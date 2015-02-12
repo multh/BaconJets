@@ -1,18 +1,21 @@
 #include "UHH2/BaconJets/include/JECAnalysisHists.h"
 #include "UHH2/core/include/Event.h"
 #include "UHH2/bacondataformats/interface/TJet.hh"
-
+#include "UHH2/bacondataformats/interface/TEventInfo.hh"
+#include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
 #include "TH1F.h"
 #include "TH2F.h"
 #include <iostream>
-#include <stdlib.h>
 
 using namespace std;
 using namespace uhh2;
+using namespace baconhep;
 
 JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists(ctx, dirname){
   // book all histograms here
   // jets
+
+  TH1::SetDefaultSumw2();
   book<TH1F>("N_jets", "N_{jets}", 20, -0.5, 19.5);  
   book<TH1F>("pt","p_{T} all jets",100,0,1500);
   book<TH1F>("eta","#eta all jets",100,-5,5);
@@ -24,6 +27,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
 
   book<TH1F>("pt_barrel","p_{T} barrel jet",100,0,1500);
   book<TH1F>("pt_probe","p_{T} probe jet",100,0,1500);
+  book<TH1F>("pt_ave","p_{T} ave jet",100,0,1500);
 
   book<TH1F>("eta_1","#eta jet 1",100,-5,5);
   book<TH1F>("eta_2","#eta jet 2",100,-5,5);
@@ -32,18 +36,34 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
   book<TH1F>("asym","asymmetrie jet 1 and jet 2",100,-1,1);
   book<TH1F>("generic_asym","generic asymmetrie jet 1 and jet 2",100,-1,1);
 
-  book<TH1F>("DeltaPhi_Jet1_Jet2", "#Delta#Phi(first jet, second jet)", 70, 0, 7);
+  book<TH1F>("DeltaPhi_Jet1_Jet2", "#Delta#Phi(first jet, second jet)", 100, 0, 7);
   book<TH1F>("pt_rel","p_{T} jet 3 / #overline{P}_{T}", 50, 0, 1);
   book<TH1F>("generic_pt_rel","generic p_{T} jet 3 / #overline{P}_{T}", 50, 0, 1);
 
-  book<TH2F>("ptrel_vs_deltaphi","delta phi vs pt_rel", 50, 0, 1 ,64, 0, 3.20);
+  book<TH2F>("ptrel_vs_deltaphi","delta phi vs pt_rel", 50, 0, 1 ,50, 0, 3.14);
+
+  book<TH1F>("pt_ave_hltDiPFJetAve40","p_{T} ave40 jet",500,0,500);
+  book<TH1F>("pt_ave_hltDiPFJetAve80","p_{T} ave80 jet",500,0,500);
+  book<TH1F>("pt_ave_hltDiPFJetAve140","p_{T} ave140 jet",500,0,500);
+  book<TH1F>("pt_ave_hltDiPFJetAve200","p_{T} ave200 jet",500,0,500);
+  book<TH1F>("pt_ave_hltDiPFJetAve260","p_{T} ave260 jet",500,0,500);
+  book<TH1F>("pt_ave_hltDiPFJetAve320","p_{T} ave320 jet",500,0,500);
+  book<TH1F>("pt_ave_hltDiPFJetAve400","p_{T} ave400 jet",500,0,500);
+
+
 
   h_jets = ctx.get_handle<TClonesArray>("Jet04");
+  h_eventInfo = ctx.get_handle<baconhep::TEventInfo>("Info");
+
+
 
 }
 
+void JECAnalysisHists::fill(const uhh2::Event & ev){
+    fill(ev, 0);
+}
 
-void JECAnalysisHists::fill(const Event & event){
+void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
   // fill the histograms. Please note the comments in the header file:
   // 'hist' is used here a lot for simplicity, but it will be rather
   // slow when you have many histograms; therefore, better
@@ -51,9 +71,13 @@ void JECAnalysisHists::fill(const Event & event){
   
   // Don't forget to always use the weight when filling.
 
-  const TClonesArray & js = event.get(h_jets);
+  const TClonesArray & js = ev.get(h_jets);
+  const baconhep::TEventInfo & info = ev.get(h_eventInfo);
 
-  double weight = event.weight;
+
+  baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+
+  double weight = ev.weight;
 
   Int_t njets = js.GetEntries();
   hist("N_jets")->Fill(njets, weight);
@@ -73,26 +97,72 @@ void JECAnalysisHists::fill(const Event & event){
 
   double barreljet = 0.0;
   double probejet = 0.0;
-  int numb = rand() % 2 + 1; 
-  if(numb==1){
+  TString FileName[7] = {"pt_ave_hltDiPFJetAve40","pt_ave_hltDiPFJetAve80", "pt_ave_hltDiPFJetAve140", "pt_ave_hltDiPFJetAve200", "pt_ave_hltDiPFJetAve260", "pt_ave_hltDiPFJetAve320","pt_ave_hltDiPFJetAve400"};
+
+  double pt_ave = (jet1->pt + jet2->pt)/2;
+
+  int numb = rand % 2 + 1; 
+  if ((fabs(jet1->eta)<1.3)&&(fabs(jet2->eta)<1.3)) {
+    if(numb==1){
+        if(fabs(jet1->eta)<1.3){
+        barreljet += jet1->pt;
+        probejet += jet2->pt;
+        hist("pt_barrel")->Fill(jet1->pt, weight);
+        hist("pt_probe")->Fill(jet2->pt, weight);
+        hist("pt_ave")->Fill(pt_ave, weight);
+        for (int j = 0; j < 7; j++) {
+            if(eventInfo->triggerBits[j]==1) { 
+            hist(FileName[j])->Fill(pt_ave, weight);
+    
+            }
+        }
+        hist("asym")->Fill((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt), weight);
+        }
+    }
+    if(numb==2){
+        if(fabs(jet2->eta)<1.3){
+        barreljet += jet2->pt;
+        probejet += jet1->pt;
+        hist("pt_barrel")->Fill(jet2->pt, weight);
+        hist("pt_probe")->Fill(jet1->pt, weight);
+        hist("pt_ave")->Fill(pt_ave, weight);
+        for (int j = 0; j < 7; j++) {
+            if(eventInfo->triggerBits[j]==1) { 
+            hist(FileName[j])->Fill(pt_ave, weight);
+            }
+        }
+        hist("asym")->Fill((jet1->pt - jet2->pt) / (jet2->pt + jet1->pt), weight);
+        }
+    }
+  } else if ((fabs(jet1->eta)<1.3)||(fabs(jet2->eta)<1.3)){
     if(fabs(jet1->eta)<1.3){
-      barreljet += jet1->pt;
-      probejet += jet2->pt;
-      hist("pt_barrel")->Fill(jet1->pt, weight);
-      hist("pt_probe")->Fill(jet2->pt, weight);
-      hist("asym")->Fill((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt), weight);
+        barreljet += jet1->pt;
+        probejet += jet2->pt;
+        hist("pt_barrel")->Fill(jet1->pt, weight);
+        hist("pt_probe")->Fill(jet2->pt, weight);
+        hist("pt_ave")->Fill(pt_ave, weight);
+        for (int j = 0; j < 7; j++) {
+            if(eventInfo->triggerBits[j]==1) { 
+            hist(FileName[j])->Fill(pt_ave, weight);
+    
+            }
+        }
+        hist("asym")->Fill((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt), weight);
     }
-  }
-  if(numb==2){
     if(fabs(jet2->eta)<1.3){
-      barreljet += jet2->pt;
-      probejet += jet1->pt;
-      hist("pt_barrel")->Fill(jet2->pt, weight);
-      hist("pt_probe")->Fill(jet1->pt, weight);
-      hist("asym")->Fill((jet1->pt - jet2->pt) / (jet2->pt + jet1->pt), weight);
+        barreljet += jet2->pt;
+        probejet += jet1->pt;
+        hist("pt_barrel")->Fill(jet2->pt, weight);
+        hist("pt_probe")->Fill(jet1->pt, weight);
+        hist("pt_ave")->Fill(pt_ave, weight);
+        for (int j = 0; j < 7; j++) {
+            if(eventInfo->triggerBits[j]==1) { 
+            hist(FileName[j])->Fill(pt_ave, weight);
+            }
+        }
+        hist("asym")->Fill((jet1->pt - jet2->pt) / (jet2->pt + jet1->pt), weight);
     }
   }
- 
 
  
 

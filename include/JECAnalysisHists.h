@@ -3,7 +3,9 @@
 #include "UHH2/core/include/Hists.h"
 #include "UHH2/core/include/Event.h"
 #include "TClonesArray.h"
-
+#include "UHH2/bacondataformats/interface/TEventInfo.hh"
+#include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
+using namespace baconhep;
 /**  \brief Example class for booking and filling histograms
  * 
  * NOTE: This class uses the 'hist' method to retrieve histograms.
@@ -17,10 +19,10 @@ public:
     JECAnalysisHists(uhh2::Context & ctx, const std::string & dirname);
 
     virtual void fill(const uhh2::Event & ev) override;
+    void fill(const uhh2::Event & ev, const int rand);
     virtual ~JECAnalysisHists();
 
 private:
     uhh2::Event::Handle<TClonesArray> h_jets;
-
-
+    uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
 };
