@@ -10,24 +10,24 @@
 
 namespace uhh2bacon {
 
-class Selection {
+class JetCorrections {
 
     private:
     uhh2::Context& context;
     uhh2::Event* event;
-
+   // uhh2::Event::Handle<TClonesArray> h_jetsout;
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
 
     public:
-    Selection(uhh2::Context & ctx);
-    ~Selection();
+    JetCorrections(uhh2::Context & ctx);
+    ~JetCorrections();
 
     void SetEvent(uhh2::Event& evt);
-    bool Trigger();
-    bool DiJet();
-    bool DiJetAdvanced();
-    bool FullSelection();
+
+    bool JetMatching();
+    bool JetResolutionSmearer();
+    bool FullJetCorrections();
 
 
 };

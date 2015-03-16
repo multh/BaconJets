@@ -6,7 +6,8 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/BaconJets/include/selection.h"
+#include "UHH2/bacon/include/selection.h"
+#include "UHH2/bacon/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
@@ -18,7 +19,7 @@
 using namespace std;
 using namespace uhh2;
 
-namespace uhh2BaconJets {
+namespace uhh2bacon {
 
 class TestModule: public AnalysisModule {
 public:
@@ -31,23 +32,26 @@ private:
   Event::Handle<TClonesArray> h_jets;
   Event::Handle<baconhep::TEventInfo> h_eventInfo;
 
-  std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet;
+  std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
   std::vector<double> eta_range;
   std::vector<JECAnalysisHists> h_eta_bins;
 
   Selection sel;
+  JetCorrections jetcorr;
 
 };
 
 
 TestModule::TestModule(Context & ctx) :
-    sel(ctx)
+    sel(ctx),
+    jetcorr(ctx)
 {
-  h_jets = ctx.declare_event_input<TClonesArray>("Jet04");
+  h_jets = ctx.declare_event_input<TClonesArray>("Jet05");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
 
   h_nocuts.reset(new JECAnalysisHists(ctx,"noCuts"));
   h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
+  h_match.reset(new JECAnalysisHists(ctx,"JetMatching"));
   h_sel.reset(new JECAnalysisHists(ctx,"Selection"));
 
 
@@ -72,6 +76,17 @@ TestModule::TestModule(Context & ctx) :
 bool TestModule::process(Event & event) {
 
   sel.SetEvent(event);
+  jetcorr.SetEvent(event);
+  const TClonesArray & js = event.get(h_jets);
+  baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
+  baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
+
+std::cout <<"test module1: jet1->pt " << jet1->pt<< std::endl;
+
+ // doing the matching from GEN to RECO
+  if(!jetcorr.JetMatching()) return false;
+  if(!jetcorr.JetResolutionSmearer()) return false;
+std::cout <<"test module2: jet1->pt " << jet1->pt<< std::endl;
 
   if(!sel.DiJet()) return false;
 
@@ -81,15 +96,21 @@ bool TestModule::process(Event & event) {
 
   h_dijet->fill(event);
 
+
+
+  h_match->fill(event);
+
+
   if(!sel.Trigger()) return false;
 
   // fill histos after dijet event selection
   h_sel->fill(event);
 
-  const TClonesArray & js = event.get(h_jets);
 
-  baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
-  baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
+//   const TClonesArray & js = event.get(h_jets);
+
+//   baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
+//   baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
 
   double probejet_eta = -99.;
 
