@@ -6,8 +6,8 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/bacon/include/selection.h"
-#include "UHH2/bacon/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/selection.h"
+#include "UHH2/BaconJets/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
