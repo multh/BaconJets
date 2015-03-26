@@ -1,4 +1,4 @@
-#include "UHH2/bacon/include/selection.h"
+#include "UHH2/BaconJets/include/selection.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
 
