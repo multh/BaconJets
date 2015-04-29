@@ -6,8 +6,9 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/bacon/include/selection.h"
-#include "UHH2/bacon/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/selection.h"
+#include "UHH2/BaconJets/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/mc_weight.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
@@ -15,6 +16,9 @@
 
 #include "TClonesArray.h"
 #include "TString.h"
+
+
+
 
 using namespace std;
 using namespace uhh2;
@@ -39,14 +43,19 @@ private:
 
   Selection sel;
   JetCorrections jetcorr;
+  McWeight mcweight;
+  bool is_mc;
 
 };
 
 
 TestModule::TestModule(Context & ctx) :
   sel(ctx),
-  jetcorr(ctx)
+  jetcorr(ctx),
+  mcweight(ctx)
 {
+  auto dataset_type = ctx.get("dataset_type");
+  is_mc = dataset_type  == "MC";
   h_jets = ctx.declare_event_input<TClonesArray>("Jet05");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
 
@@ -100,27 +109,38 @@ bool TestModule::process(Event & event) {
 
   sel.SetEvent(event);
   jetcorr.SetEvent(event);
+  mcweight.SetEvent(event);
+
   const TClonesArray & js = event.get(h_jets);
   baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
   baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
   Int_t njets = js.GetEntries();
 
+  const baconhep::TEventInfo & info = event.get(h_eventInfo);
+  baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
 
- // std::cout <<"test module no corr: jet1->pt " << jet1->pt<< std::endl;
+  if(is_mc){ /// apply for MC only
+    // to reweight MC
+//     cout << " weight1 = "<< event.weight<<endl;
+    event.weight = event.weight * mcweight.getPuReweighting();
+//     float weight = event.weight;
+//     cout << " weight2 = "<< event.weight<<endl;
 
- // doing the matching from GEN to RECO
-  if(!jetcorr.JetMatching()) return false;
-  if(!jetcorr.JetResolutionSmearer()) return false;
- // std::cout <<"test module corr: jet1->pt " << jet1->pt<< std::endl;
+  // doing the matching from GEN to RECO
+    if(!jetcorr.JetMatching()) return false;
+
+    // JER smearing
+    if(!jetcorr.JetResolutionSmearer()) return false;
+  }
 
   if(!sel.DiJet()) return false;
 
   h_nocuts->fill(event);
 
+
   if(!sel.DiJetAdvanced()) return false;
 
   h_dijet->fill(event);
-
 
 
   h_match->fill(event);
@@ -130,6 +150,8 @@ bool TestModule::process(Event & event) {
 
   // fill histos after dijet event selection
   h_sel->fill(event);
+
+  if(!sel.goodPVertex()) return false;
 
 
   double probejet_eta = -99.;

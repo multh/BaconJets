@@ -1,7 +1,7 @@
-#include "UHH2/bacon/include/selection.h"
+#include "UHH2/BaconJets/include/selection.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
-
+#include "UHH2/bacondataformats/interface/TVertex.hh"
 namespace uhh2bacon {
 
 Selection::Selection(uhh2::Context & ctx) :
@@ -10,6 +10,8 @@ Selection::Selection(uhh2::Context & ctx) :
 {
   h_jets = context.declare_event_input<TClonesArray>("Jet05");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
+  h_pv = context.declare_event_input<TClonesArray>("PV");
+
 //   h_jets = context.declare_event_autput<TClonesArray>("Jet05");
 //   h_eventInfo = context.declare_event_autput<baconhep::TEventInfo>("Info");
 }
@@ -27,7 +29,6 @@ bool Selection::Trigger()
 
   const TClonesArray & js = event->get(h_jets);
   const baconhep::TEventInfo & info = event->get(h_eventInfo);
-
 //   const baconhep::TJet * jet = dynamic_cast<const baconhep::TJet*>(js[0]);
 //   assert(jet);
 
@@ -124,7 +125,7 @@ bool Selection::DiJetAdvanced()
   if (deltaPhi < 2.7) return false;
 
   // |asymm| < 0.7
-  if ((fabs(jet2->pt - jet1->pt) / (jet2->pt + jet1->pt)) > 0.7) return false;
+  if (fabs((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt)) > 0.7) return false;
 
   // p_t,rel < 0.2
   if (njets>2){
@@ -135,10 +136,39 @@ bool Selection::DiJetAdvanced()
  return true;
 }
 
+bool Selection::goodPVertex()
+{
+  assert(event);
+  const baconhep::TEventInfo & info = event->get(h_eventInfo);
+  baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+  const TClonesArray & pvs = event->get(h_pv);
+    //        std::cout << "good prim vertex  = "<< eventInfo->pvz<<std::endl;
+  Int_t nvertices = pvs.GetEntries();
+  //std::cout << "1 number of  vertex  = "<< nvertices<<std::endl;
+  // require in the event that there is at least one reconstructed vertex
+  if(nvertices<=0) return false;
+  float nPrVer = 0;
+  // pick the first (i.e. highest sum pt) verte
+  //const reco::Vertex* theVertex=&(vertices_h->front());
+
+  for (int i=0; i<nvertices; i++){
+        baconhep::TVertex* vertices = (baconhep::TVertex*)pvs[i];
+        // require that the vertex meets certain criteria
+        
+        if((vertices->ndof>5) && (fabs(vertices->z)<24.0)  && (vertices->chi2>0.05)){
+            nPrVer++;
+         //   std::cout << "prim vertex  = "<< vertices->z<<std::endl;
+        }
+  }
+         //std::cout << "2 number of  vertex  = "<< nPrVer<<std::endl;
+
+ return true;
+}
+
 
 bool Selection::FullSelection()
 {
-    return Trigger()&&DiJet()&&DiJetAdvanced();
+    return Trigger()&&DiJet()&&DiJetAdvanced()&&goodPVertex();
 
 }
 
