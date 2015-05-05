@@ -1,4 +1,4 @@
-#include "UHH2/bacon/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
 using namespace std;

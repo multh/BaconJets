@@ -6,10 +6,11 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/BaconJets/include/selection.h"
-#include "UHH2/BaconJets/include/jet_corrections.h"
-#include "UHH2/BaconJets/include/mc_weight.h"
+#include "UHH2/bacon/include/selection.h"
+#include "UHH2/bacon/include/jet_corrections.h"
+#include "UHH2/bacon/include/mc_weight.h"
 
+#include "UHH2/bacondataformats/interface/TGenEventInfo.hh"
 #include "UHH2/bacondataformats/interface/TJet.hh"
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
 #include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
@@ -33,8 +34,9 @@ public:
 
 private:
 
-  Event::Handle<TClonesArray> h_jets;
+  Event::Handle<TClonesArray> h_jets  ;
   Event::Handle<baconhep::TEventInfo> h_eventInfo;
+  Event::Handle<baconhep::TGenEventInfo> h_genInfo;
 
   std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
   std::vector<double> eta_range, pt_range, alpha_range;
@@ -58,6 +60,8 @@ TestModule::TestModule(Context & ctx) :
   is_mc = dataset_type  == "MC";
   h_jets = ctx.declare_event_input<TClonesArray>("Jet05");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
+  h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
+
 
   h_nocuts.reset(new JECAnalysisHists(ctx,"noCuts"));
   h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
@@ -116,13 +120,21 @@ bool TestModule::process(Event & event) {
   baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
   Int_t njets = js.GetEntries();
 
+  const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
+  baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
+// cout << " gen - "<< genInfo->weight<< endl;
+
   const baconhep::TEventInfo & info = event.get(h_eventInfo);
   baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
 
   if(is_mc){ /// apply for MC only
     // to reweight MC
 //     cout << " weight1 = "<< event.weight<<endl;
-    event.weight = event.weight * mcweight.getPuReweighting();
+ //   event.weight = event.weight * mcweight.getPuReweighting();
+ //   cout << "w/o mc weight = " << event.weight << endl;
+    event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting();
+  //  cout << "with mc weight = " << event.weight << endl;
+
 //     float weight = event.weight;
 //     cout << " weight2 = "<< event.weight<<endl;
 
