@@ -51,9 +51,10 @@ class McWeight {
     TH1F *              hPuReweighting_histo400;
     TFile *             file;
 
+
     void        SetEvent(uhh2::Event& evt);
     float       getPuReweighting();
-
+    float       getEvReweighting();
 
 };
 

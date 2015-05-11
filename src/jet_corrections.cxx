@@ -1,6 +1,7 @@
 #include "UHH2/BaconJets/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
+#include "UHH2/BaconJets/include/constants.h"
 using namespace std;
 namespace uhh2bacon {
 
@@ -11,6 +12,7 @@ JetCorrections::JetCorrections(uhh2::Context & ctx) :
   h_jets = context.declare_event_input<TClonesArray>("Jet05");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
  // h_jetsout = context.declare_event_output<TClonesArray>("Jet05");
+
 }
 
 void JetCorrections::SetEvent(uhh2::Event& evt)
@@ -42,7 +44,7 @@ bool JetCorrections::JetMatching()
   double delra_R_jet1 = pow(pow(jet1->genphi - jet1->phi,2) + pow(jet1->geneta - jet1->eta,2),0.5);
   double delra_R_jet2 = pow(pow(jet2->genphi - jet2->phi,2) + pow(jet2->geneta - jet2->eta,2),0.5);
 
-  if ((delra_R_jet1 > 0.3) || (delra_R_jet2 > 0.3)) return false;
+  if ((delra_R_jet1 > s_delta_R) || (delra_R_jet2 > s_delta_R)) return false;
   //std::cout << " runNum: "<< eventInfo->runNum<< " evtNum: "<< eventInfo->evtNum <<" delra_R_jet1 = "<< delra_R_jet1 << std::endl;
 
  return true;
@@ -53,45 +55,55 @@ bool JetCorrections::JetResolutionSmearer()
   assert(event);
 
   const TClonesArray & js = event->get(h_jets);
-  const baconhep::TEventInfo & info = event->get(h_eventInfo);
+  baconhep::TEventInfo & info = event->get(h_eventInfo);
 
-  baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
-  assert(eventInfo);
-
-  //numbers taken from https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
-  // from 8TeV JER measurement.
-  constexpr const size_t n = 7;
-  static float eta_hi[n] = {0.5, 1.1, 1.7, 2.3, 2.8, 3.2, 5.0};
-  static float c_nominal[n] = {1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056};
-//   static float c_up[n] = {1.105, 1.127, 1.150, 1.254, 1.316, 1.458, 1.247};
-//   static float c_down[n] = {1.053, 1.071, 1.092, 1.162, 1.192, 1.332, 0.865};
+ // assert(eventInfo);
 
   Int_t njets = js.GetEntries();
-  baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
+  baconhep::TEventInfo* eventInfo= &info;//new baconhep::TEventInfo(info);
 
+  float met;
+  met = eventInfo->pfMET;
+
+  float recopt, rawpt, new_pt;
   for(int i=0; i < njets; ++i) {
+
     baconhep::TJet* jet = (baconhep::TJet*)js[i];
     float genpt = jet->genpt;
+    float pt_sm = jet->pt;
 
     //ignore unmatched jets (which have zero vector) or jets with very low pt:
     if(genpt < 15.0) continue;
 
-    float recopt = jet->pt;
+    recopt = jet->pt;
     float abseta = fabs(jet->eta);
     size_t ieta = 0;
     while(ieta < n && eta_hi[ieta] < abseta) ++ieta;
     if(ieta == n) ieta = n-1;
     float c;
-    c = c_nominal[ieta];
-    float new_pt = std::max(0.0f, genpt + c * (recopt - genpt));
+    if(direction == 0){
+        c = c_nominal[ieta];
+    } else if(direction == 1){
+        c = c_up[ieta];
+    } else{
+        c = c_down[ieta];
+    }
 
-    if (i == 0)std::cout <<"jet corr: jet1->pt " << jet1->pt<< std::endl;
-    if (i == 0)std::cout <<"jet corr: jet->pt " << new_pt<< std::endl;
+    new_pt = std::max(0.0f, genpt + c * (recopt - genpt));
+    pt_sm *= new_pt / recopt;
+
+    //propagate JER shifts to MET by using same factor, but for raw jet p4:
+    rawpt = jet->ptRaw;
+
+    met += rawpt;
+    rawpt *= new_pt / recopt;
+    met -= rawpt;
 
     jet->pt = new_pt;
+    eventInfo->pfMET = met;
+  }
 
-    }
-    return true;
+  return true;
 }
 
 bool JetCorrections::FullJetCorrections()

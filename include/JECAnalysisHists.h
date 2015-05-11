@@ -25,4 +25,5 @@ public:
 private:
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
+    uhh2::Event::Handle<TClonesArray> h_pv;
 };

@@ -6,9 +6,10 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/bacon/include/selection.h"
-#include "UHH2/bacon/include/jet_corrections.h"
-#include "UHH2/bacon/include/mc_weight.h"
+#include "UHH2/BaconJets/include/selection.h"
+#include "UHH2/BaconJets/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/mc_weight.h"
+#include "UHH2/BaconJets/include/constants.h"
 
 #include "UHH2/bacondataformats/interface/TGenEventInfo.hh"
 #include "UHH2/bacondataformats/interface/TJet.hh"
@@ -39,8 +40,7 @@ private:
   Event::Handle<baconhep::TGenEventInfo> h_genInfo;
 
   std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
-  std::vector<double> eta_range, pt_range, alpha_range;
-  //std::vector<JECAnalysisHists> h_eta_bins;
+//   std::vector<double> eta_range, pt_range, alpha_range;
   std::vector<JECAnalysisHists> h_pt_bins;
 
   Selection sel;
@@ -60,8 +60,9 @@ TestModule::TestModule(Context & ctx) :
   is_mc = dataset_type  == "MC";
   h_jets = ctx.declare_event_input<TClonesArray>("Jet05");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
-  h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
-
+  if(is_mc){ /// apply for MC only
+    h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
+  }
 
   h_nocuts.reset(new JECAnalysisHists(ctx,"noCuts"));
   h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
@@ -69,9 +70,6 @@ TestModule::TestModule(Context & ctx) :
   h_sel.reset(new JECAnalysisHists(ctx,"Selection"));
 
 
-  eta_range = {0, 0.261, 0.522, 0.763, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 3.139, 3.489, 5.191};
-  pt_range = {66, 107, 191, 240, 306, 379, 468, 900};
-  alpha_range = {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
   // int size = sizeof(eta_range)/sizeof(double); // to get size of string object
   // eta_range.size() // to get size of vector
 
@@ -120,23 +118,16 @@ bool TestModule::process(Event & event) {
   baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
   Int_t njets = js.GetEntries();
 
-  const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
-  baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
-// cout << " gen - "<< genInfo->weight<< endl;
-
   const baconhep::TEventInfo & info = event.get(h_eventInfo);
   baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
 
   if(is_mc){ /// apply for MC only
     // to reweight MC
-//     cout << " weight1 = "<< event.weight<<endl;
- //   event.weight = event.weight * mcweight.getPuReweighting();
- //   cout << "w/o mc weight = " << event.weight << endl;
-    event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting();
+//    cout << "w/o mc weight = " << event.weight << endl;
+    const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
+    baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
+    event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting() * mcweight.getEvReweighting();
   //  cout << "with mc weight = " << event.weight << endl;
-
-//     float weight = event.weight;
-//     cout << " weight2 = "<< event.weight<<endl;
 
   // doing the matching from GEN to RECO
     if(!jetcorr.JetMatching()) return false;
@@ -166,12 +157,14 @@ bool TestModule::process(Event & event) {
   if(!sel.goodPVertex()) return false;
 
 
+  if(!sel.jetIds(s_working_point_csv_threshold)) return false;
+
   double probejet_eta = -99.;
   double probejet_pt = -99.;
 
   int ran = rand();
   int numb = ran % 2 + 1;
-  if ((fabs(jet1->eta)<1.3)&&(fabs(jet2->eta)<1.3)) {
+  if ((fabs(jet1->eta)<s_eta_barr)&&(fabs(jet2->eta)<s_eta_barr)) {
     if(numb==1){
         probejet_eta = jet2->eta;
         probejet_pt = jet2->pt;
@@ -180,8 +173,8 @@ bool TestModule::process(Event & event) {
         probejet_eta = jet1->eta;
         probejet_pt = jet1->pt;
     }
-  } else if ((fabs(jet1->eta)<1.3)||(fabs(jet2->eta)<1.3)){
-    if(fabs(jet1->eta)<1.3){
+  } else if ((fabs(jet1->eta)<s_eta_barr)||(fabs(jet2->eta)<s_eta_barr)){
+    if(fabs(jet1->eta)<s_eta_barr){
         probejet_eta = jet2->eta;
         probejet_pt = jet2->pt;
     }

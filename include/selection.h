@@ -20,6 +20,7 @@ class Selection {
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
     uhh2::Event::Handle<TClonesArray> h_pv;
+   // float csv_threshold;
     public:
     Selection(uhh2::Context & ctx);
     ~Selection();
@@ -29,6 +30,14 @@ class Selection {
     bool DiJet();
     bool DiJetAdvanced();
     bool goodPVertex();
+    bool triggerFired(float bin1, float bin2);
+
+//     TString WP_LOOSE;
+//     TString WP_MEDIUM;
+//     TString WP_TIGHT;
+//     explicit jetIds(wp working_point);
+    bool jetIds(float csv_threshold);
+
     bool FullSelection();
 
 

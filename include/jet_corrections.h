@@ -19,6 +19,8 @@ class JetCorrections {
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
 
+    int direction = 0; // -1 = down, +1 = up, 0 = nominal
+
     public:
     JetCorrections(uhh2::Context & ctx);
     ~JetCorrections();
