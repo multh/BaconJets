@@ -11,8 +11,8 @@
     <Library Name="libSUHH2BaconJets"/>
     <Package Name="SUHH2BaconJets.par" />
 
-<!--    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_test123" TargetLumi="1" > -->
-<Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="2" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_test1234" TargetLumi="1" >  
+<!--    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_new" TargetLumi="1" >  -->
+    <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="2" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_new" TargetLumi="1" >  
 
         <!--     to run on all samples -->
 <!--
@@ -22,18 +22,21 @@
         </InputData>-->
         <!--<OutputTree Name="AnalysisTree" />-->
 
-
-        <InputData Lumi="0.0002656" NEventsMax="-1" Type="MC" Version="QCDPt15to3000_8tev" Cacheable="True">
+<!-- old ntuples
+        <InputData Lumi="1" NEventsMax="10000" Type="MC" Version="QCDPt15to3000_8tev" Cacheable="True">
             &QCDPt15to3000_8tev;
             <InputTree Name="Events" />
         </InputData> 
+-->
 
-<!--
-        <InputData Lumi="1" NEventsMax="100000" Type="MC" Version="QCDPt15to3000weight_8tev" Cacheable="True">
+
+
+        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="QCDPt15to3000weight_8tev" Cacheable="True">
             &QCDPt15to3000weight_8tev;
             <InputTree Name="Events" />
         </InputData> 
--->
+
+
 
 
         <InputData Lumi="1.0" NEventsMax="-1" Type="DATA" Version="DATA" Cacheable="True">
@@ -44,7 +47,7 @@
 
 
 
-        <!--    to run on one sample-->
+        <!--  example how to run one root file -->
 <!--
         <InputData Lumi="1" NEventsMax="100000" Type="MC" Version="QCD_Pt300to470" Cacheable="False">
             <In FileName="/pnfs/desy.de/cms/tier2/store/user/nkovalch/BaconTree_MC_DiPF/pythia8_QCD_Pt300to470_Tune4C_13TeV_pythia8_12.root" Lumi="0.0"/> 
