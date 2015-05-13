@@ -43,6 +43,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("generic_asym","generic asymmetrie jet 1 and jet 2",100,-1,1);
     book<TH1F>("mpf","MPF response",100,0.5,1.5);
     book<TH1F>("MPF","MPF response",100,0.5,1.5);
+    book<TH1F>("mpf3","MPF response",100,0.5,1.5);
 
     book<TH1F>("generic_mpf","generic MPF response",100,0.5,1.5);
     book<TH1F>("r_rel","R_{rel}",100,0.5,1.5);
@@ -184,12 +185,19 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 
     met.Set(eventInfo->pfMET * cos(eventInfo->pfMETphi),eventInfo->pfMET * sin(eventInfo->pfMETphi));
 
+    // just for another definition of mpf ..
+    LorentzVector ETmiss(0,0,0,0);
+    ETmiss.SetPt(eventInfo->pfMET);
+    ETmiss.SetPhi(eventInfo->pfMETphi);
+    double barreljet_phi = 0.0;
+
     int numb = rand % 2 + 1;
     // barrel region |eta|<1.3
     if ((fabs(jet1->eta) < s_eta_barr)&&(fabs(jet2->eta) < s_eta_barr)) {
         if(numb==1){
             if(fabs(jet1->eta) < s_eta_barr){
                 barreljet += jet1->pt;
+		barreljet_phi += jet1->phi;
                 probejet += jet2->pt;
                 asymmetry += (jet2->pt - jet1->pt)/(jet2->pt + jet1->pt);
                 pt.Set(jet1->pt * cos(jet1->phi),jet1->pt * sin(jet1->phi));
@@ -204,6 +212,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         } if(numb==2){
             if(fabs(jet2->eta) < s_eta_barr){
                 barreljet += jet2->pt;
+		barreljet_phi += jet2->phi;
                 probejet += jet1->pt;
                 asymmetry += (jet1->pt - jet2->pt)/(jet1->pt + jet2->pt);
                 pt.Set(jet2->pt * cos(jet2->phi),jet2->pt * sin(jet2->phi));
@@ -219,6 +228,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     } else if ((fabs(jet1->eta) < s_eta_barr)||(fabs(jet2->eta) < s_eta_barr)){
         if(fabs(jet1->eta) < s_eta_barr){
             barreljet += jet1->pt;
+	    barreljet_phi += jet1->phi;
             probejet += jet2->pt;
             asymmetry += (jet2->pt - jet1->pt)/(jet2->pt + jet1->pt);
             pt.Set(jet1->pt * cos(jet1->phi),jet1->pt * sin(jet1->phi));
@@ -231,6 +241,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 
         } if(fabs(jet2->eta) < s_eta_barr){
             barreljet += jet2->pt;
+	    barreljet_phi += jet2->phi;
             probejet += jet1->pt;
             asymmetry += (jet1->pt - jet2->pt)/(jet1->pt + jet2->pt);
             pt.Set(jet2->pt * cos(jet2->phi),jet2->pt * sin(jet2->phi));
@@ -243,6 +254,9 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 
         }
     }
+
+    // another definition of mpf
+    hist("mpf3")->Fill(1+( (cos(ETmiss.phi()-barreljet_phi)* ETmiss.pt()) /barreljet ), weight);
 
 
     if(fabs(jet1->eta) < s_eta_barr){
