@@ -39,7 +39,7 @@ private:
   Event::Handle<baconhep::TEventInfo> h_eventInfo;
   Event::Handle<baconhep::TGenEventInfo> h_genInfo;
 
-  std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
+  std::unique_ptr<Hists> h_sel, h_dijet, h_dijetadvanced, h_trigger, h_goodPV, h_jetIds, h_match;
 //   std::vector<double> eta_range, pt_range, alpha_range;
   std::vector<JECAnalysisHists> h_pt_bins, h_noalpha_bins;
 
@@ -64,9 +64,12 @@ TestModule::TestModule(Context & ctx) :
     h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
   }
 
-  h_nocuts.reset(new JECAnalysisHists(ctx,"noCuts"));
   h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
+  h_dijetadvanced.reset(new JECAnalysisHists(ctx,"diJetAdvanced"));
   h_match.reset(new JECAnalysisHists(ctx,"JetMatching"));
+  h_trigger.reset(new JECAnalysisHists(ctx,"Trigger"));
+  h_goodPV.reset(new JECAnalysisHists(ctx,"goodPV"));
+  h_jetIds.reset(new JECAnalysisHists(ctx,"jetIDs"));
   h_sel.reset(new JECAnalysisHists(ctx,"Selection"));
 
 
@@ -144,21 +147,22 @@ bool TestModule::process(Event & event) {
 
 
   if(!sel.DiJet()) return false;
-  h_nocuts->fill(event);
   h_dijet->fill(event);
 
 
   if(!sel.DiJetAdvanced()) return false;
+  h_dijetadvanced->fill(event);
   h_match->fill(event);
 
 
   if(!sel.Trigger()) return false;
-
+  h_trigger->fill(event);
 
   if(!sel.goodPVertex()) return false;
+  h_goodPV->fill(event);
 
-
-  if(!sel.jetIds(s_working_point_csv_threshold)) return false;
+  //if(!sel.jetIds(s_working_point_csv_threshold)) return false;
+  h_jetIds->fill(event);
 
   double probejet_eta = -99.;
   double probejet_pt = -99.;
