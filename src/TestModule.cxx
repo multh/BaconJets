@@ -41,7 +41,7 @@ private:
 
   std::unique_ptr<Hists> h_sel, h_dijet, h_dijetadvanced, h_trigger, h_goodPV, h_jetIds, h_match;
 //   std::vector<double> eta_range, pt_range, alpha_range;
-  std::vector<JECAnalysisHists> h_pt_bins, h_noalpha_bins;
+  std::vector<JECAnalysisHists> h_pt_bins, h_noalpha_bins, h_eta_bins;
 
   Selection sel;
   JetCorrections jetcorr;
@@ -102,6 +102,12 @@ TestModule::TestModule(Context & ctx) :
         for( unsigned int i=0; i < pt_range.size()-1; ++i ){
             h_pt_bins.push_back(JECAnalysisHists(ctx,(std::string)("alpha_"+alpha_range_name[k]+"_"+alpha_range_name[k+1]+"/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
         }
+    }
+  }
+
+  for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
+    for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+      h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("alpha_"+alpha_range_name[k]+"_"+alpha_range_name[k+1]+"/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1])));
     }
   }
 
@@ -197,7 +203,27 @@ bool TestModule::process(Event & event) {
 
   // fill histos for the kFSR extrapolations
   // no cut on alpha is required since we want to extrapolate as a function of alpha
+  // using an inclusive binning for alpha
   for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
+    if ((alpha>=alpha_range[0])&&(alpha<alpha_range[k+1])) {
+      for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+	//if ((fabs(probejet_eta)>=eta_range[j])&&(fabs(probejet_eta)<eta_range[j+1])) {
+	if ((probejet_eta>=eta_range[j])&&(probejet_eta<eta_range[j+1])) {
+	  h_eta_bins[k*(eta_range.size()-1)+j].fill(event, ran);
+	  for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+	    if ((probejet_pt>=pt_range[i])&&(probejet_pt<pt_range[i+1])) {
+	      h_pt_bins[k*(eta_range.size()-1)*(pt_range.size()-1)+j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+	      //cout <<"eta range = "<< eta_range[j]<<" - "<< eta_range[j+1]<< "pt range = "<< pt_range[i]<<" - "<< pt_range[i+1]<<endl;
+	      //cout <<"eta value = "<< fabs(probejet_eta) << " pt value = "<< probejet_pt <<endl;
+	    }
+	  }
+	}
+      }
+    }
+  }
+
+  // for an exclusive binning in alpha
+  /*for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
     if ((alpha>=alpha_range[k])&&(alpha<alpha_range[k+1])) {
         for( unsigned int j=0; j < eta_range.size()-1; ++j ){
             if ((fabs(probejet_eta)>=eta_range[j])&&(fabs(probejet_eta)<eta_range[j+1])) {
@@ -212,6 +238,8 @@ bool TestModule::process(Event & event) {
         }
     }
   }
+  */
+
 
   // alpha<0.2
   if(!sel.AlphaCut()) return false;
