@@ -142,9 +142,9 @@ bool TestModule::process(Event & event) {
     if(!jetcorr.JetResolutionSmearer()) return false;
   }
 
-  h_nocuts->fill(event);
 
   if(!sel.DiJet()) return false;
+  h_nocuts->fill(event);
   h_dijet->fill(event);
 
 
