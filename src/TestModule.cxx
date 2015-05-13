@@ -41,7 +41,7 @@ private:
 
   std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
 //   std::vector<double> eta_range, pt_range, alpha_range;
-  std::vector<JECAnalysisHists> h_pt_bins;
+  std::vector<JECAnalysisHists> h_pt_bins, h_noalpha_bins;
 
   Selection sel;
   JetCorrections jetcorr;
@@ -91,7 +91,9 @@ TestModule::TestModule(Context & ctx) :
     sprintf (alpha_buffer, "%5.3f", alpha_range[k]);
     alpha_range_name.push_back(alpha_buffer);
   }
-  cout << "alpha range "<<alpha_range_name[3]<<"eta range "<<eta_range_name[3]<< "pt range "<<pt_range_name[3]<< endl;
+  //cout << "alpha range "<<alpha_range_name[3]<<"eta range "<<eta_range_name[3]<< "pt range "<<pt_range_name[3]<< endl;
+
+  // histos for the kFSR extrapolations
   for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
     for( unsigned int j=0; j < eta_range.size()-1; ++j ){
         for( unsigned int i=0; i < pt_range.size()-1; ++i ){
@@ -99,11 +101,15 @@ TestModule::TestModule(Context & ctx) :
         }
     }
   }
-//   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-//     h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+range_name[i]+"_"+range_name[i+1])));
-//   }
-  //h_eta_bin1.reset(new JECAnalysisHists(ctx,"eta_bin1"));
-  //h_eta_bin2.reset(new JECAnalysisHists(ctx,"eta_bin2"));
+
+  // histos for the pT extrapolations
+  for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+    for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+      h_noalpha_bins.push_back(JECAnalysisHists(ctx,(std::string)("/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    }
+  }
+
+
 }
 
 
@@ -136,23 +142,18 @@ bool TestModule::process(Event & event) {
     if(!jetcorr.JetResolutionSmearer()) return false;
   }
 
-  if(!sel.DiJet()) return false;
-
   h_nocuts->fill(event);
 
-
-  if(!sel.DiJetAdvanced()) return false;
-
+  if(!sel.DiJet()) return false;
   h_dijet->fill(event);
 
 
+  if(!sel.DiJetAdvanced()) return false;
   h_match->fill(event);
 
 
   if(!sel.Trigger()) return false;
 
-  // fill histos after dijet event selection
-  h_sel->fill(event);
 
   if(!sel.goodPVertex()) return false;
 
@@ -189,7 +190,9 @@ bool TestModule::process(Event & event) {
         alpha = (2*(jet3->pt))/(jet1->pt + jet2->pt);
         //cout << "alpha = "<< alpha << endl;
   }
-  //for alpha < 0.2
+
+  // fill histos for the kFSR extrapolations
+  // no cut on alpha is required since we want to extrapolate as a function of alpha
   for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
     if ((alpha>=alpha_range[k])&&(alpha<alpha_range[k+1])) {
         for( unsigned int j=0; j < eta_range.size()-1; ++j ){
@@ -205,10 +208,23 @@ bool TestModule::process(Event & event) {
         }
     }
   }
-//   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-//     if ((fabs(probejet_eta)>=eta_range[i])&&(fabs(probejet_eta)<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
-// 
-//   }
+
+  // alpha<0.2
+  if(!sel.AlphaCut()) return false;
+  h_sel->fill(event);
+
+  // fill histos for the pT extrapolations
+  // alpha<0.2 needs to be required!
+  for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+    if ((fabs(probejet_eta)>=eta_range[j])&&(fabs(probejet_eta)<eta_range[j+1])) {
+      for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+	if ((probejet_pt>=pt_range[i])&&(probejet_pt<pt_range[i+1])) {
+	  h_noalpha_bins[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+	}
+      }
+    }
+  }
+
 
 
   return true;
