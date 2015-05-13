@@ -115,6 +115,26 @@ bool Selection::DiJetAdvanced()
   if (fabs((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt)) > s_asymm) return false;
 
   // p_t,rel < 0.2
+  //if (njets>2){
+  //baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
+  // if ((2*(jet3->pt))/(jet1->pt + jet2->pt) > s_pt_rel) return false;
+  //}
+
+ return true;
+}
+
+bool Selection::AlphaCut()
+{
+  assert(event);
+  
+  const TClonesArray & js = event->get(h_jets);
+  int njets = js.GetEntries();
+  if (njets < 2) return false;
+  
+  baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
+  baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
+  
+  // p_t,rel < 0.2
   if (njets>2){
     baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
     if ((2*(jet3->pt))/(jet1->pt + jet2->pt) > s_pt_rel) return false;
@@ -122,6 +142,8 @@ bool Selection::DiJetAdvanced()
 
  return true;
 }
+
+
 
 bool Selection::goodPVertex()
 {

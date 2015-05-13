@@ -29,6 +29,7 @@ class Selection {
     bool Trigger();
     bool DiJet();
     bool DiJetAdvanced();
+    bool AlphaCut();
     bool goodPVertex();
     bool triggerFired(float bin1, float bin2);
 
