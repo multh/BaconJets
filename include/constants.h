@@ -2,9 +2,9 @@
 #define  CONSTANTS_H
 
 /** \brief Binning **/
-static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.763, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 3.139, 3.489, 5.191};
+static std::vector<double>   eta_range  = {0, 0.087, 0.174, 0.261, 0.348, 0.435, 0.522, 0.609, 0.696, 0.783, 0.879, 0.957, 1.044, 1.131, 1.218, 1.305, 1.392, 1.479, 1.566, 1.653, 1.830, 1.930, 2.043, 2.172, 2.322, 2.500, 2.853, 2.964, 3.139, 5.232};
 static std::vector<double>   pt_range   = {66, 107, 191, 240, 306, 379, 468, 900};
-static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
+static std::vector<double>   alpha_range= {0.00, 0.10, 0.20, 0.30, 0.40};
 
 /** \brief Dijet event selection **/
 // barrel region (|eta| < 1.3)
