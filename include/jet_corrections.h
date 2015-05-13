@@ -5,40 +5,31 @@
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
 
-
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
 //#include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
 
 namespace uhh2bacon {
 
-class Selection {
+class JetCorrections {
 
     private:
     uhh2::Context& context;
     uhh2::Event* event;
-
+   // uhh2::Event::Handle<TClonesArray> h_jetsout;
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
-    uhh2::Event::Handle<TClonesArray> h_pv;
-   // float csv_threshold;
+
+    int direction = 0; // -1 = down, +1 = up, 0 = nominal
+
     public:
-    Selection(uhh2::Context & ctx);
-    ~Selection();
+    JetCorrections(uhh2::Context & ctx);
+    ~JetCorrections();
 
     void SetEvent(uhh2::Event& evt);
-    bool Trigger();
-    bool DiJet();
-    bool DiJetAdvanced();
-    bool goodPVertex();
-    bool triggerFired(float bin1, float bin2);
 
-//     TString WP_LOOSE;
-//     TString WP_MEDIUM;
-//     TString WP_TIGHT;
-//     explicit jetIds(wp working_point);
-    bool jetIds(float csv_threshold);
-
-    bool FullSelection();
+    bool JetMatching();
+    bool JetResolutionSmearer();
+    bool FullJetCorrections();
 
 
 };
