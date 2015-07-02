@@ -4,6 +4,8 @@
 	  <!ENTITY QCDPt15to3000_8tev SYSTEM "../datasets/QCDPt15to3000PU_RD1.xml">
 	  <!ENTITY QCDPt15to3000weight_8tev SYSTEM "../datasets/QCDPt15to3000PU_RD1_Weight.xml">
 	  <!ENTITY QCDPt15to3000_2012data SYSTEM "../datasets/QCDPt15to3000PU_2012DATA.xml">
+	  <!ENTITY jmeak4cluster SYSTEM "../datasets/jme_ak4cluster.xml">
+	  <!ENTITY jmeak4calo SYSTEM "../datasets/jme_ak4calo.xml">
 ]>
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -48,12 +50,23 @@
 
 
 
-<!-- example file for the converted ntuples -->
+<!-- example file for the converted ntuples 
         <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="converted" Cacheable="False">
             <In FileName="/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconTrans/test.root" Lumi="0.0"/> 
             <InputTree Name="Events" />
         </InputData>
+-->
 
+<!--
+        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="jme4cluster" Cacheable="True">
+            &jmeak4cluster;
+            <InputTree Name="Events" />
+        </InputData> 
+-->
+        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="jme4calo" Cacheable="True">
+            &jmeak4calo;
+            <InputTree Name="Events" />
+        </InputData> 
 
 
 

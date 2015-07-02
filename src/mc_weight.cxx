@@ -25,7 +25,7 @@ McWeight::McWeight(uhh2::Context & ctx) :
     event(0),
     fPuReweighting_histo(NULL)
 {
-    h_jets = context.declare_event_input<TClonesArray>("nt_AK4PFCluster");
+    h_jets = context.declare_event_input<TClonesArray>("nt_AK4PFCalo");
     h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
 
     fPuReweighting_histoname.push_back(hPuReweighting_histo40);

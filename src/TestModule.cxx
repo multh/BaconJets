@@ -58,7 +58,7 @@ TestModule::TestModule(Context & ctx) :
 {
   auto dataset_type = ctx.get("dataset_type");
   is_mc = dataset_type  == "MC";
-  h_jets = ctx.declare_event_input<TClonesArray>("nt_AK4PFCluster");
+  h_jets = ctx.declare_event_input<TClonesArray>("nt_AK4PFCalo");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
   if(is_mc){ /// apply for MC only
     h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
@@ -141,14 +141,14 @@ bool TestModule::process(Event & event) {
 //    cout << "w/o mc weight = " << event.weight << endl;
     const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
     baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
-    event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting() * mcweight.getEvReweighting();
+    //event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting() * mcweight.getEvReweighting();
   //  cout << "with mc weight = " << event.weight << endl;
 
   // doing the matching from GEN to RECO
-    if(!jetcorr.JetMatching()) return false;
+    //if(!jetcorr.JetMatching()) return false;
 
     // JER smearing
-    if(!jetcorr.JetResolutionSmearer()) return false;
+    //if(!jetcorr.JetResolutionSmearer()) return false;
   }
 
 

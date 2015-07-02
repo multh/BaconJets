@@ -9,7 +9,7 @@ Selection::Selection(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-  h_jets = context.declare_event_input<TClonesArray>("nt_AK4PFCluster");
+  h_jets = context.declare_event_input<TClonesArray>("nt_AK4PFCalo");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
   h_pv = context.declare_event_input<TClonesArray>("PV");
 
