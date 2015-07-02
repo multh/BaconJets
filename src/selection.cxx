@@ -9,7 +9,7 @@ Selection::Selection(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-  h_jets = context.declare_event_input<TClonesArray>("Jet05");
+  h_jets = context.declare_event_input<TClonesArray>("nt_AK4PFCluster");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
   h_pv = context.declare_event_input<TClonesArray>("PV");
 
@@ -160,7 +160,7 @@ bool Selection::goodPVertex()
         baconhep::TVertex* vertices = (baconhep::TVertex*)pvs[i];
         // require that the vertex meets certain criteria
 
-        if((vertices->nTracksFit > s_n_PvTracks) && (fabs(vertices->z) < s_n_Pv_z) && (fabs(vertices->y) < s_n_Pv_xy) && (fabs(vertices->x) < s_n_Pv_xy)){
+        if(/*(vertices->nTracksFit > s_n_PvTracks) && */(fabs(vertices->z) < s_n_Pv_z) && (fabs(vertices->y) < s_n_Pv_xy) && (fabs(vertices->x) < s_n_Pv_xy)){
             nPrVer++;
         }
     }
@@ -176,7 +176,7 @@ bool Selection::jetIds(float csv_threshold)
 
     for (int i=0; i<njets; i++){
         baconhep::TJet* jets = (baconhep::TJet*)js[i];
-        if (jets->csv < csv_threshold) return false;
+        //if (jets->csv < csv_threshold) return false;
     }
  return true;
 }

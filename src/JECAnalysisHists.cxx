@@ -88,7 +88,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("pt_ave_379_468","p_{T} ave jet pt_ave_379_468",100,0,1500);
     book<TH1F>("pt_ave_468","p_{T} ave jet pt_ave_468",100,0,1500);
 /*    uhh2::Event::Handle<TClonesArray> h_pv;*/
-    h_jets = ctx.get_handle<TClonesArray>("Jet05");
+    h_jets = ctx.get_handle<TClonesArray>("nt_AK4PFCluster");
     h_eventInfo = ctx.get_handle<baconhep::TEventInfo>("Info");
     h_pv = ctx.get_handle<TClonesArray>("PV");
 

@@ -58,7 +58,7 @@ TestModule::TestModule(Context & ctx) :
 {
   auto dataset_type = ctx.get("dataset_type");
   is_mc = dataset_type  == "MC";
-  h_jets = ctx.declare_event_input<TClonesArray>("Jet05");
+  h_jets = ctx.declare_event_input<TClonesArray>("nt_AK4PFCluster");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
   if(is_mc){ /// apply for MC only
     h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
