@@ -1,15 +1,18 @@
-#include "UHH2/BaconJets/include/selection.h"
+#include "UHH2/bacon/include/selection.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
 #include "UHH2/bacondataformats/interface/TVertex.hh"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/constants.h"
+
+#include "TVector2.h"
+
 namespace uhh2bacon {
 
 Selection::Selection(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-  h_jets = context.declare_event_input<TClonesArray>("Jet05");
+  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
   h_pv = context.declare_event_input<TClonesArray>("PV");
 
@@ -42,31 +45,46 @@ bool Selection::Trigger()
     double avePt = (jet1->pt + jet2->pt)/2;
 
     bool trigger40fired = false;
+    bool trigger60fired = false;
     bool trigger80fired = false;
     bool trigger140fired = false;
     bool trigger200fired = false;
     bool trigger260fired = false;
     bool trigger320fired = false;
     bool trigger400fired = false;
+    bool trigger500fired = false;
+    ///triggerNames  briggerBits
+//     HLT_DiPFJetAve140 = triggerBits[1]
+//     HLT_DiPFJetAve200 = triggerBits[3]
+//     HLT_DiPFJetAve260 = triggerBits[5]
+//     HLT_DiPFJetAve320 = triggerBits[7]
+//     HLT_DiPFJetAve40  = triggerBits[8]
+//     HLT_DiPFJetAve400 = triggerBits[9]
+//     HLT_DiPFJetAve500 = triggerBits[10]
+//     HLT_DiPFJetAve60  = triggerBits[11]
+//     HLT_DiPFJetAve80  = triggerBits[13]
 
 
-    if(eventInfo->triggerBits[0]==1)  trigger40fired = true;
-    if(eventInfo->triggerBits[1]==1)  trigger80fired = true;
-    if(eventInfo->triggerBits[2]==1)  trigger140fired = true;
+    if(eventInfo->triggerBits[8]==1)  trigger40fired = true;
+    if(eventInfo->triggerBits[11]==1) trigger60fired = true;
+    if(eventInfo->triggerBits[13]==1) trigger80fired = true;
+    if(eventInfo->triggerBits[1]==1)  trigger140fired = true;
     if(eventInfo->triggerBits[3]==1)  trigger200fired = true;
-    if(eventInfo->triggerBits[4]==1)  trigger260fired = true;
-    if(eventInfo->triggerBits[5]==1)  trigger320fired = true;
-    if(eventInfo->triggerBits[6]==1)  trigger400fired = true;
+    if(eventInfo->triggerBits[5]==1)  trigger260fired = true;
+    if(eventInfo->triggerBits[7]==1)  trigger320fired = true;
+    if(eventInfo->triggerBits[9]==1)  trigger400fired = true;
+    if(eventInfo->triggerBits[10]==1) trigger500fired = true;
 
     if (avePt < s_Pt_Ave40_cut) return false;
-
-    if (avePt >= s_Pt_Ave40_cut  && avePt < s_Pt_Ave80_cut  && trigger40fired) return true;
+    if (avePt >= s_Pt_Ave40_cut  && avePt < s_Pt_Ave60_cut  && trigger40fired) return true;
+    if (avePt >= s_Pt_Ave60_cut  && avePt < s_Pt_Ave80_cut  && trigger60fired) return true;
     if (avePt >= s_Pt_Ave80_cut  && avePt < s_Pt_Ave140_cut && trigger80fired) return true;
     if (avePt >= s_Pt_Ave140_cut && avePt < s_Pt_Ave200_cut && trigger140fired) return true;
     if (avePt >= s_Pt_Ave200_cut && avePt < s_Pt_Ave260_cut && trigger200fired) return true;
     if (avePt >= s_Pt_Ave260_cut && avePt < s_Pt_Ave320_cut && trigger260fired) return true;
     if (avePt >= s_Pt_Ave320_cut && avePt < s_Pt_Ave400_cut && trigger320fired) return true;
-    if (avePt >= s_Pt_Ave400_cut && trigger400fired) return true;
+    if (avePt >= s_Pt_Ave400_cut && avePt < s_Pt_Ave500_cut && trigger400fired) return true;
+    if (avePt >= s_Pt_Ave500_cut && trigger500fired) return true;
 
  return false;
 }
@@ -92,7 +110,12 @@ bool Selection::DiJetAdvanced()
     assert(event);
 
     const TClonesArray & js = event->get(h_jets);
+    const baconhep::TEventInfo & info = event->get(h_eventInfo);
+//   const baconhep::TJet * jet = dynamic_cast<const baconhep::TJet*>(js[0]);
+//   assert(jet);
 
+    baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+    assert(eventInfo);
 //   const baconhep::TJet * jet = dynamic_cast<const baconhep::TJet*>(js[0]);
 //   assert(jet);
 
@@ -108,19 +131,19 @@ bool Selection::DiJetAdvanced()
     if((fabs(jet1->eta) >= s_eta_barr) && (fabs(jet2->eta) >= s_eta_barr)) return false; 
 
     // delta phi < 2.7
-    double deltaPhi = std::min(std::abs(double(jet1->phi) - double(jet2->phi)),2*M_PI-std::abs(jet2->phi - jet1->phi));
+    double deltaPhi = std::abs(TVector2::Phi_mpi_pi(jet1->phi - jet2->phi));
     if (deltaPhi < s_delta_phi) return false;
 
-  // |asymm| < 0.7
-  if (fabs((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt)) > s_asymm) return false;
+    // |asymm| < 0.7
+    if (fabs((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt)) > s_asymm) return false;
 
-  // p_t,rel < 0.2
-  if (njets>2){
-    baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
-    if ((2*(jet3->pt))/(jet1->pt + jet2->pt) > s_pt_rel) return false;
-  }
+    // p_t,rel < 0.2
+    if (njets>2){
+        baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
+        if ((2*(jet3->pt))/(jet1->pt + jet2->pt) > s_pt_rel) return false;
+    }
 
- return true;
+    return true;
 }
 
 bool Selection::goodPVertex()
@@ -146,18 +169,7 @@ bool Selection::goodPVertex()
  return true;
 }
 
-bool Selection::jetIds(float csv_threshold)
-{
-    assert(event);
-    const TClonesArray & js = event->get(h_jets);
-    Int_t njets = js.GetEntries();
 
-    for (int i=0; i<njets; i++){
-        baconhep::TJet* jets = (baconhep::TJet*)js[i];
-        if (jets->csv < csv_threshold) return false;
-    }
- return true;
-}
 
 
 

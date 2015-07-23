@@ -2,8 +2,14 @@
 #define  CONSTANTS_H
 
 /** \brief Binning **/
-static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.763, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 3.139, 3.489, 5.191};
-static std::vector<double>   pt_range   = {66, 107, 191, 240, 306, 379, 468, 900};
+// static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.763, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 3.139, 3.489, 5.191};
+// static std::vector<double>   pt_range   = {66, 107, 191, 240, 306, 379, 468, 900};
+// static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
+
+static std::vector<double>   eta_range  = {0, 1.3, 2.5, 3.0, 5.0};
+static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
+// static std::vector<double>   pt_range   = {57, 80, 100, 166, 231, 290, 365, 478, 556};
+
 static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
 
 /** \brief Dijet event selection **/
@@ -25,27 +31,25 @@ static float s_n_Pv_z = 24.0;
  static float s_n_Pv_xy = 2.0;
 
 
-/** \brief The CSV V2 b-tag as jet id **/
-/// Uses the preliminary thresholds for that tagger recommended here:
-///  https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation53XReReco
-/// 
-/// Note that this will certainly need updates once 13TeV recommendations are available.
-static float s_WP_LOOSE = 0.423f;
-static float s_WP_MEDIUM = 0.814f;
-static float s_WP_TIGHT = 0.941f;
-
-static float s_working_point_csv_threshold = s_WP_MEDIUM;
-
 /** \brief The trigger thresholds of pt_ave **/
 /// Used for the 2012 data
-static float s_Pt_Ave40_cut   = 66; //Hennings: 62
-static float s_Pt_Ave80_cut   = 107;//Hennings: 107
-static float s_Pt_Ave140_cut  = 191;//Hennings: 175
-static float s_Pt_Ave200_cut  = 240;//Hennings: 242
-static float s_Pt_Ave260_cut  = 306;//Hennings: 310
-static float s_Pt_Ave320_cut  = 379;//Hennings: 379
-static float s_Pt_Ave400_cut  = 468;//Hennings: 467
-
+// static float s_Pt_Ave40_cut   = 66; //Hennings: 62
+// static float s_Pt_Ave80_cut   = 107;//Hennings: 107
+// static float s_Pt_Ave140_cut  = 191;//Hennings: 175
+// static float s_Pt_Ave200_cut  = 240;//Hennings: 242
+// static float s_Pt_Ave260_cut  = 306;//Hennings: 310
+// static float s_Pt_Ave320_cut  = 379;//Hennings: 379
+// static float s_Pt_Ave400_cut  = 468;//Hennings: 467
+/// Used for the 2015 data
+static float s_Pt_Ave40_cut   = 43; //Hennings: 62
+static float s_Pt_Ave60_cut   = 80; //Hennings: 62
+static float s_Pt_Ave80_cut   = 88;//Hennings: 107
+static float s_Pt_Ave140_cut  = 135;//Hennings: 175
+static float s_Pt_Ave200_cut  = 223;//Hennings: 242
+static float s_Pt_Ave260_cut  = 290;//Hennings: 310
+static float s_Pt_Ave320_cut  = 365;//Hennings: 379
+static float s_Pt_Ave400_cut  = 448;//Hennings: 467
+static float s_Pt_Ave500_cut  = 561;//Hennings: 467
 
 /** \brief Jet Resolution Smearering **/
 // doing the matching from GEN to RECO

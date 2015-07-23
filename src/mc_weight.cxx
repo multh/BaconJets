@@ -12,8 +12,8 @@
 #include<TVector3.h>
 #include <vector>
 
-#include "UHH2/BaconJets/include/mc_weight.h"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/mc_weight.h"
+#include "UHH2/bacon/include/constants.h"
 #include "UHH2/bacondataformats/interface/TJet.hh"
 using namespace std;
 
@@ -25,7 +25,7 @@ McWeight::McWeight(uhh2::Context & ctx) :
     event(0),
     fPuReweighting_histo(NULL)
 {
-    h_jets = context.declare_event_input<TClonesArray>("Jet05");
+    h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
     h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
 
     fPuReweighting_histoname.push_back(hPuReweighting_histo40);

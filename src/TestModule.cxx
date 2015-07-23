@@ -6,10 +6,11 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/BaconJets/include/selection.h"
-#include "UHH2/BaconJets/include/jet_corrections.h"
-#include "UHH2/BaconJets/include/mc_weight.h"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/selection.h"
+#include "UHH2/bacon/include/jet_corrections.h"
+#include "UHH2/bacon/include/mc_weight.h"
+#include "UHH2/bacon/include/constants.h"
+#include "UHH2/bacon/include/TSetTree.h"
 
 #include "UHH2/bacondataformats/interface/TGenEventInfo.hh"
 #include "UHH2/bacondataformats/interface/TJet.hh"
@@ -20,8 +21,10 @@
 #include "TString.h"
 
 
-
-
+    TTree   *fCurrentTree;
+    Int_t   Runnr;
+    Int_t   Eventnr;
+    TFile *fCurrentTreeFile;
 using namespace std;
 using namespace uhh2;
 
@@ -29,9 +32,9 @@ namespace uhh2bacon {
 
 class TestModule: public AnalysisModule {
 public:
-
     explicit TestModule(Context & ctx);
     virtual bool process(Event & event) override;
+    ~TestModule();
 
 private:
 
@@ -41,12 +44,14 @@ private:
 
   std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
 //   std::vector<double> eta_range, pt_range, alpha_range;
-  std::vector<JECAnalysisHists> h_pt_bins;
+  std::vector<JECAnalysisHists> h_pt_bins, h_eta_bins, h_pt_bins_a01, h_eta_bins_a01;
 
   Selection sel;
   JetCorrections jetcorr;
   McWeight mcweight;
   bool is_mc;
+
+  TSetTree cSetTree;
 
 };
 
@@ -54,11 +59,12 @@ private:
 TestModule::TestModule(Context & ctx) :
   sel(ctx),
   jetcorr(ctx),
-  mcweight(ctx)
+  mcweight(ctx),
+  cSetTree()
 {
   auto dataset_type = ctx.get("dataset_type");
   is_mc = dataset_type  == "MC";
-  h_jets = ctx.declare_event_input<TClonesArray>("Jet05");
+  h_jets = ctx.declare_event_input<TClonesArray>("AK4PFCHS");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
   if(is_mc){ /// apply for MC only
     h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
@@ -92,20 +98,29 @@ TestModule::TestModule(Context & ctx) :
     alpha_range_name.push_back(alpha_buffer);
   }
   cout << "alpha range "<<alpha_range_name[3]<<"eta range "<<eta_range_name[3]<< "pt range "<<pt_range_name[3]<< endl;
-  for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
-    for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+ // for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
+//     for( unsigned int j=0; j < eta_range.size()-1; ++j ){
         for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-            h_pt_bins.push_back(JECAnalysisHists(ctx,(std::string)("alpha_"+alpha_range_name[k]+"_"+alpha_range_name[k+1]+"/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+            h_pt_bins.push_back(JECAnalysisHists(ctx,(std::string)("a02/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+            h_pt_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("a01/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+
         }
-    }
-  }
-//   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-//     h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+range_name[i]+"_"+range_name[i+1])));
+//     }
 //   }
+  for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("a02/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    h_eta_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("a01/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+
+  }
+
   //h_eta_bin1.reset(new JECAnalysisHists(ctx,"eta_bin1"));
   //h_eta_bin2.reset(new JECAnalysisHists(ctx,"eta_bin2"));
+
 }
 
+TestModule::~TestModule() {
+    cSetTree.general();
+}
 
 bool TestModule::process(Event & event) {
 
@@ -122,19 +137,140 @@ bool TestModule::process(Event & event) {
   baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
 
   if(is_mc){ /// apply for MC only
-    // to reweight MC
-//    cout << "w/o mc weight = " << event.weight << endl;
     const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
     baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
-    event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting() * mcweight.getEvReweighting();
-  //  cout << "with mc weight = " << event.weight << endl;
+// event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting() * mcweight.getEvReweighting();
+    event.weight = event.weight * genInfo->weight * mcweight.getEvReweighting();
 
-  // doing the matching from GEN to RECO
+    //! matching from GEN to RECO
     if(!jetcorr.JetMatching()) return false;
 
-    // JER smearing
+    //! JER smearing
     if(!jetcorr.JetResolutionSmearer()) return false;
   }
+
+  float probejet_eta = -99.;
+  float probejet_pt = 0;
+  float probejet_phi = -99.;
+  float probejet_ptRaw = -99.;
+
+  float barrel_eta = -99.;
+  float barrel_pt = 0;
+  float barrel_phi = -99.;
+  float barrel_ptRaw = -99.;
+
+  float rel_r = -99.;
+  float mpf_r = -99.;
+  float asymmetry = -99.;
+
+  TVector2 pt, met;
+  TVector2* MET = new TVector2(1,1);
+  MET->SetMagPhi(eventInfo->pfMET ,eventInfo->pfMETphi);
+  met.Set(eventInfo->pfMET * cos(eventInfo->pfMETphi),eventInfo->pfMET * sin(eventInfo->pfMETphi));
+
+  int ran = rand();
+  int numb = ran % 2 + 1;
+  if ((fabs(jet1->eta)<s_eta_barr)&&(fabs(jet2->eta)<s_eta_barr)) {
+    if(numb==1){
+        probejet_eta = jet2->eta;
+        probejet_pt = jet2->pt;
+        probejet_phi = jet2->phi;
+        probejet_ptRaw = jet2->ptRaw;
+
+        barrel_eta = jet1->eta;
+        barrel_pt = jet1->pt;
+        barrel_phi = jet1->phi;
+        barrel_ptRaw = jet1->ptRaw;
+
+        asymmetry = (jet2->pt - jet1->pt)/(jet2->pt + jet1->pt);
+        rel_r = jet2->pt / jet1->pt;
+
+        pt.Set(jet1->pt * cos(jet1->phi),jet1->pt * sin(jet1->phi));
+        mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
+
+
+    }
+    if(numb==2){
+        probejet_eta = jet1->eta;
+        probejet_pt = jet1->pt;
+        probejet_phi = jet1->phi;
+        probejet_ptRaw = jet1->ptRaw;
+
+        barrel_eta = jet2->eta;
+        barrel_pt = jet2->pt;
+        barrel_phi = jet2->phi;
+        barrel_ptRaw = jet2->ptRaw;
+
+        asymmetry = (jet1->pt - jet2->pt)/(jet1->pt + jet2->pt);
+        rel_r = jet1->pt / jet2->pt;
+
+        pt.Set(jet2->pt * cos(jet2->phi),jet2->pt * sin(jet2->phi));
+        mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
+
+    }
+  } else if ((fabs(jet1->eta)<s_eta_barr)||(fabs(jet2->eta)<s_eta_barr)){
+    if(fabs(jet1->eta)<s_eta_barr){
+        probejet_eta = jet2->eta;
+        probejet_pt = jet2->pt;
+        probejet_phi = jet2->phi;
+        probejet_ptRaw = jet2->ptRaw;
+
+        barrel_eta = jet1->eta;
+        barrel_pt = jet1->pt;
+        barrel_phi = jet1->phi;
+        barrel_ptRaw = jet1->ptRaw;
+
+        asymmetry = (jet2->pt - jet1->pt)/(jet2->pt + jet1->pt);
+        rel_r = jet2->pt / jet1->pt;
+
+        pt.Set(jet1->pt * cos(jet1->phi),jet1->pt * sin(jet1->phi));
+        mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
+
+
+    }
+    else{
+        probejet_eta = jet1->eta;
+        probejet_pt = jet1->pt;
+        probejet_phi = jet1->phi;
+        probejet_ptRaw = jet1->ptRaw;
+
+        barrel_eta = jet2->eta;
+        barrel_pt = jet2->pt;
+        barrel_phi = jet2->phi;
+        barrel_ptRaw = jet2->ptRaw;
+
+        asymmetry = (jet1->pt - jet2->pt)/(jet1->pt + jet2->pt);
+        rel_r = jet1->pt / jet2->pt;
+
+        pt.Set(jet2->pt * cos(jet2->phi),jet2->pt * sin(jet2->phi));
+        mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
+    }
+
+  }
+  float pt_ave = (jet1->pt + jet2->pt)/2;
+
+  event.pt_ave = pt_ave;
+
+  event.probejet_eta    = probejet_eta;
+  event.probejet_phi    = probejet_phi;
+  event.probejet_pt     = probejet_pt;
+  event.probejet_ptRaw  = probejet_ptRaw;
+
+  event.barreljet_eta   = barrel_eta;
+  event.barreljet_phi   = barrel_phi;
+  event.barreljet_pt    = barrel_pt;
+  event.barreljet_ptRaw = barrel_ptRaw;
+
+  event.asymmetry = asymmetry;
+  event.rel_r = rel_r;
+  event.mpf_r = mpf_r;
+
+  float alpha = 0.;
+  if (njets > 2) {
+    baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
+    alpha = (2*(jet3->pt))/(jet1->pt + jet2->pt);
+  }
+  event.alpha = alpha;
 
   if(!sel.DiJet()) return false;
 
@@ -154,62 +290,50 @@ bool TestModule::process(Event & event) {
   // fill histos after dijet event selection
   h_sel->fill(event);
 
-  if(!sel.goodPVertex()) return false;
+//   if(!sel.goodPVertex()) return false;
 
 
-  if(!sel.jetIds(s_working_point_csv_threshold)) return false;
-
-  double probejet_eta = -99.;
-  double probejet_pt = -99.;
-
-  int ran = rand();
-  int numb = ran % 2 + 1;
-  if ((fabs(jet1->eta)<s_eta_barr)&&(fabs(jet2->eta)<s_eta_barr)) {
-    if(numb==1){
-        probejet_eta = jet2->eta;
-        probejet_pt = jet2->pt;
-    }
-    if(numb==2){
-        probejet_eta = jet1->eta;
-        probejet_pt = jet1->pt;
-    }
-  } else if ((fabs(jet1->eta)<s_eta_barr)||(fabs(jet2->eta)<s_eta_barr)){
-    if(fabs(jet1->eta)<s_eta_barr){
-        probejet_eta = jet2->eta;
-        probejet_pt = jet2->pt;
-    }
-    else{
-        probejet_eta = jet1->eta;
-        probejet_pt = jet1->pt;
-    }
-  }
-  double alpha = 0.;
-  if (njets > 2) {
-    baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
-        alpha = (2*(jet3->pt))/(jet1->pt + jet2->pt);
-        //cout << "alpha = "<< alpha << endl;
-  }
-  //for alpha < 0.2
-  for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
-    if ((alpha>=alpha_range[k])&&(alpha<alpha_range[k+1])) {
-        for( unsigned int j=0; j < eta_range.size()-1; ++j ){
-            if ((fabs(probejet_eta)>=eta_range[j])&&(fabs(probejet_eta)<eta_range[j+1])) {
+  //! for alpha < 0.2
+//   for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
+//     if ((alpha>=alpha_range[k])&&(alpha<alpha_range[k+1])) {
+//         for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+//             if ((fabs(probejet_eta)>=eta_range[j])&&(fabs(probejet_eta)<eta_range[j+1])) {
                 for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-                    if ((probejet_pt>=pt_range[i])&&(probejet_pt<pt_range[i+1])) {
-                        h_pt_bins[k*(eta_range.size()-1)*(pt_range.size()-1)+j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+                    if ((event.pt_ave >= pt_range[i])&&(event.pt_ave < pt_range[i+1])) {
+                        h_pt_bins[i].fill(event, ran);//j*pt_range.size()+i
+//                         h_pt_bins[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+
+//                         h_pt_bins[k*(eta_range.size()-1)*(pt_range.size()-1)+j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
                         //cout <<"eta range = "<< eta_range[j]<<" - "<< eta_range[j+1]<< "pt range = "<< pt_range[i]<<" - "<< pt_range[i+1]<<endl;
                         //cout <<"eta value = "<< fabs(probejet_eta) << " pt value = "<< probejet_pt <<endl;
                     }
                 }
-            }
-        }
+//             }
+//         }
+//     }
+//   }
+  for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
+
+  }
+  //! for alpha < 0.1
+
+  if (event.alpha < 0.1) {
+    for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+        if ((event.pt_ave >= pt_range[i])&&(event.pt_ave < pt_range[i+1])) h_pt_bins_a01[i].fill(event, ran);//j*pt_range.size()+i
+    }
+    for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+        if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins_a01[i].fill(event, ran);
     }
   }
-//   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-//     if ((fabs(probejet_eta)>=eta_range[i])&&(fabs(probejet_eta)<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
-// 
-//   }
 
+//     if ((eventInfo->runNum == 208307) || (eventInfo->runNum == 208339)|| (eventInfo->runNum == 208341)|| (eventInfo->runNum == 208351)|| (eventInfo->runNum == 208353)){
+//     if ((fabs(jet1->eta)>0.)&&(fabs(jet1->eta)<1.3)) {
+//                 cout << "1)eta <1.3: jet # 1 : pt53: "<<jet1->pt<<" pt_raw53: "<<jet1->ptRaw<<" f53=pt53/pt_raw53: "<<jet1->pt/jet1->ptRaw<<'\n';
+//                 cout << "2)eta <1.3: jet # 1 : pt53: "<<jet1->pt<<" pt_raw53: "<<jet1->ptRaw<<" f53=pt_raw53/pt53: "<<jet1->ptRaw/jet1->pt<<'\n';    }
+        cSetTree.fillTree(eventInfo->evtNum, eventInfo->runNum, pt_ave, probejet_eta, barrel_eta, probejet_phi, barrel_phi, probejet_pt, barrel_pt, jet1->pt, jet2->pt, jet1->phi, jet2->phi, jet1->eta, jet2->eta, jet1->ptRaw, jet2->ptRaw, probejet_ptRaw, barrel_ptRaw);
+
+//     }
 
   return true;
 }

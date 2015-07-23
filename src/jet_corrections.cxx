@@ -1,7 +1,7 @@
-#include "UHH2/BaconJets/include/jet_corrections.h"
+#include "UHH2/bacon/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/constants.h"
 using namespace std;
 namespace uhh2bacon {
 
@@ -9,7 +9,7 @@ JetCorrections::JetCorrections(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-  h_jets = context.declare_event_input<TClonesArray>("Jet05");
+  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
  // h_jetsout = context.declare_event_output<TClonesArray>("Jet05");
 

@@ -32,12 +32,6 @@ class Selection {
     bool goodPVertex();
     bool triggerFired(float bin1, float bin2);
 
-//     TString WP_LOOSE;
-//     TString WP_MEDIUM;
-//     TString WP_TIGHT;
-//     explicit jetIds(wp working_point);
-    bool jetIds(float csv_threshold);
-
     bool FullSelection();
 
 
