@@ -41,7 +41,7 @@ private:
 
   std::unique_ptr<Hists> h_sel, h_dijet, h_dijetadvanced, h_trigger, h_goodPV, h_jetIds, h_match;
 //   std::vector<double> eta_range, pt_range, alpha_range;
-  std::vector<JECAnalysisHists> h_pt_bins, h_noalpha_bins, h_eta_bins;
+  std::vector<JECAnalysisHists> h_pt_bins, h_noalpha_bins, h_eta_bins, h_eta_test, h_eta_dijetadvanced, h_eta_alpha, h_eta_trigger, h_mikko, h_mikko_barrel;
 
   Selection sel;
   JetCorrections jetcorr;
@@ -58,7 +58,7 @@ TestModule::TestModule(Context & ctx) :
 {
   auto dataset_type = ctx.get("dataset_type");
   is_mc = dataset_type  == "MC";
-  h_jets = ctx.declare_event_input<TClonesArray>("nt_AK4PFCalo");
+  h_jets = ctx.declare_event_input<TClonesArray>("AK4PFCHS");
   h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
   if(is_mc){ /// apply for MC only
     h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
@@ -94,6 +94,28 @@ TestModule::TestModule(Context & ctx) :
     sprintf (alpha_buffer, "%5.3f", alpha_range[k]);
     alpha_range_name.push_back(alpha_buffer);
   }
+  
+  std::vector<std::string> eta_range_test_name;
+  for( unsigned int j=0; j < eta_range_test.size(); ++j ){
+    char eta_buffer_test [50];
+    sprintf (eta_buffer_test, "%5.3f", eta_range_test[j]);
+    eta_range_test_name.push_back(eta_buffer_test);
+  }
+  
+  std::vector<std::string> eta_range_mikko_name;
+  for( unsigned int j=0; j < eta_range_mikko.size(); ++j ){
+    char eta_buffer_mikko [50];
+    sprintf (eta_buffer_mikko, "%5.3f", eta_range_mikko[j]);
+    eta_range_mikko_name.push_back(eta_buffer_mikko);
+  }
+
+  std::vector<std::string> eta_range_mikko_barrel_name;
+  for( unsigned int j=0; j < eta_range_mikko_barrel.size(); ++j ){
+    char eta_buffer_mikko_barrel [50];
+    sprintf (eta_buffer_mikko_barrel, "%5.3f", eta_range_mikko_barrel[j]);
+    eta_range_mikko_barrel_name.push_back(eta_buffer_mikko_barrel);
+  }
+
   //cout << "alpha range "<<alpha_range_name[3]<<"eta range "<<eta_range_name[3]<< "pt range "<<pt_range_name[3]<< endl;
 
   // histos for the kFSR extrapolations
@@ -110,14 +132,44 @@ TestModule::TestModule(Context & ctx) :
       h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("alpha_"+alpha_range_name[k]+"_"+alpha_range_name[k+1]+"/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1])));
     }
   }
+  
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    h_eta_test.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_test_name[j]+"_"+eta_range_test_name[j+1])));
+  }
+  /*
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    h_eta_dijetadvanced.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_test_name[j]+"_"+eta_range_test_name[j+1])));
+  }
 
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    h_eta_alpha.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_test_name[j]+"_"+eta_range_test_name[j+1])));
+  }
+
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    h_eta_trigger.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_test_name[j]+"_"+eta_range_test_name[j+1])));
+  }
+  */
+
+  
   // histos for the pT extrapolations
   for( unsigned int j=0; j < eta_range.size()-1; ++j ){
     for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-      h_noalpha_bins.push_back(JECAnalysisHists(ctx,(std::string)("/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+      h_noalpha_bins.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
     }
   }
 
+  // histos for https://github.com/miquork/jecsys
+  for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+      h_mikko.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    }
+  }
+
+  for( unsigned int j=0; j < eta_range_mikko_barrel.size()-1; ++j ){
+    for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+      h_mikko_barrel.push_back(JECAnalysisHists(ctx,(std::string)("eta_"+eta_range_mikko_barrel_name[j]+"_"+eta_range_mikko_barrel_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    }
+  }
 
 }
 
@@ -160,16 +212,6 @@ bool TestModule::process(Event & event) {
   h_dijetadvanced->fill(event);
   h_match->fill(event);
 
-
-  if(!sel.Trigger()) return false;
-  h_trigger->fill(event);
-
-  if(!sel.goodPVertex()) return false;
-  h_goodPV->fill(event);
-
-  //if(!sel.jetIds(s_working_point_csv_threshold)) return false;
-  h_jetIds->fill(event);
-
   double probejet_eta = -99.;
   double probejet_pt = -99.;
 
@@ -194,6 +236,38 @@ bool TestModule::process(Event & event) {
         probejet_pt = jet1->pt;
     }
   }
+  /*
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    if ((fabs(probejet_eta)>=eta_range_test[j])&&(fabs(probejet_eta)<eta_range_test[j+1])) {
+      h_eta_dijetadvanced[j].fill(event);
+    }
+  }
+  */
+  /*
+  if(!sel.AlphaCut()){
+    for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+      if ((fabs(probejet_eta)>=eta_range_test[j])&&(fabs(probejet_eta)<eta_range_test[j+1])) {
+	h_eta_alpha[j].fill(event);
+      }
+    }
+  }
+  */
+  //if(!sel.Trigger()) return false;
+  h_trigger->fill(event);
+  /*
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    if ((fabs(probejet_eta)>=eta_range_test[j])&&(fabs(probejet_eta)<eta_range_test[j+1])) {
+      h_eta_trigger[j].fill(event);
+    }
+  }
+  */
+  if(!sel.goodPVertex()) return false;
+  h_goodPV->fill(event);
+
+  //if(!sel.jetIds(s_working_point_csv_threshold)) return false;
+  h_jetIds->fill(event);
+
+
   double alpha = 0.;
   if (njets > 2) {
     baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
@@ -245,6 +319,13 @@ bool TestModule::process(Event & event) {
   if(!sel.AlphaCut()) return false;
   h_sel->fill(event);
 
+  
+  for( unsigned int j=0; j < eta_range_test.size()-1; ++j ){
+    if ((fabs(probejet_eta)>=eta_range_test[j])&&(fabs(probejet_eta)<eta_range_test[j+1])) {
+      h_eta_test[j].fill(event, ran);
+    }
+  }
+  
   // fill histos for the pT extrapolations
   // alpha<0.2 needs to be required!
   for( unsigned int j=0; j < eta_range.size()-1; ++j ){
@@ -252,6 +333,27 @@ bool TestModule::process(Event & event) {
       for( unsigned int i=0; i < pt_range.size()-1; ++i ){
 	if ((probejet_pt>=pt_range[i])&&(probejet_pt<pt_range[i+1])) {
 	  h_noalpha_bins[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+	}
+      }
+    }
+  }
+
+  // fill mikko histos
+  for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    if ((fabs(probejet_eta)>=eta_range_mikko[j])&&(fabs(probejet_eta)<eta_range_mikko[j+1])) {
+      for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+	if ((0.5*(jet1->pt+jet2->pt)>=pt_range[i])&&(0.5*(jet1->pt+jet2->pt)<pt_range[i+1])) {
+	  h_mikko[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+	}
+      }
+    }
+  }
+
+ for( unsigned int j=0; j < eta_range_mikko_barrel.size()-1; ++j ){
+    if ((fabs(probejet_eta)>=eta_range_mikko_barrel[j])&&(fabs(probejet_eta)<eta_range_mikko_barrel[j+1])) {
+      for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+	if ((0.5*(jet1->pt+jet2->pt)>=pt_range[i])&&(0.5*(jet1->pt+jet2->pt)<pt_range[i+1])) {
+	  h_mikko_barrel[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
 	}
       }
     }

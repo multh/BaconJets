@@ -5,6 +5,9 @@
 static std::vector<double>   eta_range  = {0, 0.087, 0.174, 0.261, 0.348, 0.435, 0.522, 0.609, 0.696, 0.783, 0.879, 0.957, 1.044, 1.131, 1.218, 1.305, 1.392, 1.479, 1.566, 1.653, 1.830, 1.930, 2.043, 2.172, 2.322, 2.500, 2.853, 2.964, 3.139, 5.232};
 static std::vector<double>   pt_range   = {66, 107, 191, 240, 306, 379, 468, 900};
 static std::vector<double>   alpha_range= {0.00, 0.10, 0.20, 0.30, 0.40};
+static std::vector<double>   eta_range_test  = {0, 1.3, 2.5, 3.0, 5.0};
+static std::vector<double>   eta_range_mikko  = {0, 1.3, 1.9, 2.5, 3.0, 3.2, 5.0};
+static std::vector<double>   eta_range_mikko_barrel  = {0, 0.8, 1.3};
 
 /** \brief Dijet event selection **/
 // barrel region (|eta| < 1.3)
@@ -14,7 +17,7 @@ static float s_delta_phi = 2.7;
 // cut on the asymmetry for events with two jets  |(j2->pt - j1->pt /(j2->pt + j1->pt)| < 0.70
 static float s_asymm = 0.7;
 // relative third jet fraction pt_rel = 2*j3_pt/(j1_pt + j2_pt) < 0.2
-static float s_pt_rel = 0.2;
+static float s_pt_rel = 0.30;
 
 /** \brief good Primary Vertex reconstruction **/
 // more than four tracks
@@ -38,13 +41,15 @@ static float s_working_point_csv_threshold = s_WP_MEDIUM;
 
 /** \brief The trigger thresholds of pt_ave **/
 /// Used for the 2012 data
-static float s_Pt_Ave40_cut   = 66; //Hennings: 62
-static float s_Pt_Ave80_cut   = 107;//Hennings: 107
-static float s_Pt_Ave140_cut  = 191;//Hennings: 175
-static float s_Pt_Ave200_cut  = 240;//Hennings: 242
-static float s_Pt_Ave260_cut  = 306;//Hennings: 310
-static float s_Pt_Ave320_cut  = 379;//Hennings: 379
-static float s_Pt_Ave400_cut  = 468;//Hennings: 467
+static float s_Pt_Ave40_cut   = 43;//66; //Hennings: 62
+static float s_Pt_Ave60_cut   = 80;//66;
+static float s_Pt_Ave80_cut   = 88;//107;//Hennings: 107
+static float s_Pt_Ave140_cut  = 135;//191;//Hennings: 175
+static float s_Pt_Ave200_cut  = 223;//240;//Hennings: 242
+static float s_Pt_Ave260_cut  = 290;//306;//Hennings: 310
+static float s_Pt_Ave320_cut  = 365;//379;//Hennings: 379
+static float s_Pt_Ave400_cut  = 448;//468;//Hennings: 467
+static float s_Pt_Ave500_cut  = 561;//468;//Hennings: 467
 
 
 /** \brief Jet Resolution Smearering **/

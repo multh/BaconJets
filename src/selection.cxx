@@ -9,7 +9,7 @@ Selection::Selection(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-  h_jets = context.declare_event_input<TClonesArray>("nt_AK4PFCalo");
+  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
   h_pv = context.declare_event_input<TClonesArray>("PV");
 
@@ -42,14 +42,38 @@ bool Selection::Trigger()
     double avePt = (jet1->pt + jet2->pt)/2;
 
     bool trigger40fired = false;
+    bool trigger60fired = false;
     bool trigger80fired = false;
     bool trigger140fired = false;
     bool trigger200fired = false;
     bool trigger260fired = false;
     bool trigger320fired = false;
     bool trigger400fired = false;
+    bool trigger500fired = false;
 
 
+    if(eventInfo->triggerBits[8]==1)  trigger40fired = true;
+    if(eventInfo->triggerBits[11]==1) trigger60fired = true;
+    if(eventInfo->triggerBits[13]==1) trigger80fired = true;
+    if(eventInfo->triggerBits[1]==1)  trigger140fired = true;
+    if(eventInfo->triggerBits[3]==1)  trigger200fired = true;
+    if(eventInfo->triggerBits[5]==1)  trigger260fired = true;
+    if(eventInfo->triggerBits[7]==1)  trigger320fired = true;
+    if(eventInfo->triggerBits[9]==1)  trigger400fired = true;
+    if(eventInfo->triggerBits[10]==1) trigger500fired = true;
+
+    if (avePt < s_Pt_Ave40_cut) return false;
+    if (avePt >= s_Pt_Ave40_cut  && avePt < s_Pt_Ave60_cut  && trigger40fired) return true;
+    if (avePt >= s_Pt_Ave60_cut  && avePt < s_Pt_Ave80_cut  && trigger60fired) return true;
+    if (avePt >= s_Pt_Ave80_cut  && avePt < s_Pt_Ave140_cut && trigger80fired) return true;
+    if (avePt >= s_Pt_Ave140_cut && avePt < s_Pt_Ave200_cut && trigger140fired) return true;
+    if (avePt >= s_Pt_Ave200_cut && avePt < s_Pt_Ave260_cut && trigger200fired) return true;
+    if (avePt >= s_Pt_Ave260_cut && avePt < s_Pt_Ave320_cut && trigger260fired) return true;
+    if (avePt >= s_Pt_Ave320_cut && avePt < s_Pt_Ave400_cut && trigger320fired) return true;
+    if (avePt >= s_Pt_Ave400_cut && avePt < s_Pt_Ave500_cut && trigger400fired) return true;
+    if (avePt >= s_Pt_Ave500_cut && trigger500fired) return true;
+
+    /*
     if(eventInfo->triggerBits[0]==1)  trigger40fired = true;
     if(eventInfo->triggerBits[1]==1)  trigger80fired = true;
     if(eventInfo->triggerBits[2]==1)  trigger140fired = true;
@@ -67,6 +91,7 @@ bool Selection::Trigger()
     if (avePt >= s_Pt_Ave260_cut && avePt < s_Pt_Ave320_cut && trigger260fired) return true;
     if (avePt >= s_Pt_Ave320_cut && avePt < s_Pt_Ave400_cut && trigger320fired) return true;
     if (avePt >= s_Pt_Ave400_cut && trigger400fired) return true;
+    */
 
  return false;
 }

@@ -6,6 +6,8 @@
 	  <!ENTITY QCDPt15to3000_2012data SYSTEM "../datasets/QCDPt15to3000PU_2012DATA.xml">
 	  <!ENTITY jmeak4cluster SYSTEM "../datasets/jme_ak4cluster.xml">
 	  <!ENTITY jmeak4calo SYSTEM "../datasets/jme_ak4calo.xml">
+	  <!ENTITY DATA_13TeV_dataJetHTRun2015B SYSTEM "../datasets/DATA_13TeV_dataJetHTRun2015B.xml">
+	  <!ENTITY QCD_13_mcflatpythia8 SYSTEM "../datasets/MC_QCD_mcflatpythia8.xml">
 ]>
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -13,8 +15,8 @@
     <Library Name="libSUHH2BaconJets"/>
     <Package Name="SUHH2BaconJets.par" />
 
-    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_test" TargetLumi="1" >  
-<!--    <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="2" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_new2" TargetLumi="1" >  -->
+<!--    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_mikko" TargetLumi="1" >  -->
+    <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="2" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/output/" PostFix="_mikkoa30" TargetLumi="1" >  
 
         <!--     to run on all samples -->
 <!--
@@ -40,6 +42,25 @@
 -->
 
 
+
+
+        <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_13TeV_dataJetHTRun2015B" Cacheable="False">
+            &DATA_13TeV_dataJetHTRun2015B;
+            <InputTree Name="Events" />
+        </InputData> 
+
+
+        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="QCD_13_mcflatpythia8" Cacheable="True">
+            &QCD_13_mcflatpythia8;
+            <InputTree Name="Events" />
+        </InputData> 
+
+
+
+
+
+
+
 <!--
         <InputData Lumi="1.0" NEventsMax="-1" Type="DATA" Version="DATA" Cacheable="True">
             &QCDPt15to3000_2012data;
@@ -63,11 +84,13 @@
             <InputTree Name="Events" />
         </InputData> 
 -->
+
+<!--
         <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="jme4calo" Cacheable="True">
             &jmeak4calo;
             <InputTree Name="Events" />
         </InputData> 
-
+-->
 
 
 

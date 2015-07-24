@@ -18,7 +18,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     TH1::SetDefaultSumw2();
 
     book<TH1F>("N_jets", "N_{jets}", 20, -0.5, 19.5);
-    book<TH1F>("pt","p_{T} all jets",100,0,1500);
+    book<TH1F>("pt","p_{T} all jets",100,0,200);
     book<TH1F>("eta","#eta all jets",100,-5,5);
     book<TH1F>("phi","#phi all jets",50,-M_PI,M_PI);
     book<TH1F>("MET","MET all jets",400,0,400);
@@ -36,6 +36,10 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
 
     book<TH1F>("pt_barrel","p_{T} barrel jet",100,0,1500);
     book<TH1F>("pt_probe","p_{T} probe jet",100,0,1500);
+
+    book<TH1F>("eta_barrel","#eta barrel jet",100,-5,5);
+    book<TH1F>("eta_probe","#eta probe jet",100,-5,5);
+
     book<TH1F>("pt_ave","p_{T} ave jet",100,0,1500);
     book<TH1F>("pt_rel","p_{T} jet 3 / #overline{P}_{T}", 50, 0, 1);
 
@@ -87,8 +91,15 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("pt_ave_306_379","p_{T} ave jet pt_ave_306_379",100,0,1500);
     book<TH1F>("pt_ave_379_468","p_{T} ave jet pt_ave_379_468",100,0,1500);
     book<TH1F>("pt_ave_468","p_{T} ave jet pt_ave_468",100,0,1500);
+
+    book<TH2F>("Rrel_vs_Npv","Rrel vs. Npv ", 40, 0, 40 ,100, 0.0,3.0); 
+    book<TH2F>("Rrel_vs_Npv_ptRaw","Rrel vs. Npv ptRaw", 40, 0, 40 ,100, 0.0,3.0); 
+    //TProfile * prof_Rrel_vs_Npv  = new TProfile("prof_Rrel_vs_Npv","Rrel vs. Npv",100, 0, 50, 0.5, 1.5); 
+
+
+
 /*    uhh2::Event::Handle<TClonesArray> h_pv;*/
-    h_jets = ctx.get_handle<TClonesArray>("nt_AK4PFCalo");
+    h_jets = ctx.get_handle<TClonesArray>("AK4PFCHS");
     h_eventInfo = ctx.get_handle<baconhep::TEventInfo>("Info");
     h_pv = ctx.get_handle<TClonesArray>("PV");
 
@@ -204,9 +215,13 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
                 hist("mpf")->Fill(1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py()), weight);
                 hist("pt_barrel")->Fill(jet1->pt, weight);
                 hist("pt_probe")->Fill(jet2->pt, weight);
+		hist("eta_barrel")->Fill(jet1->eta, weight);
+		hist("eta_probe")->Fill(jet2->eta, weight);
                 hist("asym")->Fill(((jet2->pt - jet1->pt)/(jet2->pt + jet1->pt)), weight);
                 hist("MPF")->Fill(1 + ((eventInfo->pfMET * jet1->pt)/pow(jet1->pt,2)), weight);
                 hist("r_rel")->Fill(jet2->pt / jet1->pt, weight);
+		hist("Rrel_vs_Npv")->Fill(nvertices,jet2->pt / jet1->pt); 
+		hist("Rrel_vs_Npv_ptRaw")->Fill(nvertices,jet2->ptRaw / jet1->ptRaw); 
 
             }
         } if(numb==2){
@@ -219,9 +234,13 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
                 hist("mpf")->Fill(1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py()), weight);
                 hist("pt_barrel")->Fill(jet2->pt, weight);
                 hist("pt_probe")->Fill(jet1->pt, weight);
+		hist("eta_barrel")->Fill(jet2->eta, weight);
+		hist("eta_probe")->Fill(jet1->eta, weight);
                 hist("asym")->Fill(((jet1->pt - jet2->pt)/(jet1->pt + jet2->pt)), weight);
                 hist("MPF")->Fill(1 + ((eventInfo->pfMET * jet2->pt)/pow(jet2->pt,2)), weight);
                 hist("r_rel")->Fill(jet1->pt / jet2->pt, weight);
+		hist("Rrel_vs_Npv")->Fill(nvertices,jet1->pt / jet2->pt); 
+		hist("Rrel_vs_Npv_ptRaw")->Fill(nvertices,jet1->ptRaw / jet2->ptRaw); 
 
             }
         }
@@ -235,9 +254,14 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
             hist("mpf")->Fill(1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py()), weight);
             hist("pt_barrel")->Fill(jet1->pt, weight);
             hist("pt_probe")->Fill(jet2->pt, weight);
+	    hist("eta_barrel")->Fill(jet1->eta, weight);
+	    hist("eta_probe")->Fill(jet2->eta, weight);
             hist("asym")->Fill(((jet2->pt - jet1->pt)/(jet2->pt + jet1->pt)), weight);
             hist("MPF")->Fill(1 + ((eventInfo->pfMET * jet1->pt)/pow(jet1->pt,2)), weight);
             hist("r_rel")->Fill(jet2->pt / jet1->pt, weight);
+	    hist("Rrel_vs_Npv")->Fill(nvertices,jet2->pt / jet1->pt); 
+	    hist("Rrel_vs_Npv_ptRaw")->Fill(nvertices,jet2->ptRaw / jet1->ptRaw); 
+
 
         } if(fabs(jet2->eta) < s_eta_barr){
             barreljet += jet2->pt;
@@ -248,9 +272,13 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
             hist("mpf")->Fill(1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py()), weight);
             hist("pt_barrel")->Fill(jet2->pt, weight);
             hist("pt_probe")->Fill(jet1->pt, weight);
+	    hist("eta_barrel")->Fill(jet2->eta, weight);
+	    hist("eta_probe")->Fill(jet1->eta, weight);
             hist("asym")->Fill(((jet1->pt - jet2->pt)/(jet1->pt + jet2->pt)), weight);
             hist("MPF")->Fill(1 + ((eventInfo->pfMET * jet2->pt)/pow(jet2->pt,2)), weight);
             hist("r_rel")->Fill(jet1->pt / jet2->pt, weight);
+	    hist("Rrel_vs_Npv")->Fill(nvertices,jet1->pt / jet2->pt); 
+	    hist("Rrel_vs_Npv_ptRaw")->Fill(nvertices,jet1->ptRaw / jet2->ptRaw); 
 
         }
     }
