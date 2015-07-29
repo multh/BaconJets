@@ -1,5 +1,5 @@
 #include "UHH2/BaconJets/include/JECAnalysisHists.h"
-#include "UHH2/bacon/include/constants.h"
+#include "UHH2/BaconJets/include/constants.h"
 #include "UHH2/core/include/Event.h"
 #include "UHH2/core/include/Jet.h"
 
@@ -7,6 +7,9 @@
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
 #include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
 #include "UHH2/bacondataformats/interface/TVertex.hh"
+
+
+
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TProfile.h"
@@ -114,9 +117,10 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         hist("eta")->Fill(jets->eta, weight);
         hist("phi")->Fill(jets->phi, weight);
         hist("MET")->Fill(eventInfo->pfMET, weight);
-        hist("nPu")->Fill(eventInfo->nPUmean, weight);
+        hist("nPu")->Fill(eventInfo->nPU, weight);
         hist("weight_histo")->Fill(weight, 1);
     }
+       // hist("nPu")->Fill(ev.nPU, weight);//for data only
 
     float nPrVer = 0;
     Int_t nvertices = pvs.GetEntries();

@@ -6,17 +6,18 @@
 #include "UHH2/core/include/Event.h"
 #include "../include/JECAnalysisHists.h"
 
-#include "UHH2/bacon/include/selection.h"
-#include "UHH2/bacon/include/jet_corrections.h"
-#include "UHH2/bacon/include/mc_weight.h"
-#include "UHH2/bacon/include/constants.h"
-#include "UHH2/bacon/include/TSetTree.h"
+#include "UHH2/BaconJets/include/selection.h"
+#include "UHH2/BaconJets/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/mc_weight.h"
+#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/BaconJets/include/TSetTree.h"
 
 #include "UHH2/bacondataformats/interface/TGenEventInfo.hh"
 #include "UHH2/bacondataformats/interface/TJet.hh"
 #include "UHH2/bacondataformats/interface/TEventInfo.hh"
 #include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
 
+#include "UHH2/BaconJets/include/pileup_data.h"
 #include "TClonesArray.h"
 #include "TString.h"
 
@@ -52,6 +53,7 @@ private:
   bool is_mc;
 
   TSetTree cSetTree;
+  PileupData  pileupData;
 
 };
 
@@ -60,6 +62,7 @@ TestModule::TestModule(Context & ctx) :
   sel(ctx),
   jetcorr(ctx),
   mcweight(ctx),
+  pileupData(ctx),
   cSetTree()
 {
   auto dataset_type = ctx.get("dataset_type");
@@ -120,6 +123,8 @@ TestModule::TestModule(Context & ctx) :
 
 TestModule::~TestModule() {
     cSetTree.general();
+//      cPuData.general();
+
 }
 
 bool TestModule::process(Event & event) {
@@ -127,6 +132,7 @@ bool TestModule::process(Event & event) {
   sel.SetEvent(event);
   jetcorr.SetEvent(event);
   mcweight.SetEvent(event);
+  pileupData.SetEvent(event);
 
   const TClonesArray & js = event.get(h_jets);
   baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
@@ -140,7 +146,7 @@ bool TestModule::process(Event & event) {
     const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
     baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
 // event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting() * mcweight.getEvReweighting();
-    event.weight = event.weight * genInfo->weight * mcweight.getEvReweighting();
+//     event.weight = event.weight * genInfo->weight * mcweight.getEvReweighting();
 
     //! matching from GEN to RECO
     if(!jetcorr.JetMatching()) return false;
@@ -264,7 +270,10 @@ bool TestModule::process(Event & event) {
   event.asymmetry = asymmetry;
   event.rel_r = rel_r;
   event.mpf_r = mpf_r;
-
+  if(!is_mc){
+    double nPu = pileupData.getDataPU(eventInfo->runNum,eventInfo->lumiSec);
+    event.nPU = nPu;
+  }
   float alpha = 0.;
   if (njets > 2) {
     baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
@@ -285,7 +294,7 @@ bool TestModule::process(Event & event) {
   h_match->fill(event);
 
 
-  if(!sel.Trigger()) return false;
+//   if(!sel.Trigger()) return false;
 
   // fill histos after dijet event selection
   h_sel->fill(event);
@@ -326,7 +335,9 @@ bool TestModule::process(Event & event) {
         if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins_a01[i].fill(event, ran);
     }
   }
+//         cout << "run : "<<eventInfo->runNum<< " lumi sec : "<<eventInfo->lumiSec<<endl;
 
+//          if (nPu != 0) cout << "in MAIN: run: "<<eventInfo->runNum<<" ls: "<< eventInfo->lumiSec<<" nPU : "<<  nPu<< endl;
 //     if ((eventInfo->runNum == 208307) || (eventInfo->runNum == 208339)|| (eventInfo->runNum == 208341)|| (eventInfo->runNum == 208351)|| (eventInfo->runNum == 208353)){
 //     if ((fabs(jet1->eta)>0.)&&(fabs(jet1->eta)<1.3)) {
 //                 cout << "1)eta <1.3: jet # 1 : pt53: "<<jet1->pt<<" pt_raw53: "<<jet1->ptRaw<<" f53=pt53/pt_raw53: "<<jet1->pt/jet1->ptRaw<<'\n';
