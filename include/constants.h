@@ -7,7 +7,8 @@
 // static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
 
 static std::vector<double>   eta_range  = {0, 1.3, 2.5, 3.0, 5.0};
-static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
+static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 453, 558};
+// static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
 // static std::vector<double>   pt_range   = {57, 80, 100, 166, 231, 290, 365, 478, 556};
 
 static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};

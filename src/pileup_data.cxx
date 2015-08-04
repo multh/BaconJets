@@ -14,8 +14,8 @@
 #include<TVector3.h>
 #include <vector>
 
-#include "UHH2/BaconJets/include/pileup_data.h"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/pileup_data.h"
+#include "UHH2/bacon/include/constants.h"
 #include "UHH2/bacondataformats/interface/TJet.hh"
 using namespace std;
 
@@ -33,7 +33,7 @@ PileupData::PileupData(uhh2::Context & ctx) :
 {
 
   string line;
-  ifstream file("pileup_low_new_json.txt");
+  ifstream file("pileup_new_json_low_pu.txt");
 
   if (file.is_open()){
 //     cout << "ok" << endl;

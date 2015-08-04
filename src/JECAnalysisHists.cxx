@@ -1,5 +1,5 @@
 #include "UHH2/BaconJets/include/JECAnalysisHists.h"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/constants.h"
 #include "UHH2/core/include/Event.h"
 #include "UHH2/core/include/Jet.h"
 
@@ -117,10 +117,10 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         hist("eta")->Fill(jets->eta, weight);
         hist("phi")->Fill(jets->phi, weight);
         hist("MET")->Fill(eventInfo->pfMET, weight);
-        hist("nPu")->Fill(eventInfo->nPU, weight);
+       // hist("nPu")->Fill(eventInfo->nPU, weight);
         hist("weight_histo")->Fill(weight, 1);
     }
-       // hist("nPu")->Fill(ev.nPU, weight);//for data only
+        hist("nPu")->Fill(ev.nPU, weight);//for data only
 
     float nPrVer = 0;
     Int_t nvertices = pvs.GetEntries();
@@ -140,17 +140,17 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     hist("N_PV_sel")->Fill(nPrVer, weight);
 
     baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
-    hist("pt_1")->Fill(jet1->pt, weight);
+    hist("pt_1")->Fill(ev.jet1_pt, weight);
     hist("eta_1")->Fill(jet1->eta, weight);
 
     baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
-    hist("pt_2")->Fill(jet2->pt, weight);
+    hist("pt_2")->Fill(ev.jet2_pt, weight);
     hist("eta_2")->Fill(jet2->eta, weight);
 
 
-    hist("pt_ave")      ->Fill(ev.pt_ave, weight);
-    hist("ptRaw_barrel")   ->Fill(ev.barreljet_ptRaw, weight);
-    hist("ptRaw_probe")    ->Fill(ev.probejet_ptRaw , weight);
+    hist("pt_ave")          ->Fill(ev.pt_ave, weight);
+    hist("ptRaw_barrel")    ->Fill(ev.barreljet_ptRaw, weight);
+    hist("ptRaw_probe")     ->Fill(ev.probejet_ptRaw , weight);
     hist("pt_barrel")   ->Fill(ev.barreljet_pt, weight);
     hist("pt_probe")    ->Fill(ev.probejet_pt , weight);
     hist("eta_barrel")  ->Fill(ev.barreljet_eta, weight);
@@ -185,35 +185,45 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     if(eventInfo->triggerBits[11]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
     if(eventInfo->triggerBits[13]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
 
+
+//     TString FileNameRun2HF[6] = {"HLT_DiPFJetAve100_HFJEC","HLT_DiPFJetAve160_HFJEC", "HLT_DiPFJetAve220_HFJEC", "HLT_DiPFJetAve300_HFJEC","HLT_DiPFJetAve60_HFJEC",  "HLT_DiPFJetAve80_HFJEC"};
+//     if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HF[0])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HF[1])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HF[2])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HF[3])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[12]==1) hist(FileNameRun2HF[4])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[14]==1) hist(FileNameRun2HF[5])->Fill(ev.pt_ave, weight);
+
+
     TVector2 pt, met;
     if(fabs(jet1->eta) < s_eta_barr){
-        pt.Set(jet1->pt * cos(jet1->phi),jet1->pt * sin(jet1->phi));
-        hist("generic_asym")->Fill((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt), weight);
+        pt.Set(ev.jet1_pt * cos(jet1->phi),ev.jet1_pt * sin(jet1->phi));
+        hist("generic_asym")->Fill((ev.jet2_pt - ev.jet1_pt) / (ev.jet2_pt + ev.jet1_pt), weight);
         //j(E_{jet}) = 1 + \frac{ {E^{\gamma}_{T}} \cdot { \slashed{E}_{T} } } { (E^{\gamma}_{T})^{2} } 
         hist("generic_mpf")->Fill(1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py()), weight);
-        hist("generic_r_rel")->Fill(jet2->pt / jet1->pt, weight);
-        hist("Rrel_vs_Npv")->Fill(nvertices,jet2->pt / jet1->pt);
-//         hist("prof_Rrel_vs_Npv")->Fill(nvertices,jet2->pt / jet1->pt);
+        hist("generic_r_rel")->Fill(ev.jet2_pt / ev.jet1_pt, weight);
+        hist("Rrel_vs_Npv")->Fill(nvertices,ev.jet2_pt / ev.jet1_pt);
+//         hist("prof_Rrel_vs_Npv")->Fill(nvertices,ev.jet2_pt / ev.jet1_pt);
 
     }
     if(fabs(jet2->eta) < s_eta_barr){
-        pt.Set(jet2->pt * cos(jet2->phi),jet2->pt * sin(jet2->phi));
-        hist("generic_asym")->Fill((jet1->pt - jet2->pt) / (jet2->pt + jet1->pt), weight);
+        pt.Set(ev.jet2_pt * cos(jet2->phi),ev.jet2_pt * sin(jet2->phi));
+        hist("generic_asym")->Fill((ev.jet1_pt - ev.jet2_pt) / (ev.jet2_pt + ev.jet1_pt), weight);
         //j(E_{jet}) = 1 + \frac{ {E^{\gamma}_{T}} \cdot { \slashed{E}_{T} } } { (E^{\gamma}_{T})^{2} }
         hist("generic_mpf")->Fill(1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py()), weight);
-        hist("generic_r_rel")->Fill(jet1->pt / jet2->pt, weight);
-        hist("Rrel_vs_Npv")->Fill(nvertices,jet1->pt / jet2->pt);
-//         hist("prof_Rrel_vs_Npv")->Fill(nvertices,jet1->pt / jet2->pt);
+        hist("generic_r_rel")->Fill(ev.jet1_pt / ev.jet2_pt, weight);
+        hist("Rrel_vs_Npv")->Fill(nvertices,ev.jet1_pt / ev.jet2_pt);
+//         hist("prof_Rrel_vs_Npv")->Fill(nvertices,ev.jet1_pt / ev.jet2_pt);
 
     }
 
     baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
     if (njets > 2){
-        hist("pt_3")->Fill(jet3->pt, weight);
+        hist("pt_3")->Fill(ev.jet3_pt, weight);
         hist("eta_3")->Fill(jet3->eta, weight);
-        hist("pt_rel")->Fill(jet3->pt/(0.5*(ev.barreljet_pt + ev.probejet_pt )),weight);
-        hist("generic_pt_rel")->Fill(jet3->pt/(0.5*(jet1->pt + jet2->pt)),weight);
-        hist("ptrel_vs_deltaphi")->Fill(jet3->pt/(0.5*(ev.barreljet_pt + ev.probejet_pt)),deltaPhi);
+        hist("pt_rel")->Fill(ev.jet3_pt/(0.5*(ev.barreljet_pt + ev.probejet_pt )),weight);
+        hist("generic_pt_rel")->Fill(ev.jet3_pt/(0.5*(ev.jet1_pt + ev.jet2_pt)),weight);
+        hist("ptrel_vs_deltaphi")->Fill(ev.jet3_pt/(0.5*(ev.barreljet_pt + ev.probejet_pt)),deltaPhi);
     }
 }
 JECAnalysisHists::~JECAnalysisHists(){}

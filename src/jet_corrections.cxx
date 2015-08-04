@@ -1,7 +1,7 @@
-#include "UHH2/BaconJets/include/jet_corrections.h"
+#include "UHH2/bacon/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
-#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/bacon/include/constants.h"
 using namespace std;
 namespace uhh2bacon {
 
@@ -41,8 +41,10 @@ bool JetCorrections::JetMatching()
   baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
   baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
 
-  double delra_R_jet1 = pow(pow(jet1->genphi - jet1->phi,2) + pow(jet1->geneta - jet1->eta,2),0.5);
-  double delra_R_jet2 = pow(pow(jet2->genphi - jet2->phi,2) + pow(jet2->geneta - jet2->eta,2),0.5);
+//   double delra_R_jet1 = pow(pow(jet1->genphi - jet1->phi,2) + pow(jet1->geneta - jet1->eta,2),0.5);
+//   double delra_R_jet2 = pow(pow(jet2->genphi - jet2->phi,2) + pow(jet2->geneta - jet2->eta,2),0.5);
+  double delra_R_jet1 = pow(pow(TVector2::Phi_mpi_pi(jet1->genphi - jet1->phi),2) + pow(jet1->geneta - jet1->eta,2),0.5);
+  double delra_R_jet2 = pow(pow(TVector2::Phi_mpi_pi(jet2->genphi - jet2->phi),2) + pow(jet2->geneta - jet2->eta,2),0.5);
 
   if ((delra_R_jet1 > s_delta_R) || (delra_R_jet2 > s_delta_R)) return false;
   //std::cout << " runNum: "<< eventInfo->runNum<< " evtNum: "<< eventInfo->evtNum <<" delra_R_jet1 = "<< delra_R_jet1 << std::endl;
