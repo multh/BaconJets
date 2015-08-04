@@ -27,7 +27,7 @@ void Selection::SetEvent(uhh2::Event& evt)
 }
 
 
-bool Selection::Trigger()
+bool Selection::Trigger(uhh2::Event& evt)
 {
     assert(event);
 
@@ -39,10 +39,10 @@ bool Selection::Trigger()
     baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
     assert(eventInfo);
 
-    baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
-     baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
-
-    double avePt = (jet1->pt + jet2->pt)/2;
+//     baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
+//      baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
+// 
+//     double avePt = (evt.jet1_pt + evt.jet2_pt)/2;
 
     bool trigger40fired = false;
     bool trigger60fired = false;
@@ -75,16 +75,16 @@ bool Selection::Trigger()
     if(eventInfo->triggerBits[9]==1)  trigger400fired = true;
     if(eventInfo->triggerBits[10]==1) trigger500fired = true;
 
-    if (avePt < s_Pt_Ave40_cut) return false;
-    if (avePt >= s_Pt_Ave40_cut  && avePt < s_Pt_Ave60_cut  && trigger40fired) return true;
-    if (avePt >= s_Pt_Ave60_cut  && avePt < s_Pt_Ave80_cut  && trigger60fired) return true;
-    if (avePt >= s_Pt_Ave80_cut  && avePt < s_Pt_Ave140_cut && trigger80fired) return true;
-    if (avePt >= s_Pt_Ave140_cut && avePt < s_Pt_Ave200_cut && trigger140fired) return true;
-    if (avePt >= s_Pt_Ave200_cut && avePt < s_Pt_Ave260_cut && trigger200fired) return true;
-    if (avePt >= s_Pt_Ave260_cut && avePt < s_Pt_Ave320_cut && trigger260fired) return true;
-    if (avePt >= s_Pt_Ave320_cut && avePt < s_Pt_Ave400_cut && trigger320fired) return true;
-    if (avePt >= s_Pt_Ave400_cut && avePt < s_Pt_Ave500_cut && trigger400fired) return true;
-    if (avePt >= s_Pt_Ave500_cut && trigger500fired) return true;
+    if (evt.pt_ave < s_Pt_Ave40_cut) return false;
+    if (evt.pt_ave >= s_Pt_Ave40_cut  && evt.pt_ave < s_Pt_Ave60_cut  && trigger40fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave60_cut  && evt.pt_ave < s_Pt_Ave80_cut  && trigger60fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave80_cut  && evt.pt_ave < s_Pt_Ave140_cut && trigger80fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave140_cut && evt.pt_ave < s_Pt_Ave200_cut && trigger140fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave200_cut && evt.pt_ave < s_Pt_Ave260_cut && trigger200fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave260_cut && evt.pt_ave < s_Pt_Ave320_cut && trigger260fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave320_cut && evt.pt_ave < s_Pt_Ave400_cut && trigger320fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave400_cut && evt.pt_ave < s_Pt_Ave500_cut && trigger400fired) return true;
+    if (evt.pt_ave >= s_Pt_Ave500_cut && trigger500fired) return true;
 
  return false;
 }
@@ -105,7 +105,7 @@ bool Selection::DiJet()
 
  return false;
 }
-bool Selection::DiJetAdvanced()
+bool Selection::DiJetAdvanced(uhh2::Event& evt)
 {
     assert(event);
 
@@ -135,12 +135,12 @@ bool Selection::DiJetAdvanced()
     if (deltaPhi < s_delta_phi) return false;
 
     // |asymm| < 0.7
-    if (fabs((jet2->pt - jet1->pt) / (jet2->pt + jet1->pt)) > s_asymm) return false;
+    if (fabs((evt.jet2_pt - evt.jet1_pt) / (evt.jet2_pt + evt.jet1_pt)) > s_asymm) return false;
 
     // p_t,rel < 0.2
     if (njets>2){
         baconhep::TJet* jet3 = (baconhep::TJet*)js[2];
-        if ((2*(jet3->pt))/(jet1->pt + jet2->pt) > s_pt_rel) return false;
+        if ((2*(evt.jet3_pt))/(evt.jet1_pt + evt.jet2_pt) > s_pt_rel) return false;
     }
 
     return true;
@@ -175,7 +175,7 @@ bool Selection::goodPVertex()
 
 bool Selection::FullSelection()
 {
-    return Trigger()&&DiJet()&&DiJetAdvanced()&&goodPVertex();
+    return DiJet()&&goodPVertex();
 
 }
 

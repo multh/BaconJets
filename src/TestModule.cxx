@@ -316,7 +316,7 @@ bool TestModule::process(Event & event) {
   h_nocuts->fill(event);
 
 
-  if(!sel.DiJetAdvanced()) return false;
+  if(!sel.DiJetAdvanced(event)) return false;
 
   h_dijet->fill(event);
 
@@ -324,7 +324,7 @@ bool TestModule::process(Event & event) {
   h_match->fill(event);
 
 
-   if(!sel.Trigger()) return false;
+   if(!sel.Trigger(event)) return false;
 
   // fill histos after dijet event selection
   h_sel->fill(event);
