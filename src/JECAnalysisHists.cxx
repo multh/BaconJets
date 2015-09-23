@@ -117,10 +117,10 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         hist("eta")->Fill(jets->eta, weight);
         hist("phi")->Fill(jets->phi, weight);
         hist("MET")->Fill(eventInfo->pfMET, weight);
-       // hist("nPu")->Fill(eventInfo->nPU, weight);
+        hist("nPu")->Fill(eventInfo->nPU, weight);
         hist("weight_histo")->Fill(weight, 1);
     }
-        hist("nPu")->Fill(ev.nPU, weight);//for data only
+//         hist("nPu")->Fill(ev.nPU, weight);//for data only
 
     float nPrVer = 0;
     Int_t nvertices = pvs.GetEntries();

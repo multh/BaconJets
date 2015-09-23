@@ -6,9 +6,11 @@
 // static std::vector<double>   pt_range   = {66, 107, 191, 240, 306, 379, 468, 900};
 // static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
 
-static std::vector<double>   eta_range  = {0, 1.3, 2.5, 3.0, 5.0};
-static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 453, 558};
-// static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
+
+static std::vector<double>   eta_range  = {0, 0.25, 0.5, 0.75, 1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.7, 3.0, 3.2, 5.0};//{0, 1.3, 2.5, 3.0, 5.0};
+static std::vector<double>   eta_range_mikko_barrel = {0, 0.8, 1.3};
+static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 453, 558}; //2015 data 40/pb
+// static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561}; // 2015 data
 // static std::vector<double>   pt_range   = {57, 80, 100, 166, 231, 290, 365, 478, 556};
 
 static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
@@ -21,7 +23,7 @@ static float s_delta_phi = 2.7;
 // cut on the asymmetry for events with two jets  |(j2->pt - j1->pt /(j2->pt + j1->pt)| < 0.70
 static float s_asymm = 0.7;
 // relative third jet fraction pt_rel = 2*j3_pt/(j1_pt + j2_pt) < 0.2
-static float s_pt_rel = 0.2;
+static float s_pt_rel = 0.4;
 
 /** \brief good Primary Vertex reconstruction **/
 // more than four tracks
@@ -42,15 +44,26 @@ static float s_n_Pv_z = 24.0;
 // static float s_Pt_Ave320_cut  = 379;//Hennings: 379
 // static float s_Pt_Ave400_cut  = 468;//Hennings: 467
 /// Used for the 2015 data
-static float s_Pt_Ave40_cut   = 43; //Hennings: 62
-static float s_Pt_Ave60_cut   = 80; //Hennings: 62
-static float s_Pt_Ave80_cut   = 88;//Hennings: 107
-static float s_Pt_Ave140_cut  = 135;//Hennings: 175
-static float s_Pt_Ave200_cut  = 223;//Hennings: 242
-static float s_Pt_Ave260_cut  = 290;//Hennings: 310
-static float s_Pt_Ave320_cut  = 365;//Hennings: 379
-static float s_Pt_Ave400_cut  = 448;//Hennings: 467
-static float s_Pt_Ave500_cut  = 561;//Hennings: 467
+// static float s_Pt_Ave40_cut   = 43; //Hennings: 62
+// static float s_Pt_Ave60_cut   = 80; //Hennings: 62
+// static float s_Pt_Ave80_cut   = 88;//Hennings: 107
+// static float s_Pt_Ave140_cut  = 135;//Hennings: 175
+// static float s_Pt_Ave200_cut  = 223;//Hennings: 242
+// static float s_Pt_Ave260_cut  = 290;//Hennings: 310
+// static float s_Pt_Ave320_cut  = 365;//Hennings: 379
+// static float s_Pt_Ave400_cut  = 448;//Hennings: 467
+// static float s_Pt_Ave500_cut  = 561;//Hennings: 467
+
+/// Used for the 2015 data 40/pb
+static float s_Pt_Ave40_cut   = 55; //Hennings: 62
+static float s_Pt_Ave60_cut   = 76; //Hennings: 62
+static float s_Pt_Ave80_cut   = 93;//Hennings: 107
+static float s_Pt_Ave140_cut  = 172;//Hennings: 175
+static float s_Pt_Ave200_cut  = 232;//Hennings: 242
+static float s_Pt_Ave260_cut  = 300;//Hennings: 310
+static float s_Pt_Ave320_cut  = 366;//Hennings: 379
+static float s_Pt_Ave400_cut  = 453;//Hennings: 467
+static float s_Pt_Ave500_cut  = 558;//Hennings: 467
 
 /** \brief Jet Resolution Smearering **/
 // doing the matching from GEN to RECO
