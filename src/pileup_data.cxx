@@ -33,7 +33,7 @@ PileupData::PileupData(uhh2::Context & ctx) :
 {
 
   string line;
-  ifstream file("pileup_new_json_low_pu.txt");
+  ifstream file("pileup_low_new_json.txt");
 
   if (file.is_open()){
 //     cout << "ok" << endl;

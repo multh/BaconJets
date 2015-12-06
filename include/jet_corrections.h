@@ -28,7 +28,7 @@ class JetCorrections {
     void SetEvent(uhh2::Event& evt);
 
     bool JetMatching();
-    bool JetResolutionSmearer();
+    bool JetResolutionSmearer(int  direction);
     bool FullJetCorrections();
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
-          <!ENTITY JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8  SYSTEM "/nfs/dust/cms/user/kovalch/SFrame7/SFrameAnalysis/config/Bacon/JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8.xml"> 
+          <!ENTITY data_13TeV_Summer15_25nsV5_DATA_corr_151021  SYSTEM "/afs/desy.de/user/k/kovalch/xxl/af-cms/CMSSW_7_2_1_patch4/src/UHH2/data_files/data_13TeV_Summer15_25nsV5_DATA_corr_151021.xml"> 
           <!--                     <!ENTITY JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8 SYSTEM "/nfs/dust/cms/user/kovalch/SFrame7/SFrameAnalysis/config/Bacon/JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8.xml"> -->
           
           ]>
@@ -10,12 +10,12 @@
             <Library Name="libSUHH2bacon"/>
             <Package Name="SUHH2bacon.par" />
             
-            <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/kovalch/sFrame/JEC/" PostFix="run2_QCD_no_rew_check" TargetLumi="1" >
+            <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/kovalch/sFrame/JEC/V5" PostFix="run2_nev_check" TargetLumi="1" >
               <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
                 
                 <!--     to run on all samples -->
-                <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="JetResolutionSmearer" Cacheable="True">
-                  &JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8;
+                <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA" Cacheable="True">
+                  &data_13TeV_Summer15_25nsV5_DATA_corr_151021;
                   <!--           &JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8; -->
                   <InputTree Name="Events" />
                   <!--             <OutputTree Name="Events" /> -->

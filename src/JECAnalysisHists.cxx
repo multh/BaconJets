@@ -1,5 +1,5 @@
 #include "UHH2/BaconJets/include/JECAnalysisHists.h"
-#include "UHH2/bacon/include/constants.h"
+#include "UHH2/BaconJets/include/constants.h"
 #include "UHH2/core/include/Event.h"
 #include "UHH2/core/include/Jet.h"
 
@@ -55,6 +55,8 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("eta_probe","#eta probe jet #eta^{probe}",100,-5,5);
 
     book<TH1F>("pt_ave","p_{T} ave jet; p_{T}^{ave} (GeV)",100,0,600);
+    book<TH1F>("pt_ave_pthat","p_{T} ave jet; p_{T}^{ave} - p_{T}^{hat})/p_{T}^{hat}(GeV)",100,0,600);
+    book<TH1F>("pt_ave_rebin","p_{T} ave jet; p_{T}^{ave} (GeV)",300,0,3000);
 
     book<TH1F>("pt_rel","p_{T}^{jet3} / p_{T}^{ave}; #alpha ", 50, 0, 1);
     book<TH1F>("generic_pt_rel","generic p_{T}^{jet3} / p_{T}^{ave}; #alpha ", 50, 0, 1);
@@ -79,7 +81,35 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("pt_ave_hltDiPFJetAve400","p_{T} ave400 jet; p_{T}^{ave} (GeV)",120,0,600);
     book<TH1F>("pt_ave_hltDiPFJetAve500","p_{T} ave500 jet; p_{T}^{ave} (GeV)",120,0,600);
 
+
+    book<TH1F>("HLT_DiPFJetAve100_HFJEC","p_{T} ave100 jet; p_{T}^{ave} (GeV)",120,0,600);
+    book<TH1F>("HLT_DiPFJetAve160_HFJEC","p_{T} ave160 jet; p_{T}^{ave} (GeV)",120,0,600);
+    book<TH1F>("HLT_DiPFJetAve220_HFJEC","p_{T} ave220 jet; p_{T}^{ave} (GeV)",120,0,600);
+    book<TH1F>("HLT_DiPFJetAve300_HFJEC","p_{T} ave300 jet; p_{T}^{ave} (GeV)",120,0,600);
+    book<TH1F>("HLT_DiPFJetAve60_HFJEC","p_{T} ave60 jet; p_{T}^{ave} (GeV)",120,0,600);
+    book<TH1F>("HLT_DiPFJetAve80_HFJEC","p_{T} ave80 jet; p_{T}^{ave} (GeV)",120,0,600);
+
+    book<TH1F>("probejet_eta_hltDiPFJetAve40","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve60","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve80","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve140","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve200","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve260","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve320","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve400","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_hltDiPFJetAve500","probejet_eta",100,-5,5);
+
+
+    book<TH1F>("probejet_eta_HLT_DiPFJetAve100_HFJEC","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_HLT_DiPFJetAve160_HFJEC","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_HLT_DiPFJetAve220_HFJEC","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_HLT_DiPFJetAve300_HFJEC","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_HLT_DiPFJetAve60_HFJEC","probejet_eta",100,-5,5);
+    book<TH1F>("probejet_eta_HLT_DiPFJetAve80_HFJEC","probejet_eta",100,-5,5);
+
     book<TH2F>("Rrel_vs_Npv","Rrel vs. Npv ", 50, 0, 50 ,100, 0.5,1.5);
+    book<TH2F>("pt_ave_vs_weight","pt_ave_vs_weight", 100, 0,10 ,10, 0,1);
+
 //     book<TProfile>("prof_Rrel_vs_Npv","Rrel vs. Npv ", 50, 0, 50 ,100, 0.5,1.5);
 //     TProfile * prof_Rrel_vs_Npv  = new TProfile("prof_Rrel_vs_Npv","Rrel vs. Npv",100, 0, 50, 0.5, 1.5);
 
@@ -124,7 +154,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 
     float nPrVer = 0;
     Int_t nvertices = pvs.GetEntries();
-    hist("N_PV")->Fill(nvertices, weight);
+    hist("N_PV")->Fill(ev.nvertices, weight);
 
     // require in the event that there is at least one reconstructed vertex
     if(nvertices>0) {
@@ -146,9 +176,12 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
     hist("pt_2")->Fill(ev.jet2_pt, weight);
     hist("eta_2")->Fill(jet2->eta, weight);
-
-
+//     cout << "ev.gen_pthat "<< ev.gen_pthat<< "ev.pt_ave"<< ev.pt_ave<<"(ev.pt_ave - ev.gen_pthat)/ev.gen_pthat "<<(ev.pt_ave - ev.gen_pthat)/ev.gen_pthat<< endl;
+    float ratio_pt = (ev.pt_ave - ev.gen_pthat)/ev.gen_pthat;
+    hist("pt_ave_vs_weight") ->Fill( ratio_pt, ev.gen_weight);
     hist("pt_ave")          ->Fill(ev.pt_ave, weight);
+    hist("pt_ave_pthat")   ->Fill(ev.pt_ave, weight);
+    hist("pt_ave_rebin") ->Fill(ev.pt_ave, weight);
     hist("ptRaw_barrel")    ->Fill(ev.barreljet_ptRaw, weight);
     hist("ptRaw_probe")     ->Fill(ev.probejet_ptRaw , weight);
     hist("pt_barrel")   ->Fill(ev.barreljet_pt, weight);
@@ -168,10 +201,10 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 //     HLT_DiPFJetAve200 = triggerBits[3]
 //     HLT_DiPFJetAve260 = triggerBits[5]
 //     HLT_DiPFJetAve320 = triggerBits[7]
-//     HLT_DiPFJetAve40  = triggerBits[8]
-//     HLT_DiPFJetAve400 = triggerBits[9]
+//     HLT_DiPFJetAve40  = triggerBits[9]
+//     HLT_DiPFJetAve400 = triggerBits[8]
 //     HLT_DiPFJetAve500 = triggerBits[10]
-//     HLT_DiPFJetAve60  = triggerBits[11]
+//     HLT_DiPFJetAve60  = triggerBits[12]
 //     HLT_DiPFJetAve80  = triggerBits[13]
 
     TString FileNameRun2[9] = {"pt_ave_hltDiPFJetAve140","pt_ave_hltDiPFJetAve200", "pt_ave_hltDiPFJetAve260", "pt_ave_hltDiPFJetAve320","pt_ave_hltDiPFJetAve40",  "pt_ave_hltDiPFJetAve400","pt_ave_hltDiPFJetAve500","pt_ave_hltDiPFJetAve60","pt_ave_hltDiPFJetAve80"};
@@ -179,21 +212,43 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     if(eventInfo->triggerBits[3]==1) hist(FileNameRun2[1])->Fill(ev.pt_ave, weight);
     if(eventInfo->triggerBits[5]==1) hist(FileNameRun2[2])->Fill(ev.pt_ave, weight);
     if(eventInfo->triggerBits[7]==1) hist(FileNameRun2[3])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[8]==1) hist(FileNameRun2[4])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[9]==1) hist(FileNameRun2[5])->Fill(ev.pt_ave, weight);
+    if(eventInfo->triggerBits[9]==1) hist(FileNameRun2[4])->Fill(ev.pt_ave, weight);
+    if(eventInfo->triggerBits[8]==1) hist(FileNameRun2[5])->Fill(ev.pt_ave, weight);
     if(eventInfo->triggerBits[10]==1) hist(FileNameRun2[6])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[11]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[13]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
+    if(eventInfo->triggerBits[12]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
+    if(eventInfo->triggerBits[14]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[12]==1 || eventInfo->triggerBits[11]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[14]==1 || eventInfo->triggerBits[13]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
 
+    if (fabs(ev.probejet_eta) < 2.6) {
+        TString FileNameRun2HF[6] = {"HLT_DiPFJetAve100_HFJEC","HLT_DiPFJetAve160_HFJEC", "HLT_DiPFJetAve220_HFJEC", "HLT_DiPFJetAve300_HFJEC","HLT_DiPFJetAve60_HFJEC",  "HLT_DiPFJetAve80_HFJEC"};
+        if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HF[0])->Fill(ev.pt_ave, weight);
+        if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HF[1])->Fill(ev.pt_ave, weight);
+        if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HF[2])->Fill(ev.pt_ave, weight);
+        if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HF[3])->Fill(ev.pt_ave, weight);
+        if(eventInfo->triggerBits[11]==1) hist(FileNameRun2HF[4])->Fill(ev.pt_ave, weight);
+        if(eventInfo->triggerBits[13]==1) hist(FileNameRun2HF[5])->Fill(ev.pt_ave, weight);
+    }
+    TString FileNameRun2probejet_eta[9] = {"probejet_eta_hltDiPFJetAve140","probejet_eta_hltDiPFJetAve200", "probejet_eta_hltDiPFJetAve260", "probejet_eta_hltDiPFJetAve320","probejet_eta_hltDiPFJetAve40",  "probejet_eta_hltDiPFJetAve400","probejet_eta_hltDiPFJetAve500","probejet_eta_hltDiPFJetAve60","probejet_eta_hltDiPFJetAve80"};
+    if(eventInfo->triggerBits[1]==1) hist(FileNameRun2probejet_eta[0])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[3]==1) hist(FileNameRun2probejet_eta[1])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[5]==1) hist(FileNameRun2probejet_eta[2])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[7]==1) hist(FileNameRun2probejet_eta[3])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[9]==1) hist(FileNameRun2probejet_eta[4])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[8]==1) hist(FileNameRun2probejet_eta[5])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[10]==1) hist(FileNameRun2probejet_eta[6])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[12]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[14]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[12]==1 || eventInfo->triggerBits[11]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[14]==1 || eventInfo->triggerBits[13]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
 
-//     TString FileNameRun2HF[6] = {"HLT_DiPFJetAve100_HFJEC","HLT_DiPFJetAve160_HFJEC", "HLT_DiPFJetAve220_HFJEC", "HLT_DiPFJetAve300_HFJEC","HLT_DiPFJetAve60_HFJEC",  "HLT_DiPFJetAve80_HFJEC"};
-//     if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HF[0])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HF[1])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HF[2])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HF[3])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[12]==1) hist(FileNameRun2HF[4])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[14]==1) hist(FileNameRun2HF[5])->Fill(ev.pt_ave, weight);
-
+    TString FileNameRun2HFprobejet_eta[6] = {"probejet_eta_HLT_DiPFJetAve100_HFJEC","probejet_eta_HLT_DiPFJetAve160_HFJEC", "probejet_eta_HLT_DiPFJetAve220_HFJEC", "probejet_eta_HLT_DiPFJetAve300_HFJEC","probejet_eta_HLT_DiPFJetAve60_HFJEC",  "probejet_eta_HLT_DiPFJetAve80_HFJEC"};
+    if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HFprobejet_eta[0])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HFprobejet_eta[1])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HFprobejet_eta[2])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HFprobejet_eta[3])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[11]==1) hist(FileNameRun2HFprobejet_eta[4])->Fill(ev.probejet_eta, weight);
+    if(eventInfo->triggerBits[13]==1) hist(FileNameRun2HFprobejet_eta[5])->Fill(ev.probejet_eta, weight);
 
     TVector2 pt, met;
     if(fabs(jet1->eta) < s_eta_barr){

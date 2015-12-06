@@ -1,7 +1,7 @@
-#include "UHH2/bacon/include/jet_corrections.h"
+#include "UHH2/BaconJets/include/jet_corrections.h"
 
 #include "UHH2/bacondataformats/interface/TJet.hh"
-#include "UHH2/bacon/include/constants.h"
+#include "UHH2/BaconJets/include/constants.h"
 using namespace std;
 namespace uhh2bacon {
 
@@ -47,12 +47,12 @@ bool JetCorrections::JetMatching()
   double delra_R_jet2 = pow(pow(TVector2::Phi_mpi_pi(jet2->genphi - jet2->phi),2) + pow(jet2->geneta - jet2->eta,2),0.5);
 
   if ((delra_R_jet1 > s_delta_R) || (delra_R_jet2 > s_delta_R)) return false;
-  //std::cout << " runNum: "<< eventInfo->runNum<< " evtNum: "<< eventInfo->evtNum <<" delra_R_jet1 = "<< delra_R_jet1 << std::endl;
+ // std::cout << " runNum: "<< eventInfo->runNum<< " evtNum: "<< eventInfo->evtNum <<" delra_R_jet1 = "<< delra_R_jet1 << std::endl;
 
  return true;
 }
 
-bool JetCorrections::JetResolutionSmearer()
+bool JetCorrections::JetResolutionSmearer(int  direction)
 {
   assert(event);
 
@@ -64,9 +64,10 @@ bool JetCorrections::JetResolutionSmearer()
   Int_t njets = js.GetEntries();
   baconhep::TEventInfo* eventInfo= &info;//new baconhep::TEventInfo(info);
 
-  float met;
-  met = eventInfo->pfMET;
+  TVector2 met;
+  met.SetMagPhi(eventInfo->pfMET ,eventInfo->pfMETphi);
 
+//   cout<<"old  MET: "<<eventInfo->pfMET<<" old phi MET: "<<eventInfo->pfMETphi<<endl;
   float recopt, rawpt, new_pt;
   for(int i=0; i < njets; ++i) {
 
@@ -84,33 +85,40 @@ bool JetCorrections::JetResolutionSmearer()
     if(ieta == n) ieta = n-1;
     float c;
     if(direction == 0){
-        c = c_nominal[ieta];
+        c = c_nominal[ieta]; //central
     } else if(direction == 1){
-        c = c_up[ieta];
+        c = c_nominal[ieta] + c_err_nominal[ieta]; //scale up
     } else{
-        c = c_down[ieta];
+        c = c_nominal[ieta] - c_err_nominal[ieta]; //scale down
     }
 
     new_pt = std::max(0.0f, genpt + c * (recopt - genpt));
     pt_sm *= new_pt / recopt;
-
+    
     //propagate JER shifts to MET by using same factor, but for raw jet p4:
     rawpt = jet->ptRaw;
+    float scalechange = new_pt / recopt;
+    TVector2 jetvect;//(jet->ptRaw*cos(jet->phi),jet->ptRaw*sin(jet->phi));
+    jetvect.SetMagPhi(jet->pt,jet->phi);
 
-    met += rawpt;
-    rawpt *= new_pt / recopt;
-    met -= rawpt;
+    met += jetvect;
+    jetvect *= scalechange;
+    met -= jetvect;
 
     jet->pt = new_pt;
-    eventInfo->pfMET = met;
   }
+
+
+  eventInfo->pfMET = met.Mod();
+  eventInfo->pfMETphi = met.Phi();
+//   cout<<"new  MET: "<<eventInfo->pfMET<<" new phi MET: "<<eventInfo->pfMETphi<<endl;
 
   return true;
 }
 
 bool JetCorrections::FullJetCorrections()
 {
-    return JetMatching()&&JetResolutionSmearer();
+    return JetMatching();
 
 }
 

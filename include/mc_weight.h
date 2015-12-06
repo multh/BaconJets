@@ -41,6 +41,7 @@ class McWeight {
     ~McWeight();
     // histogram name and pointer to it for Pu reweighting
     TH1F *              fPuReweighting_histo;
+
     std::vector<TH1F*>  fPuReweighting_histoname;
     TH1F *              hPuReweighting_histo40; 
     TH1F *              hPuReweighting_histo80;
@@ -49,12 +50,16 @@ class McWeight {
     TH1F *              hPuReweighting_histo260;
     TH1F *              hPuReweighting_histo320;
     TH1F *              hPuReweighting_histo400;
+
+    TH1F *              hPuReweighting_histo69A;
+    TH1F *              hPuReweighting_histo80A;
+    TH1F *              hPuReweighting_histo69F;
+    TH1F *              hPuReweighting_histo80F;
     TFile *             file;
 
-
-    void        SetEvent(uhh2::Event& evt);
-    float       getPuReweighting();
-    float       getEvReweighting();
+    void                SetEvent(uhh2::Event& evt);
+    float               getPuReweighting(TString MC_option, int minBiasXsec);
+    float               getEvReweighting(int  direction, TString MC_option, int minBiasXsec);
 
 };
 
