@@ -154,7 +154,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 
     float nPrVer = 0;
     Int_t nvertices = pvs.GetEntries();
-    hist("N_PV")->Fill(ev.nvertices, weight);
+    hist("N_PV")->Fill(nvertices, weight);
 
     // require in the event that there is at least one reconstructed vertex
     if(nvertices>0) {
@@ -176,7 +176,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
     hist("pt_2")->Fill(ev.jet2_pt, weight);
     hist("eta_2")->Fill(jet2->eta, weight);
-//     cout << "ev.gen_pthat "<< ev.gen_pthat<< "ev.pt_ave"<< ev.pt_ave<<"(ev.pt_ave - ev.gen_pthat)/ev.gen_pthat "<<(ev.pt_ave - ev.gen_pthat)/ev.gen_pthat<< endl;
+//     cout << "evg.en_pthat "<< ev.gen_pthat<< "ev.pt_ave"<< ev.pt_ave<<"(ev.pt_ave - ev.gen_pthat)/ev.gen_pthat "<<(ev.pt_ave - ev.gen_pthat)/ev.gen_pthat<< endl;
     float ratio_pt = (ev.pt_ave - ev.gen_pthat)/ev.gen_pthat;
     hist("pt_ave_vs_weight") ->Fill( ratio_pt, ev.gen_weight);
     hist("pt_ave")          ->Fill(ev.pt_ave, weight);

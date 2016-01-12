@@ -15,8 +15,8 @@
 #include<TVector3.h>
 #include <vector>
 
-#include "UHH2/bacon/include/data_corrections.h"
-#include "UHH2/bacon/include/constants.h"
+#include "UHH2/BaconJets/include/data_corrections.h"
+#include "UHH2/BaconJets/include/constants.h"
 #include "UHH2/bacondataformats/interface/TJet.hh"
 using namespace std;
 

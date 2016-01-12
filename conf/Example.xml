@@ -1,40 +1,220 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
-          <!ENTITY data_13TeV_Summer15_25nsV5_DATA_corr_151021  SYSTEM "/afs/desy.de/user/k/kovalch/xxl/af-cms/CMSSW_7_2_1_patch4/src/UHH2/data_files/data_13TeV_Summer15_25nsV5_DATA_corr_151021.xml"> 
-          <!--                     <!ENTITY JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8 SYSTEM "/nfs/dust/cms/user/kovalch/SFrame7/SFrameAnalysis/config/Bacon/JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8.xml"> -->
-          
-          ]>
-          
-          <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
-          <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
-            <Library Name="libSUHH2bacon"/>
-            <Package Name="SUHH2bacon.par" />
-            
-            <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/kovalch/sFrame/JEC/V5" PostFix="run2_nev_check" TargetLumi="1" >
-              <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
-                
-                <!--     to run on all samples -->
-                <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA" Cacheable="True">
-                  &data_13TeV_Summer15_25nsV5_DATA_corr_151021;
-                  <!--           &JMEValidatorTree_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8; -->
-                  <InputTree Name="Events" />
-                  <!--             <OutputTree Name="Events" /> -->
-                  
-                </InputData> 
-                <!--<OutputTree Name="AnalysisTree" />-->
-                
-                <!--    to run on one sample-->
-                <!--        <InputData Lumi="1" NEventsMax="100000" Type="DATA" Version="data_8TeV_bacon" Cacheable="False">
-                  <In FileName="/pnfs/desy.de/cms/tier2/store/user/nkovalch/BaconTree_MC_DiPF/pythia8_QCD_Pt300to470_Tune4C_13TeV_pythia8_12.root" Lumi="0.0"/> 
-                  <InputTree Name="Events" /> 
-                </InputData>-->
-                
-                <UserConfig>
-                  <!-- tell AnalysisModuleRunner that we use a completely user-defined event format -->
-                  <Item Name="userEventFormat" Value="true" />
-                  
-                  <!-- the class name of the AnalysisModule subclasses to run: -->
-                  <Item Name="AnalysisModule" Value="TestModule" /> 
-                </UserConfig>
-              </Cycle>
-            </JobConfiguration>
+          <!ENTITY QCD_Pt300to470 SYSTEM "/nfs/dust/cms/user/mstoev/SFrame7/SFrameAnalysis/config/Bacon/QCD_Pt300to470.xml">
+	  <!--          <!ENTITY MC_QCDpt15to7000 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/MC_QCDpt15to7000.xml">
+			<!ENTITY DATA_golden_JSON_40pb SYSTEM "/nfs/dust/cms/user/kovalch/SFrame7/SFrameAnalysis/config/Bacon/data_13TeV_40pb_all_data.xml"> -->
+	  <!ENTITY MC_QCDpt15to7000 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/MC_QCDpt15to7000dbV2.xml">
+	  <!ENTITY DATA_golden_JSON_40pb SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_all_datadbV2.xml"> 
+	  <!ENTITY DATA_golden_JSON_40pb_noL1 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_noL1.xml"> 
+	  <!ENTITY DATA_golden_JSON_40pb_L1_L2L3res SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_all_data_L1_L2L3Res.xml">
+ 	  <!ENTITY DATA_golden_JSON_40pb_L1_V3 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_all_dataV3.xml">
+ 	  <!ENTITY DATA_golden_JSON_40pb_L1_V3_reconverted0409 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_all_dataV3_reconverted0409.xml">
+	  <!ENTITY DATA_golden_JSON_40pb_L1_L2L3res_v4 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_50ns_L1_L2L3Res_V4_0209.xml">
+	  <!ENTITY MC_50ns_QCDpt15to7000_v4 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/MC_13TeV_50ns_L1_L2L3Res_V4_0209.xml">
+	  <!ENTITY DATA_25ns_DConly_MCcorrected_v2 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/dataJetHTRun2015C_13TeV_25ns_MCcorrected_v2.xml">
+	  <!ENTITY MC_QCDpt15to7000_13TeV_25ns_MCcorrV2 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/MC_QCDpt15to7000_13TeV_25ns_MCcorrV2.xml">
+	  <!ENTITY data_13TeV_50ns_40pb_L1_V4 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_50ns_40pb_L1_V4.xml">
+ 	  <!ENTITY DATA_golden_JSON_40pb_L1_L2L3res_v5 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_40pb_50ns_L1_L2L3Res_V5_0909.xml">
+	  <!ENTITY DATA_150928 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_25ns_RunD_V3DataCorr_150928.xml">
+	  <!ENTITY MC_QCD_150925 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/MC_QCDpt15to7000_13TeV_V3DataCorr_150925.xml">
+	  <!ENTITY DATA_L2L3Res_061015 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_25ns_RunD_L2L3Res_061015.xml">
+	  <!ENTITY DATA_L1_051015 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_25ns_RunD_L1_051015.xml">
+	  <!ENTITY DATA_L1_151015 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/JMEValidatorTree_13TeV_DATA_golden_JSON_Summer15_25nsV5_DATA_corr_Dv3_L1_151015.xml">
+	  <!ENTITY DATA_L1_151015_dconly SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/JMEValidatorTree_13TeV_DATA_DCSONLY_JSON_Summer15_25nsV5_DATA_corr_Dv4_L1_151015.xml">
+	  <!ENTITY DATA_L1_211015 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/new_golden_JSON_Summer15_25nsV5_DATA_corr_Dv3_L1_151021.xml">
+	  <!ENTITY DATA_L1_171115 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/data_13TeV_25ns_RunD_L1_171115.xml">
+	  <!ENTITY MC_QCD_151021 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/MC_QCDpt15to7000_13TeV_V5_151021.xml">
+	  <!ENTITY DATA_L1_081215 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/goldenJSON_2p11.xml">
+	  <!ENTITY QCD_asympt_081215 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/JMEValidatorTree_QCD_Pt-15to7000_Asympt25nsRaw_MCRUN2_151117.xml">
+	  <!ENTITY QCD_flat_081215 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/JMEValidatorTree_QCD_Pt-15to7000_Flat25nsRaw_MCRUN2_V6_151123.xml">
+	  ]>
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+  <Library Name="libSUHH2BaconJets"/>
+  <Package Name="SUHH2BaconJets.par" />
+
+
+<!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_0812/" PostFix="" TargetLumi="1" > -->
+  <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="24" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_0812/" PostFix="" TargetLumi="1" > 
+
+
+
+
+    <!-- 25ns run-->
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_081215" Cacheable="True">
+      &DATA_L1_081215;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+    <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="QCD_asympt_081215" Cacheable="True">
+      &QCD_asympt_081215;
+      <InputTree Name="Events" />
+    </InputData>
+
+
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_171115" Cacheable="True">
+      &DATA_L1_171115;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="MC_QCD_150925" Cacheable="True">
+      &MC_QCD_150925;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="MC_QCD_151021" Cacheable="True">
+      &MC_QCD_151021;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_211015" Cacheable="True">
+      &DATA_L1_211015;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_151015_dconly" Cacheable="True">
+      &DATA_L1_151015_dconly;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_151015" Cacheable="True">
+      &DATA_L1_151015;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_051015" Cacheable="True">
+      &DATA_L1_051015;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_150928" Cacheable="True">
+      &DATA_150928;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+
+
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L2L3Res_061015" Cacheable="True">
+      &DATA_L2L3Res_061015;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+
+
+<!--
+    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_25ns_DConly_MCcorrected_v2" Cacheable="True">
+      &DATA_25ns_DConly_MCcorrected_v2;
+      <InputTree Name="Events" />
+    </InputData>
+-->
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="MC" Version="MC_QCDpt15to7000_13TeV_25ns_MCcorrV2" Cacheable="True">
+          &MC_QCDpt15to7000_13TeV_25ns_MCcorrV2;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+
+
+
+<!-- 50ns runs with v4 corrections -->
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb_L1_L2L3res_v5" Cacheable="True">
+          &DATA_golden_JSON_40pb_L1_L2L3res_v5;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="data_13TeV_50ns_40pb_L1_V4" Cacheable="True">
+          &data_13TeV_50ns_40pb_L1_V4;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb_L1_L2L3res_v4" Cacheable="True">
+          &DATA_golden_JSON_40pb_L1_L2L3res_v4;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="MC" Version="MC_50ns_QCDpt15to7000_v4" Cacheable="True">
+          &MC_50ns_QCDpt15to7000_v4;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+<!-- before 30th of august. All 50ns -->
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb" Cacheable="True">
+          &DATA_golden_JSON_40pb;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb_L1_V3_reconverted0409" Cacheable="True">
+          &DATA_golden_JSON_40pb_L1_V3_reconverted0409;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb_L1_V3" Cacheable="True">
+          &DATA_golden_JSON_40pb_L1_V3;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb_L1_L2L3res" Cacheable="True">
+          &DATA_golden_JSON_40pb_L1_L2L3res;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_golden_JSON_40pb_noL1" Cacheable="True">
+          &DATA_golden_JSON_40pb_noL1;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+<!--
+	<InputData Lumi="1" NEventsMax="-1" Type="MC" Version="QCD_Pt15to7000" Cacheable="True">
+          &MC_QCDpt15to7000;
+          <InputTree Name="Events" />
+        </InputData>
+-->
+
+
+        <UserConfig>
+            <!-- tell AnalysisModuleRunner that we use a completely user-defined event format -->
+            <Item Name="userEventFormat" Value="true" />
+    
+            <!-- the class name of the AnalysisModule subclasses to run: -->
+            <Item Name="AnalysisModule" Value="TestModule" /> 
+        </UserConfig>
+    </Cycle>
+</JobConfiguration>
+
+
