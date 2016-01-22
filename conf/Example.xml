@@ -29,31 +29,35 @@
 	  <!ENTITY QCD_flat_081215 SYSTEM "/nfs/dust/cms/user/mstoev/CMSSW_7_2_1_patch4/src/UHH2/BaconJets/conf/JMEValidatorTree_QCD_Pt-15to7000_Flat25nsRaw_MCRUN2_V6_151123.xml">
 	  ]>
 
+
+
+
+
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
 <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
   <Library Name="libSUHH2BaconJets"/>
   <Package Name="SUHH2BaconJets.par" />
 
 
-<!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_0812/" PostFix="" TargetLumi="1" > -->
-  <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="24" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_0812/" PostFix="" TargetLumi="1" > 
+<!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_1301/" PostFix="_2" TargetLumi="1" > -->
+  <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="12" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_1301/" PostFix="_9" TargetLumi="1" > 
 
 
 
 
     <!-- 25ns run-->
-<!--
+
     <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_081215" Cacheable="True">
       &DATA_L1_081215;
       <InputTree Name="Events" />
     </InputData>
--->
 
+<!--
     <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="QCD_asympt_081215" Cacheable="True">
       &QCD_asympt_081215;
       <InputTree Name="Events" />
     </InputData>
-
+-->
 
 <!--
     <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_171115" Cacheable="True">

@@ -110,6 +110,8 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH2F>("Rrel_vs_Npv","Rrel vs. Npv ", 50, 0, 50 ,100, 0.5,1.5);
     book<TH2F>("pt_ave_vs_weight","pt_ave_vs_weight", 100, 0,10 ,10, 0,1);
 
+    book<TH1F>("runNum","Run number", 80,254000,262000);
+
 //     book<TProfile>("prof_Rrel_vs_Npv","Rrel vs. Npv ", 50, 0, 50 ,100, 0.5,1.5);
 //     TProfile * prof_Rrel_vs_Npv  = new TProfile("prof_Rrel_vs_Npv","Rrel vs. Npv",100, 0, 50, 0.5, 1.5);
 
@@ -206,6 +208,9 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 //     HLT_DiPFJetAve500 = triggerBits[10]
 //     HLT_DiPFJetAve60  = triggerBits[12]
 //     HLT_DiPFJetAve80  = triggerBits[13]
+
+
+    hist("runNum")->Fill(eventInfo->runNum,weight);
 
     TString FileNameRun2[9] = {"pt_ave_hltDiPFJetAve140","pt_ave_hltDiPFJetAve200", "pt_ave_hltDiPFJetAve260", "pt_ave_hltDiPFJetAve320","pt_ave_hltDiPFJetAve40",  "pt_ave_hltDiPFJetAve400","pt_ave_hltDiPFJetAve500","pt_ave_hltDiPFJetAve60","pt_ave_hltDiPFJetAve80"};
     if(eventInfo->triggerBits[1]==1) hist(FileNameRun2[0])->Fill(ev.pt_ave, weight);

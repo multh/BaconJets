@@ -7,7 +7,7 @@ Finally, in order to calculate the L2 residuals execute the macros as shown in s
 ## 1. Install and compile SFrame
 First of all one needs to install SFrame.
 ```
-svn co https://svn.code.sf.net/p/sframe/code/SFrame/tags/SFrame-04-00-01/ SFramePhys14
+svn co https://svn.code.sf.net/p/sframe/code/SFrame/tags/SFrame-04-00-01/ SFrameBacon
 ```
 
 Before compiling SFrame, remember to setup CMSSW first (to build SFrame against the right root version) and source `setup.sh` in the SFrame directory.
@@ -17,12 +17,12 @@ Before compiling SFrame, remember to setup CMSSW first (to build SFrame against 
 
 ```
 
-cmsrel CMSSW_7_2_1_patch4
-cd CMSSW_7_2_1_patch4/src
+cmsrel CMSSW_7_4_15_patch1
+cd CMSSW_7_4_15_patch1/src
 cmsenv
 scram b -j 10
 
-git clone -b https://github.com/UHH2/UHH2.git
+git clone -b next-ntuple-format https://github.com/UHH2/mstoev.git
 ```
 
 Before compiling it is required to set up CMSSW ('cmsenv') and SFrame ('source setup.sh'). Afterwards, one can compile SFrame in the SFrame directory using 'make'.

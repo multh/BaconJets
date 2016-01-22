@@ -8,13 +8,20 @@
 
 
 // static std::vector<double>   eta_range  = {0, 0.25, 0.5, 0.75, 1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.7, 3.0, 3.2, 5.0};//{0, 1.3, 2.5, 3.0, 5.0};
-static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 5.191};
+//static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 5.191};
+
+
+// additional HF bin:
+static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 3.489, 5.191};
 // static std::vector<double>   eta_range_mikko_barrel = {0, 0.8, 1.3};
+
+
 static std::vector<double>   eta_range_mikko  = {0, 1.3, 1.9, 2.5, 3.0, 3.2, 5.0, 0, 0.8, 1.3};
 
-static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 452, 558};
+//static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 452, 558};
+static std::vector<double>   pt_range   = {56, 78, 100, 168, 232, 300, 366, 453, 562}; //2.11 nominal triggers
 
- 
+
 
 // static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
 // static std::vector<double>   pt_range   = {57, 80, 100, 166, 231, 290, 365, 478, 556};
@@ -60,7 +67,31 @@ static float s_n_Pv_z = 24.0;
 // static float s_Pt_Ave400_cut  = 448;
 // static float s_Pt_Ave500_cut  = 561;
 
+/// Used for the 2015  2.11/fb  25ns data
+static float s_Pt_Ave40_cut   = 56;
+static float s_Pt_Ave60_cut   = 78;
+static float s_Pt_Ave80_cut   = 100;
+static float s_Pt_Ave140_cut  = 168;
+static float s_Pt_Ave200_cut  = 232;
+static float s_Pt_Ave260_cut  = 300;
+static float s_Pt_Ave320_cut  = 366;
+static float s_Pt_Ave400_cut  = 453;
+static float s_Pt_Ave500_cut  = 562;
+static int n_pt_bins = 9;
+
+/// HF thresholds Used for the 2015  2.11/fb  25ns data
+static float s_Pt_Ave60HF_cut   = 77;
+static float s_Pt_Ave80HF_cut   = 131;
+static float s_Pt_Ave100HF_cut  = 154;
+static float s_Pt_Ave160HF_cut  = 244;
+static float s_Pt_Ave220HF_cut  = 321;
+static float s_Pt_Ave300HF_cut  = 426;
+
+
+
+
 /// Used for the 2015  40/pb  50ns data
+/*
 static float s_Pt_Ave40_cut   = 55;
 static float s_Pt_Ave60_cut   = 76;
 static float s_Pt_Ave80_cut   = 93;
@@ -71,7 +102,7 @@ static float s_Pt_Ave320_cut  = 366;
 static float s_Pt_Ave400_cut  = 453;
 static float s_Pt_Ave500_cut  = 558;
 static int n_pt_bins = 9;
-
+*/
 /// Used for the 2015  ~1/fb  25ns data
 // static float s_Pt_Ave40_cut   = 55;
 // static float s_Pt_Ave60_cut   = 77;
@@ -84,13 +115,14 @@ static int n_pt_bins = 9;
 // static float s_Pt_Ave500_cut  = 561;
 
 /// HF thresholds Used for the 2015  40/pb  50ns data
+/*
 static float s_Pt_Ave60HF_cut   = 76;
 static float s_Pt_Ave80HF_cut   = 93;
 static float s_Pt_Ave100HF_cut  = 120;
 static float s_Pt_Ave160HF_cut  = 186;
 static float s_Pt_Ave220HF_cut  = 253;
 static float s_Pt_Ave300HF_cut  = 342;
-
+*/
 /// HF thresholds Used for the 2015  ~1/fb  25ns data
 // static float s_Pt_Ave60HF_cut   = 77;
 // static float s_Pt_Ave80HF_cut   = 99;

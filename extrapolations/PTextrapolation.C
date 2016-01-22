@@ -13,13 +13,13 @@ TString ToString(int num) {
   return start1;
 }
 
-void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag, TString variation){
+void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag, TString variation, TString tag){
   gStyle->SetOptFit(000);
 
 
   // Tag for time dependence plots
-  TString tag = "";
-  
+  //TString tag = "";
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,12 +190,12 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
     graph2[j]->SetLineColor(kBlue);
  
     f1[j] = new TF1(plotname[j]+"f1","[0]+[1]*TMath::Log(x)", 76 , 558);
-
+    f1[j]->SetParameters(1,0);
     f2[j] = new TF1(plotname[j]+"f2","pol0");
     f2[j]->SetLineColor(kBlue);
     f2[j]->SetLineStyle(3);
 
-    graph1[j]->Fit(plotname[j]+"f1","W");
+    graph1[j]->Fit(plotname[j]+"f1","");
     graph1[j]->Fit(plotname[j]+"f2","+ SAME");
     graph2[j]->Fit(plotname[j]+"f2","");
     graph1[j]->Draw("AP");
@@ -345,7 +345,7 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
     uncerts << "{ 1 JetEta 1 JetPt [0] Correction L2Relative}" << endl;
     uncerts_loglin << "{ 1 JetEta 1 JetPt [0] Correction L2Relative}" << endl;
 
-    TString ptmax[n_eta-1] = {"2160","2060","1950","1810","1970","1590","1380","1260"," 920"," 850"," 790"," 710"," 560"," 510"," 510"};
+    //TString ptmax[n_eta-1] = {"2160","2060","1950","1810","1970","1590","1380","1260"," 920"," 850"," 790"," 710"," 560"," 510"," 510"};
     for (int j=n_eta-1; j>0; --j){
       output << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptaverebin_data[j-1]->FindLastBinAbove(0.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
       output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptaverebin_data[j-1]->FindLastBinAbove(0.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
@@ -467,7 +467,7 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
     uncerts << "{ 1 JetEta 1 JetPt [0] Correction L2Relative}" << endl;
     uncerts_loglin << "{ 1 JetEta 1 JetPt [0] Correction L2Relative}" << endl;
 
-    TString ptmax[n_eta-1] = {"2160","2060","1950","1810","1970","1590","1380","1260"," 920"," 850"," 790"," 710"," 560"," 510"," 510"};
+    //TString ptmax[n_eta-1] = {"2160","2060","1950","1810","1970","1590","1380","1260"," 920"," 850"," 790"," 710"," 560"," 510"," 510"};
     for (int j=n_eta-1; j>0; --j){
       output << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptaverebin_data[j-1]->FindLastBinAbove(0.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
       output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptaverebin_data[j-1]->FindLastBinAbove(0.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) <<  "   1 0.0000 0.0" << endl;

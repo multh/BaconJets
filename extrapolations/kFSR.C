@@ -52,7 +52,8 @@ void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
     for(int i=0; i<n_alpha-1; i++){
       ratio[j]->SetBinContent(i+1, (mc[i][j]->GetMean() / data[i][j]->GetMean()) / (mc[1][j]->GetMean() / data[1][j]->GetMean()) );
       //ratio[j]->SetBinError(i+1, 1/sqrt(data[i][j]->Integral()));
-      ratio[j]->SetBinError(i+1, sqrt( pow(data[i][j]->GetRMS(),2)/data[i][j]->Integral())); // + pow(mc[i][j]->GetRMS(),2)/mc[i][j]->Integral() ) );
+      ratio[j]->SetBinError(i+1, sqrt( pow(data[i][j]->GetRMS(),2)/data[i][j]->Integral() + pow(mc[i][j]->GetRMS(),2)/mc[i][j]->Integral() ));
+      //ratio[j]->SetBinError(i+1, sqrt( pow(data[i][j]->GetRMS(),2)/data[i][j]->Integral())); // + pow(mc[i][j]->GetRMS(),2)/mc[i][j]->Integral() ) );
       //ratio[j]->SetBinError(i+1, sqrt( pow(data[i][j]->GetRMS(),2)/data[i][j]->Integral() + pow(mc[i][j]->GetRMS(),2)/mc[i][j]->Integral() ) );
     }
   }

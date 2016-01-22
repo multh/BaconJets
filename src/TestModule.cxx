@@ -335,6 +335,10 @@ namespace uhh2bacon {
     }
     event.alpha = alpha;
 
+
+    //if(eventInfo->runNum<260536 || eventInfo->runNum>260627) return false;
+
+
     if(!sel.DiJet()) return false;
 
     h_nocuts->fill(event);
