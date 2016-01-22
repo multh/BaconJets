@@ -22,7 +22,7 @@ cd CMSSW_7_4_15_patch1/src
 cmsenv
 scram b -j 10
 
-git clone -b next-ntuple-format https://github.com/UHH2/mstoev.git
+git clone -b next-ntuple-format https://github.com/mstoev/UHH2.git
 ```
 
 Before compiling it is required to set up CMSSW ('cmsenv') and SFrame ('source setup.sh'). Afterwards, one can compile SFrame in the SFrame directory using 'make'.

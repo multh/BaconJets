@@ -39,15 +39,15 @@
   <Package Name="SUHH2BaconJets.par" />
 
 
-<!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_1301/" PostFix="_2" TargetLumi="1" > -->
-  <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="12" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_1301/" PostFix="_9" TargetLumi="1" > 
+  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_1301/" PostFix="_TESTS" TargetLumi="1" > 
+<!--  <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/mstoev/PROOF/" ProofNodes="12" OutputDirectory="/nfs/dust/cms/user/mstoev/sFrame_new/JEC/run2_output/25ns_1301/" PostFix="_9" TargetLumi="1" > -->
 
 
 
 
     <!-- 25ns run-->
 
-    <InputData Lumi="1" NEventsMax="-1" Type="DATA" Version="DATA_L1_081215" Cacheable="True">
+    <InputData Lumi="1" NEventsMax="1000" Type="DATA" Version="DATA_L1_081215" Cacheable="True">
       &DATA_L1_081215;
       <InputTree Name="Events" />
     </InputData>
