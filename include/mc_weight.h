@@ -59,7 +59,7 @@ class McWeight {
 
     void                SetEvent(uhh2::Event& evt);
     float               getPuReweighting(TString MC_option, int minBiasXsec);
-    float               getEvReweighting(int  direction, TString MC_option, int minBiasXsec);
+    float               getEvReweighting(int  direction, TString MC_option, int minBiasXsec, TString TriggerType);
 
 };
 

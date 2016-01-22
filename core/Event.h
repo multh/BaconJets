@@ -15,6 +15,19 @@ class Event: public GenericEvent {
 public:
   double weight; // Note: unlike the other members, the weight is not read from the input file and not written to the output file, but calculated on the fly.
   //for dijet analysis
+  float gen_pthat;
+  float gen_weight;
+
+  float jet1_pt;
+  float jet2_pt;
+  float jet3_pt;
+
+  float jet1_ptRaw;
+  float jet2_ptRaw;
+  float jet3_ptRaw;
+
+  int   nvertices;
+
   float probejet_eta;
   float probejet_phi;
   float probejet_pt;
@@ -30,6 +43,7 @@ public:
   float rel_r;
   float mpf_r;
   float asymmetry;
+  double nPU;
 
   int run;
   int luminosityBlock;

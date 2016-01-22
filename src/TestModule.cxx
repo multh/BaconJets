@@ -172,7 +172,7 @@ namespace uhh2bacon {
         //! matching from GEN to RECO
         if(!jetcorr.JetMatching()) return false;
         //! JER smearing
-        //0 = central; 1 = scale up; other = scale down
+        //0 = central; 1 = scale up;  -1 = scale down
         if(!jetcorr.JetResolutionSmearer(0)) return false;
 
     }
@@ -209,8 +209,9 @@ namespace uhh2bacon {
          //0 = central; 1 = scale up; -1 = scale down; 99 = no scale
          //MC option:  Asympt; or Flat
          //minBiasXsec for PU:  69; or 80 mb
-        //11 = set 1; 12 = set2 ...
-         event.weight = event.weight * event.gen_weight * mcweight.getPuReweighting("Asympt", 69)* mcweight.getEvReweighting(0, "Asympt", 69);
+        //11 = set 1; 12 = set2
+        //TriggerType: "Nominal" or "HF"
+         event.weight = event.weight * event.gen_weight * mcweight.getPuReweighting("Asympt", 69) * mcweight.getEvReweighting(15, "Asympt", 69, "Nominal");
 
     }
 

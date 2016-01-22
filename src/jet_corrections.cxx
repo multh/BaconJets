@@ -83,12 +83,12 @@ bool JetCorrections::JetResolutionSmearer(int  direction)
     size_t ieta = 0;
     while(ieta < n && eta_hi[ieta] < abseta) ++ieta;
     if(ieta == n) ieta = n-1;
-    float c;
+    float c = 1;
     if(direction == 0){
         c = c_nominal[ieta]; //central
     } else if(direction == 1){
         c = c_nominal[ieta] + c_err_nominal[ieta]; //scale up
-    } else{
+    } else if(direction == -1){
         c = c_nominal[ieta] - c_err_nominal[ieta]; //scale down
     }
 

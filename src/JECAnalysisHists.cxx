@@ -54,7 +54,8 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("eta_barrel","#eta barrel jet; #eta^{barrel}",100,-5,5);
     book<TH1F>("eta_probe","#eta probe jet #eta^{probe}",100,-5,5);
 
-    book<TH1F>("pt_ave","p_{T} ave jet; p_{T}^{ave} (GeV)",100,0,600);
+    book<TH1F>("pt_ave100","p_{T} ave jet; p_{T}^{ave} (GeV)",100,0,600);
+    book<TH1F>("pt_ave","p_{T} ave jet; p_{T}^{ave} (GeV)",1200,0,600);
     book<TH1F>("pt_ave_pthat","p_{T} ave jet; p_{T}^{ave} - p_{T}^{hat})/p_{T}^{hat}(GeV)",100,0,600);
     book<TH1F>("pt_ave_rebin","p_{T} ave jet; p_{T}^{ave} (GeV)",300,0,3000);
 
@@ -180,6 +181,7 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     float ratio_pt = (ev.pt_ave - ev.gen_pthat)/ev.gen_pthat;
     hist("pt_ave_vs_weight") ->Fill( ratio_pt, ev.gen_weight);
     hist("pt_ave")          ->Fill(ev.pt_ave, weight);
+    hist("pt_ave100")       ->Fill(ev.pt_ave, weight);
     hist("pt_ave_pthat")   ->Fill(ev.pt_ave, weight);
     hist("pt_ave_rebin") ->Fill(ev.pt_ave, weight);
     hist("ptRaw_barrel")    ->Fill(ev.barreljet_ptRaw, weight);

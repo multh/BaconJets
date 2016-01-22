@@ -100,7 +100,7 @@ float  McWeight::getPuReweighting(TString MC_option, int minBiasXsec) {
 }
 //gets a weighting factor for event reweighting 
 
-float  McWeight::getEvReweighting(int  direction, TString MC_option, int minBiasXsec) {
+float  McWeight::getEvReweighting(int  direction, TString MC_option, int minBiasXsec, TString TriggerType) {
 
     assert(event);
 
@@ -141,11 +141,9 @@ float  McWeight::getEvReweighting(int  direction, TString MC_option, int minBias
             } else if(direction == 19){
                 scale_factor1[i] = scale_factor_centrA_PU69_set9[i]; //set9
             }
-
-
         }
         if(direction == 0 && MC_option == "Asympt" && minBiasXsec == 80){
-            scale_factor1[i] = scale_factor_centrA[i]; //central
+            scale_factor1[i] = scale_factor_centrA_PU80[i]; //central 80
         }
         if(MC_option == "Flat" && minBiasXsec == 69){
             if(direction == 0){
@@ -158,37 +156,43 @@ float  McWeight::getEvReweighting(int  direction, TString MC_option, int minBias
     // njets >= 2
     if (njets>=2) {
     double pt_ave = (jet1->pt + jet2->pt)/2;
+        if (TriggerType == "Nominal"){
+            // declare variable to store a weighting factor
+            if ((pt_ave >= s_Pt_Ave40_cut) && (pt_ave < s_Pt_Ave60_cut)) {
+                ev_weighting_factor = scale_factor1[0];
+            } else if ((pt_ave >= s_Pt_Ave60_cut) && (pt_ave < s_Pt_Ave80_cut)) {
+                ev_weighting_factor = scale_factor1[1];
+            } else if ((pt_ave >= s_Pt_Ave80_cut) && (pt_ave < s_Pt_Ave140_cut)) {
+                ev_weighting_factor = scale_factor1[2];
+            } else if ((pt_ave >= s_Pt_Ave140_cut) && (pt_ave < s_Pt_Ave200_cut)) {
+                ev_weighting_factor = scale_factor1[3];
+            } if ((pt_ave >= s_Pt_Ave200_cut) && (pt_ave < s_Pt_Ave260_cut)) {
+                ev_weighting_factor = scale_factor1[4];
+            } else if ((pt_ave >= s_Pt_Ave260_cut) && (pt_ave < s_Pt_Ave320_cut)) {
+                ev_weighting_factor = scale_factor1[5];
+            } else if ((pt_ave >= s_Pt_Ave320_cut) && (pt_ave < s_Pt_Ave400_cut)) {
+                ev_weighting_factor = scale_factor1[6];
+            } else if ((pt_ave >= s_Pt_Ave400_cut) && (pt_ave < s_Pt_Ave500_cut)) {
+                ev_weighting_factor = scale_factor1[7];
+            } else if ((pt_ave >= s_Pt_Ave500_cut)) {
+                ev_weighting_factor = scale_factor1[8];
+            }
+        } else if (TriggerType == "HF"){
+            if ((pt_ave >= s_Pt_Ave60HF_cut) && (pt_ave < s_Pt_Ave80HF_cut)) {
+                ev_weighting_factor = scale_factor1[0];
+            } else if ((pt_ave >= s_Pt_Ave80HF_cut) && (pt_ave < s_Pt_Ave100HF_cut)) {
+                ev_weighting_factor = scale_factor1[1];
+            } else if ((pt_ave >= s_Pt_Ave100HF_cut) && (pt_ave < s_Pt_Ave160HF_cut)) {
+                ev_weighting_factor = scale_factor1[2];
+            } else if ((pt_ave >= s_Pt_Ave160HF_cut) && (pt_ave < s_Pt_Ave220HF_cut)) {
+                ev_weighting_factor = scale_factor1[3];
+            } if ((pt_ave >= s_Pt_Ave220HF_cut) && (pt_ave < s_Pt_Ave300HF_cut)) {
+                ev_weighting_factor = scale_factor1[4];
+            } else if ((pt_ave >= s_Pt_Ave300HF_cut)) {
+                ev_weighting_factor = scale_factor1[5];
+            }
+        }
 
-
-    // declare variable to store a weighting factor
-    if ((pt_ave >= s_Pt_Ave40_cut) && (pt_ave < s_Pt_Ave60_cut)) {
-        ev_weighting_factor = scale_factor1[0];
-
-    } else if ((pt_ave >= s_Pt_Ave60_cut) && (pt_ave < s_Pt_Ave80_cut)) {
-        ev_weighting_factor = scale_factor1[1];
-
-    } else if ((pt_ave >= s_Pt_Ave80_cut) && (pt_ave < s_Pt_Ave140_cut)) {
-        ev_weighting_factor = scale_factor1[2];
-
-    } else if ((pt_ave >= s_Pt_Ave140_cut) && (pt_ave < s_Pt_Ave200_cut)) {
-        ev_weighting_factor = scale_factor1[3];
-
-    } if ((pt_ave >= s_Pt_Ave200_cut) && (pt_ave < s_Pt_Ave260_cut)) {
-        ev_weighting_factor = scale_factor1[4];
-
-    } else if ((pt_ave >= s_Pt_Ave260_cut) && (pt_ave < s_Pt_Ave320_cut)) {
-        ev_weighting_factor = scale_factor1[5];
-
-    } else if ((pt_ave >= s_Pt_Ave320_cut) && (pt_ave < s_Pt_Ave400_cut)) {
-        ev_weighting_factor = scale_factor1[6];
-
-    } else if ((pt_ave >= s_Pt_Ave400_cut) && (pt_ave < s_Pt_Ave500_cut)) {
-        ev_weighting_factor = scale_factor1[7];
-
-    } else if ((pt_ave >= s_Pt_Ave500_cut)) {
-        ev_weighting_factor = scale_factor1[8];
-
-    }
    //cout << "for event with pt_ave = "<< pt_ave << " apply scale_factor = "<<ev_weighting_factor<<endl;
     }
     if (ev_weighting_factor!=0) return      ev_weighting_factor;
