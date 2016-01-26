@@ -1,7 +1,7 @@
 #include "UHH2/BaconJets/include/selection.h"
 
-#include "UHH2/bacondataformats/interface/TJet.hh"
-#include "UHH2/bacondataformats/interface/TVertex.hh"
+#include "UHH2/BaconTrans/baconheaders/TJet.hh"
+#include "UHH2/BaconTrans/baconheaders/TVertex.hh"
 #include "UHH2/BaconJets/include/constants.h"
 
 #include "TVector2.h"

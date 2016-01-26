@@ -12,10 +12,10 @@
 #include "UHH2/BaconJets/include/constants.h"
 #include "UHH2/BaconJets/include/TSetTree.h"
 
-#include "UHH2/bacondataformats/interface/TGenEventInfo.hh"
-#include "UHH2/bacondataformats/interface/TJet.hh"
-#include "UHH2/bacondataformats/interface/TEventInfo.hh"
-#include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
+#include "UHH2/BaconTrans/baconheaders/TGenEventInfo.hh"
+#include "UHH2/BaconTrans/baconheaders/TJet.hh"
+#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
+#include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
 
 #include "UHH2/BaconJets/include/pileup_data.h"
 #include "UHH2/BaconJets/include/data_corrections.h"

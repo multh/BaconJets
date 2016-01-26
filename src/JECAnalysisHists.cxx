@@ -3,10 +3,10 @@
 #include "UHH2/core/include/Event.h"
 #include "UHH2/core/include/Jet.h"
 
-#include "UHH2/bacondataformats/interface/TJet.hh"
-#include "UHH2/bacondataformats/interface/TEventInfo.hh"
-#include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
-#include "UHH2/bacondataformats/interface/TVertex.hh"
+#include "UHH2/BaconTrans/baconheaders/TJet.hh"
+#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
+#include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
+#include "UHH2/BaconTrans/baconheaders/TVertex.hh"
 
 
 

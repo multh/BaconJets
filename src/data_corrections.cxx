@@ -15,9 +15,9 @@
 #include<TVector3.h>
 #include <vector>
 
-#include "UHH2/bacon/include/data_corrections.h"
-#include "UHH2/bacon/include/constants.h"
-#include "UHH2/bacondataformats/interface/TJet.hh"
+#include "UHH2/BaconJets/include/data_corrections.h"
+#include "UHH2/BaconJets/include/constants.h"
+#include "UHH2/BaconTrans/baconheaders/TJet.hh"
 using namespace std;
 
 namespace uhh2bacon {
@@ -94,7 +94,7 @@ float  DataCorr::jet12getL1correction(float Eta1, float Eta2, float & j2L1corr) 
             return m_corr_l1[eta1_jet[i]][eta2_jet[i]];
         }
     }
-
+    return 0;
 }
 
 float  DataCorr::jet3getL1correction(float Eta) {
@@ -107,7 +107,7 @@ float  DataCorr::jet3getL1correction(float Eta) {
 //           cout <<" JET3: CORR : "<<m_corr_l1[eta_jet[i]]<<endl;
          return m_corr_l1[eta1_jet[i]][eta2_jet[i]];        }
     }
-
+    return 0;
 }
 
 DataCorr::~DataCorr()

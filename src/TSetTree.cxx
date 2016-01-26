@@ -23,7 +23,7 @@ using namespace std;
 #include "TMatrixFSym.h"
 #include "TTree.h"
 // my includes
-#include "include/TSetTree.h"
+#include "UHH2/BaconJets/include/TSetTree.h"
 TSetTree::TSetTree()
 {
 file();

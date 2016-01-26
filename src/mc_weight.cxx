@@ -14,7 +14,7 @@
 
 #include "UHH2/BaconJets/include/mc_weight.h"
 #include "UHH2/BaconJets/include/constants.h"
-#include "UHH2/bacondataformats/interface/TJet.hh"
+#include "UHH2/BaconTrans/baconheaders/TJet.hh"
 using namespace std;
 
 namespace uhh2bacon {
