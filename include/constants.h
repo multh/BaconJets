@@ -1,6 +1,20 @@
 #ifndef  CONSTANTS_H
 #define  CONSTANTS_H
 
+//#pragma once
+
+/* #include <iostream> */
+/* #include <vector> */
+
+/* using namespace std; */
+/* namespace uhh2bacon { */
+
+/* class constants { */
+
+/* public: */
+/*   constants(){}; */
+/*   ~constants(){}; */
+
 /** \brief Binning **/
 // static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.763, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 3.139, 3.489, 5.191};
 // static std::vector<double>   pt_range   = {66, 107, 191, 240, 306, 379, 468, 900};
@@ -8,6 +22,9 @@
 
 
 // static std::vector<double>   eta_range  = {0, 0.25, 0.5, 0.75, 1.0, 1.3, 1.6, 1.9, 2.2, 2.5, 2.7, 3.0, 3.2, 5.0};//{0, 1.3, 2.5, 3.0, 5.0};
+
+//double eta_range_val [] = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 5.191};
+//std::vector<double> eta_range (eta_range_val, eta_range_val + sizeof(eta_range_val) / sizeof(double) );
 static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 5.191};
 // static std::vector<double>   eta_range_mikko_barrel = {0, 0.8, 1.3};
 static std::vector<double>   eta_range_mikko  = {0, 1.3, 1.9, 2.5, 3.0, 3.2, 5.0, 0, 0.8, 1.3};
@@ -23,13 +40,13 @@ static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.2
 
 /** \brief Dijet event selection **/
 // barrel region (|eta| < 1.3)
-static float s_eta_barr = 1.3;
+constexpr static float s_eta_barr = 1.3;
 // two back-to-back leading jets (delta_phi(j1,j2) = min(|phi1 - phi2|, 2PI - |phi2 - phi1|) > 2.7)
-static float s_delta_phi = 2.7;
+constexpr static float s_delta_phi = 2.7;
 // cut on the asymmetry for events with two jets  |(j2->pt - j1->pt /(j2->pt + j1->pt)| < 0.70
-static float s_asymm = 0.7;
+constexpr static float s_asymm = 0.7;
 // relative third jet fraction pt_rel = 2*j3_pt/(j1_pt + j2_pt) < 0.2
-static float s_pt_rel = 0.4;
+constexpr static float s_pt_rel = 0.4;
 
 /** \brief good Primary Vertex reconstruction **/
 // more than four tracks
@@ -148,7 +165,63 @@ static float scale_factor_centrF[] = {2413.77, 8916.56, 8200.09, 7844.02, 382407
 //static float scale_factor1[] = {2.14563, 4.27422,7.57198,  10.7035,17.899, 15.6095, 4.64629};//run1
 // static float scale_factor2[] = {242.617, 3514.77, 49549.8, 180540, 693177, 1.83449e+06, 1.63241e+07};//run1
 
+//void PrintConst();
+//void PrintConst(){//dummy function to avoid "-Werror=unused-variable"
+ /*  std::cout<<"Following consts are defined (see meaning in constants.h): "<<std::endl; */
+/*   std::cout<<"eta_range("<<eta_range.size()<<")"<<std::endl; */
+/*   std::cout<<"s_eta_barr = "<<s_eta_barr<<std::endl; */
+/*   std::cout<<"s_delta_phi = "<<s_delta_phi<<std::endl; */
+/*   std::cout<<"s_asymm = "<<s_asymm<<std::endl; */
+/*   std::cout<<"s_pt_rel= "<<s_pt_rel<<std::endl; */
+/*   std::cout<<"s_n_PvTracks= "<<s_n_PvTracks<<std::endl; */
+/*   std::cout<<"s_n_Pv_z= "<<s_n_Pv_z<<std::endl; */
+/*   std::cout<<"s_n_Pv_xy= "<<s_n_Pv_xy<<std::endl; */
+/*  std::cout<<"s_Pt_Ave40_cut= "<<s_Pt_Ave40_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave60_cut= "<<s_Pt_Ave60_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave80_cut= "<<s_Pt_Ave80_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave140_cut= "<<s_Pt_Ave140_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave200_cut= "<<s_Pt_Ave200_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave260_cut= "<<s_Pt_Ave260_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave320_cut= "<<s_Pt_Ave320_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave400_cut= "<<s_Pt_Ave400_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave500_cut= "<<s_Pt_Ave500_cut<<std::endl; */
+/*  std::cout<<"n_pt_bins= "<<n_pt_bins<<std::endl; */
+/*  std::cout<<"s_Pt_Ave60HF_cut= "<<s_Pt_Ave60HF_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave80HF_cut= "<<s_Pt_Ave80HF_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave100HF_cut= "<<s_Pt_Ave100HF_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave160HF_cut= "<<s_Pt_Ave160HF_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave220HF_cut= "<<s_Pt_Ave220HF_cut<<std::endl; */
+/*  std::cout<<"s_Pt_Ave300HF_cut= "<<s_Pt_Ave300HF_cut<<std::endl; */
+/* std::cout<<" s_delta_R = "<< s_delta_R <<std::endl; */
+/* std::cout<<"eta_hi[0]= "<<eta_hi[0]<<std::endl; */
+/* std::cout<<"c_nominal[0]= "<<c_nominal[0]<<std::endl; */
+/* std::cout<<"c_err_nominal[0]= "<<c_err_nominal[0]<<std::endl;  */
+/* std::cout<<"scale_factor_noJERA[0]= "<<scale_factor_noJERA[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA[0]= "<<scale_factor_centrA[0]<<std::endl; */
+/* std::cout<<"scale_factor_upA[0]= "<<scale_factor_upA[0]<<std::endl; */
+/* std::cout<<"scale_factor_downA[0]= "<<scale_factor_downA[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU80[0]= "<<scale_factor_centrA_PU80[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set1[0]= "<<scale_factor_centrA_PU69_set1[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set2[0]= "<<scale_factor_centrA_PU69_set2[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set3[0]= "<<scale_factor_centrA_PU69_set3[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set4[0]= "<<scale_factor_centrA_PU69_set4[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set5[0]= "<<scale_factor_centrA_PU69_set5[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set6[0]= "<<scale_factor_centrA_PU69_set6[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set7[0]= "<<scale_factor_centrA_PU69_set7[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set8[0]= "<<scale_factor_centrA_PU69_set8[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrA_PU69_set9[0]= "<<scale_factor_centrA_PU69_set9[0]<<std::endl; */
+/* std::cout<<"scale_factor_noJERF[0]= "<<scale_factor_noJERF[0]<<std::endl; */
+/* std::cout<<"scale_factor_centrF[0]= "<<scale_factor_centrF[0]<<std::endl; */
 
+/* std::cout<<"= "<<<<std::endl; */
+/* std::cout<<"= "<<<<std::endl; */
+/* std::cout<<"= "<<<<std::endl; */
+/* std::cout<<"= "<<<<std::endl; */
+/* std::cout<<"= "<<<<std::endl; */
+/* std::cout<<"= "<<<<std::endl; */
 
 
 #endif
+
+//};
+//}

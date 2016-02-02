@@ -37,7 +37,7 @@ McWeight::McWeight(uhh2::Context & ctx) :
 
     TString fPuReweighting_filename[] = {"PUweight_V6_minBiasXsec69000_pileupJSON_151102_newAsymptMCSel.root","PUweight_V6_minBiasXsec80000_pileupJSON_151102_newAsymptMCSel.root", "PUweight_V6_minBiasXsec69000_pileupJSON_151102_newFlatMCSel.root", "PUweight_V6_minBiasXsec80000_pileupJSON_151102_newFlatMCSel.root"};
 
-    for (int j = 0; j < fPuReweighting_histoname.size(); j++) {
+    for (unsigned int j = 0; j < fPuReweighting_histoname.size(); j++) {
         file = new TFile (DATABASE_PATH+"/"+fPuReweighting_filename[j]);
         fPuReweighting_histoname[j] = (TH1F*) file -> Get("histo_substr");
 
@@ -71,7 +71,7 @@ float  McWeight::getPuReweighting(TString MC_option, int minBiasXsec) {
     Double_t    weighting_factor = 1;
     unsigned    bin = 0;
     // sanity check: a pointer to the histogram should be valid
-    for (int i = 0; i < fPuReweighting_histoname.size(); i++) {
+    for (unsigned int i = 0; i < fPuReweighting_histoname.size(); i++) {
         if (fPuReweighting_histoname[i] == NULL) {
             cout << "was not possible to retrieve a histogram " << endl;
             abort();
@@ -110,7 +110,7 @@ float  McWeight::getEvReweighting(int  direction, TString MC_option, int minBias
 
     int njets = js.GetEntries();
     Double_t    ev_weighting_factor = 1;
-    unsigned    ev_bin = 0;
+    //    unsigned    ev_bin = 0;
     float scale_factor1[n_pt_bins];
     for (int i = 0; i < n_pt_bins; i++){
         if(MC_option == "Asympt" && minBiasXsec == 69){

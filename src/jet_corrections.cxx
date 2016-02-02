@@ -68,7 +68,8 @@ bool JetCorrections::JetResolutionSmearer(int  direction)
   met.SetMagPhi(eventInfo->pfMET ,eventInfo->pfMETphi);
 
 //   cout<<"old  MET: "<<eventInfo->pfMET<<" old phi MET: "<<eventInfo->pfMETphi<<endl;
-  float recopt, rawpt, new_pt;
+  // float recopt, rawpt, new_pt;
+ float recopt, new_pt;
   for(int i=0; i < njets; ++i) {
 
     baconhep::TJet* jet = (baconhep::TJet*)js[i];
@@ -96,7 +97,7 @@ bool JetCorrections::JetResolutionSmearer(int  direction)
     pt_sm *= new_pt / recopt;
     
     //propagate JER shifts to MET by using same factor, but for raw jet p4:
-    rawpt = jet->ptRaw;
+    //    rawpt = jet->ptRaw;
     float scalechange = new_pt / recopt;
     TVector2 jetvect;//(jet->ptRaw*cos(jet->phi),jet->ptRaw*sin(jet->phi));
     jetvect.SetMagPhi(jet->pt,jet->phi);

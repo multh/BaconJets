@@ -75,8 +75,8 @@ bool Selection::Trigger(uhh2::Event& evt)
     if (evt.pt_ave < s_Pt_Ave40_cut) return false;
     if (evt.pt_ave >= s_Pt_Ave40_cut  && evt.pt_ave < s_Pt_Ave60_cut  && trigger40fired) return true;
     if (evt.pt_ave >= s_Pt_Ave60_cut  && evt.pt_ave < s_Pt_Ave80_cut  && trigger60fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave80_cut  && evt.pt_ave < s_Pt_Ave140_cut && trigger60fired) return true; //change back to trigger80fired
-    if (evt.pt_ave >= s_Pt_Ave140_cut && evt.pt_ave < s_Pt_Ave200_cut && trigger60fired) return true; //change back to trigger140fired
+    if (evt.pt_ave >= s_Pt_Ave80_cut  && evt.pt_ave < s_Pt_Ave140_cut && trigger80fired) return true; //change back to trigger80fired
+    if (evt.pt_ave >= s_Pt_Ave140_cut && evt.pt_ave < s_Pt_Ave200_cut && trigger140fired) return true; //change back to trigger140fired
     if (evt.pt_ave >= s_Pt_Ave200_cut && evt.pt_ave < s_Pt_Ave260_cut && trigger200fired) return true;
     if (evt.pt_ave >= s_Pt_Ave260_cut && evt.pt_ave < s_Pt_Ave320_cut && trigger260fired) return true;
     if (evt.pt_ave >= s_Pt_Ave320_cut && evt.pt_ave < s_Pt_Ave400_cut && trigger320fired) return true;

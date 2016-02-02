@@ -33,7 +33,7 @@ using namespace uhh2;
 
 namespace uhh2bacon {
 
-  class TestModule: public AnalysisModule {
+  class TestModule: public uhh2::AnalysisModule {
   public:
     explicit TestModule(Context & ctx);
     virtual bool process(Event & event) override;
@@ -49,12 +49,15 @@ namespace uhh2bacon {
     std::vector<JECAnalysisHists> h_pt_bins, h_eta_bins, h_pt_bins_a01, h_eta_bins_a01, h_eta_bins_a03, h_eta_bins_a04, h_noalpha_bins,  h_eta_bins_mikko_a10, h_eta_bins_mikko_a15, h_eta_bins_mikko_a20, h_eta_bins_mikko_a30;
 
     Selection sel;
+    //    std::unique_ptr<Selection> sel;
     JetCorrections jetcorr;
     McWeight mcweight;
     bool is_mc;
     bool is_data;
     TSetTree cSetTree;
-    PileupData  pileupData;
+    uhh2bacon::PileupData  pileupData;
+    // std::unique_ptr<TSetTree> cSetTree;
+    // std::unique_ptr<PileupData>  pileupData;
 
 //     DataCorr datacorr;
   };
@@ -64,9 +67,9 @@ namespace uhh2bacon {
     sel(ctx),
     jetcorr(ctx),
     mcweight(ctx),
-    pileupData(ctx),
-// //     datacorr(ctx),
-    cSetTree()
+    pileupData(ctx)
+// // //     datacorr(ctx),
+    //  cSetTree()
   {
     auto dataset_type = ctx.get("dataset_type");
     is_mc = dataset_type  == "MC";
@@ -159,9 +162,9 @@ namespace uhh2bacon {
     mcweight.SetEvent(event);
     pileupData.SetEvent(event);
 //     datacorr.SetEvent(event);
-    float j3L1corr =1.;
-    float j1L1corr =1.;
-    float j2L1corr =1.;
+    // float j3L1corr =1.;
+    // float j1L1corr =1.;
+    // float j2L1corr =1.;
     const baconhep::TEventInfo & info = event.get(h_eventInfo);
     baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
     const TClonesArray & js = event.get(h_jets);
