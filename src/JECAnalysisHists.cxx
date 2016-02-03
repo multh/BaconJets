@@ -132,8 +132,10 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     // Don't forget to always use the weight when filling.
 
     const TClonesArray & js = ev.get(h_jets);
-    const baconhep::TEventInfo & info = ev.get(h_eventInfo);
-    baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+    // const baconhep::TEventInfo & info = ev.get(h_eventInfo);
+    // baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+    const baconhep::TEventInfo& eventInfo = ev.get(h_eventInfo);
+
     const TClonesArray & pvs = ev.get(h_pv);
 
     double weight = ev.weight;
@@ -146,8 +148,11 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         hist("pt")->Fill(jets->pt, weight);
         hist("eta")->Fill(jets->eta, weight);
         hist("phi")->Fill(jets->phi, weight);
-        hist("MET")->Fill(eventInfo->pfMET, weight);
-        hist("nPu")->Fill(eventInfo->nPU, weight);
+        // hist("MET")->Fill(eventInfo->pfMET, weight);
+        // hist("nPu")->Fill(eventInfo->nPU, weight);
+        hist("MET")->Fill(eventInfo.pfMET, weight);
+        hist("nPu")->Fill(eventInfo.nPU, weight);
+
         hist("weight_histo")->Fill(weight, 1);
     }
 //         hist("nPu")->Fill(ev.nPU, weight);//for data only
@@ -208,47 +213,81 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
 //     HLT_DiPFJetAve80  = triggerBits[13]
 
     TString FileNameRun2[9] = {"pt_ave_hltDiPFJetAve140","pt_ave_hltDiPFJetAve200", "pt_ave_hltDiPFJetAve260", "pt_ave_hltDiPFJetAve320","pt_ave_hltDiPFJetAve40",  "pt_ave_hltDiPFJetAve400","pt_ave_hltDiPFJetAve500","pt_ave_hltDiPFJetAve60","pt_ave_hltDiPFJetAve80"};
-    if(eventInfo->triggerBits[1]==1) hist(FileNameRun2[0])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[3]==1) hist(FileNameRun2[1])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[5]==1) hist(FileNameRun2[2])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[7]==1) hist(FileNameRun2[3])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[9]==1) hist(FileNameRun2[4])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[8]==1) hist(FileNameRun2[5])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[10]==1) hist(FileNameRun2[6])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[12]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
-    if(eventInfo->triggerBits[14]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[12]==1 || eventInfo->triggerBits[11]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
-//     if(eventInfo->triggerBits[14]==1 || eventInfo->triggerBits[13]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
+  //   if(eventInfo->triggerBits[1]==1) hist(FileNameRun2[0])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[3]==1) hist(FileNameRun2[1])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[5]==1) hist(FileNameRun2[2])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[7]==1) hist(FileNameRun2[3])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[9]==1) hist(FileNameRun2[4])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[8]==1) hist(FileNameRun2[5])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[10]==1) hist(FileNameRun2[6])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[12]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
+//     if(eventInfo->triggerBits[14]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
+// //     if(eventInfo->triggerBits[12]==1 || eventInfo->triggerBits[11]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
+// //     if(eventInfo->triggerBits[14]==1 || eventInfo->triggerBits[13]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
+
+    if(eventInfo.triggerBits[1]==1) hist(FileNameRun2[0])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[3]==1) hist(FileNameRun2[1])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[5]==1) hist(FileNameRun2[2])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[7]==1) hist(FileNameRun2[3])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[9]==1) hist(FileNameRun2[4])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[8]==1) hist(FileNameRun2[5])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[10]==1) hist(FileNameRun2[6])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[12]==1) hist(FileNameRun2[7])->Fill(ev.pt_ave, weight);
+    if(eventInfo.triggerBits[14]==1) hist(FileNameRun2[8])->Fill(ev.pt_ave, weight);
+
 
     if (fabs(ev.probejet_eta) < 2.6) {
         TString FileNameRun2HF[6] = {"HLT_DiPFJetAve100_HFJEC","HLT_DiPFJetAve160_HFJEC", "HLT_DiPFJetAve220_HFJEC", "HLT_DiPFJetAve300_HFJEC","HLT_DiPFJetAve60_HFJEC",  "HLT_DiPFJetAve80_HFJEC"};
-        if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HF[0])->Fill(ev.pt_ave, weight);
-        if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HF[1])->Fill(ev.pt_ave, weight);
-        if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HF[2])->Fill(ev.pt_ave, weight);
-        if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HF[3])->Fill(ev.pt_ave, weight);
-        if(eventInfo->triggerBits[11]==1) hist(FileNameRun2HF[4])->Fill(ev.pt_ave, weight);
-        if(eventInfo->triggerBits[13]==1) hist(FileNameRun2HF[5])->Fill(ev.pt_ave, weight);
+        // if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HF[0])->Fill(ev.pt_ave, weight);
+        // if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HF[1])->Fill(ev.pt_ave, weight);
+        // if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HF[2])->Fill(ev.pt_ave, weight);
+        // if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HF[3])->Fill(ev.pt_ave, weight);
+        // if(eventInfo->triggerBits[11]==1) hist(FileNameRun2HF[4])->Fill(ev.pt_ave, weight);
+        // if(eventInfo->triggerBits[13]==1) hist(FileNameRun2HF[5])->Fill(ev.pt_ave, weight);
+	if(eventInfo.triggerBits[0]==1) hist(FileNameRun2HF[0])->Fill(ev.pt_ave, weight);
+        if(eventInfo.triggerBits[2]==1) hist(FileNameRun2HF[1])->Fill(ev.pt_ave, weight);
+        if(eventInfo.triggerBits[4]==1) hist(FileNameRun2HF[2])->Fill(ev.pt_ave, weight);
+        if(eventInfo.triggerBits[6]==1) hist(FileNameRun2HF[3])->Fill(ev.pt_ave, weight);
+        if(eventInfo.triggerBits[11]==1) hist(FileNameRun2HF[4])->Fill(ev.pt_ave, weight);
+        if(eventInfo.triggerBits[13]==1) hist(FileNameRun2HF[5])->Fill(ev.pt_ave, weight);
     }
     TString FileNameRun2probejet_eta[9] = {"probejet_eta_hltDiPFJetAve140","probejet_eta_hltDiPFJetAve200", "probejet_eta_hltDiPFJetAve260", "probejet_eta_hltDiPFJetAve320","probejet_eta_hltDiPFJetAve40",  "probejet_eta_hltDiPFJetAve400","probejet_eta_hltDiPFJetAve500","probejet_eta_hltDiPFJetAve60","probejet_eta_hltDiPFJetAve80"};
-    if(eventInfo->triggerBits[1]==1) hist(FileNameRun2probejet_eta[0])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[3]==1) hist(FileNameRun2probejet_eta[1])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[5]==1) hist(FileNameRun2probejet_eta[2])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[7]==1) hist(FileNameRun2probejet_eta[3])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[9]==1) hist(FileNameRun2probejet_eta[4])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[8]==1) hist(FileNameRun2probejet_eta[5])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[10]==1) hist(FileNameRun2probejet_eta[6])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[12]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[14]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
-//     if(eventInfo->triggerBits[12]==1 || eventInfo->triggerBits[11]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
-//     if(eventInfo->triggerBits[14]==1 || eventInfo->triggerBits[13]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
+   //  if(eventInfo->triggerBits[1]==1) hist(FileNameRun2probejet_eta[0])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[3]==1) hist(FileNameRun2probejet_eta[1])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[5]==1) hist(FileNameRun2probejet_eta[2])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[7]==1) hist(FileNameRun2probejet_eta[3])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[9]==1) hist(FileNameRun2probejet_eta[4])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[8]==1) hist(FileNameRun2probejet_eta[5])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[10]==1) hist(FileNameRun2probejet_eta[6])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[12]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
+//     if(eventInfo->triggerBits[14]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
+// //     if(eventInfo->triggerBits[12]==1 || eventInfo->triggerBits[11]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
+// //     if(eventInfo->triggerBits[14]==1 || eventInfo->triggerBits[13]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[1]==1) hist(FileNameRun2probejet_eta[0])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[3]==1) hist(FileNameRun2probejet_eta[1])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[5]==1) hist(FileNameRun2probejet_eta[2])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[7]==1) hist(FileNameRun2probejet_eta[3])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[9]==1) hist(FileNameRun2probejet_eta[4])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[8]==1) hist(FileNameRun2probejet_eta[5])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[10]==1) hist(FileNameRun2probejet_eta[6])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[12]==1) hist(FileNameRun2probejet_eta[7])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[14]==1) hist(FileNameRun2probejet_eta[8])->Fill(ev.probejet_eta, weight);
+
 
     TString FileNameRun2HFprobejet_eta[6] = {"probejet_eta_HLT_DiPFJetAve100_HFJEC","probejet_eta_HLT_DiPFJetAve160_HFJEC", "probejet_eta_HLT_DiPFJetAve220_HFJEC", "probejet_eta_HLT_DiPFJetAve300_HFJEC","probejet_eta_HLT_DiPFJetAve60_HFJEC",  "probejet_eta_HLT_DiPFJetAve80_HFJEC"};
-    if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HFprobejet_eta[0])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HFprobejet_eta[1])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HFprobejet_eta[2])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HFprobejet_eta[3])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[11]==1) hist(FileNameRun2HFprobejet_eta[4])->Fill(ev.probejet_eta, weight);
-    if(eventInfo->triggerBits[13]==1) hist(FileNameRun2HFprobejet_eta[5])->Fill(ev.probejet_eta, weight);
+    // if(eventInfo->triggerBits[0]==1) hist(FileNameRun2HFprobejet_eta[0])->Fill(ev.probejet_eta, weight);
+    // if(eventInfo->triggerBits[2]==1) hist(FileNameRun2HFprobejet_eta[1])->Fill(ev.probejet_eta, weight);
+    // if(eventInfo->triggerBits[4]==1) hist(FileNameRun2HFprobejet_eta[2])->Fill(ev.probejet_eta, weight);
+    // if(eventInfo->triggerBits[6]==1) hist(FileNameRun2HFprobejet_eta[3])->Fill(ev.probejet_eta, weight);
+    // if(eventInfo->triggerBits[11]==1) hist(FileNameRun2HFprobejet_eta[4])->Fill(ev.probejet_eta, weight);
+    // if(eventInfo->triggerBits[13]==1) hist(FileNameRun2HFprobejet_eta[5])->Fill(ev.probejet_eta, weight);
+
+    if(eventInfo.triggerBits[0]==1) hist(FileNameRun2HFprobejet_eta[0])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[2]==1) hist(FileNameRun2HFprobejet_eta[1])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[4]==1) hist(FileNameRun2HFprobejet_eta[2])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[6]==1) hist(FileNameRun2HFprobejet_eta[3])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[11]==1) hist(FileNameRun2HFprobejet_eta[4])->Fill(ev.probejet_eta, weight);
+    if(eventInfo.triggerBits[13]==1) hist(FileNameRun2HFprobejet_eta[5])->Fill(ev.probejet_eta, weight);
 
     TVector2 pt, met;
     if(fabs(jet1->eta) < s_eta_barr){

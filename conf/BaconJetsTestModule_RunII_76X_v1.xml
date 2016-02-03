@@ -2,8 +2,13 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
 
 <!ENTITY PROOFdir "/nfs/dust/cms/user/karavdia/PROOF">      
+<!ENTITY NEVT "5">
 
-<!ENTITY QCDPt15to7000_pythia8 SYSTEM "../datasets/JEC_76X/MC_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8_RunIIFall15MiniAODv1.xml">
+<!-- <!ENTITY QCDPt15to7000_pythia8 SYSTEM "../datasets/JEC_76X/MC_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8_RunIIFall15MiniAODv1.xml">
+<!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Summer15_25nsV6.xml"> -->
+
+ <!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA2.xml">
+
 <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Summer15_25nsV6/">
 ]>
 
@@ -12,14 +17,20 @@
     <Library Name="libSUHH2BaconJets"/>
     <Package Name="SUHH2BaconJets.par" />
 
-<!--     <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" > -->
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="15" > 
+     <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" >
+  <!-- <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="16" > -->
         <!--     to run on all samples -->
 
-        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="QCD_Pt15to7000_pythia8" Cacheable="True">
+     <!--   <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8" Cacheable="False">
           &QCDPt15to7000_pythia8;
           <InputTree Name="Events" />
-        </InputData>
+        </InputData> -->
+
+	<InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="RunD" Cacheable="False">
+          &DATA_RunD;
+          <InputTree Name="Events" />
+        </InputData> 
+
 
         <!--<OutputTree Name="AnalysisTree" />-->
 

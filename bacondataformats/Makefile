@@ -1,3 +1,3 @@
 LIBRARY := SUHH2bacondataformats
-DICT := interface/*.hh src/BaconAnaDataFormatsLinkDef.h
+DICT := baconheaders/SUHH2bacondataformats_LinkDef.h
 include ../Makefile.common

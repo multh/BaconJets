@@ -1,7 +1,7 @@
 #include "header.h"
 #include "tdrstyle_mod14.C"
 
-void ResPlots(TString path){
+void ResPlots_OldNew(TString path){
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
 
@@ -13,6 +13,15 @@ void ResPlots(TString path){
   TH1D* consdijet = (TH1D*)resdijet->Get("res_const_dijet");
   TH1D* ptdijet = (TH1D*)resdijet->Get("res_logpt_dijet");
 
+
+
+// get OLD the residual root file for MPF and pt balance
+  TFile* resmpf_old = new TFile("/nfs/dust/cms/user/kovalch/sFrame/JEC/V6/L2ResPlots/Histo_Res_MPF_25ns_data_V6_new_trigg60for80only2.root","READ");
+  TH1D* consmpf_old = (TH1D*)resmpf_old->Get("res_const_mpf");
+  TH1D* ptmpf_old = (TH1D*)resmpf_old->Get("res_logpt_mpf");
+  TFile* resdijet_old = new TFile("/nfs/dust/cms/user/kovalch/sFrame/JEC/V6/L2ResPlots/Histo_Res_DiJet_25ns_data_V6_new_trigg60for80only2.root","READ"); 
+  TH1D* consdijet_old = (TH1D*)resdijet_old->Get("res_const_dijet");
+  TH1D* ptdijet_old = (TH1D*)resdijet_old->Get("res_logpt_dijet");
 
 
   // create histo for the normalization
@@ -88,19 +97,20 @@ void ResPlots(TString path){
   TLine *line = new TLine(0.,1,5.191,1);
   //  gROOT->LoadMacro("tdrstyle_mod14.C");
   //  gROOT->ProcessLine(".L tdrstyle_mod14.C");
-  consmpf_norm->SetLineWidth(2);
-  consmpf_norm->SetLineColor(kRed+1);
-  consmpf_norm->Draw("E1");
-  ptmpf_norm->SetLineWidth(2);
-  ptmpf_norm->SetLineStyle(2);
-  ptmpf_norm->SetLineColor(kRed+1);
-  ptmpf_norm->Draw("E1 SAME");
+  // consmpf_norm->SetLineWidth(2);
+  // consmpf_norm->SetLineColor(kRed+1);
+  // consmpf_norm->Draw("E1");
+  // ptmpf_norm->SetLineWidth(2);
+  // ptmpf_norm->SetLineStyle(2);
+  // ptmpf_norm->SetLineColor(kRed+1);
+  // ptmpf_norm->Draw("E1 SAME");
   consdijet_norm->SetLineWidth(2);
-  consdijet_norm->SetLineColor(kBlue+1);
-  consdijet_norm->Draw("E1 SAME");
+  consdijet_norm->SetLineColor(kGreen+1);
+  consdijet_norm->Draw("E1");
+  //  consdijet_norm->Draw("E1 SAME");
   ptdijet_norm->SetLineWidth(2);
   ptdijet_norm->SetLineStyle(2);
-  ptdijet_norm->SetLineColor(kBlue+1);
+  ptdijet_norm->SetLineColor(kGreen+1);
   ptdijet_norm->Draw("E1 SAME");
 
 
@@ -113,8 +123,10 @@ void ResPlots(TString path){
 
   // Draw results
   TH1D *h = new TH1D("h",";|#eta|;Relative correction",41,0,5.191);
-  h->SetMaximum(1.35);
-  h->SetMinimum(0.95);
+  // h->SetMaximum(1.35);
+  //  h->SetMinimum(0.95);
+  h->SetMaximum(1.4);
+  h->SetMinimum(0.8);
   h->GetXaxis()->SetTitleSize(0.05);
   h->GetYaxis()->SetTitleSize(0.05);
   lumi_13TeV = "2.11 fb^{-1}";
@@ -123,19 +135,38 @@ void ResPlots(TString path){
   //  TCanvas * c = new TCanvas("c", "c", 1000,1000);
   //gPad->SetGridy();
 
-  consmpf_norm->Draw("E1 SAME");
-  ptmpf_norm->Draw("E1 SAME");
+  // consmpf_norm->Draw("E1 SAME");
+  // ptmpf_norm->Draw("E1 SAME");
   consdijet_norm->Draw("E1 SAME");
   ptdijet_norm->Draw("E1 SAME");
   line->SetLineStyle(2);
   line->Draw("SAME");
 
+  consmpf_old->SetLineColor(kRed);
+  consmpf_old->Draw("E1 SAME");
+  ptmpf_old->SetLineColor(kRed);
+  ptmpf_old->SetLineWidth(2);
+  ptmpf_old->SetLineStyle(2);
+  ptmpf_old->Draw("E1 SAME");
+  consdijet_old->SetLineColor(kBlue+1);
+  consdijet_old->SetLineWidth(2);
+  consdijet_old->Draw("E1 SAME");
+  ptdijet_old->SetLineColor(kBlue+1);
+  ptdijet_old->SetLineWidth(2);
+  ptdijet_old->SetLineStyle(2);
+  ptdijet_old->Draw("E1 SAME");
+
   TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
   //leg1 -> SetHeader("AK4PFchs");
-  leg1 -> AddEntry(consmpf_norm, "MPF FLAT","L");
-  leg1 -> AddEntry(ptmpf_norm, "MPF LOGLIN","L");
-  leg1 -> AddEntry(consdijet_norm, "Pt FLAT","L");
-  leg1 -> AddEntry(ptdijet_norm, "Pt LOGLIN","L");
+  // leg1 -> AddEntry(consmpf_norm, "MPF FLAT","L");
+  // leg1 -> AddEntry(ptmpf_norm, "MPF LOGLIN","L");
+  leg1 -> AddEntry(consdijet_norm, "Pt FLAT (76X)","L");
+  leg1 -> AddEntry(ptdijet_norm, "Pt LOGLIN (76X)","L");
+  leg1 -> AddEntry(consdijet_old, "Pt FLAT (74X)","L");
+  leg1 -> AddEntry(ptdijet_old, "Pt LOGLIN (74X)","L");
+  leg1 -> AddEntry(consmpf_old, "MPF FLAT (74X)","L");
+  leg1 -> AddEntry(ptmpf_old, "MPF LOGLIN (74X)","L");
+
   leg1->Draw();
 
   TLatex *tex = new TLatex();

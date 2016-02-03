@@ -5,7 +5,6 @@
 #include "TClonesArray.h"
 #include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
 #include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
-using namespace baconhep;
 /**  \brief Example class for booking and filling histograms
  * 
  * NOTE: This class uses the 'hist' method to retrieve histograms.

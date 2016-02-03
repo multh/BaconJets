@@ -10,26 +10,34 @@ TString ToString(int num) {
   return start1;
 }
 
-void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
+//void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
+void kFSR(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile){
 
   gStyle->SetOptFit(0);
-
+  // datafile->Print();
+  // MCfile->Print();
 
   // get the histos 
   TH1D* data[n_alpha-1][n_eta-1];
   TH1D* mc[n_alpha-1][n_eta-1];
-
+ 
  
 
   for(int i=0; i<n_alpha-1; i++){
     for(int j=0; j<n_eta-1; j++){
       if(mpfMethod){
-	data[i][j] = (TH1D*)datafile->Get(alpha_range[i]+"/eta_"+eta_range[j]+"_"+eta_range[j+1]+"/mpf");
+	//	cout<<alpha_range[i]<<" "<<eta_range[j]<<" "<<eta_range[j+1]<<endl;
 	mc[i][j] = (TH1D*)MCfile->Get(alpha_range[i]+"/eta_"+eta_range[j]+"_"+eta_range[j+1]+"/mpf");
+	//	mc[i][j]->Print();
+	data[i][j] = (TH1D*)datafile->Get(alpha_range[i]+"/eta_"+eta_range[j]+"_"+eta_range[j+1]+"/mpf");
+	//	data[i][j]->Print();
+
       }
       else{
 	data[i][j] = (TH1D*)datafile->Get(alpha_range[i]+"/eta_"+eta_range[j]+"_"+eta_range[j+1]+"/r_rel");
 	mc[i][j] = (TH1D*)MCfile->Get(alpha_range[i]+"/eta_"+eta_range[j]+"_"+eta_range[j+1]+"/r_rel");
+	//	data[i][j]->Print();
+	//	mc[i][j]->Print();
       }
     }
   }
@@ -44,6 +52,7 @@ void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
     TString numstr=ToString(j);
     TString histoname="histo"+numstr;
     ratio[j] = new TH1D(histoname,histoname,n_alpha-1,alpha_bins);
+    //    ratio[j]->Print();
   }
 
 
@@ -83,13 +92,14 @@ void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
 
  
   // create output .dat file, including the kFSR extrapolation (alpha->0)
+  FILE *fp; TH1D* kFSR_MPF; TH1D* kFSR_DiJet;
   if(mpfMethod){
-    FILE *fp = fopen("KFSR_MPF_extrapolation.dat","w");
-    TH1D* kFSR_MPF = new TH1D("kfsr_mpf","kfsr_mpf", n_eta-1,eta_bins);
+    fp = fopen("KFSR_MPF_extrapolation.dat","w");
+    kFSR_MPF = new TH1D("kfsr_mpf","kfsr_mpf", n_eta-1,eta_bins);
   }
   else{
-    FILE *fp = fopen("KFSR_DiJet_extrapolation.dat","w");
-    TH1D* kFSR_DiJet = new TH1D("kfsr_dijet","kfsr_dijet", n_eta-1,eta_bins);
+    fp = fopen("KFSR_DiJet_extrapolation.dat","w");
+    kFSR_DiJet = new TH1D("kfsr_dijet","kfsr_dijet", n_eta-1,eta_bins);
   }
 
   TH1D* plotkfsr = new TH1D("kfsr","kfsr", n_eta-1,eta_bins);
@@ -123,7 +133,9 @@ void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
     graph1[j]->SetMarkerStyle(20);
     graph1[j]->SetLineColor(kBlue);
     graph1[j]->Draw("AP");
-    graph1[j]->Fit("pol1","R");
+    TF1 *pol1 = new TF1("pol1","pol1"); 
+    graph1[j]->Fit(pol1,"R");
+    //    graph1[j]->Fit("pol1","R");
     graph1[j]->GetXaxis()->SetTitle("#alpha");
     graph1[j]->GetXaxis()->SetTitleSize(0.05);
     //graph1[j]->GetYaxis()->SetTitle("kFSR");
@@ -171,10 +183,10 @@ void kFSR(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile){
 
     //save the plots
     if(mpfMethod){
-      //a[j]->Print("plots/kFSR_MPF_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+      a[j]->Print("plots/kFSR_MPF_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
     else{
-      //a[j]->Print("plots/kFSR_Pt_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+      a[j]->Print("plots/kFSR_Pt_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
 
   }

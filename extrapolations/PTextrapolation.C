@@ -6,14 +6,14 @@
 #include "header.h"
 
 
-TString ToString(int num) {
+TString ToStringPT(int num) {
   ostringstream start;
   start<<num;
   TString start1=start.str();
   return start1;
 }
 
-void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag, TString variation, TString tag){
+void PTextrapolation(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag, TString variation, TString tag){
   gStyle->SetOptFit(000);
 
 
@@ -45,16 +45,23 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
   TH1D* ptaverebin_data[n_eta-1];
   
   for(int i=0; i<n_eta-1; i++){
+    // cout<<eta_range[i]<<" "<<eta_range[i+1]<<endl;
     ptave_data[i] = (TH1D*)datafile->Get("/a02/eta_"+eta_range[i]+"_"+eta_range[i+1]+"/pt_ave");
+    // ptave_data[i]->Print();
     ptaverebin_data[i] = (TH1D*)datafile->Get("/a02/eta_"+eta_range[i]+"_"+eta_range[i+1]+"/pt_ave_rebin");
+    // ptaverebin_data[i]->Print();
     for(int j=0; j<n_pt-1; j++){
       if(mpfMethod){
+	//	cout<<"MPL: pt "<<pt_range[j]<<" "<<pt_range[j+1]<<endl;
 	data[i][j] = (TH1D*)datafile->Get("/eta_"+eta_range[i]+"_"+eta_range[i+1]+"/pt_"+pt_range[j]+"_"+pt_range[j+1]+"/mpf");
 	mc[i][j] = (TH1D*)MCfile->Get("/eta_"+eta_range[i]+"_"+eta_range[i+1]+"/pt_"+pt_range[j]+"_"+pt_range[j+1]+"/mpf");
+	data[i][j]->Print();
       }
       else{
+	//	cout<<"Dijet: pt "<<pt_range[j]<<" "<<pt_range[j+1]<<endl;
 	data[i][j] = (TH1D*)datafile->Get("/eta_"+eta_range[i]+"_"+eta_range[i+1]+"/pt_"+pt_range[j]+"_"+pt_range[j+1]+"/r_rel");
 	mc[i][j] = (TH1D*)MCfile->Get("/eta_"+eta_range[i]+"_"+eta_range[i+1]+"/pt_"+pt_range[j]+"_"+pt_range[j+1]+"/r_rel");
+	data[i][j]->Print();
       }
     }
   }
@@ -65,7 +72,7 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
   TH1D* ratio[n_eta-1];
   //TF1* fit_func[n_eta-1];
   for (int j=0; j<n_eta-1; j++){
-    TString numstr=ToString(j);
+    TString numstr=ToStringPT(j);
     if(mpfMethod){
       TString histoname="mpf_ptextra_histo"+numstr;
       ratio[j] = new TH1D(histoname,histoname,n_pt-1,pt_bins);
@@ -147,15 +154,16 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
   TF1 * f2[n_eta-1];
 
   // create output .dat file, including the kFSR extrapolation (alpha->0)
+  FILE *fp; FILE *fp2; FILE *l2resfile;
   if(mpfMethod){
-    FILE *fp = fopen("pT_MPF_extrapolations.dat","w");
-    FILE *fp2 = fopen("pT_MPF_constantExtrapolation.dat","w");
-    FILE *l2resfile = fopen("L2Res_MPF.dat","w");
+    fp = fopen("pT_MPF_extrapolations.dat","w");
+    fp2 = fopen("pT_MPF_constantExtrapolation.dat","w");
+    l2resfile = fopen("L2Res_MPF.dat","w");
   }
   else{
-    FILE *fp = fopen("pT_DiJet_extrapolations.dat","w");
-    FILE *fp2 = fopen("pT_DiJet_constantExtrapolation.dat","w");
-    FILE *l2resfile = fopen("L2Res_DiJet.dat","w");
+    fp = fopen("pT_DiJet_extrapolations.dat","w");
+    fp2 = fopen("pT_DiJet_constantExtrapolation.dat","w");
+    l2resfile = fopen("L2Res_DiJet.dat","w");
   }
 
 
@@ -302,7 +310,7 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
   // get the kFSR plots and calculate residuals
   if(mpfMethod){
     TFile* kfsr_mpf = new TFile(path+"Histo_KFSR_MPF_L1.root","READ");
-    TH1D* hist_kfsr_mpf = kfsr_mpf->Get("kfsr_mpf");
+    TH1D* hist_kfsr_mpf = (TH1D*)kfsr_mpf->Get("kfsr_mpf");
     /*
     for(int i=0; i<50; i++){
       hist_kfsr_mpf->SetBinContent(i,1);
@@ -389,21 +397,21 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
 
 
 
-
+    TFile* outputfile;
     if(syst==5){
-      TFile* outputfile = new TFile(path+"Histo_Res_MPF_L1"+tag+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_MPF_L1"+tag+".root","RECREATE");
     }
     if(syst==0){
-      TFile* outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
+     outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
     }
     if(syst==1){
-      TFile* outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
+     outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
     }
     if(syst==2){
-      TFile* outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
     }
     if(syst==3){
-      TFile* outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_MPF_L1_"+variation+".root","RECREATE");
     }
 
     Residual_logpt_MPF->Write();
@@ -422,7 +430,7 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
   // DIJET balance
   else{
     TFile* kfsr_dijet = new TFile(path+"Histo_KFSR_DiJet_L1.root","READ");
-    TH1D* hist_kfsr_dijet = kfsr_dijet->Get("kfsr_dijet");
+    TH1D* hist_kfsr_dijet = (TH1D*)kfsr_dijet->Get("kfsr_dijet");
     /*
     for(int i=0; i<50; i++){
       hist_kfsr_dijet->SetBinContent(i,1);
@@ -515,21 +523,21 @@ void PTextrapolation(bool mpfMethod(false), TString path, TFile* datafile, TFile
 
 
 
-
+    TFile* outputfile;
     if(syst==5){
-      TFile* outputfile = new TFile(path+"Histo_Res_DiJet_L1"+tag+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_DiJet_L1"+tag+".root","RECREATE");
     }
     if(syst==0){
-      TFile* outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
+     outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
     }
     if(syst==1){
-      TFile* outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
     }
     if(syst==2){
-      TFile* outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
     }
     if(syst==3){
-      TFile* outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
+      outputfile = new TFile(path+"Histo_Res_DiJet_L1_"+variation+".root","RECREATE");
     }
 
 

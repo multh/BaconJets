@@ -29,7 +29,7 @@ Int_t   Eventnr;
 TFile   *fCurrentTreeFile;
 using namespace std;
 using namespace uhh2;
-
+using namespace baconhep;
 
 namespace uhh2bacon {
 
@@ -42,6 +42,7 @@ namespace uhh2bacon {
   private:
 
     Event::Handle<TClonesArray> h_jets  ;
+    //    Event::Handle<std::vector<uhh2bacon::TJet>> h_jets;
     Event::Handle<baconhep::TEventInfo> h_eventInfo;
     Event::Handle<baconhep::TGenEventInfo> h_genInfo;
     Event::Handle<TClonesArray> h_pv;
@@ -71,11 +72,15 @@ namespace uhh2bacon {
 // // //     datacorr(ctx),
     //  cSetTree()
   {
+
+    cSetTree = TSetTree();
+
     auto dataset_type = ctx.get("dataset_type");
     is_mc = dataset_type  == "MC";
     is_data = dataset_type  == "DATA";
 
     h_jets = ctx.declare_event_input<TClonesArray>("AK4PFCHS");
+    //    h_jets = ctx.declare_event_input<std::vector<baconhep::TJet>>("AK4PFCHS");
     h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
     if(is_mc){ /// apply for MC only
       h_genInfo = ctx.declare_event_input<baconhep::TGenEventInfo>("GenEvtInfo");
@@ -165,25 +170,33 @@ namespace uhh2bacon {
     // float j3L1corr =1.;
     // float j1L1corr =1.;
     // float j2L1corr =1.;
-    const baconhep::TEventInfo & info = event.get(h_eventInfo);
-    baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+    // const baconhep::TEventInfo & info = event.get(h_eventInfo);
+    // baconhep::TEventInfo* eventInfo= new baconhep::TEventInfo(info);
+
+    const baconhep::TEventInfo & eventInfo = event.get(h_eventInfo);
     const TClonesArray & js = event.get(h_jets);
+    //    std::vector<baconhep::TJet> js = event.get(h_jets);
+    // //! JER smearing
+    // if(is_mc){ /// apply for MC only
 
-    //! JER smearing
-    if(is_mc){ /// apply for MC only
+    //     //! matching from GEN to RECO
+    //     if(!jetcorr.JetMatching()) return false;
+    //     //! JER smearing
+    //     //0 = central; 1 = scale up; other = scale down
+    //     if(!jetcorr.JetResolutionSmearer(0)) return false;
 
-        //! matching from GEN to RECO
-        if(!jetcorr.JetMatching()) return false;
-        //! JER smearing
-        //0 = central; 1 = scale up; other = scale down
-        if(!jetcorr.JetResolutionSmearer(0)) return false;
+    // }
 
-    }
+    // baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
+    // baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
 
     baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
     baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
     Int_t njets = js.GetEntries();
-    baconhep::TJet* jet3 ;
+    std::cout<<"Number of jets = "<<js.GetEntries()<<std::endl;
+    //    std::cout<<"evtNum = "<<eventInfo->evtNum<<std::endl;
+    std::cout<<"evtNum = "<<eventInfo.evtNum<<std::endl;
+    baconhep::TJet* jet3;
 
     const TClonesArray & pvs = event.get(h_pv);
 
@@ -191,6 +204,8 @@ namespace uhh2bacon {
     event.jet2_pt = jet2->pt;
     event.jet1_ptRaw = jet1->ptRaw;
     event.jet2_ptRaw = jet2->ptRaw;
+    std::cout<<"event.jet1_ptRaw = "<<event.jet1_ptRaw<<" event.jet1_pt = "<<event.jet1_pt<<std::endl;
+    std::cout<<"event.jet2_ptRaw = "<<event.jet2_ptRaw<<" event.jet2_pt = "<<event.jet2_pt<<std::endl;
     if (njets > 2) {
         jet3 = (baconhep::TJet*)js[2];
         event.jet3_pt = jet3->pt;
@@ -198,7 +213,7 @@ namespace uhh2bacon {
     }
     float pt_ave = (event.jet1_pt + event.jet2_pt)/2;
     event.pt_ave = pt_ave;
-
+    std::cout<<"pt_ave = "<<pt_ave<<endl;
     if(is_mc){ /// apply for MC only
         const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
         baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
@@ -207,14 +222,14 @@ namespace uhh2bacon {
 
         //! Reweighting
         //event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting("Asympt", 69) * mcweight.getEvReweighting(0, "Asympt", 69);
-
+	std::cout<<"(event.pt_ave - event.gen_pthat)/event.gen_pthat = "<<(event.pt_ave - event.gen_pthat)/event.gen_pthat<<std::endl;
          if ((event.pt_ave - event.gen_pthat)/event.gen_pthat > 1) return false;
          //0 = central; 1 = scale up; -1 = scale down; 99 = no scale
          //MC option:  Asympt; or Flat
          //minBiasXsec for PU:  69; or 80 mb
         //11 = set 1; 12 = set2 ...
          event.weight = event.weight * event.gen_weight * mcweight.getPuReweighting("Asympt", 69)* mcweight.getEvReweighting(0, "Asympt", 69);
-
+	 std::cout<<"event.weight = "<<event.weight<<endl;
     }
 
 
@@ -234,9 +249,11 @@ namespace uhh2bacon {
 
     TVector2 pt, met;
     TVector2* MET = new TVector2(1,1);
-    MET->SetMagPhi(eventInfo->pfMET ,eventInfo->pfMETphi);
+    //    MET->SetMagPhi(eventInfo->pfMET ,eventInfo->pfMETphi);
+    MET->SetMagPhi(eventInfo.pfMET ,eventInfo.pfMETphi);
 
-    met.Set(eventInfo->pfMET * cos(eventInfo->pfMETphi),eventInfo->pfMET * sin(eventInfo->pfMETphi));
+    //    met.Set(eventInfo->pfMET * cos(eventInfo->pfMETphi),eventInfo->pfMET * sin(eventInfo->pfMETphi));
+    met.Set(eventInfo.pfMET * cos(eventInfo.pfMETphi),eventInfo.pfMET * sin(eventInfo.pfMETphi));
 
     int ran = rand();
     int numb = ran % 2 + 1;
