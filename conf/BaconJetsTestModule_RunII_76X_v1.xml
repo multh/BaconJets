@@ -7,9 +7,9 @@
 <!-- <!ENTITY QCDPt15to7000_pythia8 SYSTEM "../datasets/JEC_76X/MC_QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8_RunIIFall15MiniAODv1.xml">
 <!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Summer15_25nsV6.xml"> -->
 
- <!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA2.xml">
+ <!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/testDATA_04022016.xml">
 
-<!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Summer15_25nsV6/">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/TEST/">
 ]>
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->

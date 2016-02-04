@@ -1,7 +1,0 @@
-This is from https://github.com/nhanvtran/ProjectPUPPI
-ana_cms_v2/Bacon/BaconAna/DataFormatsOffline
-
-Once copied, delete the auto-generated dict files src/BaconDict.cc and src/BaconDict.h,
-as these will be recreated by the UHH2 Makefile.
-
-
