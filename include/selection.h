@@ -19,7 +19,18 @@ class Selection {
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
     uhh2::Event::Handle<TClonesArray> h_pv;
-   // float csv_threshold;
+
+    //Additional vars in Event, specific for dijet
+    uhh2::Event::Handle<float> tt_gen_pthat; uhh2::Event::Handle<float> tt_gen_weight;
+    uhh2::Event::Handle<float> tt_jet1_pt;     uhh2::Event::Handle<float> tt_jet2_pt;     uhh2::Event::Handle<float> tt_jet3_pt;
+    uhh2::Event::Handle<float> tt_jet1_ptRaw;  uhh2::Event::Handle<float> tt_jet2_ptRaw;  uhh2::Event::Handle<float> tt_jet3_ptRaw;
+    uhh2::Event::Handle<int> tt_nvertices;
+    uhh2::Event::Handle<float> tt_probejet_eta;  uhh2::Event::Handle<float> tt_probejet_phi; uhh2::Event::Handle<float> tt_probejet_pt; uhh2::Event::Handle<float> tt_probejet_ptRaw;
+    uhh2::Event::Handle<float> tt_barreljet_eta;  uhh2::Event::Handle<float> tt_barreljet_phi; uhh2::Event::Handle<float> tt_barreljet_pt; uhh2::Event::Handle<float> tt_barreljet_ptRaw;
+    uhh2::Event::Handle<float> tt_pt_ave;
+    uhh2::Event::Handle<float> tt_alpha;
+    uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<float> tt_nPU;
+
     public:
     Selection(uhh2::Context & ctx);
     ~Selection();

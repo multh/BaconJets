@@ -16,8 +16,30 @@ Selection::Selection(uhh2::Context & ctx) :
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
   h_pv = context.declare_event_input<TClonesArray>("PV");
 
-//   h_jets = context.declare_event_autput<TClonesArray>("Jet05");
-//   h_eventInfo = context.declare_event_autput<baconhep::TEventInfo>("Info");
+  tt_gen_pthat = ctx.declare_event_output<float>("gen_pthat");
+  tt_gen_weight = ctx.declare_event_output<float>("gen_weight");
+  tt_jet1_pt = ctx.declare_event_output<float>("jet1_pt");
+  tt_jet2_pt = ctx.declare_event_output<float>("jet2_pt");
+  tt_jet3_pt = ctx.declare_event_output<float>("jet3_pt");
+  tt_jet1_ptRaw = ctx.declare_event_output<float>("jet1_ptRaw");
+  tt_jet2_ptRaw = ctx.declare_event_output<float>("jet2_ptRaw");
+  tt_jet3_ptRaw = ctx.declare_event_output<float>("jet3_ptRaw");
+  tt_nvertices = ctx.declare_event_output<int>("nvertices");
+  tt_probejet_eta = ctx.declare_event_output<float>("probejet_eta");
+  tt_probejet_phi = ctx.declare_event_output<float>("probejet_phi");
+  tt_probejet_pt = ctx.declare_event_output<float>("probejet_pt");
+  tt_probejet_ptRaw = ctx.declare_event_output<float>("probejet_ptRaw");
+  tt_barreljet_eta = ctx.declare_event_output<float>("barreljet_eta");
+  tt_barreljet_phi = ctx.declare_event_output<float>("barreljet_phi");
+  tt_barreljet_pt = ctx.declare_event_output<float>("barreljet_pt");
+  tt_barreljet_ptRaw = ctx.declare_event_output<float>("barreljet_ptRaw");
+  tt_pt_ave = ctx.declare_event_output<float>("pt_ave");
+  tt_alpha = ctx.declare_event_output<float>("alpha");
+  tt_rel_r = ctx.declare_event_output<float>("rel_r");
+  tt_mpf_r = ctx.declare_event_output<float>("mpf_r");
+  tt_asymmetry = ctx.declare_event_output<float>("asymmetry");
+  tt_nPU = ctx.declare_event_output<float>("nPU");
+
 }
 
 void Selection::SetEvent(uhh2::Event& evt)
@@ -72,16 +94,16 @@ bool Selection::Trigger(uhh2::Event& evt)
     if(eventInfo->triggerBits[8]==1)  trigger400fired = true;
     if(eventInfo->triggerBits[10]==1) trigger500fired = true;
 
-    if (evt.pt_ave < s_Pt_Ave40_cut) return false;
-    if (evt.pt_ave >= s_Pt_Ave40_cut  && evt.pt_ave < s_Pt_Ave60_cut  && trigger40fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave60_cut  && evt.pt_ave < s_Pt_Ave80_cut  && trigger60fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave80_cut  && evt.pt_ave < s_Pt_Ave140_cut && trigger80fired) return true; //change back to trigger80fired
-    if (evt.pt_ave >= s_Pt_Ave140_cut && evt.pt_ave < s_Pt_Ave200_cut && trigger140fired) return true; //change back to trigger140fired
-    if (evt.pt_ave >= s_Pt_Ave200_cut && evt.pt_ave < s_Pt_Ave260_cut && trigger200fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave260_cut && evt.pt_ave < s_Pt_Ave320_cut && trigger260fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave320_cut && evt.pt_ave < s_Pt_Ave400_cut && trigger320fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave400_cut && evt.pt_ave < s_Pt_Ave500_cut && trigger400fired) return true;
-    if (evt.pt_ave >= s_Pt_Ave500_cut && trigger500fired) return true;
+    if (evt.get(tt_pt_ave) < s_Pt_Ave40_cut) return false;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave40_cut  && evt.get(tt_pt_ave) < s_Pt_Ave60_cut  && trigger40fired) return true;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave60_cut  && evt.get(tt_pt_ave) < s_Pt_Ave80_cut  && trigger60fired) return true;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave80_cut  && evt.get(tt_pt_ave) < s_Pt_Ave140_cut && trigger80fired) return true; //change back to trigger80fired
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave140_cut && evt.get(tt_pt_ave) < s_Pt_Ave200_cut && trigger140fired) return true; //change back to trigger140fired
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave200_cut && evt.get(tt_pt_ave) < s_Pt_Ave260_cut && trigger200fired) return true;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave260_cut && evt.get(tt_pt_ave) < s_Pt_Ave320_cut && trigger260fired) return true;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave320_cut && evt.get(tt_pt_ave) < s_Pt_Ave400_cut && trigger320fired) return true;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave400_cut && evt.get(tt_pt_ave) < s_Pt_Ave500_cut && trigger400fired) return true;
+    if (evt.get(tt_pt_ave) >= s_Pt_Ave500_cut && trigger500fired) return true;
 
 
 
@@ -172,7 +194,7 @@ bool Selection::DiJetAdvanced(uhh2::Event& evt)
     if (deltaPhi < s_delta_phi) return false;
 
     // |asymm| < 0.7
-    if (fabs((evt.jet2_pt - evt.jet1_pt) / (evt.jet2_pt + evt.jet1_pt)) > s_asymm) return false;
+    if (fabs((evt.get(tt_jet2_pt) - evt.get(tt_jet1_pt)) / (evt.get(tt_jet2_pt) + evt.get(tt_jet1_pt))) > s_asymm) return false;
 
     // p_t,rel < 0.2
 //     if (njets>2){

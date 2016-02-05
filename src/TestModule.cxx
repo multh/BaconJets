@@ -57,10 +57,18 @@ namespace uhh2bacon {
     bool is_data;
     TSetTree cSetTree;
     uhh2bacon::PileupData  pileupData;
-    // std::unique_ptr<TSetTree> cSetTree;
-    // std::unique_ptr<PileupData>  pileupData;
 
-//     DataCorr datacorr;
+    //Additional vars in Event, specific for dijet
+    Event::Handle<float> tt_gen_pthat; Event::Handle<float> tt_gen_weight;
+    Event::Handle<float> tt_jet1_pt;     Event::Handle<float> tt_jet2_pt;     Event::Handle<float> tt_jet3_pt;
+    Event::Handle<float> tt_jet1_ptRaw;  Event::Handle<float> tt_jet2_ptRaw;  Event::Handle<float> tt_jet3_ptRaw;
+    Event::Handle<int> tt_nvertices;
+    Event::Handle<float> tt_probejet_eta;  Event::Handle<float> tt_probejet_phi; Event::Handle<float> tt_probejet_pt; Event::Handle<float> tt_probejet_ptRaw;
+    Event::Handle<float> tt_barreljet_eta;  Event::Handle<float> tt_barreljet_phi; Event::Handle<float> tt_barreljet_pt; Event::Handle<float> tt_barreljet_ptRaw;
+    Event::Handle<float> tt_pt_ave;
+    Event::Handle<float> tt_alpha;
+    Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; Event::Handle<float> tt_asymmetry; Event::Handle<float> tt_nPU;
+
   };
 
 
@@ -152,6 +160,40 @@ namespace uhh2bacon {
       }
     }
 
+    //Additional vars in event
+    //
+
+    // gen_pthat = 0; gen_weight = 0;
+    // jet1_pt = 0; jet2_pt = 0; jet3_pt = 0; 
+    // jet1_ptRaw = 0; jet2_ptRaw = 0; jet3_ptRaw = 0; 
+    // nvertices = 0;
+    // probejet_eta = 0; probejet_phi = 0; probejet_pt = 0; probejet_ptRaw = 0;
+    // barreljet_eta = 0; barreljet_phi = 0; barreljet_pt = 0; barreljet_ptRaw = 0;
+    // pt_ave = 0; alpha = 0; rel_r = 0; mpf_r = 0;
+    // asymmetry = 0; nPU = 0;
+    tt_gen_pthat = ctx.declare_event_output<float>("gen_pthat");
+    tt_gen_weight = ctx.declare_event_output<float>("gen_weight");
+    tt_jet1_pt = ctx.declare_event_output<float>("jet1_pt");
+    tt_jet2_pt = ctx.declare_event_output<float>("jet2_pt");
+    tt_jet3_pt = ctx.declare_event_output<float>("jet3_pt");
+    tt_jet1_ptRaw = ctx.declare_event_output<float>("jet1_ptRaw");
+    tt_jet2_ptRaw = ctx.declare_event_output<float>("jet2_ptRaw");
+    tt_jet3_ptRaw = ctx.declare_event_output<float>("jet3_ptRaw");
+    tt_nvertices = ctx.declare_event_output<int>("nvertices");
+    tt_probejet_eta = ctx.declare_event_output<float>("probejet_eta");
+    tt_probejet_phi = ctx.declare_event_output<float>("probejet_phi");
+    tt_probejet_pt = ctx.declare_event_output<float>("probejet_pt");
+    tt_probejet_ptRaw = ctx.declare_event_output<float>("probejet_ptRaw");
+    tt_barreljet_eta = ctx.declare_event_output<float>("barreljet_eta");
+    tt_barreljet_phi = ctx.declare_event_output<float>("barreljet_phi");
+    tt_barreljet_pt = ctx.declare_event_output<float>("barreljet_pt");
+    tt_barreljet_ptRaw = ctx.declare_event_output<float>("barreljet_ptRaw");
+    tt_pt_ave = ctx.declare_event_output<float>("pt_ave");
+    tt_alpha = ctx.declare_event_output<float>("alpha");
+    tt_rel_r = ctx.declare_event_output<float>("rel_r");
+    tt_mpf_r = ctx.declare_event_output<float>("mpf_r");
+    tt_asymmetry = ctx.declare_event_output<float>("asymmetry");
+    tt_nPU = ctx.declare_event_output<float>("nPU");
   }
 
   TestModule::~TestModule() {
@@ -199,36 +241,45 @@ namespace uhh2bacon {
     baconhep::TJet* jet3;
 
     const TClonesArray & pvs = event.get(h_pv);
-
-    event.jet1_pt = jet1->pt;
-    event.jet2_pt = jet2->pt;
-    event.jet1_ptRaw = jet1->ptRaw;
-    event.jet2_ptRaw = jet2->ptRaw;
-    std::cout<<"event.jet1_ptRaw = "<<event.jet1_ptRaw<<" event.jet1_pt = "<<event.jet1_pt<<std::endl;
-    std::cout<<"event.jet2_ptRaw = "<<event.jet2_ptRaw<<" event.jet2_pt = "<<event.jet2_pt<<std::endl;
+    event.set(tt_jet1_pt,jet1->pt);
+    event.set(tt_jet2_pt,jet2->pt);
+    event.set(tt_jet1_ptRaw,jet1->ptRaw);
+    event.set(tt_jet2_ptRaw,jet2->ptRaw);
+    // event.jet1_pt = jet1->pt;
+    // event.jet2_pt = jet2->pt;
+    // event.jet1_ptRaw = jet1->ptRaw;
+    // event.jet2_ptRaw = jet2->ptRaw;
+    std::cout<<"event.jet1_ptRaw = "<<event.get(tt_jet1_ptRaw)<<" event.jet1_pt = "<<event.get(tt_jet1_pt)<<std::endl;
+    std::cout<<"event.jet2_ptRaw = "<<event.get(tt_jet2_ptRaw)<<" event.jet2_pt = "<<event.get(tt_jet2_pt)<<std::endl;
     if (njets > 2) {
         jet3 = (baconhep::TJet*)js[2];
-        event.jet3_pt = jet3->pt;
-        event.jet3_ptRaw = jet3->ptRaw;
+	event.set(tt_jet3_pt, jet3->pt);
+	event.set(tt_jet3_ptRaw, jet3->ptRaw);
+	//        event.jet3_pt = jet3->pt;
+	//        event.jet3_ptRaw = jet3->ptRaw;
     }
-    float pt_ave = (event.jet1_pt + event.jet2_pt)/2;
-    event.pt_ave = pt_ave;
+    float pt_ave = (event.get(tt_jet1_pt) + event.get(tt_jet2_pt))/2;
+    event.set(tt_pt_ave,pt_ave);
+    //    event.pt_ave = pt_ave;
     std::cout<<"pt_ave = "<<pt_ave<<endl;
+    event.set(tt_gen_pthat,0);//set default values for DATA
+    event.set(tt_gen_weight, 0);//set default values for DATA
     if(is_mc){ /// apply for MC only
         const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
         baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
-        event.gen_pthat    = genInfo->pthat;
-        event.gen_weight   = genInfo->weight;
+	event.set(tt_gen_pthat,genInfo->pthat);
+	event.set(tt_gen_weight, genInfo->weight);
+        // event.gen_pthat    = genInfo->pthat;
+        // event.gen_weight   = genInfo->weight;
 
         //! Reweighting
         //event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting("Asympt", 69) * mcweight.getEvReweighting(0, "Asympt", 69);
-	std::cout<<"(event.pt_ave - event.gen_pthat)/event.gen_pthat = "<<(event.pt_ave - event.gen_pthat)/event.gen_pthat<<std::endl;
-         if ((event.pt_ave - event.gen_pthat)/event.gen_pthat > 1) return false;
+	if ((event.get(tt_pt_ave) - event.get(tt_gen_pthat))/event.get(tt_gen_pthat) > 1) return false;
          //0 = central; 1 = scale up; -1 = scale down; 99 = no scale
          //MC option:  Asympt; or Flat
          //minBiasXsec for PU:  69; or 80 mb
         //11 = set 1; 12 = set2 ...
-         event.weight = event.weight * event.gen_weight * mcweight.getPuReweighting("Asympt", 69)* mcweight.getEvReweighting(0, "Asympt", 69);
+	event.weight = event.weight * event.get(tt_gen_weight) * mcweight.getPuReweighting("Asympt", 69)* mcweight.getEvReweighting(0, "Asympt", 69);
 	 std::cout<<"event.weight = "<<event.weight<<endl;
     }
 
@@ -260,100 +311,99 @@ namespace uhh2bacon {
     if ((fabs(jet1->eta)<s_eta_barr)&&(fabs(jet2->eta)<s_eta_barr)) {
         if(numb==1){
             probejet_eta = jet2->eta;
-            probejet_pt = event.jet2_pt;
+            probejet_pt = event.get(tt_jet2_pt);
             probejet_phi = jet2->phi;
-            probejet_ptRaw = event.jet2_ptRaw;
+            probejet_ptRaw = event.get(tt_jet2_ptRaw);
 
             barrel_eta = jet1->eta;
-            barrel_pt = event.jet1_pt;
+            barrel_pt = event.get(tt_jet1_pt);
             barrel_phi = jet1->phi;
-            barrel_ptRaw = event.jet1_ptRaw;
+            barrel_ptRaw = event.get(tt_jet1_ptRaw);
 
-            asymmetry = (event.jet2_pt - event.jet1_pt)/(event.jet2_pt + event.jet1_pt);
-            rel_r = event.jet2_pt / event.jet1_pt;
+            asymmetry = (event.get(tt_jet2_pt) - event.get(tt_jet1_pt))/(event.get(tt_jet2_pt) + event.get(tt_jet1_pt));
+            rel_r = event.get(tt_jet2_pt) / event.get(tt_jet1_pt);
 
-            pt.Set(event.jet1_pt * cos(jet1->phi),event.jet1_pt * sin(jet1->phi));
+            pt.Set(event.get(tt_jet1_pt) * cos(jet1->phi),event.get(tt_jet1_pt) * sin(jet1->phi));
             mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
         }
         if(numb==2){
             probejet_eta = jet1->eta;
-            probejet_pt = event.jet1_pt;
+            probejet_pt = event.get(tt_jet1_pt);
             probejet_phi = jet1->phi;
-            probejet_ptRaw = event.jet1_ptRaw;
+            probejet_ptRaw = event.get(tt_jet1_ptRaw);
 
             barrel_eta = jet2->eta;
-            barrel_pt = event.jet2_pt;
+            barrel_pt = event.get(tt_jet2_pt);
             barrel_phi = jet2->phi;
-            barrel_ptRaw = event.jet2_ptRaw;
+            barrel_ptRaw = event.get(tt_jet2_ptRaw);
 
-            asymmetry = (event.jet1_pt - event.jet2_pt)/(event.jet1_pt + event.jet2_pt);
-            rel_r = event.jet1_pt / event.jet2_pt;
+            asymmetry = (event.get(tt_jet1_pt) - event.get(tt_jet2_pt))/(event.get(tt_jet1_pt) + event.get(tt_jet2_pt));
+            rel_r = event.get(tt_jet1_pt) / event.get(tt_jet2_pt);
 
-            pt.Set(event.jet2_pt * cos(jet2->phi),event.jet2_pt * sin(jet2->phi));
+            pt.Set(event.get(tt_jet2_pt) * cos(jet2->phi),event.get(tt_jet2_pt) * sin(jet2->phi));
             mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
 
         }
     } else if ((fabs(jet1->eta)<s_eta_barr)||(fabs(jet2->eta)<s_eta_barr)){
         if(fabs(jet1->eta)<s_eta_barr){
             probejet_eta = jet2->eta;
-            probejet_pt = event.jet2_pt;
+            probejet_pt = event.get(tt_jet2_pt);
             probejet_phi = jet2->phi;
-            probejet_ptRaw = event.jet2_ptRaw;
+            probejet_ptRaw = event.get(tt_jet2_ptRaw);
 
             barrel_eta = jet1->eta;
-            barrel_pt = event.jet1_pt;
+            barrel_pt = event.get(tt_jet1_pt);
             barrel_phi = jet1->phi;
-            barrel_ptRaw = event.jet1_ptRaw;
+            barrel_ptRaw = event.get(tt_jet1_ptRaw);
 
-            asymmetry = (event.jet2_pt - event.jet1_pt)/(event.jet2_pt + event.jet1_pt);
-            rel_r = event.jet2_pt / event.jet1_pt;
+            asymmetry = (event.get(tt_jet2_pt) - event.get(tt_jet1_pt))/(event.get(tt_jet2_pt) + event.get(tt_jet1_pt));
+            rel_r = event.get(tt_jet2_pt) / event.get(tt_jet1_pt);
 
-            pt.Set(event.jet1_pt * cos(jet1->phi),event.jet1_pt * sin(jet1->phi));
+            pt.Set(event.get(tt_jet1_pt) * cos(jet1->phi),event.get(tt_jet1_pt) * sin(jet1->phi));
             mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
 
         }else{
             probejet_eta = jet1->eta;
-            probejet_pt = event.jet1_pt;
+            probejet_pt = event.get(tt_jet1_pt);
             probejet_phi = jet1->phi;
-            probejet_ptRaw = event.jet1_ptRaw;
+            probejet_ptRaw = event.get(tt_jet1_ptRaw);
 
             barrel_eta = jet2->eta;
-            barrel_pt = event.jet2_pt;
+            barrel_pt = event.get(tt_jet2_pt);
             barrel_phi = jet2->phi;
-            barrel_ptRaw = event.jet2_ptRaw;
+            barrel_ptRaw = event.get(tt_jet2_ptRaw);
 
-            asymmetry = (event.jet1_pt - event.jet2_pt)/(event.jet1_pt + event.jet2_pt);
-            rel_r = event.jet1_pt / event.jet2_pt;
+            asymmetry = (event.get(tt_jet1_pt) - event.get(tt_jet2_pt))/(event.get(tt_jet1_pt) + event.get(tt_jet2_pt));
+            rel_r = event.get(tt_jet1_pt) / event.get(tt_jet2_pt);
 
-            pt.Set(event.jet2_pt * cos(jet2->phi),event.jet2_pt * sin(jet2->phi));
+            pt.Set(event.get(tt_jet2_pt) * cos(jet2->phi),event.get(tt_jet2_pt) * sin(jet2->phi));
             mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
         }
 
     }
 
-    event.probejet_eta    = probejet_eta;
-    event.probejet_phi    = probejet_phi;
-    event.probejet_pt     = probejet_pt;
-    event.probejet_ptRaw  = probejet_ptRaw;
+    event.set(tt_probejet_eta,probejet_eta);
+    event.set(tt_probejet_phi,probejet_phi);
+    event.set(tt_probejet_pt,probejet_pt);
+    event.set(tt_probejet_ptRaw,probejet_ptRaw);
+    event.set(tt_barreljet_eta,barrel_eta);
+    event.set(tt_barreljet_phi,barrel_phi);
+    event.set(tt_barreljet_pt,barrel_pt);
+    event.set(tt_barreljet_ptRaw,barrel_ptRaw);
+    event.set(tt_asymmetry,asymmetry);
+    event.set(tt_rel_r,rel_r);
+    event.set(tt_mpf_r,mpf_r);
 
-    event.barreljet_eta   = barrel_eta;
-    event.barreljet_phi   = barrel_phi;
-    event.barreljet_pt    = barrel_pt;
-    event.barreljet_ptRaw = barrel_ptRaw;
-
-    event.asymmetry = asymmetry;
-    event.rel_r     = rel_r;
-    event.mpf_r     = mpf_r;
-
-
-    event.nvertices = pvs.GetEntries();
+    event.set(tt_nvertices,pvs.GetEntries());
+    //    event.nvertices = pvs.GetEntries();
 //     if ((event.nvertices < 14.) || (event.nvertices >= 16.) ) return false;
 
     float alpha = 0.;
     if (njets > 2) {
-      alpha = (2*(event.jet3_pt))/(event.jet1_pt + event.jet2_pt);
+      alpha = (2*(event.get(tt_jet3_pt)))/(event.get(tt_jet1_pt) + event.get(tt_jet2_pt));
     }
-    event.alpha = alpha;
+    // event.alpha = alpha;
+    event.set(tt_alpha,alpha);
 
     if(!sel.DiJet()) return false;
 
@@ -371,7 +421,7 @@ namespace uhh2bacon {
         if(!sel.Trigger(event)) return false;
 
     } 
-    if (event.alpha < 0.2) {
+    if (event.get(tt_alpha) < 0.2) {
       h_sel->fill(event);
     }
 
@@ -381,20 +431,20 @@ namespace uhh2bacon {
 
     //   if(!sel.goodPVertex()) return false;
     //! for alpha < 0.4
-    if (event.alpha < 0.4) {
+    if (event.get(tt_alpha) < 0.4) {
         for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-            if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins_a04[i].fill(event, ran);
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a04[i].fill(event, ran);
         }
     }
     //! for alpha < 0.3
-    if (event.alpha < 0.3) {
+    if (event.get(tt_alpha) < 0.3) {
         for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-            if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins_a03[i].fill(event, ran);
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a03[i].fill(event, ran);
         }
         for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-            if ((fabs(event.probejet_eta)>=eta_range_mikko[j])&&(fabs(event.probejet_eta)<eta_range_mikko[j+1])) {
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
                 for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-                    if ((event.pt_ave>=pt_range[i])&&(event.pt_ave<pt_range[i+1])) {
+		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
                         h_eta_bins_mikko_a30[j*(pt_range.size()-1)+i].fill(event, ran);
                     }
                 }
@@ -402,27 +452,27 @@ namespace uhh2bacon {
         }
     }
     //! for alpha < 0.2
-    if (event.alpha < 0.2) {
+    if (event.get(tt_alpha) < 0.2) {
         for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-            if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
         }
 
         for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-             if ((event.pt_ave >= pt_range[i])&&(event.pt_ave < pt_range[i+1])) h_pt_bins[i].fill(event, ran);//j*pt_range.size()+i
+	  if ((event.get(tt_pt_ave) >= pt_range[i])&&(event.get(tt_pt_ave) < pt_range[i+1])) h_pt_bins[i].fill(event, ran);//j*pt_range.size()+i
         }
         for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-            if ((fabs(event.probejet_eta)>=eta_range_mikko[j])&&(fabs(event.probejet_eta)<eta_range_mikko[j+1])) {
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
                 for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-                    if ((event.pt_ave>=pt_range[i])&&(event.pt_ave<pt_range[i+1])) {
+		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
                         h_eta_bins_mikko_a20[j*(pt_range.size()-1)+i].fill(event, ran);
                     }
                 }
             }
         }
         for( unsigned int j=0; j < eta_range.size()-1; ++j ){
-            if ((fabs(event.probejet_eta)>=eta_range[j])&&(fabs(event.probejet_eta)<eta_range[j+1])) {
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[j])&&(fabs(event.get(tt_probejet_eta))<eta_range[j+1])) {
                 for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-                    if ((event.pt_ave>=pt_range[i])&&(event.pt_ave<pt_range[i+1])) {
+		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
                         h_noalpha_bins[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
                     }
                 }
@@ -430,11 +480,11 @@ namespace uhh2bacon {
         }
     }
     //! for alpha < 0.15
-    if (event.alpha < 0.15) {
+    if (event.get(tt_alpha) < 0.15) {
         for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-            if ((fabs(event.probejet_eta)>=eta_range_mikko[j])&&(fabs(event.probejet_eta)<eta_range_mikko[j+1])) {
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
                 for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-                    if ((event.pt_ave>=pt_range[i])&&(event.pt_ave<pt_range[i+1])) {
+		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
                         h_eta_bins_mikko_a15[j*(pt_range.size()-1)+i].fill(event, ran);
                     }
                 }
@@ -444,17 +494,17 @@ namespace uhh2bacon {
 
     //! for alpha < 0.1
 
-    if (event.alpha < 0.1) {
+    if (event.get(tt_alpha) < 0.1) {
         for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-            if ((event.pt_ave >= pt_range[i])&&(event.pt_ave < pt_range[i+1])) h_pt_bins_a01[i].fill(event, ran);//j*pt_range.size()+i
+	  if ((event.get(tt_pt_ave) >= pt_range[i])&&(event.get(tt_pt_ave) < pt_range[i+1])) h_pt_bins_a01[i].fill(event, ran);//j*pt_range.size()+i
         }
         for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-            if ((fabs(event.probejet_eta)>=eta_range[i])&&(fabs(event.probejet_eta)<eta_range[i+1])) h_eta_bins_a01[i].fill(event, ran);
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a01[i].fill(event, ran);
         }
         for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-            if ((fabs(event.probejet_eta)>=eta_range_mikko[j])&&(fabs(event.probejet_eta)<eta_range_mikko[j+1])) {
+	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
                 for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-                    if ((event.pt_ave>=pt_range[i])&&(event.pt_ave<pt_range[i+1])) {
+		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
                         h_eta_bins_mikko_a10[j*(pt_range.size()-1)+i].fill(event, ran);
                     }
                 }
