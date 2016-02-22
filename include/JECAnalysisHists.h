@@ -1,5 +1,5 @@
 #pragma once
-
+//#include <UHH2/BaconJets/include/HistsBASE.h>
 #include "UHH2/core/include/Hists.h"
 #include "UHH2/core/include/Event.h"
 #include "TClonesArray.h"
@@ -13,6 +13,7 @@
  * pointers as member data instead, like in 'common/include/ElectronHists.h'.
  */
 class JECAnalysisHists: public uhh2::Hists {
+//class JECAnalysisHists: public HistsBASE {
 public:
     // use the same constructor arguments as Hists for forwarding:
     JECAnalysisHists(uhh2::Context & ctx, const std::string & dirname);
@@ -21,6 +22,7 @@ public:
     void fill(const uhh2::Event & ev, const int rand);
     virtual ~JECAnalysisHists();
 
+    // TH2D *ptjet3_vs_alpha,*pt_ave_vs_alpha;
 private:
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
@@ -34,5 +36,6 @@ private:
     uhh2::Event::Handle<float> tt_barreljet_eta;  uhh2::Event::Handle<float> tt_barreljet_phi; uhh2::Event::Handle<float> tt_barreljet_pt; uhh2::Event::Handle<float> tt_barreljet_ptRaw;
     uhh2::Event::Handle<float> tt_pt_ave;
     uhh2::Event::Handle<float> tt_alpha;
-    uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<float> tt_nPU;
+    uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<int> tt_nPU;
+   
 };

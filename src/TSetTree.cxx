@@ -58,7 +58,7 @@ void TSetTree::file() {
     t->Branch("PtRaw_jt2",  &PtRaw_jt2,  "PtRaw_jt2/F");
 }
 
-void TSetTree::fillTree(Int_t ev, Int_t rn, Float_t pt_ave, Float_t eta_jt1, Float_t eta_jt2, Float_t phi_jt1, Float_t phi_jt2, Float_t pt_jt1, Float_t pt_jt2, Float_t ptjt1, Float_t ptjt2, Float_t phijt1, Float_t phijt2, Float_t etajt1, Float_t etajt2, Float_t ptraw_jt1, Float_t ptraw_jt2, Float_t ptraw_probjt, Float_t ptraw_barrjt) {
+void TSetTree::fillTree(Int_t ev, Int_t rn, Float_t pt_ave, Float_t eta_jt1, Float_t eta_jt2, Float_t phi_jt1, Float_t phi_jt2, Float_t pt_jt1, Float_t pt_jt2, Float_t ptjt1, Float_t ptjt2, Float_t phijt1, Float_t phijt2, Float_t etajt1, Float_t etajt2, Float_t ptraw_jt1, Float_t ptraw_jt2, Float_t ptraw_probjt, Float_t ptraw_barrjt, Float_t alpha_t) {
 //     file();
 
   //  for(event=1; event<=1000; ++event){
@@ -81,7 +81,7 @@ void TSetTree::fillTree(Int_t ev, Int_t rn, Float_t pt_ave, Float_t eta_jt1, Flo
         PtRaw_barrjt = ptraw_barrjt;
         PtRaw_jt1 = ptraw_jt1;
         PtRaw_jt2 = ptraw_jt2;
-
+	alpha = alpha_t;
         t->Fill();
    // }
 

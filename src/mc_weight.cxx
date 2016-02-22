@@ -25,19 +25,34 @@ McWeight::McWeight(uhh2::Context & ctx) :
     event(0),
     fPuReweighting_histo(NULL)
 {
-    h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
+  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
+  //    h_jets = context.declare_event_input<TClonesArray>("AK4PFPUPPI");
     h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
 
-    fPuReweighting_histoname.push_back(hPuReweighting_histo69A);
-    fPuReweighting_histoname.push_back(hPuReweighting_histo80A);
-    fPuReweighting_histoname.push_back(hPuReweighting_histo69F);
-    fPuReweighting_histoname.push_back(hPuReweighting_histo80F);
+    // fPuReweighting_histoname.push_back(hPuReweighting_histo69A);
+    // fPuReweighting_histoname.push_back(hPuReweighting_histo80A);
+    // fPuReweighting_histoname.push_back(hPuReweighting_histo69F);
+    // fPuReweighting_histoname.push_back(hPuReweighting_histo80F);
 
-    TString DATABASE_PATH = "/nfs/dust/cms/user/kovalch/DataPileup/PuWeights";
+    fPuReweighting_histoname.push_back(hPuReweighting_histo58);
+    fPuReweighting_histoname.push_back(hPuReweighting_histo69);
+    fPuReweighting_histoname.push_back(hPuReweighting_histo80);
 
-    TString fPuReweighting_filename[] = {"PUweight_V6_minBiasXsec69000_pileupJSON_151102_newAsymptMCSel.root","PUweight_V6_minBiasXsec80000_pileupJSON_151102_newAsymptMCSel.root", "PUweight_V6_minBiasXsec69000_pileupJSON_151102_newFlatMCSel.root", "PUweight_V6_minBiasXsec80000_pileupJSON_151102_newFlatMCSel.root"};
 
-    for (unsigned int j = 0; j < fPuReweighting_histoname.size(); j++) {
+    //    TString DATABASE_PATH = "/nfs/dust/cms/user/kovalch/DataPileup/PuWeights";
+   //  TString DATABASE_PATH = "/afs/desy.de/user/k/karavdia/CMSSW_7_6_3/src/UHH2/BaconJets/reweighting/pileup_76Xcampaign/output";
+ //    // TString fPuReweighting_filename[] = {"PUweight_V6_minBiasXsec69000_pileupJSON_151102_newAsymptMCSel.root","PUweight_V6_minBiasXsec80000_pileupJSON_151102_newAsymptMCSel.root", "PUweight_V6_minBiasXsec69000_pileupJSON_151102_newFlatMCSel.root", "PUweight_V6_minBiasXsec80000_pileupJSON_151102_newFlatMCSel.root"};
+
+ // TString fPuReweighting_filename[] = {"Pileup_V6_minBiasXsec58000_pileupJSON_160207.root","Pileup_V6_minBiasXsec69000_pileupJSON_160207.root", "Pileup_V6_minBiasXsec80000_pileupJSON_160207.root"};
+
+  TString DATABASE_PATH = "/afs/desy.de/user/k/karavdia/CMSSW_7_6_3/src/UHH2/BaconJets/reweighting/OLD/";
+    // TString fPuReweighting_filename[] = {"PUweight_V6_minBiasXsec69000_pileupJSON_151102_newAsymptMCSel.root","PUweight_V6_minBiasXsec80000_pileupJSON_151102_newAsymptMCSel.root", "PUweight_V6_minBiasXsec69000_pileupJSON_151102_newFlatMCSel.root", "PUweight_V6_minBiasXsec80000_pileupJSON_151102_newFlatMCSel.root"};
+
+ TString fPuReweighting_filename[] = {"58mb/PileupWeight_V6_minBiasXsec58000_pileupJSON_151102.root","69mb/PileupWeight_V6_minBiasXsec69000_pileupJSON_151102.root", "80mb/PileupWeight_V6_minBiasXsec80000_pileupJSON_151102.root"};
+
+
+   for (unsigned int j = 0; j < fPuReweighting_histoname.size(); j++) {
+ // for (unsigned int j = 0; j < fPuReweighting_filename.size(); j++) {
         file = new TFile (DATABASE_PATH+"/"+fPuReweighting_filename[j]);
         fPuReweighting_histoname[j] = (TH1F*) file -> Get("histo_substr");
 
@@ -77,23 +92,44 @@ float  McWeight::getPuReweighting(TString MC_option, int minBiasXsec) {
             abort();
         }
     }
-    if(MC_option == "Asympt"){
-        if(minBiasXsec == 69){
-            bin = fPuReweighting_histoname[0]->FindBin(Pu_true);
-            weighting_factor = fPuReweighting_histoname[0]->GetBinContent(bin);
-        } else if(minBiasXsec == 80){
-            bin = fPuReweighting_histoname[1]->FindBin(Pu_true);
-            weighting_factor = fPuReweighting_histoname[1]->GetBinContent(bin);
-        }
-    } else if(MC_option == "Flat"){
-        if(minBiasXsec == 69){
-            bin = fPuReweighting_histoname[2]->FindBin(Pu_true);
-            weighting_factor = fPuReweighting_histoname[2]->GetBinContent(bin);
-        } else if(minBiasXsec == 80){
-            bin = fPuReweighting_histoname[3]->FindBin(Pu_true);
-            weighting_factor = fPuReweighting_histoname[3]->GetBinContent(bin);
-        }
+    // if(MC_option == "Asympt"){
+    //     if(minBiasXsec == 69){
+    //         bin = fPuReweighting_histoname[0]->FindBin(Pu_true);
+    //         weighting_factor = fPuReweighting_histoname[0]->GetBinContent(bin);
+    //     } else if(minBiasXsec == 80){
+    //         bin = fPuReweighting_histoname[1]->FindBin(Pu_true);
+    //         weighting_factor = fPuReweighting_histoname[1]->GetBinContent(bin);
+    //     }
+    // } else if(MC_option == "Flat"){
+    //     if(minBiasXsec == 69){
+    // 	  //            bin = fPuReweighting_histoname[2]->FindBin(Pu_true);
+    //         bin = fPuReweighting_histoname[1]->FindBin(Pu_true);
+    //         weighting_factor = fPuReweighting_histoname[1]->GetBinContent(bin);
+    //     } else if(minBiasXsec == 80){
+    //         bin = fPuReweighting_histoname[2]->FindBin(Pu_true);
+    //         weighting_factor = fPuReweighting_histoname[2]->GetBinContent(bin);
+    //     }
+    // 	else if(minBiasXsec == 58){
+    // 	  bin = fPuReweighting_histoname[0]->FindBin(Pu_true);
+    // 	  weighting_factor = fPuReweighting_histoname[0]->GetBinContent(bin);
+    // 	}
+
+    // }
+
+    if(MC_option == "Flat"){
+      if(minBiasXsec == 69){
+	bin = fPuReweighting_histoname[1]->FindBin(Pu_true);
+	weighting_factor = fPuReweighting_histoname[1]->GetBinContent(bin);
+      } else if(minBiasXsec == 80){
+	bin = fPuReweighting_histoname[2]->FindBin(Pu_true);
+	weighting_factor = fPuReweighting_histoname[2]->GetBinContent(bin);
+      }
+      else if(minBiasXsec == 58){
+	bin = fPuReweighting_histoname[0]->FindBin(Pu_true);
+	weighting_factor = fPuReweighting_histoname[0]->GetBinContent(bin);
+      }
     }
+
 
     if (weighting_factor!=0) return      weighting_factor;
     else return 1;

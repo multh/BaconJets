@@ -29,7 +29,7 @@ class Selection {
     uhh2::Event::Handle<float> tt_barreljet_eta;  uhh2::Event::Handle<float> tt_barreljet_phi; uhh2::Event::Handle<float> tt_barreljet_pt; uhh2::Event::Handle<float> tt_barreljet_ptRaw;
     uhh2::Event::Handle<float> tt_pt_ave;
     uhh2::Event::Handle<float> tt_alpha;
-    uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<float> tt_nPU;
+    uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<int> tt_nPU;
 
     public:
     Selection(uhh2::Context & ctx);
@@ -37,6 +37,7 @@ class Selection {
 
     void SetEvent(uhh2::Event& evt);
     bool Trigger(uhh2::Event& evt);
+    bool PtMC(uhh2::Event& evt); //apply lowest Pt cut on MC
     bool DiJet();
     bool DiJetAdvanced(uhh2::Event& evt);
     bool goodPVertex();

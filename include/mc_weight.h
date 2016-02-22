@@ -43,18 +43,24 @@ class McWeight {
     TH1F *              fPuReweighting_histo;
 
     std::vector<TH1F*>  fPuReweighting_histoname;
-    TH1F *              hPuReweighting_histo40; 
-    TH1F *              hPuReweighting_histo80;
-    TH1F *              hPuReweighting_histo140;
-    TH1F *              hPuReweighting_histo200;
-    TH1F *              hPuReweighting_histo260;
-    TH1F *              hPuReweighting_histo320;
-    TH1F *              hPuReweighting_histo400;
 
-    TH1F *              hPuReweighting_histo69A;
-    TH1F *              hPuReweighting_histo80A;
-    TH1F *              hPuReweighting_histo69F;
-    TH1F *              hPuReweighting_histo80F;
+    TH1F *              hPuReweighting_histo58; 
+    TH1F *              hPuReweighting_histo69; 
+    TH1F *              hPuReweighting_histo80; 
+
+
+    /* TH1F *              hPuReweighting_histo40;  */
+    /* TH1F *              hPuReweighting_histo80; */
+    /* TH1F *              hPuReweighting_histo140; */
+    /* TH1F *              hPuReweighting_histo200; */
+    /* TH1F *              hPuReweighting_histo260; */
+    /* TH1F *              hPuReweighting_histo320; */
+    /* TH1F *              hPuReweighting_histo400; */
+
+    /* TH1F *              hPuReweighting_histo69A; */
+    /* TH1F *              hPuReweighting_histo80A; */
+    /* TH1F *              hPuReweighting_histo69F; */
+    /* TH1F *              hPuReweighting_histo80F; */
     TFile *             file;
 
     void                SetEvent(uhh2::Event& evt);

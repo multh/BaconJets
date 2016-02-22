@@ -10,6 +10,8 @@ JetCorrections::JetCorrections(uhh2::Context & ctx) :
     event(0)
 {
   h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
+  //h_jets = context.declare_event_input<TClonesArray>("AK4PFPUPPI");
+
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
  // h_jetsout = context.declare_event_output<TClonesArray>("Jet05");
 

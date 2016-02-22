@@ -25,13 +25,13 @@
 
 //double eta_range_val [] = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 5.191};
 //std::vector<double> eta_range (eta_range_val, eta_range_val + sizeof(eta_range_val) / sizeof(double) );
-static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 5.191};
+//static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 3.489, 5.191};
+static std::vector<double>   eta_range  = {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 3.489, 3.853, 5.191}; 
 // static std::vector<double>   eta_range_mikko_barrel = {0, 0.8, 1.3};
-static std::vector<double>   eta_range_mikko  = {0, 1.3, 1.9, 2.5, 3.0, 3.2, 5.0, 0, 0.8, 1.3};
+static std::vector<double>   eta_range_mikko  = {0, 0.783, 1.305, 1.93, 2.5, 2.964, 3.2, 5.191};
 
-static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 452, 558};
-
- 
+//static std::vector<double>   pt_range   = {55, 76, 93, 172, 232, 300, 366, 452, 558};
+static std::vector<double>   pt_range   = {56, 78, 100, 168, 232, 300, 366, 453, 562};
 
 // static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
 // static std::vector<double>   pt_range   = {57, 80, 100, 166, 231, 290, 365, 478, 556};
@@ -77,16 +77,29 @@ constexpr static float s_n_Pv_xy = 2.0;
 // static float s_Pt_Ave400_cut  = 448;
 // static float s_Pt_Ave500_cut  = 561;
 
-/// Used for the 2015  40/pb  50ns data
-constexpr static float s_Pt_Ave40_cut   = 55;
-constexpr static float s_Pt_Ave60_cut   = 76;
-constexpr static float s_Pt_Ave80_cut   = 93;
-constexpr static float s_Pt_Ave140_cut  = 172;
-constexpr static float s_Pt_Ave200_cut  = 232;
-constexpr static float s_Pt_Ave260_cut  = 300;
-constexpr static float s_Pt_Ave320_cut  = 366;
-constexpr static float s_Pt_Ave400_cut  = 453;
-constexpr static float s_Pt_Ave500_cut  = 558;
+/* /// Used for the 2015  40/pb  50ns data */
+/* constexpr static float s_Pt_Ave40_cut   = 55; */
+/* constexpr static float s_Pt_Ave60_cut   = 76; */
+/* constexpr static float s_Pt_Ave80_cut   = 93; */
+/* constexpr static float s_Pt_Ave140_cut  = 172; */
+/* constexpr static float s_Pt_Ave200_cut  = 232; */
+/* constexpr static float s_Pt_Ave260_cut  = 300; */
+/* constexpr static float s_Pt_Ave320_cut  = 366; */
+/* constexpr static float s_Pt_Ave400_cut  = 453; */
+/* constexpr static float s_Pt_Ave500_cut  = 558;
+
+ */
+//As in AN-15-254 (RunII, 2015, 25ns)
+ constexpr static float s_Pt_Ave40_cut   = 56;
+ constexpr static float s_Pt_Ave60_cut   = 78;
+ constexpr static float s_Pt_Ave80_cut   = 100;
+ constexpr static float s_Pt_Ave140_cut  = 168;
+ constexpr static float s_Pt_Ave200_cut  = 232;
+ constexpr static float s_Pt_Ave260_cut  = 300;
+ constexpr static float s_Pt_Ave320_cut  = 366;
+ constexpr static float s_Pt_Ave400_cut  = 453;
+ constexpr static float s_Pt_Ave500_cut  = 562;
+
 constexpr static int n_pt_bins = 9;
 
 /// Used for the 2015  ~1/fb  25ns data
@@ -100,13 +113,13 @@ constexpr static int n_pt_bins = 9;
 // static float s_Pt_Ave400_cut  = 451;
 // static float s_Pt_Ave500_cut  = 561;
 
-/// HF thresholds Used for the 2015  40/pb  50ns data
-constexpr static float s_Pt_Ave60HF_cut   = 76;
-constexpr static float s_Pt_Ave80HF_cut   = 93;
-constexpr static float s_Pt_Ave100HF_cut  = 120;
-constexpr static float s_Pt_Ave160HF_cut  = 186;
-constexpr static float s_Pt_Ave220HF_cut  = 253;
-constexpr static float s_Pt_Ave300HF_cut  = 342;
+/* /// HF thresholds Used for the 2015  40/pb  50ns data */
+/* constexpr static float s_Pt_Ave60HF_cut   = 76; */
+/* constexpr static float s_Pt_Ave80HF_cut   = 93; */
+/* constexpr static float s_Pt_Ave100HF_cut  = 120; */
+/* constexpr static float s_Pt_Ave160HF_cut  = 186; */
+/* constexpr static float s_Pt_Ave220HF_cut  = 253; */
+/* constexpr static float s_Pt_Ave300HF_cut  = 342; */
 
 /// HF thresholds Used for the 2015  ~1/fb  25ns data
 // static float s_Pt_Ave60HF_cut   = 77;
@@ -115,6 +128,15 @@ constexpr static float s_Pt_Ave300HF_cut  = 342;
 // static float s_Pt_Ave160HF_cut  = 187;
 // static float s_Pt_Ave220HF_cut  = 253;
 // static float s_Pt_Ave300HF_cut  = 342;
+
+/// HF thresholds Used for the 2015 DATA (AN-15-254)
+constexpr static float s_Pt_Ave60HF_cut   = 77;
+constexpr static float s_Pt_Ave80HF_cut   = 131;
+constexpr static float s_Pt_Ave100HF_cut  = 154;
+constexpr static float s_Pt_Ave160HF_cut  = 244;
+constexpr static float s_Pt_Ave220HF_cut  = 321;
+constexpr static float s_Pt_Ave300HF_cut  = 426;
+
 
 /** \brief Jet Resolution Smearering **/
 // doing the matching from GEN to RECO
@@ -157,68 +179,15 @@ constexpr static float scale_factor_centrA_PU69_set9[] = {78.5873, 442.229, 393.
 
 
 ///Flat MC
-constexpr static float scale_factor_noJERF[] = {2543.11, 9228.77, 8404.76, 7916.86, 385342, 550228, 3.42556e+06, 1.17561e+07, 1.41737e+07};//run2 69000 V6 Flat
-constexpr static float scale_factor_centrF[] = {2413.77, 8916.56, 8200.09, 7844.02, 382407, 544738, 3.39795e+06, 1.17032e+07, 1.40901e+07};//run2 69000 V6, cent.smear Flat
+//constexpr static float scale_factor_noJERF[] = {2543.11, 9228.77, 8404.76, 7916.86, 385342, 550228, 3.42556e+06, 1.17561e+07, 1.41737e+07};//run2 69000 V6 Flat
+//constexpr static float scale_factor_centrF[] = {2413.77, 8916.56, 8200.09, 7844.02, 382407, 544738, 3.39795e+06, 1.17032e+07, 1.40901e+07};//run2 69000 V6, cent.smear Flat
 
+constexpr static float scale_factor_noJERF[] = {1479.49,7681.19,7625.43,17894.4,502333,630238,4.91968e+06,1.61948e+07, 2.0111e+07};//run2, 76X, with pile-up reweigting
 
+constexpr static float scale_factor_centrF[] = {2.39658,3.42565,0.750234,0.144745,1.18348,0.647537,1.684,2.22249,1.42624};//TMP!!!
 
 //static float scale_factor1[] = {2.14563, 4.27422,7.57198,  10.7035,17.899, 15.6095, 4.64629};//run1
 // static float scale_factor2[] = {242.617, 3514.77, 49549.8, 180540, 693177, 1.83449e+06, 1.63241e+07};//run1
-
-//void PrintConst();
-//void PrintConst(){//dummy function to avoid "-Werror=unused-variable"
- /*  std::cout<<"Following consts are defined (see meaning in constants.h): "<<std::endl; */
-/*   std::cout<<"eta_range("<<eta_range.size()<<")"<<std::endl; */
-/*   std::cout<<"s_eta_barr = "<<s_eta_barr<<std::endl; */
-/*   std::cout<<"s_delta_phi = "<<s_delta_phi<<std::endl; */
-/*   std::cout<<"s_asymm = "<<s_asymm<<std::endl; */
-/*   std::cout<<"s_pt_rel= "<<s_pt_rel<<std::endl; */
-/*   std::cout<<"s_n_PvTracks= "<<s_n_PvTracks<<std::endl; */
-/*   std::cout<<"s_n_Pv_z= "<<s_n_Pv_z<<std::endl; */
-/*   std::cout<<"s_n_Pv_xy= "<<s_n_Pv_xy<<std::endl; */
-/*  std::cout<<"s_Pt_Ave40_cut= "<<s_Pt_Ave40_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave60_cut= "<<s_Pt_Ave60_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave80_cut= "<<s_Pt_Ave80_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave140_cut= "<<s_Pt_Ave140_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave200_cut= "<<s_Pt_Ave200_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave260_cut= "<<s_Pt_Ave260_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave320_cut= "<<s_Pt_Ave320_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave400_cut= "<<s_Pt_Ave400_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave500_cut= "<<s_Pt_Ave500_cut<<std::endl; */
-/*  std::cout<<"n_pt_bins= "<<n_pt_bins<<std::endl; */
-/*  std::cout<<"s_Pt_Ave60HF_cut= "<<s_Pt_Ave60HF_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave80HF_cut= "<<s_Pt_Ave80HF_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave100HF_cut= "<<s_Pt_Ave100HF_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave160HF_cut= "<<s_Pt_Ave160HF_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave220HF_cut= "<<s_Pt_Ave220HF_cut<<std::endl; */
-/*  std::cout<<"s_Pt_Ave300HF_cut= "<<s_Pt_Ave300HF_cut<<std::endl; */
-/* std::cout<<" s_delta_R = "<< s_delta_R <<std::endl; */
-/* std::cout<<"eta_hi[0]= "<<eta_hi[0]<<std::endl; */
-/* std::cout<<"c_nominal[0]= "<<c_nominal[0]<<std::endl; */
-/* std::cout<<"c_err_nominal[0]= "<<c_err_nominal[0]<<std::endl;  */
-/* std::cout<<"scale_factor_noJERA[0]= "<<scale_factor_noJERA[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA[0]= "<<scale_factor_centrA[0]<<std::endl; */
-/* std::cout<<"scale_factor_upA[0]= "<<scale_factor_upA[0]<<std::endl; */
-/* std::cout<<"scale_factor_downA[0]= "<<scale_factor_downA[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU80[0]= "<<scale_factor_centrA_PU80[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set1[0]= "<<scale_factor_centrA_PU69_set1[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set2[0]= "<<scale_factor_centrA_PU69_set2[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set3[0]= "<<scale_factor_centrA_PU69_set3[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set4[0]= "<<scale_factor_centrA_PU69_set4[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set5[0]= "<<scale_factor_centrA_PU69_set5[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set6[0]= "<<scale_factor_centrA_PU69_set6[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set7[0]= "<<scale_factor_centrA_PU69_set7[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set8[0]= "<<scale_factor_centrA_PU69_set8[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrA_PU69_set9[0]= "<<scale_factor_centrA_PU69_set9[0]<<std::endl; */
-/* std::cout<<"scale_factor_noJERF[0]= "<<scale_factor_noJERF[0]<<std::endl; */
-/* std::cout<<"scale_factor_centrF[0]= "<<scale_factor_centrF[0]<<std::endl; */
-
-/* std::cout<<"= "<<<<std::endl; */
-/* std::cout<<"= "<<<<std::endl; */
-/* std::cout<<"= "<<<<std::endl; */
-/* std::cout<<"= "<<<<std::endl; */
-/* std::cout<<"= "<<<<std::endl; */
-/* std::cout<<"= "<<<<std::endl; */
 
 
 #endif

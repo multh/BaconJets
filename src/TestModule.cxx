@@ -4,6 +4,7 @@
 
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
+//#include "UHH2/core/include/EventHelper.h"
 #include "../include/JECAnalysisHists.h"
 
 #include "UHH2/BaconJets/include/selection.h"
@@ -23,39 +24,44 @@
 #include "TString.h"
 
 
-TTree   *fCurrentTree;
+//TTree   *fCurrentTree;
 Int_t   Runnr;
 Int_t   Eventnr;
-TFile   *fCurrentTreeFile;
+//TFile   *fCurrentTreeFile;
 using namespace std;
 using namespace uhh2;
 using namespace baconhep;
+//using uhh2::detail::EventHelper;
 
 namespace uhh2bacon {
 
   class TestModule: public uhh2::AnalysisModule {
+
   public:
-    explicit TestModule(Context & ctx);
-    virtual bool process(Event & event) override;
+    explicit TestModule(uhh2::Context&);
+    virtual bool process(uhh2::Event&) override;
     ~TestModule();
 
   private:
-
+    //    std::unique_ptr<EventHelper> eh;
     Event::Handle<TClonesArray> h_jets  ;
     //    Event::Handle<std::vector<uhh2bacon::TJet>> h_jets;
     Event::Handle<baconhep::TEventInfo> h_eventInfo;
     Event::Handle<baconhep::TGenEventInfo> h_genInfo;
     Event::Handle<TClonesArray> h_pv;
-    std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
-    std::vector<JECAnalysisHists> h_pt_bins, h_eta_bins, h_pt_bins_a01, h_eta_bins_a01, h_eta_bins_a03, h_eta_bins_a04, h_noalpha_bins,  h_eta_bins_mikko_a10, h_eta_bins_mikko_a15, h_eta_bins_mikko_a20, h_eta_bins_mikko_a30;
-
+    //std::unique_ptr<Hists> h_nocuts, h_sel, h_dijet, h_match;
+    std::unique_ptr<JECAnalysisHists> h_nocuts, h_sel, h_dijet, h_match;
+    // std::vector<JECAnalysisHists> h_pt_bins, h_eta_bins, h_pt_bins_a01, h_eta_bins_a01, h_eta_bins_a03, h_eta_bins_a04, h_noalpha_bins,h_eta_bins_a005,   h_eta_bins_a015, h_eta_bins_a025, h_eta_bins_a035, h_eta_bins_a045;//h_eta_bins_a0075, h_eta_bins_a0125,  
+    // std::vector<JECAnalysisHists> h_eta_bins_mikko_a10, h_eta_bins_mikko_a15, h_eta_bins_mikko_a20, h_eta_bins_mikko_a30;
+    // std::vector<JECAnalysisHists>  h_eta_bins_pt_bins_a005, h_eta_bins_pt_bins_a01,h_eta_bins_pt_bins_a015,h_eta_bins_pt_bins_a02,h_eta_bins_pt_bins_a025,h_eta_bins_pt_bins_a03,h_eta_bins_pt_bins_a035,h_eta_bins_pt_bins_a04,h_eta_bins_pt_bins_a045;
     Selection sel;
     //    std::unique_ptr<Selection> sel;
     JetCorrections jetcorr;
     McWeight mcweight;
     bool is_mc;
     bool is_data;
-    TSetTree cSetTree;
+    bool is_mc_reweight;
+    //  TSetTree cSetTree;
     uhh2bacon::PileupData  pileupData;
 
     //Additional vars in Event, specific for dijet
@@ -67,7 +73,7 @@ namespace uhh2bacon {
     Event::Handle<float> tt_barreljet_eta;  Event::Handle<float> tt_barreljet_phi; Event::Handle<float> tt_barreljet_pt; Event::Handle<float> tt_barreljet_ptRaw;
     Event::Handle<float> tt_pt_ave;
     Event::Handle<float> tt_alpha;
-    Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; Event::Handle<float> tt_asymmetry; Event::Handle<float> tt_nPU;
+    Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; Event::Handle<float> tt_asymmetry; Event::Handle<int> tt_nPU;
 
   };
 
@@ -81,13 +87,16 @@ namespace uhh2bacon {
     //  cSetTree()
   {
 
-    cSetTree = TSetTree();
-
+    //    cSetTree = TSetTree();
+    auto mc_reweight_par = ctx.get("MCreweight");
+    is_mc_reweight = mc_reweight_par=="true";
     auto dataset_type = ctx.get("dataset_type");
     is_mc = dataset_type  == "MC";
     is_data = dataset_type  == "DATA";
-
-    h_jets = ctx.declare_event_input<TClonesArray>("AK4PFCHS");
+    auto jetCollection = ctx.get("jetCollection");
+    h_jets = ctx.declare_event_input<TClonesArray>(jetCollection);
+    //    h_jets = ctx.declare_event_input<TClonesArray>("AK4PFCHS");
+    //    h_jets = ctx.declare_event_input<TClonesArray>("AK4PFPUPPI");
     //    h_jets = ctx.declare_event_input<std::vector<baconhep::TJet>>("AK4PFCHS");
     h_eventInfo = ctx.declare_event_input<baconhep::TEventInfo>("Info");
     if(is_mc){ /// apply for MC only
@@ -96,81 +105,91 @@ namespace uhh2bacon {
 //     h_pv = ctx.get_handle<TClonesArray>("PV");
     h_pv = ctx.declare_event_input<TClonesArray>("PV");
 
-
+    //    eh.reset(new EventHelper(ctx));
     h_nocuts.reset(new JECAnalysisHists(ctx,"noCuts"));
     h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
     h_match.reset(new JECAnalysisHists(ctx,"JetMatching"));
     h_sel.reset(new JECAnalysisHists(ctx,"Selection"));
 
 
-    // int size = sizeof(eta_range)/sizeof(double); // to get size of string object
-    // eta_range.size() // to get size of vector
 
-    std::vector<std::string> pt_range_name;
-    for( unsigned int i=0; i < pt_range.size(); ++i ){
-      char pt_buffer [50];
-      sprintf (pt_buffer, "%5.3f", pt_range[i]);
-      pt_range_name.push_back(pt_buffer);
-    }
-    std::vector<std::string> eta_range_name;
-    for( unsigned int j=0; j < eta_range.size(); ++j ){
-      char eta_buffer [50];
-      sprintf (eta_buffer, "%5.3f", eta_range[j]);
-      eta_range_name.push_back(eta_buffer);
-    }
-    // for Mikkos combination root file
-    std::vector<std::string> eta_range_mikko_name;
-    for( unsigned int j=0; j < eta_range_mikko.size(); ++j ){
-      char eta_buffer_mikko [50];
-      sprintf (eta_buffer_mikko, "%5.3f", eta_range_mikko[j]);
-      eta_range_mikko_name.push_back(eta_buffer_mikko);
-    }
 
-    // for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
-    //     for( unsigned int j=0; j < eta_range.size()-1; ++j ){
-    for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-      h_pt_bins.push_back(JECAnalysisHists(ctx,(std::string)("a02/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
-      h_pt_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("a01/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    // // int size = sizeof(eta_range)/sizeof(double); // to get size of string object
+    // // eta_range.size() // to get size of vector
 
-    }
-    //     }
+    // std::vector<std::string> pt_range_name;
+    // for( unsigned int i=0; i < pt_range.size(); ++i ){
+    //   char pt_buffer [50];
+    //   sprintf (pt_buffer, "%5.3f", pt_range[i]);
+    //   pt_range_name.push_back(pt_buffer);
+    // }
+    // std::vector<std::string> eta_range_name;
+    // for( unsigned int j=0; j < eta_range.size(); ++j ){
+    //   char eta_buffer [50];
+    //   sprintf (eta_buffer, "%5.3f", eta_range[j]);
+    //   eta_range_name.push_back(eta_buffer);
+    // }
+    // // for Mikkos combination root file
+    // std::vector<std::string> eta_range_mikko_name;
+    // for( unsigned int j=0; j < eta_range_mikko.size(); ++j ){
+    //   char eta_buffer_mikko [50];
+    //   sprintf (eta_buffer_mikko, "%5.3f", eta_range_mikko[j]);
+    //   eta_range_mikko_name.push_back(eta_buffer_mikko);
+    // }
+
+    // // for( unsigned int k=0; k < alpha_range.size()-1; ++k ){
+    // //     for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+    // for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    //   h_pt_bins.push_back(JECAnalysisHists(ctx,(std::string)("/a020/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    //   h_pt_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("/a010/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+
+    // }
+    // //     }
+    // //   }
+    // for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    //   h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("/a020/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("/a010/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a005.push_back(JECAnalysisHists(ctx,(std::string)("/a005/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   // h_eta_bins_a0075.push_back(JECAnalysisHists(ctx,(std::string)("a0075/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   // h_eta_bins_a0125.push_back(JECAnalysisHists(ctx,(std::string)("a0125/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a015.push_back(JECAnalysisHists(ctx,(std::string)("/a015/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a025.push_back(JECAnalysisHists(ctx,(std::string)("/a025/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a03.push_back(JECAnalysisHists(ctx,(std::string)("/a030/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a035.push_back(JECAnalysisHists(ctx,(std::string)("/a035/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a04.push_back(JECAnalysisHists(ctx,(std::string)("/a040/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   h_eta_bins_a045.push_back(JECAnalysisHists(ctx,(std::string)("/a045/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    //   for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	h_eta_bins_pt_bins_a005.push_back(JECAnalysisHists(ctx,(std::string)("/a005/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("/a010/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a015.push_back(JECAnalysisHists(ctx,(std::string)("/a015/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a02.push_back(JECAnalysisHists(ctx,(std::string)("/a020/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a025.push_back(JECAnalysisHists(ctx,(std::string)("/a025/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a03.push_back(JECAnalysisHists(ctx,(std::string)("/a030/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a035.push_back(JECAnalysisHists(ctx,(std::string)("/a035/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a04.push_back(JECAnalysisHists(ctx,(std::string)("/a040/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
+    // 	h_eta_bins_pt_bins_a045.push_back(JECAnalysisHists(ctx,(std::string)("/a045/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1]+"/pt_"+pt_range_name[j]+"_"+pt_range_name[j+1])));
     //   }
-    for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-      h_eta_bins.push_back(JECAnalysisHists(ctx,(std::string)("a02/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
-      h_eta_bins_a01.push_back(JECAnalysisHists(ctx,(std::string)("a01/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
-      h_eta_bins_a03.push_back(JECAnalysisHists(ctx,(std::string)("a03/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
-      h_eta_bins_a04.push_back(JECAnalysisHists(ctx,(std::string)("a04/eta_"+eta_range_name[i]+"_"+eta_range_name[i+1])));
+    // }
 
-    }
+    // for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    //   for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    //     h_eta_bins_mikko_a10.push_back(JECAnalysisHists(ctx,(std::string)("/a010/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    //     h_eta_bins_mikko_a15.push_back(JECAnalysisHists(ctx,(std::string)("/a015/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    //     h_eta_bins_mikko_a20.push_back(JECAnalysisHists(ctx,(std::string)("/a020/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    //     h_eta_bins_mikko_a30.push_back(JECAnalysisHists(ctx,(std::string)("/a030/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    //   }
+    // }
 
-    for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-      for( unsigned int i=0; i < pt_range.size()-1; ++i ){
 
-        h_eta_bins_mikko_a10.push_back(JECAnalysisHists(ctx,(std::string)("a10/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
-        h_eta_bins_mikko_a15.push_back(JECAnalysisHists(ctx,(std::string)("a15/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
-        h_eta_bins_mikko_a20.push_back(JECAnalysisHists(ctx,(std::string)("a20/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
-        h_eta_bins_mikko_a30.push_back(JECAnalysisHists(ctx,(std::string)("a30/eta_"+eta_range_mikko_name[j]+"_"+eta_range_mikko_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
-      }
-    }
-
-    // histos for the pT extrapolations
-    for( unsigned int j=0; j < eta_range.size()-1; ++j ){
-      for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-        h_noalpha_bins.push_back(JECAnalysisHists(ctx,(std::string)("/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
-      }
-    }
+    // // histos for the pT extrapolations
+    // for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+    //   for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    //     h_noalpha_bins.push_back(JECAnalysisHists(ctx,(std::string)("/eta_"+eta_range_name[j]+"_"+eta_range_name[j+1]+"/pt_"+pt_range_name[i]+"_"+pt_range_name[i+1])));
+    //   }
+    // }
 
     //Additional vars in event
-    //
-
-    // gen_pthat = 0; gen_weight = 0;
-    // jet1_pt = 0; jet2_pt = 0; jet3_pt = 0; 
-    // jet1_ptRaw = 0; jet2_ptRaw = 0; jet3_ptRaw = 0; 
-    // nvertices = 0;
-    // probejet_eta = 0; probejet_phi = 0; probejet_pt = 0; probejet_ptRaw = 0;
-    // barreljet_eta = 0; barreljet_phi = 0; barreljet_pt = 0; barreljet_ptRaw = 0;
-    // pt_ave = 0; alpha = 0; rel_r = 0; mpf_r = 0;
-    // asymmetry = 0; nPU = 0;
+    //    ctx.undeclare_event_output("");
     tt_gen_pthat = ctx.declare_event_output<float>("gen_pthat");
     tt_gen_weight = ctx.declare_event_output<float>("gen_weight");
     tt_jet1_pt = ctx.declare_event_output<float>("jet1_pt");
@@ -193,17 +212,17 @@ namespace uhh2bacon {
     tt_rel_r = ctx.declare_event_output<float>("rel_r");
     tt_mpf_r = ctx.declare_event_output<float>("mpf_r");
     tt_asymmetry = ctx.declare_event_output<float>("asymmetry");
-    tt_nPU = ctx.declare_event_output<float>("nPU");
+    tt_nPU = ctx.declare_event_output<int>("nPU");
   }
 
   TestModule::~TestModule() {
-    cSetTree.general();
+    //  cSetTree.general();
     //      cPuData.general();
 
   }
 
   bool TestModule::process(Event & event) {
-
+    // cout<<"NEW EVENT"<<endl;
     sel.SetEvent(event);
     jetcorr.SetEvent(event);
     mcweight.SetEvent(event);
@@ -217,6 +236,10 @@ namespace uhh2bacon {
 
     const baconhep::TEventInfo & eventInfo = event.get(h_eventInfo);
     const TClonesArray & js = event.get(h_jets);
+    int nPU_tt = eventInfo.nPU;
+    //    cout<<"nPU = "<<nPU_tt<<endl;
+    event.set(tt_nPU,nPU_tt);
+
     //    std::vector<baconhep::TJet> js = event.get(h_jets);
     // //! JER smearing
     // if(is_mc){ /// apply for MC only
@@ -224,7 +247,7 @@ namespace uhh2bacon {
     //     //! matching from GEN to RECO
     //     if(!jetcorr.JetMatching()) return false;
     //     //! JER smearing
-    //     //0 = central; 1 = scale up; other = scale down
+    //     //0 = central; 1 = scale up; -1 = scale down
     //     if(!jetcorr.JetResolutionSmearer(0)) return false;
 
     // }
@@ -235,9 +258,9 @@ namespace uhh2bacon {
     baconhep::TJet* jet1 = (baconhep::TJet*)js[0];
     baconhep::TJet* jet2 = (baconhep::TJet*)js[1];
     Int_t njets = js.GetEntries();
-    std::cout<<"Number of jets = "<<js.GetEntries()<<std::endl;
+    //   std::cout<<"Number of jets = "<<js.GetEntries()<<std::endl;
     //    std::cout<<"evtNum = "<<eventInfo->evtNum<<std::endl;
-    std::cout<<"evtNum = "<<eventInfo.evtNum<<std::endl;
+    // std::cout<<"evtNum = "<<eventInfo.evtNum<<std::endl;
     baconhep::TJet* jet3;
 
     const TClonesArray & pvs = event.get(h_pv);
@@ -249,8 +272,8 @@ namespace uhh2bacon {
     // event.jet2_pt = jet2->pt;
     // event.jet1_ptRaw = jet1->ptRaw;
     // event.jet2_ptRaw = jet2->ptRaw;
-    std::cout<<"event.jet1_ptRaw = "<<event.get(tt_jet1_ptRaw)<<" event.jet1_pt = "<<event.get(tt_jet1_pt)<<std::endl;
-    std::cout<<"event.jet2_ptRaw = "<<event.get(tt_jet2_ptRaw)<<" event.jet2_pt = "<<event.get(tt_jet2_pt)<<std::endl;
+    //  std::cout<<"event.jet1_ptRaw = "<<event.get(tt_jet1_ptRaw)<<" event.jet1_pt = "<<event.get(tt_jet1_pt)<<std::endl;
+    //    std::cout<<"event.jet2_ptRaw = "<<event.get(tt_jet2_ptRaw)<<" event.jet2_pt = "<<event.get(tt_jet2_pt)<<std::endl;
     if (njets > 2) {
         jet3 = (baconhep::TJet*)js[2];
 	event.set(tt_jet3_pt, jet3->pt);
@@ -261,10 +284,11 @@ namespace uhh2bacon {
     float pt_ave = (event.get(tt_jet1_pt) + event.get(tt_jet2_pt))/2;
     event.set(tt_pt_ave,pt_ave);
     //    event.pt_ave = pt_ave;
-    std::cout<<"pt_ave = "<<pt_ave<<endl;
+    //   std::cout<<"pt_ave = "<<pt_ave<<endl;
     event.set(tt_gen_pthat,0);//set default values for DATA
     event.set(tt_gen_weight, 0);//set default values for DATA
-    if(is_mc){ /// apply for MC only
+   // //  //!!!NO reweighting for reweighting hists
+    if(is_mc && is_mc_reweight){ /// apply for MC only
         const baconhep::TGenEventInfo & geninfo = event.get(h_genInfo);
         baconhep::TGenEventInfo* genInfo= new baconhep::TGenEventInfo(geninfo);
 	event.set(tt_gen_pthat,genInfo->pthat);
@@ -274,13 +298,24 @@ namespace uhh2bacon {
 
         //! Reweighting
         //event.weight = event.weight * genInfo->weight * mcweight.getPuReweighting("Asympt", 69) * mcweight.getEvReweighting(0, "Asympt", 69);
-	if ((event.get(tt_pt_ave) - event.get(tt_gen_pthat))/event.get(tt_gen_pthat) > 1) return false;
-         //0 = central; 1 = scale up; -1 = scale down; 99 = no scale
+	//	if ((event.get(tt_pt_ave) - event.get(tt_gen_pthat))/event.get(tt_gen_pthat) > 1) return false; //ToDO: include special cut
+         //0 = central; 1 = scale up; -1 = scale down; 99 = no scale(no smearing!)
          //MC option:  Asympt; or Flat
          //minBiasXsec for PU:  69; or 80 mb
         //11 = set 1; 12 = set2 ...
-	event.weight = event.weight * event.get(tt_gen_weight) * mcweight.getPuReweighting("Asympt", 69)* mcweight.getEvReweighting(0, "Asympt", 69);
-	 std::cout<<"event.weight = "<<event.weight<<endl;
+	//	cout<<"Before: "<<event.weight<<endl;
+	//	event.weight = event.weight * mcweight.getPuReweighting("Flat", 58); //TEST
+	//	event.weight = event.weight * mcweight.getPuReweighting("Flat", 69); //TEST
+	event.weight = event.weight * mcweight.getEvReweighting(99, "Flat", 69) * mcweight.getPuReweighting("Flat", 69);//TEST: Pt reweighting only
+	//	event.weight = event.weight * mcweight.getPuReweighting("Flat", 80); //TEST
+
+	//	event.weight = event.weight * event.get(tt_gen_weight) * mcweight.getPuReweighting("Flat", 58); //ToDo: run it 1st!
+	//	event.weight = event.weight * event.get(tt_gen_weight) * mcweight.getPuReweighting("Flat", 69); //ToDo: run it 1st!
+
+	//	event.weight = event.weight * event.get(tt_gen_weight) * mcweight.getPuReweighting("Flat", 80); //ToDo: run it 1st!
+//	event.weight = event.weight * event.get(tt_gen_weight) * mcweight.getPuReweighting("Flat", 69)* mcweight.getEvReweighting(0, "Flat", 69);
+//	cout<<"After: "<<event.weight<<endl;
+	// std::cout<<"event.weight = "<<event.weight<<endl;
     }
 
 
@@ -306,9 +341,12 @@ namespace uhh2bacon {
     //    met.Set(eventInfo->pfMET * cos(eventInfo->pfMETphi),eventInfo->pfMET * sin(eventInfo->pfMETphi));
     met.Set(eventInfo.pfMET * cos(eventInfo.pfMETphi),eventInfo.pfMET * sin(eventInfo.pfMETphi));
 
-    int ran = rand();
-    int numb = ran % 2 + 1;
+   
+
     if ((fabs(jet1->eta)<s_eta_barr)&&(fabs(jet2->eta)<s_eta_barr)) {
+      int ran = rand();
+      int numb = ran % 2 + 1;
+      //      cout<<"numb = "<<numb<<endl;
         if(numb==1){
             probejet_eta = jet2->eta;
             probejet_pt = event.get(tt_jet2_pt);
@@ -419,109 +457,198 @@ namespace uhh2bacon {
 
     if(is_data){
         if(!sel.Trigger(event)) return false;
+    }
+    else
+      if(!sel.PtMC(event)) return false;
 
-    } 
-    if (event.get(tt_alpha) < 0.2) {
+    // cout<<"Fill hist for selection"<<endl;
+    //if (event.get(tt_alpha) < 0.2) {
+    if (event.get(tt_alpha) < 0.3) { //18.02.2016: change nominal alpha cut to 0.3
       h_sel->fill(event);
     }
 
-
-    //! fill histos after dijet event selection
-
-
-    //   if(!sel.goodPVertex()) return false;
-    //! for alpha < 0.4
-    if (event.get(tt_alpha) < 0.4) {
-        for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a04[i].fill(event, ran);
-        }
-    }
-    //! for alpha < 0.3
-    if (event.get(tt_alpha) < 0.3) {
-        for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a03[i].fill(event, ran);
-        }
-        for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
-                for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
-                        h_eta_bins_mikko_a30[j*(pt_range.size()-1)+i].fill(event, ran);
-                    }
-                }
-            }
-        }
-    }
-    //! for alpha < 0.2
-    if (event.get(tt_alpha) < 0.2) {
-        for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
-        }
-
-        for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-	  if ((event.get(tt_pt_ave) >= pt_range[i])&&(event.get(tt_pt_ave) < pt_range[i+1])) h_pt_bins[i].fill(event, ran);//j*pt_range.size()+i
-        }
-        for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
-                for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
-                        h_eta_bins_mikko_a20[j*(pt_range.size()-1)+i].fill(event, ran);
-                    }
-                }
-            }
-        }
-        for( unsigned int j=0; j < eta_range.size()-1; ++j ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[j])&&(fabs(event.get(tt_probejet_eta))<eta_range[j+1])) {
-                for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
-                        h_noalpha_bins[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
-                    }
-                }
-            }
-        }
-    }
-    //! for alpha < 0.15
-    if (event.get(tt_alpha) < 0.15) {
-        for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
-                for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
-                        h_eta_bins_mikko_a15[j*(pt_range.size()-1)+i].fill(event, ran);
-                    }
-                }
-            }
-        }
-    }
-
-    //! for alpha < 0.1
-
-    if (event.get(tt_alpha) < 0.1) {
-        for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-	  if ((event.get(tt_pt_ave) >= pt_range[i])&&(event.get(tt_pt_ave) < pt_range[i+1])) h_pt_bins_a01[i].fill(event, ran);//j*pt_range.size()+i
-        }
-        for( unsigned int i=0; i < eta_range.size()-1; ++i ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a01[i].fill(event, ran);
-        }
-        for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
-	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
-                for( unsigned int i=0; i < pt_range.size()-1; ++i ){
-		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
-                        h_eta_bins_mikko_a10[j*(pt_range.size()-1)+i].fill(event, ran);
-                    }
-                }
-            }
-        }
-    }
-
-
-    //cSetTree.fillTree(eventInfo->evtNum, eventInfo->runNum, pt_ave, probejet_eta, barrel_eta, probejet_phi, barrel_phi, probejet_pt, barrel_pt, event.jet1_pt, event.jet2_pt, jet1->phi, jet2->phi, jet1->eta, jet2->eta, event.jet1_ptRaw, event.jet2_ptRaw, probejet_ptRaw, barrel_ptRaw);
-
-    //     }
-
+    //    cout<<"Yff! "<<endl;
     return true;
   }
+
+    // //! fill histos after dijet event selection
+    // //! for alpha < 0.1
+    // if (event.get(tt_alpha) < 0.1) {
+    //     for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    // 	  if ((event.get(tt_pt_ave) >= pt_range[i])&&(event.get(tt_pt_ave) < pt_range[i+1])) h_pt_bins_a01[i].fill(event, ran);
+    //     }
+    //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])){ 
+    // 	    h_eta_bins_a01[i].fill(event, ran);
+    // 	    for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	      if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a01[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	    }
+    // 	  }
+    //     }
+
+    // 	for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
+    // 	    for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    // 	      if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
+    // 		h_eta_bins_mikko_a10[j*(pt_range.size()-1)+i].fill(event, ran);
+    // 	      }
+    // 	    }
+    // 	  }
+    //     }
+    // }
+
+    // //! for alpha < 0.2
+    // if (event.get(tt_alpha) < 0.2) {
+    //   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins[i].fill(event, ran);
+    // 	for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	  if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	    h_eta_bins_pt_bins_a02[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	}
+    //   }
+      
+    //   for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    // 	if ((event.get(tt_pt_ave) >= pt_range[i])&&(event.get(tt_pt_ave) < pt_range[i+1])) h_pt_bins[i].fill(event, ran);//j*pt_range.size()+i
+    //   }
+      
+    //   for( unsigned int j=0; j < eta_range.size()-1; ++j ){
+    // 	if ((fabs(event.get(tt_probejet_eta))>=eta_range[j])&&(fabs(event.get(tt_probejet_eta))<eta_range[j+1])) {
+    // 	  for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    // 	    if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
+    // 	      h_noalpha_bins[j*(pt_range.size()-1)+i].fill(event, ran);//j*pt_range.size()+i
+    // 	    }
+    // 	  }
+    // 	}
+    //   }
+    //   for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    //   	if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
+    //   	  for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    //   	    if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
+    //   	      h_eta_bins_mikko_a20[j*(pt_range.size()-1)+i].fill(event, ran);
+    //   	    }
+    //   	  }
+    //   	}
+    //   }
+    // }
+
+    // //! for alpha < 0.05
+    // if (event.get(tt_alpha) < 0.05) {
+    //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a005[i].fill(event, ran);
+    // 	  for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	    if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a005[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	  }
+    //     }
+    // }
+
+    // // //! for alpha < 0.075
+    // // if (event.get(tt_alpha) < 0.075) {
+    // //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a0075[i].fill(event, ran);
+    // //     }
+    // // }
+
+    // // //! for alpha < 0.125
+    // // if (event.get(tt_alpha) < 0.125) {
+    // //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a0125[i].fill(event, ran);
+    // //     }
+    // // }
+
+    // //! for alpha < 0.15
+    // if (event.get(tt_alpha) < 0.15) {
+    //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a015[i].fill(event, ran);
+    // 	  for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	    if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a015[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	  }
+    //     }
+    // for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
+    //             for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    // 		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
+    //                     h_eta_bins_mikko_a15[j*(pt_range.size()-1)+i].fill(event, ran);
+    //                 }
+    //             }
+    // 	  }
+    // }
+    // }
+
+    // //! for alpha < 0.25
+    // if (event.get(tt_alpha) < 0.25) {
+    //   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a025[i].fill(event, ran);
+    // 	  for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	    if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a025[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	  }
+    //     }
+    // }
+
+    // //! for alpha < 0.3
+    // if (event.get(tt_alpha) < 0.3) {
+    //   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a03[i].fill(event, ran);
+    // 	  for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	    if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a03[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	  }
+    //     }
+    // for( unsigned int j=0; j < eta_range_mikko.size()-1; ++j ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range_mikko[j])&&(fabs(event.get(tt_probejet_eta))<eta_range_mikko[j+1])) {
+    //             for( unsigned int i=0; i < pt_range.size()-1; ++i ){
+    // 		  if ((event.get(tt_pt_ave)>=pt_range[i])&&(event.get(tt_pt_ave)<pt_range[i+1])) {
+    //                     h_eta_bins_mikko_a30[j*(pt_range.size()-1)+i].fill(event, ran);
+    //                 }
+    //             }
+    //         }
+    // }
+    // }
+
+    // //! for alpha < 0.35
+    // if (event.get(tt_alpha) < 0.35) {
+    //   for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a035[i].fill(event, ran);
+    // 	for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	  if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	    h_eta_bins_pt_bins_a035[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	}
+    //     }
+    // }
+    // //! for alpha < 0.4
+    // if (event.get(tt_alpha) < 0.4) {
+    //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a04[i].fill(event, ran);
+    // 	  for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	    if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a04[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	  }
+    //     }
+    // }
+    // //! for alpha < 0.45
+    // if (event.get(tt_alpha) < 0.45) {
+    //     for( unsigned int i=0; i < eta_range.size()-1; ++i ){
+    // 	  if ((fabs(event.get(tt_probejet_eta))>=eta_range[i])&&(fabs(event.get(tt_probejet_eta))<eta_range[i+1])) h_eta_bins_a045[i].fill(event, ran);
+    // 	  for( unsigned int j=0; j < pt_range.size()-1; ++j ){
+    // 	    if ((event.get(tt_pt_ave) >= pt_range[j])&&(event.get(tt_pt_ave) < pt_range[j+1])) 
+    // 	      h_eta_bins_pt_bins_a045[i*(pt_range.size()-1)+j].fill(event, ran); //i*pt_range.size()+j
+    // 	  }
+    //     }
+    // }
+
+
+    //    cSetTree.fillTree(eventInfo->evtNum, eventInfo->runNum, pt_ave, probejet_eta, barrel_eta, probejet_phi, barrel_phi, probejet_pt, barrel_pt, event.jet1_pt, event.jet2_pt, jet1->phi, jet2->phi, jet1->eta, jet2->eta, event.jet1_ptRaw, event.jet2_ptRaw, probejet_ptRaw, barrel_ptRaw, alpha);
+
+    // //     }
+    // event.eh->event_write();
+
+    
 
   // as we want to run the ExampleCycleNew directly with AnalysisModuleRunner,
   // make sure the ExampleModule is found by class name. This is ensured by this macro:
   UHH2_REGISTER_ANALYSIS_MODULE(TestModule)
 
-}
+ }
