@@ -44,7 +44,9 @@ constexpr static float s_eta_barr = 1.3;
 // two back-to-back leading jets (delta_phi(j1,j2) = min(|phi1 - phi2|, 2PI - |phi2 - phi1|) > 2.7)
 constexpr static float s_delta_phi = 2.7;
 // cut on the asymmetry for events with two jets  |(j2->pt - j1->pt /(j2->pt + j1->pt)| < 0.70
-constexpr static float s_asymm = 0.7;
+constexpr static float s_asymm = 0.7; 
+ // cut on the asymmetry for events with two jets  |(j2->pt - j1->pt /(j2->pt + j1->pt)| < 0.2
+/* constexpr static float s_asymm = 0.2; */
 // relative third jet fraction pt_rel = 2*j3_pt/(j1_pt + j2_pt) < 0.2
 constexpr static float s_pt_rel = 0.4;
 
@@ -182,7 +184,7 @@ constexpr static float scale_factor_centrA_PU69_set9[] = {78.5873, 442.229, 393.
 //constexpr static float scale_factor_noJERF[] = {2543.11, 9228.77, 8404.76, 7916.86, 385342, 550228, 3.42556e+06, 1.17561e+07, 1.41737e+07};//run2 69000 V6 Flat
 //constexpr static float scale_factor_centrF[] = {2413.77, 8916.56, 8200.09, 7844.02, 382407, 544738, 3.39795e+06, 1.17032e+07, 1.40901e+07};//run2 69000 V6, cent.smear Flat
 
-constexpr static float scale_factor_noJERF[] = {1479.49,7681.19,7625.43,17894.4,502333,630238,4.91968e+06,1.61948e+07, 2.0111e+07};//run2, 76X, with pile-up reweigting
+constexpr static float scale_factor_noJERF[] = {1.99956, 3.13126, 0.774701, 0.163565, 1.20852, 0.724814, 1.5932, 2.06871, 1.32797};//run2, 76X, with pile-up reweigting
 
 constexpr static float scale_factor_centrF[] = {2.39658,3.42565,0.750234,0.144745,1.18348,0.647537,1.684,2.22249,1.42624};//TMP!!!
 

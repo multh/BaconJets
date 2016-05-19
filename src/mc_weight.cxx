@@ -25,7 +25,9 @@ McWeight::McWeight(uhh2::Context & ctx) :
     event(0),
     fPuReweighting_histo(NULL)
 {
-  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
+  auto jetCollection = ctx.get("jetCollection");
+  h_jets = ctx.declare_event_input<TClonesArray>(jetCollection);
+  //  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
   //    h_jets = context.declare_event_input<TClonesArray>("AK4PFPUPPI");
     h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
 
@@ -45,10 +47,10 @@ McWeight::McWeight(uhh2::Context & ctx) :
 
  // TString fPuReweighting_filename[] = {"Pileup_V6_minBiasXsec58000_pileupJSON_160207.root","Pileup_V6_minBiasXsec69000_pileupJSON_160207.root", "Pileup_V6_minBiasXsec80000_pileupJSON_160207.root"};
 
-  TString DATABASE_PATH = "/afs/desy.de/user/k/karavdia/CMSSW_7_6_3/src/UHH2/BaconJets/reweighting/OLD/";
+  TString DATABASE_PATH = "/afs/desy.de/user/k/karavdia/CMSSW_7_6_3/src/UHH2/BaconJets/reweighting/pileup_76Xcampaign/output/";
     // TString fPuReweighting_filename[] = {"PUweight_V6_minBiasXsec69000_pileupJSON_151102_newAsymptMCSel.root","PUweight_V6_minBiasXsec80000_pileupJSON_151102_newAsymptMCSel.root", "PUweight_V6_minBiasXsec69000_pileupJSON_151102_newFlatMCSel.root", "PUweight_V6_minBiasXsec80000_pileupJSON_151102_newFlatMCSel.root"};
 
- TString fPuReweighting_filename[] = {"58mb/PileupWeight_V6_minBiasXsec58000_pileupJSON_151102.root","69mb/PileupWeight_V6_minBiasXsec69000_pileupJSON_151102.root", "80mb/PileupWeight_V6_minBiasXsec80000_pileupJSON_151102.root"};
+ TString fPuReweighting_filename[] = {"PUweight_RunII_76X_V1_minBiasXsec58000_pileupJSON_FlatMCSel_pythia8_.root","PUweight_RunII_76X_V1_minBiasXsec69000_pileupJSON_FlatMCSel_pythia8_.root", "PUweight_RunII_76X_V1_minBiasXsec80000_pileupJSON_FlatMCSel_pythia8_.root"};
 
 
    for (unsigned int j = 0; j < fPuReweighting_histoname.size(); j++) {

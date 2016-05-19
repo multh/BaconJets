@@ -12,7 +12,9 @@ Selection::Selection(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-    h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
+  auto jetCollection = ctx.get("jetCollection");
+  h_jets = ctx.declare_event_input<TClonesArray>(jetCollection);
+  //    h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
   // h_jets = context.declare_event_input<TClonesArray>("AK4PFPUPPI");
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");
   h_pv = context.declare_event_input<TClonesArray>("PV");
@@ -151,7 +153,7 @@ bool Selection::Trigger(uhh2::Event& evt)
     if (evt.get(tt_pt_ave) >= s_Pt_Ave300HF_cut && trigger300HFfired) return true;
     */
 
-    //For combination of triggers
+//     //For combination of triggers
  //nominal triggers
     bool trigger40fired = false;
     bool trigger60fired = false;
@@ -196,6 +198,7 @@ bool Selection::Trigger(uhh2::Event& evt)
     if (evt.get(tt_pt_ave) >= s_Pt_Ave400_cut && evt.get(tt_pt_ave) < s_Pt_Ave500_cut && trigger400fired) return true;
     if (evt.get(tt_pt_ave) >= s_Pt_Ave500_cut && trigger500fired) return true;
 
+    // //HF triggers -------------------------------------------------------------------------------------------
     bool trigger60HFfired = false;
     bool trigger80HFfired = false;
     bool trigger100HFfired = false;
@@ -225,7 +228,7 @@ bool Selection::Trigger(uhh2::Event& evt)
     if (evt.get(tt_pt_ave) >= s_Pt_Ave160HF_cut && evt.get(tt_pt_ave) < s_Pt_Ave220HF_cut && trigger160HFfired) return true;
     if (evt.get(tt_pt_ave) >= s_Pt_Ave220HF_cut && evt.get(tt_pt_ave) < s_Pt_Ave300HF_cut && trigger220HFfired) return true;
     if (evt.get(tt_pt_ave) >= s_Pt_Ave300HF_cut && trigger300HFfired) return true;
-
+    //---------------------------------------------------------------------------------------------------
 
 
 

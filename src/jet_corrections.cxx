@@ -9,7 +9,8 @@ JetCorrections::JetCorrections(uhh2::Context & ctx) :
     context(ctx),
     event(0)
 {
-  h_jets = context.declare_event_input<TClonesArray>("AK4PFCHS");
+  auto jetCollection = ctx.get("jetCollection");
+  h_jets = context.declare_event_input<TClonesArray>(jetCollection);
   //h_jets = context.declare_event_input<TClonesArray>("AK4PFPUPPI");
 
   h_eventInfo = context.declare_event_input<baconhep::TEventInfo>("Info");

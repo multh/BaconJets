@@ -1,7 +1,7 @@
 #include "header.h"
 #include "tdrstyle_mod14.C"
 
-void AllResPlots_noKFSR(TString path){
+void AllResPlots_noKFSR(TString path, double al_cut=0.2){
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
 
@@ -118,7 +118,7 @@ void AllResPlots_noKFSR(TString path){
   consdijet_norm->SetLineColor(kBlue+1);
   conscomb_norm->SetLineWidth(2);
   conscomb_norm->SetLineColor(kGreen+1);
-
+  conscomb_norm->SetMarkerColor(kGreen+1);
   rrconsmpf_norm->SetLineWidth(2);
   rrconsmpf_norm->SetLineStyle(2);
   rrconsmpf_norm->SetLineColor(kRed+1);
@@ -128,13 +128,14 @@ void AllResPlots_noKFSR(TString path){
   rrconscomb_norm->SetLineWidth(2);
   rrconscomb_norm->SetLineStyle(2);
   rrconscomb_norm->SetLineColor(kGreen+1);
+  rrconscomb_norm->SetMarkerColor(kGreen+1);
   rrlogptmpf_norm->SetLineWidth(2);
   rrlogptmpf_norm->SetLineColor(kRed+1);
   rrlogptdijet_norm->SetLineWidth(2);
   rrlogptdijet_norm->SetLineColor(kBlue+1);
   rrlogptcomb_norm->SetLineWidth(2);
   rrlogptcomb_norm->SetLineColor(kGreen+1);
-
+  rrlogptcomb_norm->SetMarkerColor(kGreen+1);
 
   consmpf_norm->GetXaxis()->SetTitle("|#eta|");
   consmpf_norm->GetXaxis()->SetTitleSize(0.05);
@@ -165,7 +166,7 @@ void AllResPlots_noKFSR(TString path){
   TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
   leg1 -> AddEntry(consmpf_norm, "MPF","L");
   leg1 -> AddEntry(consdijet_norm, "Pt","L");
-  leg1 -> AddEntry(conscomb_norm, "COMB","L");
+  leg1 -> AddEntry(conscomb_norm, "COMB","LP");
   leg1->Draw();
 
   TLatex *tex = new TLatex();
@@ -175,11 +176,16 @@ void AllResPlots_noKFSR(TString path){
   tex->DrawLatex(0.47,0.87,"Anti-k_{t} R = 0.4, PF+CHS");
   
 
-  c1->SaveAs("plots/L2Res_25ns_2p11fb.pdf");
+  c1->SaveAs(path+"plots/L2Res_25ns_2p11fb_nokFSR.pdf");
   
 
   TCanvas *c2 = tdrCanvas("c2",h,4,0,kSquare);
-  rrconsmpf_norm->GetYaxis()->SetTitle("(R^{MC}/R^{data})_{#alpha<0.3}");
+  TString alVal;
+  alVal.Form("%0.2f\n",al_cut);
+  TString altitle = "{#alpha<"+alVal+"}";
+  TString axistitle = "(R^{MC}/R^{data})_";
+  axistitle +=altitle;
+  rrconsmpf_norm->GetYaxis()->SetTitle(axistitle);
   rrconsmpf_norm->GetYaxis()->SetTitleSize(0.05);
   rrconsmpf_norm->GetYaxis()->SetRangeUser(0.95,1.15);
   rrconsmpf_norm->GetXaxis()->SetTitle("|#eta|");
@@ -194,11 +200,11 @@ void AllResPlots_noKFSR(TString path){
   TLegend *leg2 = tdrLeg(0.17,0.49,0.40,0.80);
   leg2 -> AddEntry(rrconsmpf_norm, "MPF FLAT","L");
   leg2 -> AddEntry(rrconsdijet_norm, "Pt FLAT","L");
-  leg2 -> AddEntry(rrconscomb_norm, "COMB FLAT","L");
+  leg2 -> AddEntry(rrconscomb_norm, "COMB FLAT","LP");
   leg2 -> AddEntry(rrlogptmpf_norm, "MPF LOGLIN","L");
   leg2 -> AddEntry(rrlogptdijet_norm, "Pt LOGLIN","L");
-  leg2 -> AddEntry(rrlogptcomb_norm, "COMB LOGLIN","L");
+  leg2 -> AddEntry(rrlogptcomb_norm, "COMB LOGLIN","LP");
   leg2->Draw();
   tex->DrawLatex(0.47,0.87,"Anti-k_{t} R = 0.4, PF+CHS");
-  c2->SaveAs("plots/Ratio_25ns_2p11fb.pdf");
+  c2->SaveAs(path+"plots/Ratio_25ns_2p11fb_nokFSR.pdf");
 }

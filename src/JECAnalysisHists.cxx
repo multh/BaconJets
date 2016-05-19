@@ -26,7 +26,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     // jets
     TH1::SetDefaultSumw2();
 
-    book<TH1F>("N_jets", "N_{jets}", 20, -0.5, 19.5);
+    book<TH1F>("N_jets", "N_{jets}", 50, -0.5, 49.5);
     book<TH1F>("pt","p_{T} all jets; p_{T} (GeV)",100,0,1500);
     book<TH1F>("eta","#eta all jets; #eta",100,-5,5);
     book<TH1F>("phi","#phi all jets; #phi",50,-M_PI,M_PI);
@@ -52,16 +52,17 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("pt_barrel","p_{T} barrel jet; p_{T}^{barrel} (GeV)",100,0,600);
     book<TH1F>("pt_probe","p_{T} probe jet; p_{T}^{probe} (GeV)",100,0,600);
     book<TH1F>("eta_barrel","#eta barrel jet; #eta^{barrel}",100,-5,5);
-    book<TH1F>("eta_probe","#eta probe jet #eta^{probe}",100,-5,5);
-
-    book<TH1F>("pt_ave","p_{T} ave jet; p_{T}^{ave} (GeV)",100,0,600);
+    book<TH1F>("eta_probe","#eta probe jet; #eta^{probe}",100,-5,5);
+    book<TH1F>("eta_probe_pos","#eta probe jet >=0; #eta^{probe}",50,0,5);
+    book<TH1F>("eta_probe_neg","#eta probe jet <0; |#eta^{probe}|",50,0,5);
+    book<TH1F>("pt_ave","p_{T} ave jet; p_{T}^{ave} (GeV)",600,0,600);
     book<TH1F>("pt_ave_pthat","p_{T} ave jet; p_{T}^{ave} - p_{T}^{hat})/p_{T}^{hat}(GeV)",100,0,600);
     book<TH1F>("pt_ave_rebin","p_{T} ave jet; p_{T}^{ave} (GeV)",300,0,3000);
 
     book<TH1F>("pt_rel","p_{T}^{jet3} / p_{T}^{ave}; #alpha ", 50, 0, 1);
     book<TH1F>("generic_pt_rel","generic p_{T}^{jet3} / p_{T}^{ave}; #alpha ", 50, 0, 1);
 
-    book<TH1F>("asym","asymmetrie jet 1 and jet 2; Asymmetry",100,-1,1);
+    book<TH1F>("asym","asymmetrie jet 1 and jet 2; Asymmetry",150,-1.5,1.5);
     book<TH1F>("generic_asym","generic asymmetrie jet 1 and jet 2; Asymmetry",100,-1,1);
     // book<TH1F>("mpf","MPF response; MPF response",100,0.5,1.5);
     // book<TH1F>("generic_mpf","generic MPF response; MPF response",100,0.5,1.5);
@@ -119,6 +120,24 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH2D>("mpf_vs_etaProbe","MPF response vs. #eta probe jet; #eta probe; MPF response",100,-5,5,100,0.,2.);
     book<TH2D>("r_rel_vs_etaProbe","Relative response vs. #eta probe jet; #eta probe; R_{rel}",100,-5,5,100,0.,2.);
     book<TH2D>("pt_ave_vs_etaProbe","pt ave vs #eta probe jet; #eta probe; pT_{ave}, GeV",100,-5.2,5.2,200,0,1000);
+    book<TH2D>("Rrel_vs_assym","Relative response vs. Asymmetry ; Asymmetry; R_{rel}",100,-1.5,1.5,200,0,10.);
+    book<TH2D>("Rmpf_vs_assym","MPF response vs. Asymmetry ; Asymmetry; R_{MPF}",100,-1.5,1.5,200,0,10.);
+    book<TH2D>("alpha_vs_assym","#alpha vs. Asymmetry ; Asymmetry; #alpha",100,-1.5,1.5,100,0,1.);
+    book<TH2D>("alphaSum_vs_alpha3","#alpha_{sum} vs. #alpha_{3} ; #alpha_{3}; #alpha_{sum};",100,0.,2.,100,0,2.);
+    book<TH2D>("Njets_vs_alpha","Number of jets vs. #alpha ; #alpha; Njets",100,0,1.,50, -0.5, 49.5);
+    book<TH2D>("Pt_vs_JetN","pT of jets in event ; jet number; pT", 50, -0.5, 49.5, 200,0,500);
+    book<TH2D>("eta_vs_JetN","#eta of jets in event ; jet number; #eta", 50, -0.5, 49.5, 100,-5,5);
+    // book<TH2D>("diffPt1_vs_alpha3","(pT_{rec}-pT_{gen}) vs. #alpha_{3} ; #alpha_{3}; (pT_{rec}-pT_{gen})_{1st jet} ;",100,0.,2.,100,-200,200.);
+    // book<TH2D>("diffPt1_vs_alphaSum","(pT_{rec}-pT_{gen}) vs. #alpha_{sum} ; #alpha_{sum}; (pT_{rec}-pT_{gen})_{1st jet} ;",100,0.,2.,100,-200,200.);
+    // book<TH2D>("diffPt2_vs_alpha3","(pT_{rec}-pT_{gen}) vs. #alpha_{3} ; #alpha_{3}; (pT_{rec}-pT_{gen})_{2nd jet} ;",100,0.,2.,100,-200,200.);
+    // book<TH2D>("diffPt2_vs_alphaSum","(pT_{rec}-pT_{gen}) vs. #alpha_{sum} ; #alpha_{sum}; (pT_{rec}-pT_{gen})_{2nd jet} ;",100,0.,2.,100,-200,200.);
+    // // book<TH2D>("diffPtGen_vs_alpha3","((pT_{1}-pT_{2})_{gen})/pT^{gen}_{ave} vs. #alpha_{3} ; #alpha_{3}; (pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} ;",100,0.,2.,100,0,2.);
+    // // book<TH2D>("diffPtGen_vs_alphaSum","(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} vs. #alpha_{sum} ; #alpha_{sum}; (pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} ;",100,0.,2.,100,0,2.);
+    book<TH2D>("diffPtGen_vs_alpha3","(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} vs. #alpha_{3} ; #alpha_{3}; (pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} ;",200,0.,2.,400,-3.,3.);
+    book<TH2D>("diffPtGen_vs_alphaSum","(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} vs. #alpha_{sum} ; #alpha_{sum}; (pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} ;",200,0.,2.,400,-3.,3.);
+
+    // book<TH2D>("AbsdiffPtGen_vs_alpha3","((pT_{1}-pT_{2})_{gen})/pT^{gen}_{ave} vs. #alpha_{3} ; #alpha_{3}; |(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave}|",100,0.,2.,300,0,3.);
+    // book<TH2D>("AbsdiffPtGen_vs_alphaSum","(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave} vs. #alpha_{sum} ; #alpha_{sum}; |(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave}|",100,0.,2.,300,0,3.);
     // book_TH2F("ptjet3_vs_alpha","pt jet3 vs #alpha", 10, 0, 1., 100,0,1500);
     // book_TH2F("pt_ave_vs_alpha","pt ave vs #alpha", 10, 0, 1., 100,0,1500);
     // ptjet3_vs_alpha = new TH2F("ptjet3_vs_alpha","pt jet3 vs #alpha", 10, 0, 1., 100,0,1500);
@@ -130,8 +149,10 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
 
 
 /*    uhh2::Event::Handle<TClonesArray> h_pv;*/
-    h_jets = ctx.get_handle<TClonesArray>("AK4PFCHS");
+//    h_jets = ctx.get_handle<TClonesArray>("AK4PFCHS");
     //    h_jets = ctx.get_handle<TClonesArray>("AK4PFPUPPI");
+    auto jetCollection = ctx.get("jetCollection");
+    h_jets = ctx.declare_event_input<TClonesArray>(jetCollection);
     h_eventInfo = ctx.get_handle<baconhep::TEventInfo>("Info");
     h_pv = ctx.get_handle<TClonesArray>("PV");
     tt_gen_pthat  = ctx.get_handle<float>("gen_pthat");
@@ -153,6 +174,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     tt_barreljet_ptRaw = ctx.get_handle<float>("barreljet_ptRaw");
     tt_pt_ave = ctx.get_handle<float>("pt_ave");
     tt_alpha = ctx.get_handle<float>("alpha");
+    tt_alpha_sum = ctx.get_handle<float>("alpha_sum");
     tt_rel_r = ctx.get_handle<float>("rel_r");
     tt_mpf_r = ctx.get_handle<float>("mpf_r");
     tt_asymmetry = ctx.get_handle<float>("asymmetry");
@@ -191,7 +213,8 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         // hist("nPu")->Fill(eventInfo->nPU, weight);
         hist("MET")->Fill(eventInfo.pfMET, weight);
         hist("nPu")->Fill(eventInfo.nPU, weight);
-
+	((TH2D*)hist("Pt_vs_JetN"))->Fill(i+1,jets->pt, weight);
+	((TH2D*)hist("eta_vs_JetN"))->Fill(i+1,jets->eta, weight);
         hist("weight_histo")->Fill(weight, 1);
     }
 //         hist("nPu")->Fill(ev.nPU, weight);//for data only
@@ -237,10 +260,13 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     hist("pt_probe")    ->Fill(ev.get(tt_probejet_pt) , weight);
     hist("eta_barrel")  ->Fill(ev.get(tt_barreljet_eta), weight);
     hist("eta_probe")   ->Fill(ev.get(tt_probejet_eta) , weight);
+    if(ev.get(tt_probejet_eta)>=0) hist("eta_probe_pos")->Fill(ev.get(tt_probejet_eta) , weight);
+    else hist("eta_probe_neg")->Fill(fabs(ev.get(tt_probejet_eta)) , weight);
     hist("mpf")         ->Fill(ev.get(tt_mpf_r), weight);
     hist("asym")        ->Fill(ev.get(tt_asymmetry), weight);
     hist("r_rel")       ->Fill(ev.get(tt_rel_r), weight);
-
+    ((TH2D*)hist("Rrel_vs_assym"))->Fill(ev.get(tt_asymmetry),ev.get(tt_rel_r), weight);
+    ((TH2D*)hist("Rmpf_vs_assym"))->Fill(ev.get(tt_asymmetry),ev.get(tt_mpf_r), weight);
     double deltaPhi = abs(jet1->phi - jet2->phi);
     hist("DeltaPhi_Jet1_Jet2")->Fill(deltaPhi, weight);
 
@@ -370,6 +396,26 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
         hist("ptrel_vs_deltaphi")->Fill(alpha,deltaPhi);
 	((TH2D*)hist("ptjet3_vs_alpha"))->Fill(alpha,pt_jet3,weight);
 	((TH2D*)hist("pt_ave_vs_alpha"))->Fill(alpha,pt_ave,weight);
+	((TH2D*)hist("alpha_vs_assym"))->Fill(ev.get(tt_asymmetry),alpha, weight);
+	((TH2D*)hist("Njets_vs_alpha"))->Fill(alpha,njets,weight);
+	((TH2D*)hist("alphaSum_vs_alpha3"))->Fill(alpha,ev.get(tt_alpha_sum),weight);
+	// ((TH2D*)hist("diffPt1_vs_alpha3"))->Fill(alpha,((jet1->pt)-(jet1->genpt)),weight);
+	// ((TH2D*)hist("diffPt2_vs_alpha3"))->Fill(alpha,((jet2->pt)-(jet2->genpt)),weight);
+	// ((TH2D*)hist("diffPt1_vs_alphaSum"))->Fill(ev.get(tt_alpha_sum),((jet1->pt)-(jet1->genpt)),weight);
+	// ((TH2D*)hist("diffPt2_vs_alphaSum"))->Fill(ev.get(tt_alpha_sum),((jet2->pt)-(jet2->genpt)),weight);
+	// ((TH2D*)hist("diffPtGen_vs_alpha3"))->Fill(alpha,abs(2*((jet1->genpt)-(jet2->genpt))/((jet1->genpt)+(jet2->genpt))),weight);
+	// ((TH2D*)hist("diffPtGen_vs_alphaSum"))->Fill(ev.get(tt_alpha_sum),abs(2*((jet1->genpt)-(jet2->genpt))/((jet1->genpt)+(jet2->genpt))),weight);
+	double diffPt = (jet1->genpt)-(jet2->genpt);
+	double avePt = 0.5*((jet1->genpt)+(jet2->genpt));
+	if(jet2->genpt>0 && jet1->genpt>0){
+	  //	if((diffPt/avePt)>1.99) 
+	// cout<<"diffPt/avePt = "<<diffPt/avePt<<" diffPt = "<<diffPt<<" avePt = "<<avePt<<" jet1->genpt = "
+	//     <<jet1->genpt<<" jet2->genpt = "<<jet2->genpt<<" jet2->pt = "<<jet2->pt<<endl;
+	((TH2D*)hist("diffPtGen_vs_alpha3"))->Fill(alpha,(diffPt/avePt),weight);
+	((TH2D*)hist("diffPtGen_vs_alphaSum"))->Fill(ev.get(tt_alpha_sum),(diffPt/avePt),weight);
+	// ((TH2D*)hist("AbsdiffPtGen_vs_alpha3"))->Fill(alpha,fabs(diffPt/avePt),weight);
+	// ((TH2D*)hist("AbsdiffPtGen_vs_alphaSum"))->Fill(ev.get(tt_alpha_sum),fabs(diffPt/avePt),weight);
+	}
     }
 }
 JECAnalysisHists::~JECAnalysisHists(){}

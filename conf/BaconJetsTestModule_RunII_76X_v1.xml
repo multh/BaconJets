@@ -17,11 +17,14 @@
 
 <!-- <!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Summer15_25nsV6.xml"> -->
 
- <!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Fall15_25nsV1.xml">
+<!ENTITY DATA_RunD SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Fall15_25nsV1.xml">
+<!ENTITY DATA_RunD_AK8PFCHS SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Fall15_25nsV1_AK8PFCHS.xml">
 <!-- <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight/"> -->
 <!--   <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_18EtaBins/"> -->
-  <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_AllTriggers_TTree/">
-   <!--  <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_AllTriggers_TTree/"> -->
+<!-- <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_AllTriggers_TTree/"> -->
+      <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_AllTriggers_TTree/">
+<!--     <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_StandTriggers_TTree/"> -->
+<!--     <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_HFTriggers_TTree/"> -->
 <!-- <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPUandPt_AllTriggers_TTree/"> -->
 <!-- <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_PtReweight/"> -->
 <!-- <!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_alpha0_1_Selection/"> -->
@@ -35,26 +38,32 @@
 <!-- <!ENTITY OUTdir  "/nfs/dust/cms/user/karavdia/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Fall15_25nsV1/"> -->
 ]>
 
+<!--
+   <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="10" AutoResubmit="10"/>
+   <ConfigSGE RAM ="3" DISK ="2" Mail="XXXX@desy.de" Notification="as" Workdir="workdir"/>
+-->
+
+
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
 <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
     <Library Name="libSUHH2BaconJets"/>
     <Package Name="SUHH2BaconJets.par" />
 
-   <!-- <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" > -->
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="16" > 
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" >
+<!--  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="16" > -->
         <!--     to run on all samples -->
 
-   <!--  <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8_AK4CHS" Cacheable="False">
+     <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8_AK4CHS" Cacheable="False">
           &QCDPt15to7000_pythia8_AK4CHS;
           <InputTree Name="Events"/>
           <OutputTree Name="Events"/>
-     </InputData> -->
+     </InputData>
 
-     <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_herwigpp_AK4CHS" Cacheable="False">
+    <!-- <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_herwigpp_AK4CHS" Cacheable="False">
          &QCDPt15to7000_herwigpp_AK4CHS;
 	 <OutputTree Name="Events"/>
          <InputTree Name="Events" />
-       </InputData>
+       </InputData> -->
 
      <!-- <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8_AK4PUPPI" Cacheable="False">
         &QCDPt15to7000_pythia8_AK4PUPPI;
@@ -66,12 +75,12 @@
         <InputTree Name="Events" />
       </InputData> -->
 
-    <!--   <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8_AK8CHS" Cacheable="False">
+      <!-- <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8_AK8CHS" Cacheable="False">
           &QCDPt15to7000_pythia8_AK8CHS;
           <InputTree Name="Events" />
-        </InputData>
+        </InputData> -->
 
-       <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_herwigpp_AK8CHS" Cacheable="False">
+     <!--  <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_herwigpp_AK8CHS" Cacheable="False">
          &QCDPt15to7000_herwigpp_AK8CHS;
          <InputTree Name="Events" />
        </InputData> 
@@ -93,7 +102,13 @@
           &DATA_RunD;
           <InputTree Name="Events"/>
 	  <OutputTree Name="Events"/>
-        </InputData> 
+        </InputData>
+
+ <!-- <InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="RunD_AK8CHS" Cacheable="False">
+          &DATA_RunD_AK8PFCHS;
+          <InputTree Name="Events"/>
+	  <OutputTree Name="Events"/>
+        </InputData> -->
 
 
         <!--<OutputTree Name="AnalysisTree" />-->
@@ -136,10 +151,11 @@
             <!-- tell AnalysisModuleRunner that we use a completely user-defined event format -->
             <Item Name="userEventFormat" Value="true" />
 	    <!-- set the name of jet collection -->
-	    <Item Name="jetCollection" Value="AK4PFCHS" /> 
+	    <Item Name="jetCollection" Value="AK4PFCHS" />
+<!--            <Item Name="jetCollection" Value="AK8PFCHS" /> -->
             <!-- the class name of the AnalysisModule subclasses to run: -->
             <Item Name="AnalysisModule" Value="TestModule" /> 
-	    <Item Name="MCreweight" Value="false" /> 
+	    <Item Name="MCreweight" Value="true" /> 
         </UserConfig>
     </Cycle>
 </JobConfiguration>

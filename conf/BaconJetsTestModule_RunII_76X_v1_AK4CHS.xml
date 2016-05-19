@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
+
+<!ENTITY PROOFdir "/nfs/dust/cms/user/karavdia/PROOF">      
+  <!ENTITY NEVT "-1"> 
+<!-- <!ENTITY NEVT "1000"> -->
+
+
+
+<!ENTITY QCDPt15to7000_pythia8_AK4CHS SYSTEM "../datasets/JEC_76X/MC_QCD_Pt-15to7000_Flat_pythia8_Fall15_25nsV1_MC.xml">
+<!ENTITY QCDPt15to7000_herwigpp_AK4CHS SYSTEM "../datasets/JEC_76X/MC_QCD_Pt-15to7000_Flat_herwigpp_Fall15_25nsV1_MC.xml">
+<!ENTITY DATA_RunD_AK4CHS SYSTEM "../datasets/JEC_76X/DATA_RunIID_Cert_246908-260627_v2_13TeV_PromptReco_Collisions15_25ns_JSON_Fall15_25nsV1.xml"> 
+
+<!ENTITY QCD_Pt_5to10_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_5to10_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_10to15_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_10to15_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_15to30_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_15to30_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_30to50_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_30to50_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_50to80_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_50to80_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_80to120_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_120to170_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_170to300_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_300to470_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_470to600_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_600to800_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_800to1000_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_1000to1400_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_1400to1800_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_1800to2400_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_2400to3200_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+<!ENTITY QCD_Pt_3200toInf_pythia8_AK4PFCHS SYSTEM "../datasets/JEC_76X/QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8_AK4PFCHS.xml">
+
+
+<!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight/3dJet_50GeV/">
+
+<!-- <!ENTITY QCDPt15to7000_pythia8_AK4CHS SYSTEM "../datasets/JEC_76X/Fall15_25nsV2_L2L3Res_MC_pythia8_AK4PFCHS.xml">
+<!ENTITY DATA_RunD_AK4CHS SYSTEM "../datasets/JEC_76X/Fall15_25nsV2_L2L3Res_DATA_AK4PFCHS.xml">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_L2L3Res_noReweight/"> -->
+]>
+
+<!--
+   <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="10" AutoResubmit="10"/>
+   <ConfigSGE RAM ="3" DISK ="2" Mail="XXXX@desy.de" Notification="as" Workdir="workdir"/>
+-->
+
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+    <Library Name="libSUHH2BaconJets"/>
+    <Package Name="SUHH2BaconJets.par" />
+
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="2690.71" >
+ <!-- <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="1" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="16" > -->
+        <!--     to run on all samples -->
+
+	<InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_pythia8_AK4CHS" Cacheable="False">
+          &QCDPt15to7000_pythia8_AK4CHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+
+     <InputData Lumi="1" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt15to7000_herwigpp_AK4CHS" Cacheable="False">
+         &QCDPt15to7000_herwigpp_AK4CHS;
+	 <OutputTree Name="Events"/>
+         <InputTree Name="Events" />
+       </InputData>
+
+	<InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="RunD_AK4CHS" Cacheable="False">
+          &DATA_RunD_AK4CHS;
+          <InputTree Name="Events"/>
+	  <OutputTree Name="Events"/>
+        </InputData>
+
+
+ <!-- <InputData Lumi="1.126208e-04" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_5to10_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_5to10_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+ <InputData Lumi="1.145340e-03" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_10to15_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_10to15_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="2.079760e-02" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_15to30_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_15to30_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="6.945488e-02" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_30to50_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_30to50_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="4.936901e-01" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_50to80_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_50to80_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="2.512069e+00" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_80to120_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_80to120_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+<InputData Lumi="1.453667e+01" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_120to170_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_120to170_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="5.867173e+01" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_170to300_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_170to300_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="7.630014e+02" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_300to470_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_300to470_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="6.111843e+03" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_470to600_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_470to600_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="2.110810e+04" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_600to800_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_600to800_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+<InputData Lumi="1.230367e+05" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_800to1000_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_800to1000_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+<InputData Lumi="3.125979e+05" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_1000to1400_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_1000to1400_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+<InputData Lumi="4.696195e+05" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_1400to1800_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_1400to1800_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+<InputData Lumi="3.425698e+06" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_1800to2400_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_1800to2400_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+<InputData Lumi="5.834015e+07" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_2400to3200_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_2400to3200_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData>
+
+<InputData Lumi="2.363976e+09" NEventsMax="&NEVT;" Type="MC" Version="QCD_Pt_3200toInf_pythia8_AK4PFCHS" Cacheable="False">
+          &QCD_Pt_3200toInf_pythia8_AK4PFCHS;
+          <InputTree Name="Events"/>
+          <OutputTree Name="Events"/>
+     </InputData> -->
+
+
+        <UserConfig>
+            <!-- tell AnalysisModuleRunner that we use a completely user-defined event format -->
+            <Item Name="userEventFormat" Value="true" />
+	    <!-- set the name of jet collection -->
+	    <Item Name="jetCollection" Value="AK4PFCHS" />
+            <!-- the class name of the AnalysisModule subclasses to run: -->
+            <Item Name="AnalysisModule" Value="TestModule" /> 
+	    <Item Name="MCreweight" Value="false" /> 
+	    <Item Name="use_sframe_weight" Value="false"/>
+        </UserConfig>
+    </Cycle>
+</JobConfiguration>

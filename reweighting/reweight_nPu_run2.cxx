@@ -8,11 +8,12 @@
 // weighting factors will be stored;
 
 TString     nPu_reweighting_dbase = "nPu_reweighting";
-//TString     sminBiasXsec = "58000";
+TString     sminBiasXsec = "58000";
 //TString     sminBiasXsec = "69000";
-TString     sminBiasXsec = "80000";
+//TString     sminBiasXsec = "80000";
 TString     sMCsample = "Flat";
-TString MCgen = "herwigpp";
+//TString MCgen = "herwigpp";
+TString MCgen = "pythia8";
 
 // main function
 int reweight_nPu_run2() {
@@ -33,7 +34,7 @@ int reweight_nPu_run2() {
 // TFile *file_DATA = new TFile ("/afs/desy.de/user/k/karavdia/CMSSW_7_6_3/src/UHH2/BaconJets/reweighting/pileup_76Xcampaign/MyDataPileup_V6_minBiasXsec69000_pileupJSON_160207.root");
 //  TFile *file_DATA = new TFile ("/afs/desy.de/user/k/karavdia/CMSSW_7_6_3/src/UHH2/BaconJets/reweighting/pileup_76Xcampaign/MyDataPileup_V6_minBiasXsec80000_pileupJSON_160207.root");
   // TFile *file_MC = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/MC_QCD_Pt-15to7000_Flat_pythia8_Fall15_25nsV1_MC_noReweight/uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8.root");
-  TFile *file_MC = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_AllTriggers_TTree/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_"+MCgen+"_AK4CHS.root");
+  TFile *file_MC = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_AllTriggers_TTree/uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_"+MCgen+"_AK4CHS.root");
     TH1F * histo_DATA = (TH1F*) file_DATA -> Get("pileup");
     TH1F * histo_MC = (TH1F*) file_MC -> Get("Selection/nPu");
 

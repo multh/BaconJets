@@ -50,13 +50,21 @@ void kFSR_pT(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile){
     }
   }
 
-  //Divide reponses by value at alpha=0.3
-  //find bin with alpha = 0.3
+  // //Divide reponses by value at alpha=0.3
+  // //find bin with alpha = 0.3
+  // int al_ref=0;
+  // for(int i=0; i<n_alpha; i++){
+  //   if(fabs(alpha_bins[i]-0.3)<1e-4) al_ref=i;
+  // }
+  // cout<<"alpha=0.3 for bin#"<<al_ref<<endl;
+
+  //Divide reponses by value at alpha=0.2
+  //find bin with alpha = 0.2
   int al_ref=0;
   for(int i=0; i<n_alpha; i++){
-    if(fabs(alpha_bins[i]-0.3)<1e-4) al_ref=i;
+    if(fabs(alpha_bins[i]-0.2)<1e-4) al_ref=i;
   }
-  cout<<"alpha=0.3 for bin#"<<al_ref<<endl;
+  cout<<"alpha=0.2 for bin#"<<al_ref<<endl;
 
   for(int j=0; j<n_eta-1; j++){
     for(int k=0; k<n_pt-1; k++){
@@ -133,11 +141,11 @@ void kFSR_pT(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile){
   // create output .dat file, including the kFSR extrapolation (alpha->0)
   FILE *fp; TH1D* kFSR_MPF; TH1D* kFSR_DiJet;
   if(mpfMethod){
-    fp = fopen("output/KFSR_MPF_extrapolation.dat","w");
+    fp = fopen(path+"output/KFSR_MPF_extrapolation.dat","w");
     kFSR_MPF = new TH1D("kfsr_mpf","kfsr_mpf", n_eta-1,eta_bins);
   }
   else{
-    fp = fopen("output/KFSR_DiJet_extrapolation.dat","w");
+    fp = fopen(path+"output/KFSR_DiJet_extrapolation.dat","w");
     kFSR_DiJet = new TH1D("kfsr_dijet","kfsr_dijet", n_eta-1,eta_bins);
   }
 
@@ -217,10 +225,10 @@ void kFSR_pT(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile){
 
     //save the plots
     if(mpfMethod){
-      a[j]->Print("plots/kFSR_MPF_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+      a[j]->Print(path+"plots/kFSR_MPF_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
     else{
-      a[j]->Print("plots/kFSR_Pt_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+      a[j]->Print(path+"plots/kFSR_Pt_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
 
   }

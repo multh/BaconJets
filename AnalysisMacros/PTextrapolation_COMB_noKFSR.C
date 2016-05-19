@@ -7,7 +7,7 @@
 
 
 
-void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag, TString variation, TString tag){
+void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag, TString variation, TString tag, double al_cut=0.2){
 
   gStyle->SetOptFit(000);
 
@@ -36,7 +36,9 @@ void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, T
   // get the histos for pt average
   TH1D* ptave_data[n_eta-1];
   for(int i=0; i<n_eta-1; i++){
-    TString selection = "alpha<0.3 && probejet_eta<";
+    TString selection = "alpha<";
+    selection+=al_cut;
+    selection+=" && probejet_eta<";
     selection+=eta_range[i+1];
     selection+=" && probejet_eta>=";
     selection+=eta_range[i];
@@ -46,20 +48,20 @@ void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, T
 
  
   // get ratio for MC to DATA responses
-  double ratio_mpf[n_eta-1][n_pt-1]; //ratio at pt,eta bins for alpha = 0.3
-  double err_ratio_mpf[n_eta-1][n_pt-1]; //error of ratio at pt,eta bins for alpha = 0.3
-  double ratio_dijet[n_eta-1][n_pt-1]; //ratio at pt,eta bins for alpha = 0.3
-  double err_ratio_dijet[n_eta-1][n_pt-1]; //error of ratio at pt,eta bins for alpha = 0.3
+  double ratio_mpf[n_eta-1][n_pt-1]; //ratio at pt,eta bins for alpha = al_cut
+  double err_ratio_mpf[n_eta-1][n_pt-1]; //error of ratio at pt,eta bins for alpha = al_cut
+  double ratio_dijet[n_eta-1][n_pt-1]; //ratio at pt,eta bins for alpha = al_cut
+  double err_ratio_dijet[n_eta-1][n_pt-1]; //error of ratio at pt,eta bins for alpha = al_cut
   for(int j=0; j<n_eta-1; j++){
     for(int k=0; k<n_pt-1; k++){
       std::cout<<"For eta range = "<<eta_bins[j]<<", "<<eta_bins[j+1]<<" and pT range = "<<pt_bins[k]<<", "<<pt_bins[k+1]<<std::endl;
-      pair<double,double> res_mc_mpf =  Response(MCfile,0.3,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],true);
-      pair<double,double> res_data_mpf =  Response(datafile,0.3,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],true);
+      pair<double,double> res_mc_mpf =  Response(MCfile,al_cut,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],true);
+      pair<double,double> res_data_mpf =  Response(datafile,al_cut,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],true);
       pair<double,double> ratio_res_mpf = Rmc_to_Rdata(res_mc_mpf,res_data_mpf);
       ratio_mpf[j][k] = ratio_res_mpf.first;
       err_ratio_mpf[j][k] = ratio_res_mpf.second;
-      pair<double,double> res_mc_dijet =  Response(MCfile,0.3,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],false);
-      pair<double,double> res_data_dijet =  Response(datafile,0.3,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],false);
+      pair<double,double> res_mc_dijet =  Response(MCfile,al_cut,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],false);
+      pair<double,double> res_data_dijet =  Response(datafile,al_cut,eta_bins[j],eta_bins[j+1],pt_bins[k],pt_bins[k+1],false);
       pair<double,double> ratio_res_dijet = Rmc_to_Rdata(res_mc_dijet,res_data_dijet);
       ratio_dijet[j][k] = ratio_res_dijet.first;
       err_ratio_dijet[j][k] = ratio_res_dijet.second;
@@ -96,9 +98,9 @@ void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, T
 
   // create output .dat file, including the kFSR extrapolation (alpha->0)
   FILE *fp; FILE *fp2; FILE *l2resfile;
-  fp = fopen("output/pT_COMB_extrapolations.dat","w");
-  fp2 = fopen("output/pT_COMB_constantExtrapolation.dat","w");
-  l2resfile = fopen("output/L2Res_COMB.dat","w");
+  fp = fopen(path+"output/pT_COMB_extrapolations.dat","w");
+  fp2 = fopen(path+"output/pT_COMB_constantExtrapolation.dat","w");
+  l2resfile = fopen(path+"output/L2Res_COMB.dat","w");
 
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,7 +226,7 @@ void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, T
     //   mg1[j]->GetYaxis()->SetRangeUser(0.95,1.30);
     // }
     //save plots
-    asd[j]->Print("plots/pTextrapolation_COMB_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+    asd[j]->Print(path+"plots/pTextrapolation_COMB_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
   }
   fclose(fp);
   fclose(fp2);
@@ -264,10 +266,10 @@ void PTextrapolation_COMB_noKFSR(TString path, TFile* datafile, TFile* MCfile, T
   TH1D* ptave_const_COMB = new TH1D("ptave_const_comb","ptave_const_comb", n_eta-1,eta_bins);
   TH1D* ptave_logpt_COMB = new TH1D("ptave_logpt_comb","ptave_logpt_comb", n_eta-1,eta_bins);
   ofstream output, output_loglin, uncerts, uncerts_loglin;
-  output.open("output/Fall15_25ns_COMB_FLAT_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
-  output_loglin.open("output/Fall15_25ns_COMB_LOGLIN_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
-  uncerts.open("output/Fall15_25ns_COMB_FLAT_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt.STAT");
-  uncerts_loglin.open("output/Fall15_25ns_COMB_LOGLIN_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt.STAT");
+  output.open(path+"output/Fall15_25ns_COMB_FLAT_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
+  output_loglin.open(path+"output/Fall15_25ns_COMB_LOGLIN_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
+  uncerts.open(path+"output/Fall15_25ns_COMB_FLAT_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt.STAT");
+  uncerts_loglin.open(path+"output/Fall15_25ns_COMB_LOGLIN_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt.STAT");
   //output  << "JetEta (abs)      " << "p[0]" << "       " <<  "kFSR * p[0] " << "  statistical unc" << endl;
   //output_loglin  << "JetEta (abs)      "  << "p[0]        "  << "p[1]"  << "       " <<  "kFSR*[p[0]+p[1]*Log(max(ptmin,min(ptmax, x)) )] " << "  statistical unc" << endl;
   output  << "{ 1 JetEta 1 JetPt [2]*([3]*([4]+[5]*TMath::Log(max([0],min([1],x))))*1./([6]+[7]*100./3.*(TMath::Max(0.,1.03091-0.051154*pow(x,-0.154227))-TMath::Max(0.,1.03091-0.051154*TMath::Power(208.,-0.154227)))+[8]*((-2.36997+0.413917*TMath::Log(x))/x-(-2.36997+0.413917*TMath::Log(208))/208))) Correction L2Relative}" << endl;
