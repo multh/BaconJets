@@ -6,8 +6,7 @@
 #include "UHH2/core/include/Event.h"
 
 
-#include "UHH2/bacondataformats/interface/TEventInfo.hh"
-//#include "UHH2/bacondataformats/interface/BaconAnaDefs.hh"
+#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
 
 namespace uhh2bacon {
 
@@ -20,24 +19,29 @@ class Selection {
     uhh2::Event::Handle<TClonesArray> h_jets;
     uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
     uhh2::Event::Handle<TClonesArray> h_pv;
-   // float csv_threshold;
+
+    //Additional vars in Event, specific for dijet
+    uhh2::Event::Handle<float> tt_gen_pthat; uhh2::Event::Handle<float> tt_gen_weight;
+    uhh2::Event::Handle<float> tt_jet1_pt;     uhh2::Event::Handle<float> tt_jet2_pt;     uhh2::Event::Handle<float> tt_jet3_pt;
+    uhh2::Event::Handle<float> tt_jet1_ptRaw;  uhh2::Event::Handle<float> tt_jet2_ptRaw;  uhh2::Event::Handle<float> tt_jet3_ptRaw;
+    uhh2::Event::Handle<int> tt_nvertices;
+    uhh2::Event::Handle<float> tt_probejet_eta;  uhh2::Event::Handle<float> tt_probejet_phi; uhh2::Event::Handle<float> tt_probejet_pt; uhh2::Event::Handle<float> tt_probejet_ptRaw;
+    uhh2::Event::Handle<float> tt_barreljet_eta;  uhh2::Event::Handle<float> tt_barreljet_phi; uhh2::Event::Handle<float> tt_barreljet_pt; uhh2::Event::Handle<float> tt_barreljet_ptRaw;
+    uhh2::Event::Handle<float> tt_pt_ave;
+    uhh2::Event::Handle<float> tt_alpha;
+    uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<int> tt_nPU;
+
     public:
     Selection(uhh2::Context & ctx);
     ~Selection();
 
     void SetEvent(uhh2::Event& evt);
-    bool Trigger();
+    bool Trigger(uhh2::Event& evt);
+    bool PtMC(uhh2::Event& evt); //apply lowest Pt cut on MC
     bool DiJet();
-    bool DiJetAdvanced();
-    bool AlphaCut();
+    bool DiJetAdvanced(uhh2::Event& evt);
     bool goodPVertex();
     bool triggerFired(float bin1, float bin2);
-
-//     TString WP_LOOSE;
-//     TString WP_MEDIUM;
-//     TString WP_TIGHT;
-//     explicit jetIds(wp working_point);
-    bool jetIds(float csv_threshold);
 
     bool FullSelection();
 
