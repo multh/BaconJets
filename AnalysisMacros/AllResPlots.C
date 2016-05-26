@@ -12,8 +12,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
 
   gStyle->SetOptStat(0);
   gStyle->SetOptTitle(0);
-  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+CHS";
-  //  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+PUPPI";
+  //  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+CHS";
+  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+PUPPI";
   //  TString JetDescrib = "Anti-k_{t} R = 0.8, PF+CHS";
   //  TString JetDescrib = "Anti-k_{t} R = 0.8, PF+PUPPI";
 
@@ -247,11 +247,13 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   h->SetMinimum(0.8);
   h->GetXaxis()->SetTitleSize(0.05);
   h->GetYaxis()->SetTitleSize(0.05);
-  lumi_13TeV = "2.11 fb^{-1}";
+  //  lumi_13TeV = "2.11 fb^{-1}";
+  lumi_13TeV = "218 pb^{-1}";
   bool kSquare = true;
 
   TCanvas *c1 = tdrCanvas("c1",h,4,0,kSquare);
-  consmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
+  //  consmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
+  consmpf_norm->GetYaxis()->SetRangeUser(0.81,1.15);
   consmpf_norm->Draw("E1");
   consdijet_norm->Draw("E1 SAME");
   logptmpf_norm->Draw("E1 SAME");
@@ -259,7 +261,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   line->SetLineStyle(2);
   line->Draw("SAME");
 
-  TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
+  //  TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
+  TLegend *leg1 = tdrLeg(0.17,0.19,0.40,0.40);
   leg1 -> AddEntry(consmpf_norm, "MPF Flat","L");
   leg1 -> AddEntry(consdijet_norm, "Pt Flat","L");
   leg1 -> AddEntry(logptmpf_norm, "MPF Loglin","L");
@@ -287,7 +290,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   axistitle +=altitle;
   rrconsmpf_norm->GetYaxis()->SetTitle(axistitle);
   rrconsmpf_norm->GetYaxis()->SetTitleSize(0.05);
-  rrconsmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
+  //  rrconsmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
+  rrconsmpf_norm->GetYaxis()->SetRangeUser(0.81,1.15);
   rrconsmpf_norm->GetXaxis()->SetTitle("|#eta|");
   rrconsmpf_norm->GetXaxis()->SetTitleSize(0.05);
   rrconsmpf_norm->Draw("E1");
@@ -303,7 +307,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   kfsrconsmpf_norm->GetYaxis()->SetTitle("k_{FSR}");
   kfsrconsmpf_norm->GetYaxis()->SetTitleSize(0.05);
   //  kfsrconsmpf_norm->GetYaxis()->SetRangeUser(0.998,1.002);
-  kfsrconsmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
+  //  kfsrconsmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
+  kfsrconsmpf_norm->GetYaxis()->SetRangeUser(0.81,1.15);
   kfsrconsmpf_norm->GetXaxis()->SetTitle("|#eta|");
   kfsrconsmpf_norm->GetXaxis()->SetTitleSize(0.05);
  
@@ -313,10 +318,10 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   //  kfsr_fit_dijet->SetParameters(0,0,0);
   //  kfsr_fit_dijet->SetParameters(0.,0,100.);//AK4CHS, phythia, Herwigg
   //  kfsr_fit_dijet->SetParameters(2.,-150.,145.); //AK4PUPPI, phythia
-  kfsr_fit_dijet->SetParameters(1.,-1400.,100.);//AK4PUPPI, Herwigg
-   //   kfsr_fit_dijet->SetParameters(1.,-100.,100.); //AK8CHS
-   //   kfsr_fit_dijet->SetParameters(1.,-200.,100.); //AK4CHS
-  // kfsr_fit_dijet->SetParLimits(0,1.,2.);
+  //  kfsr_fit_dijet->SetParameters(1.,-1400.,100.);//AK4PUPPI, Herwigg; AK4CHS, Herwigg
+  //  kfsr_fit_dijet->SetParameters(1.,-100.,100.); //AK8CHS
+    kfsr_fit_dijet->SetParameters(1.,-200.,100.); //AK4CHS
+  //  kfsr_fit_dijet->SetParLimits(0,1.,2.);
   //  kfsr_fit_dijet->SetParLimits(2,-100,1.);
   kfsr_fit_dijet->SetLineColor(kBlue+1);
 
@@ -348,7 +353,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
 
    hint_dijet->GetYaxis()->SetTitle("k_{FSR}");
    hint_dijet->GetYaxis()->SetTitleSize(0.05);
-   hint_dijet->GetYaxis()->SetRangeUser(0.91,1.15);
+   //   hint_dijet->GetYaxis()->SetRangeUser(0.91,1.15);
+   hint_dijet->GetYaxis()->SetRangeUser(0.81,1.15);
    hint_dijet->GetXaxis()->SetTitle("|#eta|");
    hint_dijet->GetXaxis()->SetTitleSize(0.05);
 
@@ -360,7 +366,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
 
   line->Draw("SAME");
 
-  TLegend *leg2 = tdrLeg(0.17,0.49,0.40,0.80);
+  //  TLegend *leg2 = tdrLeg(0.17,0.49,0.40,0.80);
+  TLegend *leg2 = tdrLeg(0.17,0.19,0.40,0.30);
   leg2 -> AddEntry(kfsrconsmpf_norm, "MPF","L");
   leg2 -> AddEntry(kfsrconsdijet_norm, "Pt","L");
   leg2->Draw();
@@ -388,7 +395,8 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
 
   rrconsmpf_norm_kFSR->GetYaxis()->SetTitle("Relative correction");
   rrconsmpf_norm_kFSR->GetYaxis()->SetTitleSize(0.05);
-  rrconsmpf_norm_kFSR->GetYaxis()->SetRangeUser(0.91,1.15);
+  //  rrconsmpf_norm_kFSR->GetYaxis()->SetRangeUser(0.91,1.15);
+  rrconsmpf_norm_kFSR->GetYaxis()->SetRangeUser(0.81,1.15);
   rrconsmpf_norm_kFSR->GetXaxis()->SetTitle("|#eta|");
   rrconsmpf_norm_kFSR->GetXaxis()->SetTitleSize(0.05);
   rrconsmpf_norm_kFSR->Draw("E1");
@@ -397,7 +405,7 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   rrlogptdijet_norm_kFSR->Draw("E1 SAME");
   leg1->Draw();
   tex->DrawLatex(0.47,0.87,JetDescrib);
-
+  line->Draw();
   // TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
   // leg1 -> AddEntry(consmpf_norm, "MPF Flat","L");
   // leg1 -> AddEntry(consdijet_norm, "Pt Flat","L");

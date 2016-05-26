@@ -17,26 +17,23 @@ void run(){
   //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight/3dJet_50GeV/\";");
   //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_L2L3Res_noReweight/\";");
 
+  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV1/noHFtriggers_with_HLT_DiPFJetAve80_140/\";");
   gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV1/\";");
 
 
   // input data files
-  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";");//TEST
-  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root\";");
-  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4PUPPI.root\";");
-  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK8CHS.root\";");
-  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK8PUPPI.root\";");
+  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4CHS.root\";");//TEST
+  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4PUPPI.root\";");
+  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8CHS.root\";");
+  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8PUPPI.root\";");
 
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root\";");
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4PUPPI.root\";");
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK8CHS.root\";");
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK8PUPPI.root\";");
+  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4CHS.root\";");
+  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4PUPPI.root\";");
+  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8CHS.root\";");
+  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8PUPPI.root\";");
 
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4PUPPI.root\";");
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4CHS.root\";");
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK8CHS.root\";");
 
-  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";"); //TEST
+  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";"); 
   //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4PUPPI.root\";");
   //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8CHS.root\";");
   //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8PUPPI.root\";");
@@ -45,27 +42,27 @@ void run(){
   // gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root\";");
   // gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";");
 
-  // gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4CHS.root\";");
-  //gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4PUPPI.root\";");
+  //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4CHS.root\";");
+  //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4PUPPI.root\";");
 //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK8CHS.root\";");
 //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK8PUPPI.root\";");
 
   //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8PUPPI.root\";");
 //    gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8CHS.root\";");
-//   gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK8CHS.root\";");
-  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";");
+//gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4PUPPI.root\";");
+gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";");
 //  
   // gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK8CHS.root\";");
     //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8CHS.root\";");
-  //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4PUPPI.root\";");
+  //  
   
   //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Sum_Pt_pythia8_AK4CHS.root\";");
 
   // choose a tag for the txt output files
   gROOT->ProcessLine("TString txttag = \"v2\";");
   // tag for the jet cone size
-  //  gROOT->ProcessLine("TString jettag = \"AK4PFchs\";");
-  gROOT->ProcessLine("TString jettag = \"AK4PFpuppi\";");
+  gROOT->ProcessLine("TString jettag = \"AK4PFchs\";");
+  //  gROOT->ProcessLine("TString jettag = \"AK4PFpuppi\";");
   //  gROOT->ProcessLine("TString jettag = \"AK8PFchs\";");
   //  gROOT->ProcessLine("TString jettag = \"AK8PFpuppi\";");
   // choose a systematic uncertainty in pt average ("central" (pt=120GeV), "up" (pt=240GeV), "down" (pt=60GeV), "doubleup" (pt=480GeV) or "nominal" (pt -> mean value of pt ave))
@@ -85,30 +82,30 @@ void run(){
   // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  gROOT->ProcessLine("TString MCname = \"herwigpp\";");
-  //  gROOT->ProcessLine("TString MCname = \"pythia8\";");
+  //  gROOT->ProcessLine("TString MCname = \"herwigpp\";");
+  gROOT->ProcessLine("TString MCname = \"pythia8\";");
   gROOT->ProcessLine(".L Control_Plots.C");
   gROOT->ProcessLine("Control_Plots(path,datafile,MCfile,MCname,Realdatafile);");
 
-  // gROOT->ProcessLine("double al_cut=0.3;"); 
-  // // // // // // // // // // // // // // // // // // //  gROOT->ProcessLine("double al_cut=0.7;"); 
-  // gROOT->ProcessLine(".L kFSR_pT_TTree.C+");
-  // gROOT->ProcessLine("kFSR_pT_TTree(true,path,datafile,MCfile,al_cut,nResponseBins);");
-  // // // // // // // gROOT->ProcessLine("kFSR_pT_TTree(false,path,datafile,MCfile,al_cut,nResponseBins);");
-  // // // // // // // // // gROOT->ProcessLine(".L kFSR_TTree.C+");
-  // // // // // // // // // gROOT->ProcessLine("kFSR_TTree(true,path,datafile,MCfile,al_cut,nResponseBins);");
-  // // // // // // // // // gROOT->ProcessLine("kFSR_TTree(false,path,datafile,MCfile,al_cut,nResponseBins);");
+  gROOT->ProcessLine("double al_cut=0.3;"); 
+  // // // // // // // // // // // // // // // // // // // //  gROOT->ProcessLine("double al_cut=0.7;"); 
+  gROOT->ProcessLine(".L kFSR_pT_TTree.C+");
+  gROOT->ProcessLine("kFSR_pT_TTree(true,path,datafile,MCfile,al_cut,nResponseBins);");
+  // // // // // // // // gROOT->ProcessLine("kFSR_pT_TTree(false,path,datafile,MCfile,al_cut,nResponseBins);");
+  // // // // // // // // // // gROOT->ProcessLine(".L kFSR_TTree.C+");
+  // // // // // // // // // // gROOT->ProcessLine("kFSR_TTree(true,path,datafile,MCfile,al_cut,nResponseBins);");
+  // // // // // // // // // // gROOT->ProcessLine("kFSR_TTree(false,path,datafile,MCfile,al_cut,nResponseBins);");
 
-  // gROOT->ProcessLine("TString variation= \"nominal\";");
-  // //  gROOT->ProcessLine("TString variation= \"central\";");
+  gROOT->ProcessLine("TString variation= \"nominal\";");
+  // // //   gROOT->ProcessLine("TString variation= \"central\";");
   // // //  gROOT->ProcessLine("TString variation= \"up\";");
   // // //  gROOT->ProcessLine("TString variation= \"down\";");
   // // // gROOT->ProcessLine("TString variation= \"doubleup\";");
-  // gROOT->ProcessLine(".L PTextrapolation_TTree.C+");
-  // gROOT->ProcessLine("PTextrapolation_TTree(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  // gROOT->ProcessLine("PTextrapolation_TTree(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  // gROOT->ProcessLine(".L AllResPlots.C");
-  // gROOT->ProcessLine("AllResPlots(path,al_cut,variation)");
+  gROOT->ProcessLine(".L PTextrapolation_TTree.C+");
+  gROOT->ProcessLine("PTextrapolation_TTree(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
+  gROOT->ProcessLine("PTextrapolation_TTree(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
+  gROOT->ProcessLine(".L AllResPlots.C");
+  gROOT->ProcessLine("AllResPlots(path,al_cut,variation)");
   
   // //  gROOT->ProcessLine("TString variation= \"central\";");
   // //  gROOT->ProcessLine("TString variation= \"up\";");

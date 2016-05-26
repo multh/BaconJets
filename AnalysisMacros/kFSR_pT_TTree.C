@@ -144,7 +144,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
 	if(fabs(alpha_bins[i]-al_cut)<1e-4){
 	  if(k==0) cout<<eta_bins[j]<<" ";
 	  //cout<<"& "<<hmc_rel_r[k][j][i]->GetEntries();//MC
-	  cout<<"& "<<hdata_rel_r[k][j][i]->GetEntries();//MC
+	  cout<<"& "<<hdata_rel_r[k][j][i]->GetEntries();//DATA
 	}
 	pair<double,double> res_mc_rel_r,res_data_rel_r;
 	pair<double,double> res_mc_mpf_r,res_data_mpf_r;
@@ -307,7 +307,8 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     //    pTgraph_rel_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})/(R_{MC}/R_{DATA})_{#alpha<0.2}");
     pTgraph_rel_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})");
     pTgraph_rel_r[j]->GetXaxis()->SetTitle("cut on #alpha");
-    pol1[j] = new TF1("pol1","pol1",0.19,0.36);  //TEST AK4
+    //    pol1[j] = new TF1("pol1","pol1",0.19,0.36);  //TEST AK4
+    pol1[j] = new TF1("pol1","pol1",0.09,0.36);  //TEST AK4
     //    pol1[j] = new TF1("pol1","pol1",0.19,0.46);  //TEST AK8CHS
     //    pol1[j] = new TF1("pol1","pol1",0.19,0.41); //TEST AK8PUPPI
 
@@ -375,7 +376,8 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     //    pTgraph_mpf_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})/(R_{MC}/R_{DATA})_{#alpha<0.2}");
     pTgraph_mpf_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})");
     pTgraph_mpf_r[j]->GetXaxis()->SetTitle("cut on #alpha");
-    pol1[j] = new TF1("pol1","pol1",0.19,0.36);  //TEST AK4
+    //    pol1[j] = new TF1("pol1","pol1",0.19,0.36);  //TEST AK4
+    pol1[j] = new TF1("pol1","pol1",0.09,0.36);  //TEST AK4
     //    pol1[j] = new TF1("pol1","pol1",0.19,0.46);  //TEST AK8CHS
     //    pol1[j] = new TF1("pol1","pol1",0.19,0.41); //TEST AK8PUPPI
     pol1[j]->SetParameters(0,0);

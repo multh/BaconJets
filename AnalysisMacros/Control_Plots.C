@@ -11,18 +11,18 @@ TString ToStringC(int num) {
 }
 
 void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName="pythia8",TFile* Realdatafile=NULL){
-  // TString DATAtitle = "DATA";
+  TString DATAtitle = "DATA";
   // TString MCtitle = "MC";
   //  TString MCtitle = "Herwigpp";
   TString MCtitle = "Pythia8";
- TString DATAtitle = "Pythia8";
+  //  TString DATAtitle = "Pythia8";
 
   // // TString DATAtitle = "Herwigpp";
   // // TString MCtitle = "Pythia8"; 
- //  TString dirName = "Selection";
+  //  TString dirName = "Selection";
   //  TString dirName = "JetMatching";
   //  TString dirName = "diJet";
- TString dirName = "noCuts";
+  TString dirName = "noCuts";
   gStyle->SetOptFit(0);
   TH1F *pt_jet1_DATA,*pt_jet2_DATA,*pt_jet3_DATA;
   TH1F *pt_jet1_MC,*pt_jet2_MC,*pt_jet3_MC;
@@ -104,14 +104,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   pt_jet1_DATA->SetMarkerColor(1);
   pt_jet1_DATA->SetLineColor(1);
   pt_jet1_DATA->GetXaxis()->SetTitle("p_{T}, GeV");
-  // pt_jet1_DATA->Scale(1/pt_jet1_DATA->Integral());
-  //  pt_jet1_DATA->GetYaxis()->SetRangeUser(0,0.1);
+  pt_jet1_DATA->Scale(1/pt_jet1_DATA->Integral());
+  pt_jet1_DATA->GetYaxis()->SetRangeUser(0,0.1);
   pt_jet1_DATA->Draw();
   pt_jet1_MC->SetMarkerStyle(22);
   pt_jet1_MC->SetMarkerSize(0.5);
   pt_jet1_MC->SetMarkerColor(2);
   pt_jet1_MC->SetLineColor(2);
-  //  pt_jet1_MC->Scale(1/pt_jet1_MC->Integral());
+  pt_jet1_MC->Scale(1/pt_jet1_MC->Integral());
   pt_jet1_MC->Draw("same");
   TLegend *leg1;
   leg1 = new TLegend(0.63,0.68,0.9,0.85,"","brNDC");//x+0.1
@@ -129,14 +129,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   pt_jet2_DATA->SetMarkerColor(1);
   pt_jet2_DATA->SetLineColor(1);
   pt_jet2_DATA->GetXaxis()->SetTitle("p_{T}, GeV");
-  //  pt_jet2_DATA->Scale(1/pt_jet2_DATA->Integral());
-  //  pt_jet2_DATA->GetYaxis()->SetRangeUser(0,0.1);
+  pt_jet2_DATA->Scale(1/pt_jet2_DATA->Integral());
+  pt_jet2_DATA->GetYaxis()->SetRangeUser(0,0.1);
   pt_jet2_DATA->Draw();
   pt_jet2_MC->SetMarkerStyle(22);
   pt_jet2_MC->SetMarkerSize(0.5);
   pt_jet2_MC->SetMarkerColor(2);
   pt_jet2_MC->SetLineColor(2);
-  //  pt_jet2_MC->Scale(1/pt_jet2_MC->Integral());
+  pt_jet2_MC->Scale(1/pt_jet2_MC->Integral());
   pt_jet2_MC->Draw("same");
   a->cd(3);
   // gPad->SetLogx();   gPad->SetLogy();
@@ -145,14 +145,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   pt_jet3_DATA->SetMarkerColor(1);
   pt_jet3_DATA->SetLineColor(1);
   pt_jet3_DATA->GetXaxis()->SetTitle("p_{T}, GeV");
-  //  pt_jet3_DATA->Scale(1/pt_jet3_DATA->Integral());
-  // pt_jet3_DATA->GetYaxis()->SetRangeUser(0,0.1);
+  pt_jet3_DATA->Scale(1/pt_jet3_DATA->Integral());
+  pt_jet3_DATA->GetYaxis()->SetRangeUser(0,0.1);
   pt_jet3_DATA->Draw();
   pt_jet3_MC->SetMarkerStyle(22);
   pt_jet3_MC->SetMarkerSize(0.5);
   pt_jet3_MC->SetMarkerColor(2);
   pt_jet3_MC->SetLineColor(2);
-  //  pt_jet3_MC->Scale(1/pt_jet3_MC->Integral());
+  pt_jet3_MC->Scale(1/pt_jet3_MC->Integral());
   pt_jet3_MC->Draw("same");
   // TLatex *tex = new TLatex();
   // tex->SetNDC();
@@ -165,14 +165,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   eta_jet1_DATA->SetMarkerColor(1);
   eta_jet1_DATA->SetLineColor(1);
   eta_jet1_DATA->GetXaxis()->SetTitle("#eta");
-  //  eta_jet1_DATA->Scale(1./eta_jet1_DATA->Integral());
-  //  eta_jet1_DATA->GetYaxis()->SetRangeUser(0,0.04);
+  eta_jet1_DATA->Scale(1./eta_jet1_DATA->Integral());
+  eta_jet1_DATA->GetYaxis()->SetRangeUser(0,0.04);
   eta_jet1_DATA->Draw();
   eta_jet1_MC->SetMarkerStyle(22);
   eta_jet1_MC->SetMarkerSize(0.5);
   eta_jet1_MC->SetMarkerColor(2);
   eta_jet1_MC->SetLineColor(2);
-  //  eta_jet1_MC->Scale(1./eta_jet1_MC->Integral());
+  eta_jet1_MC->Scale(1./eta_jet1_MC->Integral());
   eta_jet1_MC->Draw("same");
   a->cd(5);
   eta_jet2_DATA->SetMarkerStyle(20);
@@ -180,14 +180,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   eta_jet2_DATA->SetMarkerColor(1);
   eta_jet2_DATA->SetLineColor(1);
   eta_jet2_DATA->GetXaxis()->SetTitle("#eta");
-  //  eta_jet2_DATA->Scale(1./eta_jet2_DATA->Integral());
-  //  eta_jet2_DATA->GetYaxis()->SetRangeUser(0,0.04);
+  eta_jet2_DATA->Scale(1./eta_jet2_DATA->Integral());
+  eta_jet2_DATA->GetYaxis()->SetRangeUser(0,0.04);
   eta_jet2_DATA->Draw();
   eta_jet2_MC->SetMarkerStyle(22);
   eta_jet2_MC->SetMarkerSize(0.5);
   eta_jet2_MC->SetMarkerColor(2);
   eta_jet2_MC->SetLineColor(2);
-  //  eta_jet2_MC->Scale(1./eta_jet2_MC->Integral());
+  eta_jet2_MC->Scale(1./eta_jet2_MC->Integral());
   eta_jet2_MC->Draw("same");
  
   a->cd(6);
@@ -211,14 +211,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   Njets_DATA->SetMarkerColor(1);
   Njets_DATA->SetLineColor(1);
   Njets_DATA->GetXaxis()->SetTitle("Number of jets");
-  //  Njets_DATA->Scale(1./Njets_DATA->Integral());
-  //  Njets_DATA->GetYaxis()->SetRangeUser(0,0.04);
+  Njets_DATA->Scale(1./Njets_DATA->Integral());
+  Njets_DATA->GetYaxis()->SetRangeUser(0,0.1);
   Njets_DATA->Draw();
   Njets_MC->SetMarkerStyle(22);
   Njets_MC->SetMarkerSize(0.5);
   Njets_MC->SetMarkerColor(2);
   Njets_MC->SetLineColor(2);  
-  //  Njets_MC->Scale(1./Njets_MC->Integral());
+  Njets_MC->Scale(1./Njets_MC->Integral());
   Njets_MC->Draw("same");
 
   leg1->Draw();
@@ -234,14 +234,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   N_PV_DATA->SetMarkerColor(1);
   N_PV_DATA->SetLineColor(1);
   //  N_PV_DATA->GetXaxis()->SetTitle("N PVtx");
-  //  N_PV_DATA->Scale(1./N_PV_DATA->Integral());
-  //  N_PV_DATA->GetYaxis()->SetRangeUser(0,0.15);
+  N_PV_DATA->Scale(1./N_PV_DATA->Integral());
+  N_PV_DATA->GetYaxis()->SetRangeUser(0,0.15);
   N_PV_DATA->Draw();
   N_PV_MC->SetMarkerStyle(22);
   N_PV_MC->SetMarkerSize(0.5);
   N_PV_MC->SetMarkerColor(2);
   N_PV_MC->SetLineColor(2);
-  //  N_PV_MC->Scale(1./N_PV_MC->Integral());
+  N_PV_MC->Scale(1./N_PV_MC->Integral());
   N_PV_MC->Draw("same");
   TLegend *leg2;
   leg2 = new TLegend(0.63,0.68,0.9,0.86,"","brNDC");//x+0.1
@@ -259,8 +259,8 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   // nPU_DATA->SetMarkerColor(1);
   // nPU_DATA->SetLineColor(1);
   // //  nPU_DATA->GetXaxis()->SetTitle("N PVtx");
-  // //  nPU_DATA->Scale(1./nPU_DATA->Integral());
-  // //  nPU_DATA->GetYaxis()->SetRangeUser(0,0.15);
+  // nPU_DATA->Scale(1./nPU_DATA->Integral());
+  // nPU_DATA->GetYaxis()->SetRangeUser(0,0.15);
   // nPU_DATA->Draw();
   // nPU_MC->SetMarkerStyle(22);
   // nPU_MC->SetMarkerSize(0.5);
@@ -288,14 +288,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   pt_ave_DATA->SetMarkerSize(0.5);
   pt_ave_DATA->SetMarkerColor(1);
   pt_ave_DATA->SetLineColor(1);
-  // pt_ave_DATA->Scale(1./pt_ave_DATA->Integral());
-  //  pt_ave_DATA->GetYaxis()->SetRangeUser(0,0.1);
+  pt_ave_DATA->Scale(1./pt_ave_DATA->Integral());
+  pt_ave_DATA->GetYaxis()->SetRangeUser(0,0.03);
   pt_ave_DATA->Draw();
   pt_ave_MC->SetMarkerStyle(22);
   pt_ave_MC->SetMarkerSize(0.5);
   pt_ave_MC->SetMarkerColor(2);
   pt_ave_MC->SetLineColor(2);
-  //  pt_ave_MC->Scale(1./pt_ave_MC->Integral());
+  pt_ave_MC->Scale(1./pt_ave_MC->Integral());
   pt_ave_MC->Draw("same");
   // b->cd(3);
   // pt_rel_DATA->SetMarkerStyle(20);
@@ -318,14 +318,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   asym_DATA->SetMarkerSize(0.5);
   asym_DATA->SetMarkerColor(1);
   asym_DATA->SetLineColor(1);
-  //  asym_DATA->Scale(1./asym_DATA->Integral());
+  asym_DATA->Scale(1./asym_DATA->Integral());
   //  asym_DATA->GetYaxis()->SetRangeUser(0,0.1);
   asym_DATA->Draw();
   asym_MC->SetMarkerStyle(22);
   asym_MC->SetMarkerSize(0.5);
   asym_MC->SetMarkerColor(2);
   asym_MC->SetLineColor(2);
-  //  asym_MC->Scale(1./asym_MC->Integral());
+  asym_MC->Scale(1./asym_MC->Integral());
   asym_MC->Draw("same");
   leg1->Draw();
   b->cd(5);
@@ -333,14 +333,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   r_dijet_DATA->SetMarkerSize(0.5);
   r_dijet_DATA->SetMarkerColor(1);
   r_dijet_DATA->SetLineColor(1);
-  //  r_dijet_DATA->Scale(1./r_dijet_DATA->Integral());
-  //  r_dijet_DATA->GetYaxis()->SetRangeUser(0,0.04);
+  r_dijet_DATA->Scale(1./r_dijet_DATA->Integral());
+  r_dijet_DATA->GetYaxis()->SetRangeUser(0,0.03);
   r_dijet_DATA->Draw();
   r_dijet_MC->SetMarkerStyle(22);
   r_dijet_MC->SetMarkerSize(0.5);
   r_dijet_MC->SetMarkerColor(2);
   r_dijet_MC->SetLineColor(2);
-  //  r_dijet_MC->Scale(1./r_dijet_MC->Integral());
+  r_dijet_MC->Scale(1./r_dijet_MC->Integral());
   r_dijet_MC->Draw("same");
   leg1->Draw();
   b->cd(6);
@@ -348,14 +348,14 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   r_mpf_DATA->SetMarkerSize(0.5);
   r_mpf_DATA->SetMarkerColor(1);
   r_mpf_DATA->SetLineColor(1);
-  //  r_mpf_DATA->Scale(1./r_mpf_DATA->Integral());
-  //  r_mpf_DATA->GetYaxis()->SetRangeUser(0,0.05);
+  r_mpf_DATA->Scale(1./r_mpf_DATA->Integral());
+  r_mpf_DATA->GetYaxis()->SetRangeUser(0,0.04);
   r_mpf_DATA->Draw();
   r_mpf_MC->SetMarkerStyle(22);
   r_mpf_MC->SetMarkerSize(0.5);
   r_mpf_MC->SetMarkerColor(2);
   r_mpf_MC->SetLineColor(2);
-  //  r_mpf_MC->Scale(1./r_mpf_MC->Integral());
+  r_mpf_MC->Scale(1./r_mpf_MC->Integral());
   r_mpf_MC->Draw("same");
   // TLatex *tex2 = new TLatex();
   // tex2->SetNDC();
@@ -520,106 +520,106 @@ for(int i=0;i<n_pt;i++)
 
   g->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Pt_aveVsEtaProbe.pdf");
 
- TCanvas* h1 = new TCanvas();
- TH2F *Rrel_vs_assym_DATA = (TH2F*)datafile->Get(dirName+"/Rrel_vs_assym");
- TH2F *Rrel_vs_assym_MC = (TH2F*)MCfile->Get(dirName+"/Rrel_vs_assym");
+ // TCanvas* h1 = new TCanvas();
+ // TH2F *Rrel_vs_assym_DATA = (TH2F*)datafile->Get(dirName+"/Rrel_vs_assym");
+ // TH2F *Rrel_vs_assym_MC = (TH2F*)MCfile->Get(dirName+"/Rrel_vs_assym");
 
- h1->Divide(2,1);
- h1->cd(1);
- Rrel_vs_assym_DATA->SetTitle(DATAtitle);
- Rrel_vs_assym_DATA->Draw("colz");
+ // h1->Divide(2,1);
+ // h1->cd(1);
+ // Rrel_vs_assym_DATA->SetTitle(DATAtitle);
+ // Rrel_vs_assym_DATA->Draw("colz");
 
- h1->cd(2);
- Rrel_vs_assym_MC->SetTitle(MCtitle);
- Rrel_vs_assym_MC->Draw("colz");
- h1->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Rrel_vs_assym.pdf");
+ // h1->cd(2);
+ // Rrel_vs_assym_MC->SetTitle(MCtitle);
+ // Rrel_vs_assym_MC->Draw("colz");
+ // h1->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Rrel_vs_assym.pdf");
 
- TCanvas* h2 = new TCanvas();
- TH2F *Rmpf_vs_assym_DATA = (TH2F*)datafile->Get(dirName+"/Rmpf_vs_assym");
- TH2F *Rmpf_vs_assym_MC = (TH2F*)MCfile->Get(dirName+"/Rmpf_vs_assym");
+ // TCanvas* h2 = new TCanvas();
+ // TH2F *Rmpf_vs_assym_DATA = (TH2F*)datafile->Get(dirName+"/Rmpf_vs_assym");
+ // TH2F *Rmpf_vs_assym_MC = (TH2F*)MCfile->Get(dirName+"/Rmpf_vs_assym");
 
- h2->Divide(2,1);
- h2->cd(1);
- Rmpf_vs_assym_DATA->SetTitle(DATAtitle);
- Rmpf_vs_assym_DATA->Draw("colz");
+ // h2->Divide(2,1);
+ // h2->cd(1);
+ // Rmpf_vs_assym_DATA->SetTitle(DATAtitle);
+ // Rmpf_vs_assym_DATA->Draw("colz");
 
- h2->cd(2);
- Rmpf_vs_assym_MC->SetTitle(MCtitle);
- Rmpf_vs_assym_MC->Draw("colz");
- h2->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Rmpf_vs_assym.pdf");
-
-
- TCanvas* h3 = new TCanvas();
- TH2F *alpha_vs_assym_DATA = (TH2F*)datafile->Get(dirName+"/alpha_vs_assym");
- TH2F *alpha_vs_assym_MC = (TH2F*)MCfile->Get(dirName+"/alpha_vs_assym");
-
- h3->Divide(2,1);
- h3->cd(1);
- alpha_vs_assym_DATA->SetTitle(DATAtitle);
- alpha_vs_assym_DATA->Draw("colz");
-
- h3->cd(2);
- alpha_vs_assym_MC->SetTitle(MCtitle);
- alpha_vs_assym_MC->Draw("colz");
- h3->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_alpha_vs_assym.pdf");
+ // h2->cd(2);
+ // Rmpf_vs_assym_MC->SetTitle(MCtitle);
+ // Rmpf_vs_assym_MC->Draw("colz");
+ // h2->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Rmpf_vs_assym.pdf");
 
 
- TCanvas* h4 = new TCanvas();
- TH2F *Njets_alpha_DATA = (TH2F*)datafile->Get(dirName+"/Njets_vs_alpha");
- TH2F *Njets_alpha_MC = (TH2F*)MCfile->Get(dirName+"/Njets_vs_alpha");
+ // TCanvas* h3 = new TCanvas();
+ // TH2F *alpha_vs_assym_DATA = (TH2F*)datafile->Get(dirName+"/alpha_vs_assym");
+ // TH2F *alpha_vs_assym_MC = (TH2F*)MCfile->Get(dirName+"/alpha_vs_assym");
 
- h4->Divide(2,1);
- h4->cd(1);
- Njets_alpha_DATA->SetTitle(DATAtitle);
- Njets_alpha_DATA->Draw("colz");
+ // h3->Divide(2,1);
+ // h3->cd(1);
+ // alpha_vs_assym_DATA->SetTitle(DATAtitle);
+ // alpha_vs_assym_DATA->Draw("colz");
 
- h4->cd(2);
- Njets_alpha_MC->SetTitle(MCtitle);
- Njets_alpha_MC->Draw("colz");
- h4->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_N_jets_alpha.pdf");
-
- TCanvas* h5 = new TCanvas();
- TH2F *alphaSum_vs_alpha3_DATA = (TH2F*)datafile->Get(dirName+"/alphaSum_vs_alpha3");
- TH2F *alphaSum_vs_alpha3_MC = (TH2F*)MCfile->Get(dirName+"/alphaSum_vs_alpha3");
-
- h5->Divide(2,1);
- h5->cd(1);
- alphaSum_vs_alpha3_DATA->SetTitle(DATAtitle);
- alphaSum_vs_alpha3_DATA->Draw("colz");
-
- h5->cd(2);
- alphaSum_vs_alpha3_MC->SetTitle(MCtitle);
- alphaSum_vs_alpha3_MC->Draw("colz");
- h5->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_alphaSum_vs_alpha3.pdf");
+ // h3->cd(2);
+ // alpha_vs_assym_MC->SetTitle(MCtitle);
+ // alpha_vs_assym_MC->Draw("colz");
+ // h3->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_alpha_vs_assym.pdf");
 
 
- TCanvas* h6 = new TCanvas();
- TH2F *Pt_vs_JetN_DATA = (TH2F*)datafile->Get(dirName+"/Pt_vs_JetN");
- TH2F *Pt_vs_JetN_MC = (TH2F*)MCfile->Get(dirName+"/Pt_vs_JetN");
+ // TCanvas* h4 = new TCanvas();
+ // TH2F *Njets_alpha_DATA = (TH2F*)datafile->Get(dirName+"/Njets_vs_alpha");
+ // TH2F *Njets_alpha_MC = (TH2F*)MCfile->Get(dirName+"/Njets_vs_alpha");
 
- h6->Divide(2,1);
- h6->cd(1);
- Pt_vs_JetN_DATA->SetTitle(DATAtitle);
- Pt_vs_JetN_DATA->Draw("colz");
+ // h4->Divide(2,1);
+ // h4->cd(1);
+ // Njets_alpha_DATA->SetTitle(DATAtitle);
+ // Njets_alpha_DATA->Draw("colz");
 
- h6->cd(2);
- Pt_vs_JetN_MC->SetTitle(MCtitle);
- Pt_vs_JetN_MC->Draw("colz");
- h6->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Pt_vs_JetN.pdf");
+ // h4->cd(2);
+ // Njets_alpha_MC->SetTitle(MCtitle);
+ // Njets_alpha_MC->Draw("colz");
+ // h4->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_N_jets_alpha.pdf");
 
- TCanvas* h7 = new TCanvas();
- TH2F *eta_vs_JetN_DATA = (TH2F*)datafile->Get(dirName+"/eta_vs_JetN");
- TH2F *eta_vs_JetN_MC = (TH2F*)MCfile->Get(dirName+"/eta_vs_JetN");
+ // TCanvas* h5 = new TCanvas();
+ // TH2F *alphaSum_vs_alpha3_DATA = (TH2F*)datafile->Get(dirName+"/alphaSum_vs_alpha3");
+ // TH2F *alphaSum_vs_alpha3_MC = (TH2F*)MCfile->Get(dirName+"/alphaSum_vs_alpha3");
 
- h7->Divide(2,1);
- h7->cd(1);
- eta_vs_JetN_DATA->SetTitle(DATAtitle);
- eta_vs_JetN_DATA->Draw("colz");
+ // h5->Divide(2,1);
+ // h5->cd(1);
+ // alphaSum_vs_alpha3_DATA->SetTitle(DATAtitle);
+ // alphaSum_vs_alpha3_DATA->Draw("colz");
 
- h7->cd(2);
- eta_vs_JetN_MC->SetTitle(MCtitle);
- eta_vs_JetN_MC->Draw("colz");
- h7->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_eta_vs_JetN.pdf");
+ // h5->cd(2);
+ // alphaSum_vs_alpha3_MC->SetTitle(MCtitle);
+ // alphaSum_vs_alpha3_MC->Draw("colz");
+ // h5->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_alphaSum_vs_alpha3.pdf");
+
+
+ // TCanvas* h6 = new TCanvas();
+ // TH2F *Pt_vs_JetN_DATA = (TH2F*)datafile->Get(dirName+"/Pt_vs_JetN");
+ // TH2F *Pt_vs_JetN_MC = (TH2F*)MCfile->Get(dirName+"/Pt_vs_JetN");
+
+ // h6->Divide(2,1);
+ // h6->cd(1);
+ // Pt_vs_JetN_DATA->SetTitle(DATAtitle);
+ // Pt_vs_JetN_DATA->Draw("colz");
+
+ // h6->cd(2);
+ // Pt_vs_JetN_MC->SetTitle(MCtitle);
+ // Pt_vs_JetN_MC->Draw("colz");
+ // h6->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_Pt_vs_JetN.pdf");
+
+ // TCanvas* h7 = new TCanvas();
+ // TH2F *eta_vs_JetN_DATA = (TH2F*)datafile->Get(dirName+"/eta_vs_JetN");
+ // TH2F *eta_vs_JetN_MC = (TH2F*)MCfile->Get(dirName+"/eta_vs_JetN");
+
+ // h7->Divide(2,1);
+ // h7->cd(1);
+ // eta_vs_JetN_DATA->SetTitle(DATAtitle);
+ // eta_vs_JetN_DATA->Draw("colz");
+
+ // h7->cd(2);
+ // eta_vs_JetN_MC->SetTitle(MCtitle);
+ // eta_vs_JetN_MC->Draw("colz");
+ // h7->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_eta_vs_JetN.pdf");
 
  // TCanvas* h8 = new TCanvas();
  // //TH1F *diffPt1_vs_alpha3_DATA = (TH1F*)datafile->Get(dirName+"/diffPt1_vs_alpha3");
@@ -686,7 +686,8 @@ for(int i=0;i<n_pt;i++)
    diffPtGen_vs_alpha3_MC_Profile->SetTitle("<(pT_{1}-pT_{2})_{gen}/pT^{gen}_{ave}>");
    // diffPtGen_vs_alpha3_MC_Profile->Print();
    diffPtGen_vs_alpha3_MC_Profile->SetName("diffPtGen_vs_alpha3_pfx_MC");
-   TF1 *fit_lin = new TF1("diffPtGen_vs_alpha3_MC_1_fit","pol1",0.19,0.36); //AK4
+   //   TF1 *fit_lin = new TF1("diffPtGen_vs_alpha3_MC_1_fit","pol1",0.19,0.36); //AK4
+   TF1 *fit_lin = new TF1("diffPtGen_vs_alpha3_MC_1_fit","pol1",0.09,0.36); //AK4
    // TF1 *fit_lin = new TF1("diffPtGen_vs_alpha3_MC_1_fit","pol1",0.19,0.41); //AK8Puppi
    // TF1 *fit_lin = new TF1("diffPtGen_vs_alpha3_MC_1_fit","pol1",0.19,0.46); //AK8CHS
    diffPtGen_vs_alpha3_MC_Profile->Fit("diffPtGen_vs_alpha3_MC_1_fit","SR");
@@ -713,7 +714,8 @@ for(int i=0;i<n_pt;i++)
    diffPtGen_vs_alpha3_DATA_Profile->SetTitle("");
    TH1F *ratio = (TH1F*)diffPtGen_vs_alpha3_DATA_Profile->Clone("ratio_DATA_MC");
    //   diffPtGen_vs_alpha3_DATA_Profile->Print();
-   TF1 *fit_lin_DATA = new TF1("diffPtGen_vs_alpha3_DATA_1_fit","pol1",0.19,0.36); //AK4
+   //   TF1 *fit_lin_DATA = new TF1("diffPtGen_vs_alpha3_DATA_1_fit","pol1",0.19,0.36); //AK4
+   TF1 *fit_lin_DATA = new TF1("diffPtGen_vs_alpha3_DATA_1_fit","pol1",0.09,0.36); //AK4
    diffPtGen_vs_alpha3_DATA_Profile->Fit("diffPtGen_vs_alpha3_DATA_1_fit","SR");
    diffPtGen_vs_alpha3_DATA_Profile->SetMarkerStyle(21);
    diffPtGen_vs_alpha3_DATA_Profile->SetMarkerColor(kGreen+3);
