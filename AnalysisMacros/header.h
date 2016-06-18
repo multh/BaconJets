@@ -170,13 +170,13 @@ TString eta_range2[n_eta] = {"00", "0261", "0522", "0783", "1044", "1305", "1479
 
 //bins used to produce input for global fit
 const int n_alpha_common = 4;
-TString alpha_range_common[n_alpha_common] = {"a010","a015", "a020", "a030"};//for Global fit we produce result only in few alpha values
+TString alpha_range_common[n_alpha_common] = {"a10","a15", "a20", "a30"};//for Global fit we produce result only in few alpha values
 double alpha_bins_common[n_alpha_common] = {0.100, 0.150, 0.200, 0.300};
 
 const int n_eta_common = 8;
 double eta_common_bins[n_eta_common] ={0, 0.783, 1.305, 1.93, 2.5, 2.964, 3.2, 5.191};
 TString eta_common_range[n_eta_common] = {"0.000", "0.783", "1.305", "1.930", "2.500", "2.964", "3.200", "5.191"};
-TString eta_output[n_eta_common-1] = {"eta0000-0783", "eta0783-1305","eta1305-1930","eta1930-2500","eta2500-2964","eta2964-3200","eta3200-5191"};
+TString eta_output[n_eta_common-1] = {"eta00-08", "eta08-13","eta13-19","eta19-25","eta25-30","eta30-32","eta32-52"};
 
 
 
@@ -237,10 +237,10 @@ TString ToString(int num) {
 }
 
 //Get hist for variable from tree with particular selection 
-//NB: Name of the tree should be <OutputTree Name=""/> parameter in UHH2/BaconJet xml file! ("Events" in current version)
+//NB: Name of the tree should be <OutputTree Name=""/> parameter in UHH2/BaconJet xml file! ("AnalysisTree" in current version)
 TH1D* GetHist(TFile *rootfile, TString selection, TString varName, int nbins, double low, double up){
   TH1D* hist = new TH1D("hist","",nbins,low,up);
-  TTree *tree = (TTree*)rootfile->Get("Events");
+  TTree *tree = (TTree*)rootfile->Get("AnalysisTree");
   int Nev = tree->Project("hist",varName,selection);
   return hist;
 }

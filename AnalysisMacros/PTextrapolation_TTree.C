@@ -107,7 +107,7 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
 
 
 // Create the tree reader and its data containers
-   TTreeReader myReader_DATA("Events", datafile);
+   TTreeReader myReader_DATA("AnalysisTree", datafile);
    TTreeReaderValue<Float_t> pt_ave_data(myReader_DATA, "pt_ave");
    TTreeReaderValue<Float_t> probejet_eta_data(myReader_DATA, "probejet_eta");
    TTreeReaderValue<Float_t> alpha_data(myReader_DATA, "alpha");
@@ -131,7 +131,7 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
      }
    }
 
-   TTreeReader myReader_MC("Events", MCfile);
+   TTreeReader myReader_MC("AnalysisTree", MCfile);
    TTreeReaderValue<Float_t> pt_ave_mc(myReader_MC, "pt_ave");
    TTreeReaderValue<Float_t> probejet_eta_mc(myReader_MC, "probejet_eta");
    TTreeReaderValue<Float_t> alpha_mc(myReader_MC, "alpha");
@@ -379,27 +379,27 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
   fclose(fp2);
 
 
-  //==============================================================================================================================
-  // some couts for cross check
-  for(int i=0; i<n_eta-1; i++){
-    cout << "mean value, eta " << eta_range[i] << " to " << eta_range[i+1] << ": " << ptave_data[i]->GetMean() << endl;
-    //cout << "max value, eta " << eta_range[i] << " to " << eta_range[i+1] << ": " << ptave_data[i]->FindLastBinAbove() << endl;
-  }
-  for(int i=0; i<n_eta-1; i++){
-    cout << "loglin fit value " << eta_range[i] << " to " << eta_range[i+1] << ": " << f1[i]->GetParameter(1) << endl;
-  }
-  for(int i=0; i<n_eta-1; i++){
-    cout << "max value of pt " << eta_range[i] << " to " << eta_range[i+1] << ": " << ptave_data[i]->FindLastBinAbove(0.) << endl;
-  }
+  // //==============================================================================================================================
+  // // some couts for cross check
+  // for(int i=0; i<n_eta-1; i++){
+  //   cout << "mean value, eta " << eta_range[i] << " to " << eta_range[i+1] << ": " << ptave_data[i]->GetMean() << endl;
+  //   //cout << "max value, eta " << eta_range[i] << " to " << eta_range[i+1] << ": " << ptave_data[i]->FindLastBinAbove() << endl;
+  // }
+  // for(int i=0; i<n_eta-1; i++){
+  //   cout << "loglin fit value " << eta_range[i] << " to " << eta_range[i+1] << ": " << f1[i]->GetParameter(1) << endl;
+  // }
+  // for(int i=0; i<n_eta-1; i++){
+  //   cout << "max value of pt " << eta_range[i] << " to " << eta_range[i+1] << ": " << ptave_data[i]->FindLastBinAbove(0.) << endl;
+  // }
 
-  for(int i=0; i<n_eta-1; i++){
-    for(int j=0; j<graph1_mpf[i]->GetN(); j++) {
-      cout << "uncert, eta " << eta_range[i] << " to " << eta_range[i+1] << ", pt range " << pt_range[j] << " to " << pt_range[j+1] << ": "  << graph1_mpf[i]->GetEY()[j] << endl;
-    }
-  }
+  // for(int i=0; i<n_eta-1; i++){
+  //   for(int j=0; j<graph1_mpf[i]->GetN(); j++) {
+  //     cout << "uncert, eta " << eta_range[i] << " to " << eta_range[i+1] << ", pt range " << pt_range[j] << " to " << pt_range[j+1] << ": "  << graph1_mpf[i]->GetEY()[j] << endl;
+  //   }
+  // }
 
 
-  //==============================================================================================================================
+  // //==============================================================================================================================
   // get the kFSR plots and calculate residuals
   if(mpfMethod){
     TFile* kfsr_mpf = new TFile(path+"Histo_KFSR_MPF_L1.root","READ");
@@ -435,6 +435,17 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
     TH1D* Residual_const_MPF = new TH1D("res_const_mpf","res_const_mpf", n_eta-1,eta_bins);
     TH1D* ptave_const_MPF = new TH1D("ptave_const_mpf","ptave_const_mpf", n_eta-1,eta_bins);
     TH1D* ptave_logpt_MPF = new TH1D("ptave_logpt_mpf","ptave_logpt_mpf", n_eta-1,eta_bins);
+    // for (int j=n_eta-1; j>0; --j){
+    //   if(syst==5){
+    // 	f1[j]->Print();
+    // 	ptave_logpt_MPF->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()));
+    // 	ptave_logpt_MPF->SetBinError(j+1,Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()));
+    //   }
+    //   ptave_const_MPF->SetBinContent(j+1,f2[j]->GetParameter(0));
+    //   ptave_const_MPF->SetBinError(j+1,f2[j]->GetParError(0));                                                                                 
+     
+    //   //   ptave_logpt_MPF->SetBinError(j+1,f2[j]->GetParError(0));   
+    // }
     ofstream output, output_loglin, uncerts, uncerts_loglin;
     output.open(path+"output/Spring16_25ns_MPF_FLAT_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
     output_loglin.open(path+"output/Spring16_25ns_MPF_LOGLIN_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
@@ -458,24 +469,24 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
       uncerts_loglin << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  3    55    " << ptave_data[j]->FindLastBinAbove(0.)*10 << "       " << sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))) / loglin_norm << endl;
 
       if(syst==5){
-	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) ) );
-	Residual_logpt_MPF->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))));
+    	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) ) );
+    	Residual_logpt_MPF->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))));
       }
       if(syst==0){
-	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120) ) );
-	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(120),2)+2*Vcov[2][j]*TMath::Log(120))));
+    	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120) ) );
+    	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(120),2)+2*Vcov[2][j]*TMath::Log(120))));
       }
       if(syst==1){
-	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60) ) );
-	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(60),2)+2*Vcov[2][j]*TMath::Log(60))));
+    	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60) ) );
+    	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(60),2)+2*Vcov[2][j]*TMath::Log(60))));
       }
       if(syst==2){
-	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240) ) );
-	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(240),2)+2*Vcov[2][j]*TMath::Log(240))));
+    	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240) ) );
+    	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(240),2)+2*Vcov[2][j]*TMath::Log(240))));
       }
       if(syst==3){
-	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480) ) );
-	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(480),2)+2*Vcov[2][j]*TMath::Log(480))));
+    	Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480) ) );
+    	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(480),2)+2*Vcov[2][j]*TMath::Log(480))));
       }
 
       Residual_const_MPF->SetBinContent(j+1,hist_kfsr_mpf->GetBinContent(j+1)*f2[j]->GetParameter(0));
@@ -530,6 +541,10 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
     }
     ptave_const_MPF->Write();
     ptave_logpt_MPF->Write();
+  for (int j=0; j<n_eta-1; j++){
+    f1[j]->Write();
+    f2[j]->Write();
+  }
     outputfile2->Write();
     outputfile2->Close();
   }
@@ -573,6 +588,17 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
     TH1D* Residual_const_DiJet = new TH1D("res_const_dijet","res_const_dijet", n_eta-1,eta_bins);
     TH1D* ptave_const_DiJet = new TH1D("ptave_const_dijet","ptave_const_dijet", n_eta-1,eta_bins);
     TH1D* ptave_logpt_DiJet = new TH1D("ptave_logpt_dijet","ptave_logpt_dijet", n_eta-1,eta_bins);
+    // for (int j=n_eta-1; j>0; --j){
+    //   if(syst==5){
+    //     ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()));
+    //     ptave_logpt_DiJet->SetBinError(j+1,Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)
+    // 				       +2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()));                                                                                                                                    
+    //   }                                                                                                                                          
+    //   ptave_const_DiJet->SetBinContent(j+1,f2[j]->GetParameter(0));                                                                              
+    //   ptave_const_DiJet->SetBinError(j+1,f2[j]->GetParError(0));                                                                                 
+      
+      //   ptave_logpt_MPF->SetBinError(j+1,f2[j]->GetParError(0));                                                                               
+    // }                 
     ofstream output, output_loglin, uncerts, uncerts_loglin;
     output.open(path+"output/Spring16_25ns_pT_FLAT_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
     output_loglin.open(path+"output/Spring16_25ns_pT_LOGLIN_L2Residual_"+txttag+"_"+jettag+"_"+variation+".txt");
@@ -600,36 +626,36 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
 
 
       if(syst==5){
-	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) ) );
-	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))));
+    	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) ) );
+    	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))));
 
-	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()));
-	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))));
+    	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()));
+    	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(ptave_data[j]->GetMean()),2)+2*Vcov[2][j]*TMath::Log(ptave_data[j]->GetMean()))));
 
       }
       if(syst==0){
-	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120) ) );
-	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(120),2)+2*Vcov[2][j]*TMath::Log(120))));
-	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120));
-	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(120),2)+2*Vcov[2][j]*TMath::Log(120))));
+    	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120) ) );
+    	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(120),2)+2*Vcov[2][j]*TMath::Log(120))));
+    	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(120));
+    	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(120),2)+2*Vcov[2][j]*TMath::Log(120))));
       }
       if(syst==1){
-	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60) ) );
-	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(60),2)+2*Vcov[2][j]*TMath::Log(60))));
-	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60));
-	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(60),2)+2*Vcov[2][j]*TMath::Log(60))));
+    	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60) ) );
+    	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(60),2)+2*Vcov[2][j]*TMath::Log(60))));
+    	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(60));
+    	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(60),2)+2*Vcov[2][j]*TMath::Log(60))));
       }
       if(syst==2){
-	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240) ) );
-	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(240),2)+2*Vcov[2][j]*TMath::Log(240))));
-	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240));
-	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(240),2)+2*Vcov[2][j]*TMath::Log(240))));
+    	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240) ) );
+    	Residual_logpt_DiJet->SetBinError(j+1, sqrt(  pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(240),2)+2*Vcov[2][j]*TMath::Log(240))));
+    	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(240));
+    	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(240),2)+2*Vcov[2][j]*TMath::Log(240))));
       }
       if(syst==3){
-	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480) ) );
-	Residual_logpt_DiJet->SetBinError(j+1, sqrt( pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(480),2)+2*Vcov[2][j]*TMath::Log(480))));
-	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480));
-	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(480),2)+2*Vcov[2][j]*TMath::Log(480))));
+    	Residual_logpt_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480) ) );
+    	Residual_logpt_DiJet->SetBinError(j+1, sqrt( pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480),2)*pow(hist_kfsr_dijet->GetBinError(j+1),2)   + pow(hist_kfsr_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(480),2)+2*Vcov[2][j]*TMath::Log(480))));
+    	ptave_logpt_DiJet->SetBinContent(j+1,f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(480));
+    	ptave_logpt_DiJet->SetBinError(j+1,sqrt((Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(480),2)+2*Vcov[2][j]*TMath::Log(480))));
       }
 
       Residual_const_DiJet->SetBinContent(j+1,hist_kfsr_dijet->GetBinContent(j+1)*f2[j]->GetParameter(0));
@@ -663,7 +689,7 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
     Residual_const_DiJet->Write();
     outputfile->Write();
     outputfile->Close();
-    // TFile* outputfile2 = new TFile(path+"Histo_ptave_DiJet_L1.root","RECREATE");
+    //    TFile* outputfile2 = new TFile(path+"Histo_ptave_DiJet_L1.root","RECREATE");
     TFile* outputfile2;
     if(syst==5){
       outputfile2 = new TFile(path+"Histo_ptave_DiJet_L1"+tag+".root","RECREATE");
@@ -683,6 +709,10 @@ void PTextrapolation_TTree(bool mpfMethod, TString path, TFile* datafile, TFile*
 
     ptave_const_DiJet->Write();
     ptave_logpt_DiJet->Write();
+    for (int j=0; j<n_eta-1; j++){
+      f1[j]->Write();
+      f2[j]->Write();
+    }             
     outputfile2->Write();
     outputfile2->Close();
   }

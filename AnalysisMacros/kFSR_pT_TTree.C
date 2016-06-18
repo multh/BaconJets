@@ -62,7 +62,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
 
 
    // Create the tree reader and its data containers
-   TTreeReader myReader_DATA("Events", datafile);
+   TTreeReader myReader_DATA("AnalysisTree", datafile);
    TTreeReaderValue<Float_t> pt_ave_data(myReader_DATA, "pt_ave");
    TTreeReaderValue<Float_t> probejet_eta_data(myReader_DATA, "probejet_eta");
    TTreeReaderValue<Float_t> alpha_data(myReader_DATA, "alpha");
@@ -74,7 +74,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
    while (myReader_DATA.Next()) {
    //   for( int i=0;i<10;i++) {//TEST
    //     myReader_DATA.Next();//TEST
-     // cout<<"DATA point: alpha = "<<*alpha_data<<" eta_probe = "<<*probejet_eta_data<<" pT_ave = "<<*pt_ave_data<<endl;
+     //      cout<<"DATA point: alpha = "<<*alpha_data<<" eta_probe = "<<*probejet_eta_data<<" pT_ave = "<<*pt_ave_data<<endl;
      for(int k=0; k<n_pt-1; k++){
    	   if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
 	   for(int j=0; j<n_eta-1; j++){
@@ -95,7 +95,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
      }
    }
 
-   TTreeReader myReader_MC("Events", MCfile);
+   TTreeReader myReader_MC("AnalysisTree", MCfile);
    TTreeReaderValue<Float_t> pt_ave_mc(myReader_MC, "pt_ave");
    TTreeReaderValue<Float_t> probejet_eta_mc(myReader_MC, "probejet_eta");
    TTreeReaderValue<Float_t> alpha_mc(myReader_MC, "alpha");

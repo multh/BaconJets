@@ -18,7 +18,7 @@
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
 using namespace std;
-void InputForGlobalFit_TTree(TString path, TFile* datafile, TFile* MCfile){
+void InputForGlobalFit_TTree(TString path, TFile* datafile, TFile* MCfile, TString txttag, TString jettag){
   const int min_number_events = 20;//required number of events in response histogram
   TStyle* m_gStyle = new TStyle();
   m_gStyle->SetOptFit(0);
@@ -215,7 +215,7 @@ void InputForGlobalFit_TTree(TString path, TFile* datafile, TFile* MCfile){
     }
 
   //Save results in root file
-  TFile* outputfile = new TFile(path+"output/JECcombifile_Dijet.root","RECREATE");
+  TFile* outputfile = new TFile(path+"output/JEC_L2_Dijet_"+jettag+"_"+txttag+".root","RECREATE");
   outputfile->Print();
  // TString eta_output[n_eta_common-1] = {"eta0000-0261", "eta0216-0522","eta0522-0783","eta0783-1044","eta1044-1305","eta1305-1653","eta1653-1930","eta1930-2172","eta2172-2322","eta2322-2500","eta2500-2650","eta2650-2853","eta2853-2964","eta2964-3139",
  // 				"eta3139-3489","eta3489-5191"};//TMP

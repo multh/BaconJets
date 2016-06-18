@@ -11,18 +11,20 @@ TString ToStringC(int num) {
 }
 
 void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName="pythia8",TFile* Realdatafile=NULL){
+  //  datafile->Print();
+  //  MCfile->Print();
   TString DATAtitle = "DATA";
-  // TString MCtitle = "MC";
+  TString MCtitle = "MC";
   //  TString MCtitle = "Herwigpp";
-  TString MCtitle = "Pythia8";
+  //  TString MCtitle = "Pythia8";
   //  TString DATAtitle = "Pythia8";
 
   // // TString DATAtitle = "Herwigpp";
   // // TString MCtitle = "Pythia8"; 
-  //  TString dirName = "Selection";
+  TString dirName = "Selection";
   //  TString dirName = "JetMatching";
-  //  TString dirName = "diJet";
-  TString dirName = "noCuts";
+  //    TString dirName = "diJet";
+  //  TString dirName = "noCuts";
   gStyle->SetOptFit(0);
   TH1F *pt_jet1_DATA,*pt_jet2_DATA,*pt_jet3_DATA;
   TH1F *pt_jet1_MC,*pt_jet2_MC,*pt_jet3_MC;
@@ -54,8 +56,15 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   TH1F *r_dijet_MC = (TH1F*)MCfile->Get(dirName+"/r_rel");
   TH1F *r_mpf_DATA = (TH1F*)datafile->Get(dirName+"/mpf");
   TH1F *r_mpf_MC = (TH1F*)MCfile->Get(dirName+"/mpf");
-  TH1F *N_PV_DATA = (TH1F*)datafile->Get(dirName+"/N_PV");
-  TH1F *N_PV_MC = (TH1F*)MCfile->Get(dirName+"/N_PV");
+   TH1F *N_PV_DATA = (TH1F*)datafile->Get(dirName+"/N_PV");
+   TH1F *N_PV_MC = (TH1F*)MCfile->Get(dirName+"/N_PV");
+ // TH1F *N_PV_DATA = (TH1F*)datafile->Get(dirName+"/N_PVgood");
+ // TH1F *N_PV_MC = (TH1F*)MCfile->Get(dirName+"/N_PVgood");
+  // TH1F *N_PVgood_DATA = (TH1F*)datafile->Get(dirName+"/N_PVgood");
+  // TH1F *N_PVgood_MC = (TH1F*)MCfile->Get(dirName+"/N_PVgood");
+  // TH1F *Rho_DATA = (TH1F*)datafile->Get(dirName+"/Rho");
+  // TH1F *Rho_MC = (TH1F*)MCfile->Get(dirName+"/Rho");
+
   TH1F *nPU_DATA = (TH1F*)datafile->Get(dirName+"/nPu");
   TH1F *nPU_MC = (TH1F*)MCfile->Get(dirName+"/nPu");
 
@@ -233,9 +242,9 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   N_PV_DATA->SetMarkerSize(0.5);
   N_PV_DATA->SetMarkerColor(1);
   N_PV_DATA->SetLineColor(1);
-  //  N_PV_DATA->GetXaxis()->SetTitle("N PVtx");
+  N_PV_DATA->GetXaxis()->SetTitle("N good PV");
   N_PV_DATA->Scale(1./N_PV_DATA->Integral());
-  N_PV_DATA->GetYaxis()->SetRangeUser(0,0.15);
+  N_PV_DATA->GetYaxis()->SetRangeUser(0,0.1);
   N_PV_DATA->Draw();
   N_PV_MC->SetMarkerStyle(22);
   N_PV_MC->SetMarkerSize(0.5);
@@ -243,8 +252,17 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   N_PV_MC->SetLineColor(2);
   N_PV_MC->Scale(1./N_PV_MC->Integral());
   N_PV_MC->Draw("same");
+  // N_PVgood_MC->SetMarkerSize(0.5);
+  // N_PVgood_DATA->SetMarkerSize(0.5);
+  // N_PVgood_DATA->Scale(1./N_PVgood_DATA->Integral()); 
+  // N_PVgood_MC->Scale(1./N_PVgood_MC->Integral()); 
+  // N_PVgood_DATA->SetMarkerStyle(25);  
+  // N_PVgood_DATA->Draw("same");
+  // N_PVgood_MC->SetMarkerStyle(32); 
+  // N_PVgood_MC->SetMarkerColor(2); 
+  // N_PVgood_MC->Draw("same");
   TLegend *leg2;
-  leg2 = new TLegend(0.63,0.68,0.9,0.86,"","brNDC");//x+0.1
+  leg2 = new TLegend(0.63,0.68,0.87,0.86,"","brNDC");//x+0.1
   leg2->SetBorderSize(0);
   leg2->SetTextSize(0.045);
   leg2->SetFillColor(10);
@@ -254,8 +272,30 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   leg2->AddEntry(Njets_MC,MCtitle,"lp");
   leg2->Draw();
   b->cd(2);
-  // nPU_DATA->SetMarkerStyle(20);
-  // nPU_DATA->SetMarkerSize(0.5);
+  /* Rho_DATA->SetMarkerSize(0.5);
+  Rho_DATA->SetMarkerColor(1); 
+  Rho_DATA->SetMarkerStyle(20); 
+  Rho_DATA->Scale(1./Rho_DATA->Integral());
+  Rho_DATA->GetYaxis()->SetRangeUser(0,0.11);  
+  Rho_DATA->GetXaxis()->SetTitle("#rho");  
+  Rho_MC->SetMarkerSize(0.5);
+  Rho_MC->SetMarkerColor(2); 
+  Rho_MC->SetMarkerStyle(22); 
+  Rho_MC->Scale(1./Rho_MC->Integral());
+  Rho_DATA->Draw(); 
+  Rho_MC->Draw("same"); */ 
+  /*
+  N_PVgood_DATA->SetMarkerSize(0.5);          
+  N_PVgood_DATA->SetMarkerColor(1);                                                                                                                N_PVgood_DATA->SetLineColor(1);                                                                                                                  N_PVgood_DATA->GetXaxis()->SetTitle("N good PV");                                                                                         
+  N_PVgood_DATA->Scale(1./N_PVgood_DATA->Integral());                                                                                              N_PVgood_DATA->GetYaxis()->SetRangeUser(0,0.1);                                                                                                 N_PVgood_DATA->Draw();                                                                                                                         //  N_PVgood_MC->SetMarkerStyle(22);                                                                                                               
+  N_PVgood_MC->SetMarkerSize(0.5);                                                                                                               
+  N_PVgood_MC->SetMarkerColor(2);                                                                                                                   
+  N_PVgood_MC->SetLineColor(2);                                                                                                                      
+  N_PVgood_MC->Scale(1./N_PVgood_MC->Integral());                                                                                                        
+  N_PVgood_MC->Draw("same");
+  */            
+  // // nPU_DATA->SetMarkerStyle(20);
+  // // nPU_DATA->SetMarkerSize(0.5);
   // nPU_DATA->SetMarkerColor(1);
   // nPU_DATA->SetLineColor(1);
   // //  nPU_DATA->GetXaxis()->SetTitle("N PVtx");
@@ -268,20 +308,20 @@ void Control_Plots(TString path, TFile* datafile, TFile* MCfile, TString GenName
   // nPU_MC->SetLineColor(2);
   // //  nPU_MC->Scale(1./nPU_MC->Integral());
   // nPU_MC->Draw("same");
-  Eta_assym_top_DATA->SetMarkerStyle(20);
-  Eta_assym_top_DATA->SetMarkerSize(0.5);
-  Eta_assym_top_DATA->SetMarkerColor(1);
-  Eta_assym_top_DATA->SetLineColor(1);
-  Eta_assym_top_DATA->SetTitle("Asymmetry (eta)");
-  //  Eta_assym_top_DATA->GetYaxis()->SetTitle("(#eta^{probe}_{negative} - #eta^{probe}_{positive})/#eta^{probe}_{positive}");
-  Eta_assym_top_DATA->GetYaxis()->SetTitle("(N^{+}-N^{-})/(N^{+}+N^{-})");
-  Eta_assym_top_DATA->GetYaxis()->SetRangeUser(-0.35,0.35);
-  Eta_assym_top_DATA->Draw();
-  Eta_assym_top_MC->SetMarkerStyle(22);
-  Eta_assym_top_MC->SetMarkerSize(0.5);
-  Eta_assym_top_MC->SetMarkerColor(2);
-  Eta_assym_top_MC->SetLineColor(2);
-  Eta_assym_top_MC->Draw("same");
+  // Eta_assym_top_DATA->SetMarkerStyle(20);
+  // Eta_assym_top_DATA->SetMarkerSize(0.5);
+  // Eta_assym_top_DATA->SetMarkerColor(1);
+  // Eta_assym_top_DATA->SetLineColor(1);
+  // Eta_assym_top_DATA->SetTitle("Asymmetry (eta)");
+  // //  Eta_assym_top_DATA->GetYaxis()->SetTitle("(#eta^{probe}_{negative} - #eta^{probe}_{positive})/#eta^{probe}_{positive}");
+  // Eta_assym_top_DATA->GetYaxis()->SetTitle("(N^{+}-N^{-})/(N^{+}+N^{-})");
+  // Eta_assym_top_DATA->GetYaxis()->SetRangeUser(-0.35,0.35);
+  // Eta_assym_top_DATA->Draw();
+  // Eta_assym_top_MC->SetMarkerStyle(22);
+  // Eta_assym_top_MC->SetMarkerSize(0.5);
+  // Eta_assym_top_MC->SetMarkerColor(2);
+  // Eta_assym_top_MC->SetLineColor(2);
+  // Eta_assym_top_MC->Draw("same");
   leg2->Draw();
   b->cd(3);
   pt_ave_DATA->SetMarkerStyle(20);
@@ -652,7 +692,7 @@ for(int i=0;i<n_pt;i++)
  // diffPt2_vs_alphaSum_MC->Draw("colz");
  // h9->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_diffPt_vs_alphaSum.pdf");
 
-
+  /*
  TCanvas* h10 = new TCanvas();
  //TH1F *diffPt1_vs_alpha3_DATA = (TH1F*)datafile->Get(dirName+"/diffPt1_vs_alpha3");
  TH2F *diffPtGen_vs_alpha3_MC = (TH2F*)MCfile->Get(dirName+"/diffPtGen_vs_alpha3");
@@ -785,6 +825,7 @@ for(int i=0;i<n_pt;i++)
    ratio->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
    ratio->GetXaxis()->SetLabelSize(15);
    h11->Print(path+"plots/Control_Plots_"+dirName+"_AsData_"+DATAtitle+"_AsMC_"+MCtitle+"_diffPtGEN_vs_alpha_Profile.pdf");
+  
  }
 
 
@@ -884,4 +925,5 @@ for(int i=0;i<n_pt;i++)
  // TH1F*  AbsdiffPtGen_vs_alphaSum_MC_1 = (TH1F*)gDirectory->Get("AbsdiffPtGen_vs_alphaSum_1");
  // AbsdiffPtGen_vs_alphaSum_MC_1->Draw();
  // h13->Print(path+"plots/Control_Plots_"+dirName+"_"+GenName+"_AbsdiffPtGEN_vs_alpha_Profile.pdf");
+ */
 }

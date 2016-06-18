@@ -3,8 +3,8 @@
 #include "UHH2/core/include/Hists.h"
 #include "UHH2/core/include/Event.h"
 #include "TClonesArray.h"
-#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
-#include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
+//#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
+//#include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
 /**  \brief Example class for booking and filling histograms
  * 
  * NOTE: This class uses the 'hist' method to retrieve histograms.
@@ -24,9 +24,9 @@ public:
 
     // TH2D *ptjet3_vs_alpha,*pt_ave_vs_alpha;
 private:
-    uhh2::Event::Handle<TClonesArray> h_jets;
-    uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
-    uhh2::Event::Handle<TClonesArray> h_pv;
+    //    uhh2::Event::Handle<TClonesArray> h_jets;
+    //    uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
+    //    uhh2::Event::Handle<TClonesArray> h_pv;
     //Variables specific for dijet events
     uhh2::Event::Handle<float> tt_gen_pthat; uhh2::Event::Handle<float> tt_gen_weight;
     uhh2::Event::Handle<float> tt_jet1_pt;     uhh2::Event::Handle<float> tt_jet2_pt;     uhh2::Event::Handle<float> tt_jet3_pt;

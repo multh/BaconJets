@@ -6,7 +6,7 @@
 #include "UHH2/core/include/Event.h"
 
 
-#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
+//#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
 
 namespace uhh2bacon {
 
@@ -16,9 +16,9 @@ class Selection {
     uhh2::Context& context;
     uhh2::Event* event;
 
-    uhh2::Event::Handle<TClonesArray> h_jets;
-    uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo;
-    uhh2::Event::Handle<TClonesArray> h_pv;
+    /* uhh2::Event::Handle<TClonesArray> h_jets; */
+    /* uhh2::Event::Handle<baconhep::TEventInfo> h_eventInfo; */
+    /* uhh2::Event::Handle<TClonesArray> h_pv; */
 
     //Additional vars in Event, specific for dijet
     uhh2::Event::Handle<float> tt_gen_pthat; uhh2::Event::Handle<float> tt_gen_weight;
@@ -36,14 +36,14 @@ class Selection {
     ~Selection();
 
     void SetEvent(uhh2::Event& evt);
-    bool Trigger(uhh2::Event& evt);
+    // bool Trigger(uhh2::Event& evt);
     bool PtMC(uhh2::Event& evt); //apply lowest Pt cut on MC
     bool DiJet();
     bool DiJetAdvanced(uhh2::Event& evt);
-    bool goodPVertex();
+    int goodPVertex();
     bool triggerFired(float bin1, float bin2);
 
-    bool FullSelection();
+    //  bool FullSelection();
 
 
 };

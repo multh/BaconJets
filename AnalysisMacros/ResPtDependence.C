@@ -1,17 +1,17 @@
 #include "header.h"
-#include "tdrstyle_mod14.C"
+#include "tdrstyle_mod15.C"
 
-void ResPtDependence(TString path, double al_cut=0.2, TString method = "COMB"){
-  gStyle->SetOptStat(0);
-  gStyle->SetOptTitle(0);
+void ResPtDependence(TString path, TString txttag, TString jettag, TString method = "COMB"){
+  //gStyle->SetOptStat(0);
+  // gStyle->SetOptTitle(0);
 
   // get the residual root file for diff Pt
-  TFile* res_nominal_file = new TFile(path+"Histo_Res_"+method+"_L1.root","READ");
+  TFile* res_nominal_file = new TFile(path+"Histo_Res_kFSRfit_"+method+"_L1_"+jettag+"_"+txttag+"_nominal.root","READ");
   res_nominal_file->Print();
-  TFile* res_central_file = new TFile(path+"Histo_Res_"+method+"_L1_central.root","READ");
-  TFile* res_down_file = new TFile(path+"Histo_Res_"+method+"_L1_down.root","READ");
-  TFile* res_up_file = new TFile(path+"Histo_Res_"+method+"_L1_up.root","READ");
-  TFile* res_doubleup_file = new TFile(path+"Histo_Res_"+method+"_L1_doubleup.root","READ");
+  TFile* res_central_file = new TFile(path+"Histo_Res_kFSRfit_"+method+"_L1_"+jettag+"_"+txttag+"_central.root","READ");
+  TFile* res_down_file = new TFile(path+"Histo_Res_kFSRfit_"+method+"_L1_"+jettag+"_"+txttag+"_down.root","READ");
+  TFile* res_up_file = new TFile(path+"Histo_Res_kFSRfit_"+method+"_L1_"+jettag+"_"+txttag+"_up.root","READ");
+  TFile* res_doubleup_file = new TFile(path+"Histo_Res_kFSRfit_"+method+"_L1_"+jettag+"_"+txttag+"_doubleup.root","READ");
 
   TH1D *res_nominal = (TH1D*)res_nominal_file->Get("res_logpt_comb");
   TH1D *res_central = (TH1D*)res_central_file->Get("res_logpt_comb");
@@ -48,7 +48,8 @@ void ResPtDependence(TString path, double al_cut=0.2, TString method = "COMB"){
   h->SetMinimum(0.8);
   h->GetXaxis()->SetTitleSize(0.05);
   h->GetYaxis()->SetTitleSize(0.05);
-  lumi_13TeV = "2.11 fb^{-1}";
+  //lumi_13TeV = "2.11 fb^{-1}";
+  lumi_13TeV = "589.3 pb^{-1}"; 
   bool kSquare = true;
 
   TCanvas *c1 = tdrCanvas("c1",h,4,0,kSquare);
@@ -76,9 +77,9 @@ void ResPtDependence(TString path, double al_cut=0.2, TString method = "COMB"){
   tex->SetTextSize(0.045);
   
   tex->DrawLatex(0.47,0.87,"Anti-k_{t} R = 0.4, PF+CHS");
-  c1->SaveAs(path+"plots/RatioPtDepend_"+method+"_25ns_2p11fb_nokFSR.pdf");
+  c1->SaveAs(path+"plots/L2PtDepend_"+method+".pdf");
 
-  TFile* outputfilenorm = new TFile(path+"Histos_Res_COMB_L1_PtDepend_"+method+".root","RECREATE");
+  TFile* outputfilenorm = new TFile(path+"Histos_Res_PtDepend_"+method+"_L1.root","RECREATE");
   res_nominal->Write();
   res_central->Write();
   res_down->Write();

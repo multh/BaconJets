@@ -1,7 +1,8 @@
 #include "header.h"
-#include "tdrstyle_mod14.C"
+//#include "tdrstyle_mod14.C"
+#include "tdrstyle_mod15.C"
 
-void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal"){
+void AllResPlots(TString path, TString txttag, TString jettag, TString variation, TString tag, double al_cut=0.2){
 
   int syst = 0;
   if(variation=="central") syst=0;
@@ -9,11 +10,12 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   if(variation=="up") syst=2;
   if(variation=="doubleup") syst=3;
   if(variation=="nominal") syst=5;
-
-  gStyle->SetOptStat(0);
-  gStyle->SetOptTitle(0);
-  //  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+CHS";
-  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+PUPPI";
+  //  gROOT->LoadMacro("tdrstyle_mod15.C");
+  //  setTDRStyle();
+  // gStyle->SetOptStat(0);
+  //gStyle->SetOptTitle(0);
+    TString JetDescrib = "Anti-k_{t} R = 0.4, PF+CHS";
+  //  TString JetDescrib = "Anti-k_{t} R = 0.4, PF+PUPPI";
   //  TString JetDescrib = "Anti-k_{t} R = 0.8, PF+CHS";
   //  TString JetDescrib = "Anti-k_{t} R = 0.8, PF+PUPPI";
 
@@ -107,8 +109,7 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   TH1D* kfsrconstmpf = (TH1D*)kfsrmpf->Get("kfsr_mpf");
   TFile* kfsrdijet = new TFile(path+"Histo_KFSR_DiJet_L1.root","READ"); 
   TH1D* kfsrconstdijet = (TH1D*)kfsrdijet->Get("kfsr_dijet");
-  // kfsrconstmpf->Print();
-  // kfsrconstdijet->Print();
+
 
   // create histo for the normalization
   TH1D* consmpf_norm=(TH1D*)consmpf->Clone();
@@ -172,7 +173,7 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   kfsrconsmpf_norm->Scale(1/norm_factor_kfsrMPF);
   kfsrconsdijet_norm->Scale(1/norm_factor_kfsrDiJet);
 
-  TFile* outputfilenorm = new TFile(path+"Histos_Res_norm_L1.root","RECREATE");
+  TFile* outputfilenorm = new TFile(path+"Histos_Res_norm_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   consmpf_norm->Write();
   consdijet_norm->Write();
   rrconsmpf_norm->Write();
@@ -248,40 +249,40 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   h->GetXaxis()->SetTitleSize(0.05);
   h->GetYaxis()->SetTitleSize(0.05);
   //  lumi_13TeV = "2.11 fb^{-1}";
-  lumi_13TeV = "218 pb^{-1}";
+  lumi_13TeV = "589.3 pb^{-1}";
   bool kSquare = true;
 
-  TCanvas *c1 = tdrCanvas("c1",h,4,0,kSquare);
+  TCanvas *c1 = tdrCanvas("c1",h,4,10,kSquare);
   //  consmpf_norm->GetYaxis()->SetRangeUser(0.91,1.15);
   consmpf_norm->GetYaxis()->SetRangeUser(0.81,1.15);
-  consmpf_norm->Draw("E1");
+  consmpf_norm->Draw("E1 SAME");
   consdijet_norm->Draw("E1 SAME");
   logptmpf_norm->Draw("E1 SAME");
   logptdijet_norm->Draw("E1 SAME");
   line->SetLineStyle(2);
-  line->Draw("SAME");
+   line->Draw("SAME");
 
-  //  TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
-  TLegend *leg1 = tdrLeg(0.17,0.19,0.40,0.40);
+  // //  TLegend *leg1 = tdrLeg(0.17,0.49,0.40,0.80);
+   TLegend *leg1 = tdrLeg(0.17,0.19,0.40,0.40);
   leg1 -> AddEntry(consmpf_norm, "MPF Flat","L");
   leg1 -> AddEntry(consdijet_norm, "Pt Flat","L");
   leg1 -> AddEntry(logptmpf_norm, "MPF Loglin","L");
   leg1 -> AddEntry(logptdijet_norm, "Pt Loglin","L");
   leg1->Draw();
 
-  TLatex *tex = new TLatex();
+   TLatex *tex = new TLatex();
   tex->SetNDC();
   tex->SetTextSize(0.045);
   
   tex->DrawLatex(0.47,0.87,JetDescrib);
+
+
+  c1->SaveAs(path+"plots/L2Res_"+jettag+"_"+txttag+"_"+variation+".pdf");
   
 
-  c1->SaveAs(path+"plots/L2Res_25ns_2p11fb.pdf");
-  
 
 
-
-  TCanvas *c2 = tdrCanvas("c2",h,4,0,kSquare);
+  TCanvas *c2 = tdrCanvas("c2",h,4,10,kSquare);
   //  rrconsmpf_norm->GetYaxis()->SetTitle("(R^{MC}/R^{data})_{#alpha<0.3}");
   TString alVal;
   alVal.Form("%0.2f\n",al_cut);
@@ -294,16 +295,16 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   rrconsmpf_norm->GetYaxis()->SetRangeUser(0.81,1.15);
   rrconsmpf_norm->GetXaxis()->SetTitle("|#eta|");
   rrconsmpf_norm->GetXaxis()->SetTitleSize(0.05);
-  rrconsmpf_norm->Draw("E1");
+  rrconsmpf_norm->Draw("E1 SAME");
   rrconsdijet_norm->Draw("E1 SAME");
   rrlogptmpf_norm->Draw("E1 SAME");
   rrlogptdijet_norm->Draw("E1 SAME");
   line->Draw("SAME");
   leg1->Draw();
   tex->DrawLatex(0.47,0.87,JetDescrib);
-  c2->SaveAs(path+"plots/Ratio_25ns_2p11fb.pdf");
+  c2->SaveAs(path+"plots/Ratio_"+jettag+"_"+txttag+"_"+variation+".pdf");
 
-  TCanvas *c3 = tdrCanvas("c3",h,4,0,kSquare);
+  TCanvas *c3 = tdrCanvas("c3",h,4,10,kSquare);
   kfsrconsmpf_norm->GetYaxis()->SetTitle("k_{FSR}");
   kfsrconsmpf_norm->GetYaxis()->SetTitleSize(0.05);
   //  kfsrconsmpf_norm->GetYaxis()->SetRangeUser(0.998,1.002);
@@ -373,7 +374,7 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   leg2->Draw();
 
   tex->DrawLatex(0.47,0.87,JetDescrib);
-  c3->SaveAs(path+"plots/kFSR_25ns_2p11fb.pdf");
+  c3->SaveAs(path+"plots/kFSR_"+jettag+"_"+txttag+"_"+variation+".pdf");
 
 
   // use kFSR fit function instead of values in bins
@@ -382,7 +383,7 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   h4->SetMinimum(0.8);
   h4->GetXaxis()->SetTitleSize(0.05);
   h4->GetYaxis()->SetTitleSize(0.05);
-  TCanvas *c4 = tdrCanvas("c4",h,4,0,kSquare);
+  TCanvas *c4 = tdrCanvas("c4",h,4,10,kSquare);
   TH1D* rrconsmpf_norm_kFSR = (TH1D*)rrconsmpf_norm->Clone();
   TH1D* rrconsdijet_norm_kFSR = (TH1D*)rrconsdijet_norm->Clone();
   TH1D* rrlogptmpf_norm_kFSR = (TH1D*)rrlogptmpf_norm->Clone();
@@ -399,7 +400,7 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   rrconsmpf_norm_kFSR->GetYaxis()->SetRangeUser(0.81,1.15);
   rrconsmpf_norm_kFSR->GetXaxis()->SetTitle("|#eta|");
   rrconsmpf_norm_kFSR->GetXaxis()->SetTitleSize(0.05);
-  rrconsmpf_norm_kFSR->Draw("E1");
+  rrconsmpf_norm_kFSR->Draw("E1 SAME");
   rrconsdijet_norm_kFSR->Draw("E1 SAME");
   rrlogptmpf_norm_kFSR->Draw("E1 SAME");
   rrlogptdijet_norm_kFSR->Draw("E1 SAME");
@@ -419,23 +420,24 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   
   
   
-  c4->SaveAs(path+"plots/L2Res_kFSRfunc_25ns_2p11fb.pdf");
+  c4->SaveAs(path+"plots/L2Res_kFSRfit_"+jettag+"_"+txttag+"_"+variation+".pdf");
 
   TFile* mpf_out;// = path+"/Histo_Res_kFSRfit_MPF_L1_";  output_mpf += variation;  output_mpf += ".root";   TFile* mpf_out = new TFile(output_mpf,"RECREATE");
   if(syst==5){
-    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1"+tag+".root","RECREATE");
+    //    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1"+tag+".root","RECREATE");
+    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==0){
-    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+variation+".root","RECREATE");
+    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==1){
-    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+variation+".root","RECREATE");
+    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==2){
-    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+variation+".root","RECREATE");
+    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==3){
-    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+variation+".root","RECREATE");
+    mpf_out = new TFile(path+"Histo_Res_kFSRfit_MPF_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
 
   rrconsmpf_norm_kFSR->Write();
@@ -448,19 +450,20 @@ void AllResPlots(TString path, double al_cut=0.2, TString variation = "nominal")
   // output_dijet += ".root";
   TFile* dijet_out;// = new TFile(output_dijet,"RECREATE");
   if(syst==5){
-    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1"+tag+".root","RECREATE");
+    //    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1"+tag+".root","RECREATE");
+   dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==0){
-   dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+variation+".root","RECREATE");
+    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==1){
-   dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+variation+".root","RECREATE");
+   dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==2){
-    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+variation+".root","RECREATE");
+    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   if(syst==3){
-    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+variation+".root","RECREATE");
+    dijet_out = new TFile(path+"Histo_Res_kFSRfit_DiJet_L1_"+jettag+"_"+txttag+"_"+variation+".root","RECREATE");
   }
   rrconsdijet_norm_kFSR->Write();
   rrlogptdijet_norm_kFSR->Write();
