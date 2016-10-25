@@ -15,11 +15,12 @@ TString     nPu_reweighting_dbase = "reweight_event";
 int reweight_event_run2_pt_ave() {
 
 
-  //    TString     sTriggerThreshold[] = {"40","60", "80", "140", "200", "260", "320", "400","500"};
-  TString     sTriggerThreshold[] = {"40","60", "60","60","200", "260", "320", "400","500"};
-    //    Float_t     fTriggerThreshold[10] = {55,76,93,172,232,300,366,453,558,600};
+  //    TString     sTriggerThreshold[] = {"40","60", "80", "140", "200", "260", "320", "400","500"}; //orig
+  //    TString     sTriggerThreshold[] = {"40","60", "60","60","200", "260", "320", "400","500"};
+  TString     sTriggerThreshold[] = {"40","60", "80","140","200", "260", "320", "400", "500"}; //Arne
+  //    Float_t     fTriggerThreshold[10] = {55,76,93,172,232,300,366,453,558,600};
   //    Float_t     fTriggerThreshold[] = {56,78,93,172,232,300,366,453,562,600};
-    Float_t     fTriggerThreshold[] = {56,78,100,168,232,300,366,453,562,600};
+  Float_t     fTriggerThreshold[] = {56,78,100,168,232,300,366,453,562,600};
 
     float scale_factor = 0;
     float mc_integral = 0;
@@ -29,8 +30,10 @@ int reweight_event_run2_pt_ave() {
     int bmax = 1;
     int size = sizeof(sTriggerThreshold)/sizeof(double);
 
-    TFile *file_DATA = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_StandTriggers_TTree/uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root");
-    TFile *file_MC = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_StandTriggers_TTree/uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root");
+    //TFile *file_DATA = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_StandTriggers_TTree/uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root"); //orig
+    //TFile *file_MC = new TFile ("/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_StandTriggers_TTree/uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root"); //orig
+    TFile *file_DATA = new TFile ("/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/4fb_FlatQCD_Weight1_FullCorr_WithMET_Pt15_JERSmear/uhh2.AnalysisModuleRunner.DATA.DATA_RunB_AK4CHS.root"); //Arne
+    TFile *file_MC = new TFile ("/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/4fb_FlatQCD_Weight1_FullCorr_WithMET_Pt15_JERSmear/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS.root"); //Arne
 
 
 //  TFile *file_DATA = new TFile ("/nfs/dust/cms/user/kovalch/sFrame/JEC/V6/uhh2.AnalysisModuleRunner.DATA.DATAdata_1200pt_ave_V6_CDv3Dv4.root");//finite bining
@@ -46,7 +49,7 @@ int reweight_event_run2_pt_ave() {
     for(int i=0; i < 9; i++){
     //    for(int i=0; i < 7; i++){
 
-        TH1F * histo_DATA = (TH1F*) file_DATA -> Get("Selection/pt_ave_hltDiPFJetAve"+sTriggerThreshold[i]);
+        TH1F * histo_DATA = (TH1F*) file_DATA -> Get("HLT_DiPFJetAve"+sTriggerThreshold[i]+"/pt_ave");
 
         bmin = histo_MC->FindBin(fTriggerThreshold[i]); 
         bmax = histo_MC->FindBin(fTriggerThreshold[i+1]-0.5); 

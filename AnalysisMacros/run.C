@@ -1,229 +1,203 @@
 //Set of macros, which reads TTree from UHH2/BaconJet output files
 
-void run(){
-
-  // change your absolute path here:
-  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X_standalone/TEST_2/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV2_pileup_69mb/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV2_pileup_NO/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV2_pileup/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV3_pileup_L2L3/\";");
-
-  //gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_noReweight_AllTriggers/\";");
-  //gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_noReweight_AllTriggers_assym02/\";");
-  //gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_noReweight_AllTriggers_assym02_nJets_le25/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_L2L3Res_noReweight/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_AllTriggers_TTree/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_AllTriggers_TTree/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_HFTriggers_TTree/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_ReweightPU_StandTriggers_TTree/\";");
-  //gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_noReweight/\";");
-
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight_Reworked/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV1_noReweight/3dJet_50GeV/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_76X/Fall15_25nsV2_L2L3Res_noReweight/\";");
-
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV1/noHFtriggers_with_HLT_DiPFJetAve80_140/\";");
-  //gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV2/\";");
-  //  gROOT->ProcessLine("TString path = \"/nfs/dust/cms/user/karavdia/JEC_80X/Spring16_25nsV2_pileup/\";");
+//include "tdrstyle_mod15.C"
 
 
-  // input data files
-  //gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root\";");//TEST
-  //gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4PUPPI.root\";");
-  // gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4CHS.root\";");//TEST
- gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.DATA_RunB_AK4CHS.root\";");//TEST
-  //    gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4PUPPI.root\";");
-  // gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8CHS.root\";");
-  //  gROOT->ProcessLine("TString realdatfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8PUPPI.root\";");
 
-  //gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root\";");
-  //gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4PUPPI.root\";");
-  //gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4CHS.root\";");
-gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.DATA_RunB_AK4CHS.root\";");
-  //gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK4PUPPI.root\";");
-  //gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8CHS.root\";");
- //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunB_AK8PUPPI.root\";");
+void run(TString Generator, TString Collection, TString Runs, bool only_AllCollections, bool WithJetID){
+
+  gROOT->ProcessLine(" lumi_binned = false;");
+  gROOT->ProcessLine(" with_sys = false;");
+  gROOT->ProcessLine(" is_sys_MC = true;"); //Systematic only relevant for MC samples, no systematic data files need to be read in
+
+  //Jet Collection
+  if(Collection == "AK4CHS"){
+    gROOT->ProcessLine(" s_jets = \"AK4CHS\";");
+    gROOT->ProcessLine(" jettag = \"AK4PFchs\";");
+  }
+  else if(Collection == "AK8CHS"){
+    gROOT->ProcessLine(" s_jets = \"AK8CHS\";");
+    gROOT->ProcessLine(" jettag = \"AK8PFchs\";");
+  }
+  else if(Collection == "AK4Puppi"){
+    gROOT->ProcessLine(" s_jets = \"AK4Puppi\";");
+    gROOT->ProcessLine(" jettag = \"AK4PFpuppi\";");
+  }
+  else if(Collection == "AK8Puppi"){
+    gROOT->ProcessLine(" s_jets = \"AK8Puppi\";");
+    gROOT->ProcessLine(" jettag = \"AK8PFpuppi\";");
+  }
+  else throw runtime_error("run.C: Invalid Jet-collection specified.");
 
 
-  //gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";"); 
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4PUPPI.root\";");
-  //  gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8CHS.root\";");
-     //     gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8PUPPI.root\";");
+  if(Collection == "AK4CHS" || Collection == "AK4Puppi" ) gROOT->ProcessLine(" s_postfix = \"\";");
+  else gROOT->ProcessLine(" s_postfix = \"_NoJERSmearing\";");
 
-  //
-  // gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK4CHS.root\";");
-  // gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";");
-
-  //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4CHS.root\";");
-  //gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK4PUPPI.root\";");
-  //gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK8CHS.root\";");
-  //gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_herwigpp_AK8PUPPI.root\";");
-
-//  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8PUPPI.root\";");
-  //gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8CHS.root\";");
-  // gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4PUPPI.root\";");
-//   gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK4CHS.root\";");
- gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS.root\";");
-
-//  
-  // gROOT->ProcessLine("TString datfile = \"uhh2.AnalysisModuleRunner.DATA.RunD_AK8CHS.root\";");
-    //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt15to7000_pythia8_AK8CHS.root\";");
-  //  
-  
-  //  gROOT->ProcessLine("TString mcfile = \"uhh2.AnalysisModuleRunner.MC.QCD_Sum_Pt_pythia8_AK4CHS.root\";");
+  //Runs
+  if(Runs == "BCD")  gROOT->ProcessLine(" runnr = \"BCD\";");
+  else if(Runs == "EF")  gROOT->ProcessLine(" runnr = \"EF\";");
+  else if(Runs == "G")  gROOT->ProcessLine(" runnr = \"G\";");
+  else if(Runs == "B")  gROOT->ProcessLine(" runnr = \"B\";");
+  else if(Runs == "C")  gROOT->ProcessLine(" runnr = \"C\";");
+  else if(Runs == "D")  gROOT->ProcessLine(" runnr = \"D\";");
+  else if(Runs == "E")  gROOT->ProcessLine(" runnr = \"E\";");
+  else if(Runs == "F")  gROOT->ProcessLine(" runnr = \"F\";");
+  else throw runtime_error("run.C: Invalid RunNr. specified.");
 
   // choose a tag for the txt output files
-  //gROOT->ProcessLine("TString txttag = \"pythia8_v3\";");
-gROOT->ProcessLine("TString txttag = \"pythia8_v4\";");
-  //gROOT->ProcessLine("TString txttag = \"herwigpp_v3\";");
-  //gROOT->ProcessLine("TString txttag = \"herwigpp_v4\";");
-  // tag for the jet cone size
-  gROOT->ProcessLine("TString jettag = \"AK4PFchs\";");
-  //  gROOT->ProcessLine("TString jettag = \"AK4PFpuppi\";");
-  // gROOT->ProcessLine("TString jettag = \"AK8PFchs\";");
-  //gROOT->ProcessLine("TString jettag = \"AK8PFpuppi\";");
-  // choose a systematic uncertainty in pt average ("central" (pt=120GeV), "up" (pt=240GeV), "down" (pt=60GeV), "doubleup" (pt=480GeV) or "nominal" (pt -> mean value of pt ave))
-  //   gROOT->ProcessLine("TString variation= \"nominal\";");
-  // Tag for time dependence plots
-  //  gROOT->ProcessLine("TString tag = \"_9\";");
-  //  gROOT->ProcessLine("TString tag = \"_pythia8\";");
-  gROOT->ProcessLine("TString tag = \"\";");
+  //Generator
+  if(Generator == "pythia") {gROOT->ProcessLine(" txttag = \"pythia8_v4\";"); gROOT->ProcessLine(" Generator = \"pythia\";");}
+  else if (Generator == "herwig") {gROOT->ProcessLine(" txttag = \"herwigpp_v4\";"); gROOT->ProcessLine(" Generator = \"herwig\";");}
+  else throw runtime_error("run.C: Invalid Generator specified.");
 
-  gROOT->ProcessLine("TFile* Realdatafile = new TFile(path+realdatfile,\"READ\");"); 
-
-  gROOT->ProcessLine("TFile* datafile = new TFile(path+datfile,\"READ\");"); 
-  gROOT->ProcessLine("TFile* MCfile = new TFile(path+mcfile,\"READ\");"); 
-  gROOT->ProcessLine("double al_cut=0.3;"); 
-  gROOT->ProcessLine("int nResponseBins = 100;");
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
-  // //  gROOT->ProcessLine("TString MCname = \"herwigpp\";");
-  gROOT->ProcessLine("TString MCname = \"pythia8\";");
-  gROOT->ProcessLine(".L Control_Plots.C");
-  gROOT->ProcessLine("Control_Plots(path,datafile,MCfile,MCname,Realdatafile);");
   
-   
-  // // // // // // // // // // // // // // // // // // // // // // //  gROOT->ProcessLine("double al_cut=0.7;"); 
-  gROOT->ProcessLine(".L kFSR_pT_TTree.C+");
-  gROOT->ProcessLine("kFSR_pT_TTree(true,path,datafile,MCfile,al_cut,nResponseBins);");
-  // // // // // // // // // // // gROOT->ProcessLine("kFSR_pT_TTree(false,path,datafile,MCfile,al_cut,nResponseBins);");
-  // // // // // // // // // // // // // gROOT->ProcessLine(".L kFSR_TTree.C+");
-  // // // // // // // // // // // // // gROOT->ProcessLine("kFSR_TTree(true,path,datafile,MCfile,al_cut,nResponseBins);");
-  // // // // // // // // // // // // // gROOT->ProcessLine("kFSR_TTree(false,path,datafile,MCfile,al_cut,nResponseBins);");
+  //Runs
+  if(Runs == "BCD")  gROOT->ProcessLine(" lumitag=\"RunBCD  12.9 fb^{-1}\";");
+  else if(Runs == "EF")  gROOT->ProcessLine(" lumitag=\"RunEF  7.3 fb^{-1}\";");
+  else if(Runs == "G")  gROOT->ProcessLine(" lumitag=\"RunG  1.8 fb^{-1}\";");
+  else if(Runs == "B")  gROOT->ProcessLine(" lumitag=\"RunB  5.8 fb^{-1}\";");
+  else if(Runs == "C")  gROOT->ProcessLine(" lumitag=\"RunC  2.6 fb^{-1}\";");
+  else if(Runs == "D")  gROOT->ProcessLine(" lumitag=\"RunD  4.3 fb^{-1}\";");
+  else if(Runs == "E")  gROOT->ProcessLine(" lumitag=\"RunE  4.1 fb^{-1}\";");
+  else if(Runs == "F")  gROOT->ProcessLine(" lumitag=\"RunF  3.2 fb^{-1}\";");
+  else throw runtime_error("run.C: Invalid RunNr. specified.");
+
+  //WithJetID?
+  if(WithJetID) {
+    gROOT->ProcessLine("s_JetID = \"_Loose_JetPFID\";");
+    gROOT->ProcessLine("b_JetID = true;");
+  }
+  else{
+    gROOT->ProcessLine("s_JetID = \"\";");
+    gROOT->ProcessLine("b_JetID = false;");
+  }
+
+
+  // change your absolute path here:
+  gROOT->ProcessLine(" dir =\"RunBCDEFG_noRes\" ");
+
+  gROOT->ProcessLine(" path = \"/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/\" + dir + \"/\" + s_jets + s_JetID + s_postfix + \"/Run\" + runnr +\"/\";"); 
+  gROOT->ProcessLine(" path_up = \"/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/\" + dir + \"_Sys_JER_Up/\" + s_jets + s_JetID + s_postfix + \"/Run\" + runnr +\"/\";");
+  gROOT->ProcessLine(" path_down = \"/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/\" + dir + \"_Sys_JER_Down/\" + s_jets + s_JetID + s_postfix + \"/Run\" + runnr +\"/\";");
+  gROOT->ProcessLine(" path_general = \"/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/\" + dir +\"/\";"); //for general plots in the very end
  
-   gROOT->ProcessLine("TString variation= \"nominal\";");
-   gROOT->ProcessLine(".L PTextrapolation_TTree_kFSRfit.C+");
-   gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-   gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");//WATCH OUT for kFSR fit results here!!!
-  
-         
-   gROOT->ProcessLine("variation= \"central\";");
-  gROOT->ProcessLine(".L PTextrapolation_TTree_kFSRfit.C+");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");//WATCH OUT for kFSR fit results here!!!
-   gROOT->ProcessLine("variation= \"up\";");
-  gROOT->ProcessLine(".L PTextrapolation_TTree_kFSRfit.C+");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");//WATCH OUT for kFSR fit results here!!!
-  
-  gROOT->ProcessLine("variation= \"doubleup\";");
-  gROOT->ProcessLine(".L PTextrapolation_TTree_kFSRfit.C+");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");//WATCH OUT for kFSR fit results here!!!
-  
-  gROOT->ProcessLine("variation= \"down\";"); 
-  gROOT->ProcessLine(".L PTextrapolation_TTree_kFSRfit.C+");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");//WATCH OUT for kFSR fit results here!!!
+  // input files
 
-  gROOT->ProcessLine(".L L2ResOutput.C");                                          
-  gROOT->ProcessLine("L2ResOutput(path,txttag,jettag,tag,al_cut)");
+  gROOT->ProcessLine(" realdatfile = \"../uhh2.AnalysisModuleRunner.DATA.DATA_Run\"+runnr+\"_\"+s_jets+\".root\";");
+  gROOT->ProcessLine(" datfile = \"../uhh2.AnalysisModuleRunner.DATA.DATA_Run\"+runnr+\"_\"+s_jets+\".root\";");
+  if(Generator == "herwig") gROOT->ProcessLine(" mcfile = \"../uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_\"+s_jets+\".root\";");
+  else if(Generator == "pythia") gROOT->ProcessLine(" mcfile = \"../uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_\"+s_jets+\".root\";");
+  
+ 
+
+  //only for HIP mitigation plots
+  gROOT->ProcessLine(" lumis[0] = \"0p6\";");
+  gROOT->ProcessLine(" lumis[1] = \"0p8\";");
+  gROOT->ProcessLine(" lumis[2] = \"1p2\";");
+  if(Collection == "AK4CHS") {
+    cout << "AK4CHS collection specified." << endl;
+    gROOT->ProcessLine(" path_HIP = \"/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/\" + dir + \"/\" + s_jets + s_JetID + s_postfix +\"/\";"); 
+  }
+  else if(Collection == "AK4Puppi") {
+    cout << "AK4Puppi collection specified." << endl; 
+    gROOT->ProcessLine(" path_HIP = \"/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/\" + dir + \"/\" + s_jets + s_JetID + s_postfix +\"/\";"); 
+  }
+  else { 
+    cout << "Collection different from AK4CHS or AK4Puppi specified! HIP_path will be generic " << endl; 
+    gROOT->ProcessLine(" path_HIP = path");
+  }
+  gROOT->ProcessLine(" HIP = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt-15to7000_Flat_HIP_\";");
+  gROOT->ProcessLine(" HIP_mtOff = \"uhh2.AnalysisModuleRunner.MC.QCD_Pt-15to7000_Flat_HIP_mtOff_\";");
+  gROOT->ProcessLine(" DATA_HIP = \"uhh2.AnalysisModuleRunner.DATA.DATA_Run2016E_29Jul_HIP\";");
+  gROOT->ProcessLine(" DATA_mtOff = \"uhh2.AnalysisModuleRunner.DATA.DATA_RunBCD_\" + s_jets;");
+
+
+
+
+
+
+
+
+  // choose a systematic uncertainty in pt average ("central" (pt=120GeV), "up" (pt=240GeV), "down" (pt=60GeV), "doubleup" (pt=480GeV) or "nominal" (pt -> mean value of pt ave))
+
+  // Tag for time dependence plots
+  //gROOT->ProcessLine("TString tag = \"_9\";");
+  //gROOT->ProcessLine("TString tag = \"_pythia8\";");
+  gROOT->ProcessLine(" tag = \"\";");
+
+  gROOT->ProcessLine("Realdatafile = new TFile(path+realdatfile,\"READ\");"); 
+  gROOT->ProcessLine(" datafile = new TFile(path+datfile,\"READ\");"); 
+  gROOT->ProcessLine(" MCfile = new TFile(path+mcfile,\"READ\");"); 
+  gROOT->ProcessLine("if(with_sys) {MCfile_up = new TFile(path_up+mcfile,\"READ\"); MCfile_down = new TFile(path_down+mcfile,\"READ\");}");
+  gROOT->ProcessLine("if(with_sys && is_sys_MC) {datafile_up = datafile; datafile_down = datafile; Realdatafile_up = Realdatafile; Realdatafile_down = Realdatafile;}");
+  gROOT->ProcessLine("if(with_sys && !is_sys_MC){datafile_up = new TFile(path_up+datfile,\"READ\"); datafile_down = new TFile(path_down+datfile,\"READ\"); Realdatafile_up = new TFile(path_up+realdatfile,\"READ\"); Realdatafile_down = new TFile(path_down+realdatfile,\"READ\");}");
+
+
+
+  gROOT->ProcessLine("al_cut=0.3;"); 
+  gROOT->ProcessLine("nResponseBins = 100;");
+
+
+
+  // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+
+  
+  if(Generator == "herwig") gROOT->ProcessLine(" MCname = \"herwigpp\";");
+  else if (Generator == "pythia") gROOT->ProcessLine(" MCname = \"pythia8\";");
+  else throw runtime_error("run.C: Invalid Generator specified.");
+
+  gROOT->ProcessLine("cout << \"Opening MC file: \" << path+mcfile << endl;");
+  
+
+
+  // ********************************************* starting analysis *********************************** //
+  
+  //gROOT->ProcessLine("HIP_Mitigation_Plots(path_HIP,HIP,HIP_mtOff,DATA_HIP,DATA_mtOff,s_jets,lumis, al_cut);");
+  
+  if(!only_AllCollections){
+    /*
+      gROOT->ProcessLine("Control_Plots(lumi_binned,path,datafile,MCfile,MCname,Realdatafile);");
+      
+    
+    gROOT->ProcessLine("kFSR_pT_TTree(true,false,1,path,datafile,MCfile,txttag,lumitag,al_cut,nResponseBins);");
+    gROOT->ProcessLine("if(lumi_binned){for(int i=4; i<n_lumi;i++){kFSR_pT_TTree(true,lumi_binned,i,path,datafile,MCfile,txttag,lumitag,al_cut,nResponseBins);}}");
+    gROOT->ProcessLine("if(with_sys){kFSR_pT_TTree(true,false,1,path_up,datafile_up,MCfile_up,txttag,lumitag,al_cut,nResponseBins); kFSR_pT_TTree(true,false,1,path_down,datafile_down,MCfile_down,txttag,lumitag,al_cut,nResponseBins);}");
+      
+ 
+    
+    gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(true,false,1,path,datafile,MCfile,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins);");
+    gROOT->ProcessLine("PTextrapolation_TTree_kFSRfit(false,false,1,path,datafile,MCfile,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins);");//WATCH OUT for kFSR fit results here!!!
+    gROOT->ProcessLine("if(lumi_binned){for(int i=4; i<n_lumi;i++){PTextrapolation_TTree_kFSRfit(true,lumi_binned,i,path,datafile,MCfile,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins);}}");
+    gROOT->ProcessLine("if(lumi_binned){for(int i=4; i<n_lumi;i++){PTextrapolation_TTree_kFSRfit(false,lumi_binned,i,path,datafile,MCfile,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins);}}");
+    gROOT->ProcessLine("if(with_sys){PTextrapolation_TTree_kFSRfit(true,false,1,path_up,datafile_up,MCfile_up,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins); PTextrapolation_TTree_kFSRfit(true,false,1,path_down,datafile_down,MCfile_down,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins);}");
+    gROOT->ProcessLine("if(with_sys){PTextrapolation_TTree_kFSRfit(false,false,1,path_up,datafile_up,MCfile_up,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins); PTextrapolation_TTree_kFSRfit(false,false,1,path_down,datafile_down,MCfile_down,txttag,jettag,variation,tag,Generator,runnr,lumitag,al_cut,nResponseBins);}");//WATCH OUT for kFSR fit results here!!!
+    
+ 
+                      
+    gROOT->ProcessLine("L2ResOutput(false,with_sys,1,path,path_up,path_down,txttag,jettag,tag,lumitag,al_cut)");
+    gROOT->ProcessLine("if(lumi_binned){for(int i=4; i<n_lumi;i++){L2ResOutput(lumi_binned,false,i,path,path_up,path_down,txttag,jettag,tag,lumitag,al_cut);}}");
+    */
+    /*
+    if(Generator == "pythia"){
+      gROOT->ProcessLine(".L FlavorCorrection_TTree.C");                                          
+      gROOT->ProcessLine("FlavorCorrection_TTree(path,MCfile,jettag, txttag,al_cut)");
+    }
+    else cout << "Flavor plots not created for herwig samples." << endl;
+    */
+    if(WithJetID) gROOT->ProcessLine("JetID_ComparisonPlots(path, mcfile, datfile, txttag, s_jets, runnr)");
+  }
+  else{
+    gROOT->ProcessLine(".L L2ResALLJetColl.C");  
+    gROOT->ProcessLine("L2ResALLJetColl(path_general,txttag,tag,lumitag,runnr,b_JetID)");
+  }
 
   //gROOT->ProcessLine(".L L2ResTxtTest.C");                                          
-  //  gROOT->ProcessLine("L2ResTxtTest(path,txttag,jettag,tag,al_cut)"); 
-  // gROOT->ProcessLine(".L L2ResALLJetColl.C");  
-  // gROOT->ProcessLine("L2ResALLJetColl(path,txttag,jettag,tag)");
+  //gROOT->ProcessLine("L2ResTxtTest(path,txttag,jettag,tag,al_cut)"); 
+  //gROOT->ProcessLine(".L AllResPlots.C");
+  //gROOT->ProcessLine("AllResPlots(path,txttag,jettag,variation,tag,al_cut)");
 
-  // // // gROOT->ProcessLine(".L AllResPlots.C");
-  // // // // gROOT->ProcessLine("AllResPlots(path,txttag,jettag,variation,tag,al_cut)");
-
-
-  // // // // gROOT->ProcessLine(".L PTextrapolation_TTree.C+");
-  // // // // gROOT->ProcessLine("PTextrapolation_TTree(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  // // // // gROOT->ProcessLine("PTextrapolation_TTree(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut,nResponseBins);");
-  // // // gROOT->ProcessLine(".L AllResPlots.C");
-  // // // gROOT->ProcessLine("AllResPlots(path,txttag,jettag,variation,tag,al_cut)");
-
-
-
-  
-  // gROOT->ProcessLine("TString method= \"MPF\";");
-  // gROOT->ProcessLine(".L ResPtDependence.C");
-  // gROOT->ProcessLine("ResPtDependence(path,txttag,jettag,method)");
-
-  
-  // //  gROOT->ProcessLine("TString variation= \"central\";");
-  // //  gROOT->ProcessLine("TString variation= \"up\";");
-  // //  gROOT->ProcessLine("TString variation= \"down\";");
-  // // gROOT->ProcessLine("TString variation= \"doubleup\";");
-  // gROOT->ProcessLine(".L PTextrapolation_TTree.C+");
-  // gROOT->ProcessLine("PTextrapolation_TTree(true,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut);");
-  // // gROOT->ProcessLine("PTextrapolation_TTree(false,path,datafile,MCfile,txttag,jettag,variation,tag,al_cut);"); 
-  
-
-  // // // // // // // // // //W/t kFSR ---------------------------------
-  // gROOT->ProcessLine("TString variation= \"nominal\";");
-  // // // //  gROOT->ProcessLine("TString variation= \"central\";");
-  // // // //gROOT->ProcessLine("TString variation= \"up\";"); 
-  // // // //gROOT->ProcessLine("TString variation= \"down\";");
-  // // // // gROOT->ProcessLine("TString variation= \"doubleup\";");
-  // gROOT->ProcessLine(".L PTextrapolation_COMB_noKFSR_TTree.C");
-  // gROOT->ProcessLine("PTextrapolation_COMB_noKFSR_TTree(path,datafile,MCfile,txttag,jettag,variation,tag,al_cut);");
-  // gROOT->ProcessLine(".L AllResPlots_noKFSR.C");
-  // gROOT->ProcessLine("AllResPlots_noKFSR(path,al_cut)");
-  // // // // gROOT->ProcessLine(".L ResPtDependence.C");
-  // // // // gROOT->ProcessLine("TString method= \"COMB\";");
-  // // // // // //  gROOT->ProcessLine("TString method= \"MPF\";");
-  // // // // gROOT->ProcessLine("ResPtDependence(path,al_cut,method)");
-  // // // // // // // // //-----------------------------------------------
-
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  // //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
- //  // // Input for Mikko's Global Fit ----------------------
- //  gROOT->ProcessLine(".L InputForGlobalFit_TTree.C+");
- //  gROOT->ProcessLine("InputForGlobalFit_TTree(path,datafile,MCfile,txttag,jettag);");
- // //  //----------------------------------------------------
- //  gROOT->ProcessLine(".L PTextrapolation.C");
- // // choose a systematic uncertainty in pt average ("central" (pt=120GeV), "up" (pt=240GeV), "down" (pt=60GeV), "doubleup" (pt=480GeV) or "nominal" (pt -> mean value of pt ave))
- //  gROOT->ProcessLine("TString variation= \"central\";");
- //  gROOT->ProcessLine("PTextrapolation(true,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("PTextrapolation(false,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("TString variation= \"up\";");
- //  gROOT->ProcessLine("PTextrapolation(true,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("PTextrapolation(false,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("TString variation= \"down\";");
- //  gROOT->ProcessLine("PTextrapolation(true,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("PTextrapolation(false,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("TString variation= \"doubleup\";");
- //  gROOT->ProcessLine("PTextrapolation(true,path,datafile,MCfile,txttag,jettag,variation,tag);");
- //  gROOT->ProcessLine("PTextrapolation(false,path,datafile,MCfile,txttag,jettag,variation,tag);");
-
-
- // gROOT->ProcessLine(".L kFSR_pT.C+");
-  // gROOT->ProcessLine("kFSR_pT(true,path,datafile,MCfile);");
-  // gROOT->ProcessLine(".L kFSR_pT.C+"); //recomplie to have correct labels on plots
-  // gROOT->ProcessLine("kFSR_pT(false,path,datafile,MCfile);");
-  // gROOT->ProcessLine(".L PTextrapolation.C");
-  // gROOT->ProcessLine("PTextrapolation(true,path,datafile,MCfile,txttag,jettag,variation,tag);");
-  // gROOT->ProcessLine("PTextrapolation(false,path,datafile,MCfile,txttag,jettag,variation,tag);");
-// // gROOT->ProcessLine(".L PTextrapolation_COMB_noKFSR.C");
-  // // gROOT->ProcessLine("PTextrapolation_COMB_noKFSR(path,datafile,MCfile,txttag,jettag,variation,tag);");
 }

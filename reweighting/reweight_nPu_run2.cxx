@@ -8,8 +8,8 @@
 // weighting factors will be stored;
 
 TString     nPu_reweighting_dbase = "nPu_reweighting";
-TString     sminBiasXsec = "58000";
-//TString     sminBiasXsec = "69000";
+//TString     sminBiasXsec = "58000";//orig
+TString     sminBiasXsec = "69000";//Arne
 //TString     sminBiasXsec = "80000";
 TString     sMCsample = "Flat";
 //TString MCgen = "herwigpp";

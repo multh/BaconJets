@@ -21,9 +21,14 @@
 //#include "UsefulFunctions.C"
 using namespace std;
 
-void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile, double al_cut=0.2,int nResponseBins=100){
+void kFSR_pT_TTree(bool mpfMethod, bool divide_by_lumi, int current_lumibin, TString path, TFile* datafile, TFile* MCfile, TString txttag, TString lumitag, double al_cut,int nResponseBins){
   cout<<"alpha cut @"<<al_cut<<endl;
   TStyle* m_gStyle = new TStyle();
+
+  if(divide_by_lumi){
+    cout << "kFSR is calculated in bins of instantaneous lumi, this time for " << lumi_bins[current_lumibin-1] << " < lumi < " << lumi_bins[current_lumibin] << endl;
+  }
+
 
   m_gStyle->SetOptFit(0);
   // get ratio for MC to DATA responses
@@ -69,12 +74,11 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
    //   TTreeReaderValue<Float_t> alpha_data(myReader_DATA, "alpha_sum"); //TEST alpha_sum
    TTreeReaderValue<Float_t> rel_r_data(myReader_DATA, "rel_r");
    TTreeReaderValue<Float_t> mpf_r_data(myReader_DATA, "mpf_r");
+   TTreeReaderValue<Float_t> inst_lumi_data(myReader_DATA, "instantaneous_lumi");
    TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
    
    while (myReader_DATA.Next()) {
-   //   for( int i=0;i<10;i++) {//TEST
-   //     myReader_DATA.Next();//TEST
-     //      cout<<"DATA point: alpha = "<<*alpha_data<<" eta_probe = "<<*probejet_eta_data<<" pT_ave = "<<*pt_ave_data<<endl;
+     if(divide_by_lumi && (*inst_lumi_data<lumi_bins[current_lumibin-1] || *inst_lumi_data>=lumi_bins[current_lumibin])) continue;
      for(int k=0; k<n_pt-1; k++){
    	   if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
 	   for(int j=0; j<n_eta-1; j++){
@@ -122,7 +126,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
      }
    }
 
-   //TEST: normilise hists
+   //TEST: normalise hists
    for(int i=0; i<n_alpha; i++){
      for(int j=0; j<n_eta-1; j++){
        for(int k=0; k<n_pt-1; k++){
@@ -140,11 +144,14 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
 
    for(int i=0; i<n_alpha; i++){
      for(int j=0; j<n_eta-1; j++){
+       int n_sum = 0;
       for(int k=0; k<n_pt-1; k++){
 	if(fabs(alpha_bins[i]-al_cut)<1e-4){
 	  if(k==0) cout<<eta_bins[j]<<" ";
-	  //cout<<"& "<<hmc_rel_r[k][j][i]->GetEntries();//MC
-	  cout<<"& "<<hdata_rel_r[k][j][i]->GetEntries();//DATA
+	  cout<<"& "<<hmc_rel_r[k][j][i]->GetEntries();//MC
+	  n_sum += hmc_rel_r[k][j][i]->GetEntries(); //MC
+	  //cout<<"& "<<hdata_rel_r[k][j][i]->GetEntries();//DATA
+	  //n_sum += hdata_rel_r[k][j][i]->GetEntries(); //DATA
 	}
 	pair<double,double> res_mc_rel_r,res_data_rel_r;
 	pair<double,double> res_mc_mpf_r,res_data_mpf_r;
@@ -169,7 +176,8 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
 	ratio_al_mpf_r[k][j][i] = ratio_res_mpf_r.first;
 	err_ratio_al_mpf_r[k][j][i] = ratio_res_mpf_r.second;
       }
-      if(fabs(alpha_bins[i]-al_cut)<1e-4) cout<<""<<endl;
+      if(fabs(alpha_bins[i]-al_cut)<1e-4) cout << ",   SUM: " << n_sum <<endl;
+
      }
    }
 
@@ -192,19 +200,32 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
 
   for(int j=0; j<n_eta-1; j++){
     for(int k=0; k<n_pt-1; k++){
+      if(k==4 && j == n_eta-3){cout << "The yellow graph's bincontents before scaling with alpha=0.3: " << endl; 
+	for(int i=0; i<n_alpha;i++){
+	  cout << ratio_al_rel_r[k][j][i] << " +- " << err_ratio_al_rel_r[k][j][i] << endl;
+	}
+	cout << endl;
+      }
+
       double norm_al02_rel_r = ratio_al_rel_r[k][j][al_ref];
       double err_norm_al02_rel_r = err_ratio_al_rel_r[k][j][al_ref];
       double norm_al02_mpf_r = ratio_al_mpf_r[k][j][al_ref];
       double err_norm_al02_mpf_r = err_ratio_al_mpf_r[k][j][al_ref];
       for(int i=0; i<n_alpha; i++){
   	if(norm_al02_rel_r>0){
-  	  ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_al02_rel_r;
+  	  ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_al02_rel_r; //original
   	  err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_al02_rel_r,2)));
-  	}
+	  //err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i] / (ratio_al_rel_r[k][j][i]) ,2)+pow(err_norm_al02_rel_r / norm_al02_rel_r,2))) * ratio_al_rel_r[k][j][i] / norm_al02_rel_r ; //self
+ 	  //ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_al02_rel_r;
+	  if(i == al_ref) err_ratio_al_rel_r[k][j][i] = 0.;
+	}
   	if(norm_al02_mpf_r>0){
   	  ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_al02_mpf_r;
   	  err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_al02_mpf_r,2)));
-  	}
+	  //err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i] / (ratio_al_mpf_r[k][j][i]) ,2)+pow(err_norm_al02_mpf_r / norm_al02_mpf_r,2))) * err_ratio_al_mpf_r[k][j][i] / norm_al02_mpf_r;
+	  //ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_al02_mpf_r;
+	  if(i == al_ref) err_ratio_al_mpf_r[k][j][i] = 0.;
+	}
       }
     }
   }
@@ -243,7 +264,15 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
 	graph_rel_r[k][j]->SetLineColor(k+19);
       }
       if(graph_rel_r[k][j]->GetN()>0) 
-	pTgraph_rel_r[j]->Add(graph_rel_r[k][j]);
+	{
+	  pTgraph_rel_r[j]->Add(graph_rel_r[k][j]); //one multigraph consisting of several TGraphErrors. One Multigraph for each eta bin
+	}
+      if(k==4 && j == n_eta-3) {cout << "The yellow graph's bincontents: " << endl; 
+	for(int i=0; i<n_alpha;i++){
+	  cout << ratio_al_rel_r[k][j][i] << " +- " << err_ratio_al_rel_r[k][j][i] << endl;
+	}
+	cout << endl;
+      }
       TString pTbin_label = "";
       pTbin_label+=pt_bins[k];
       pTbin_label+=" < p_{T} < ";
@@ -265,7 +294,6 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
       }
       if(graph_mpf_r[k][j]->GetN()>0) 
 	pTgraph_mpf_r[j]->Add(graph_mpf_r[k][j]);
-
     }
   }
 
@@ -284,8 +312,14 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
   // create output .dat file, including the kFSR extrapolation (alpha->0)
   FILE *fp_rel_r; FILE *fp_mpf_r; 
   TH1D* kFSR_MPF; TH1D* kFSR_DiJet;
-  fp_mpf_r = fopen(path+"output/KFSR_MPF_extrapolation.dat","w");
-  fp_rel_r = fopen(path+"output/KFSR_DiJet_extrapolation.dat","w");
+  if(divide_by_lumi){
+    fp_mpf_r = fopen(path+"output/KFSR_MPF_extrapolation_Lumi_"+lumi_range[current_lumibin-1]+"_"+lumi_range[current_lumibin]+".dat","w");
+    fp_rel_r = fopen(path+"output/KFSR_DiJet_extrapolation_Lumi_"+lumi_range[current_lumibin-1]+"_"+lumi_range[current_lumibin]+".dat","w");
+  }
+  else{
+    fp_mpf_r = fopen(path+"output/KFSR_MPF_extrapolation.dat","w");
+    fp_rel_r = fopen(path+"output/KFSR_DiJet_extrapolation.dat","w");
+  }
   kFSR_MPF = new TH1D("kfsr_mpf","kfsr_mpf", n_eta-1,eta_bins);
   kFSR_DiJet = new TH1D("kfsr_dijet","kfsr_dijet", n_eta-1,eta_bins);
   TH1D* plotkfsr = new TH1D("kfsr","kfsr", n_eta-1,eta_bins);
@@ -296,7 +330,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
   TCanvas* a[n_eta-1];
   TString plotname[n_eta-1];
   TF1 *pol1[n_eta-1];
-  for (int j=0; j<n_eta-1; j++){
+  for (int j=0; j<n_eta-1; j++){ //n_eta-1
     plotname[j]="dijet_kfsr_diffPt_eta_"+eta_range[j]+"_"+eta_range[j+1];
     a[j] = new TCanvas(plotname[j], plotname[j], 800,700);
     m_gStyle->SetOptTitle(0);
@@ -341,7 +375,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     TLatex *tex = new TLatex();
     tex->SetNDC();
     tex->SetTextSize(0.045); 
-    tex->DrawLatex(0.64,0.91,"2.11fb^{-1} (13TeV)");
+    tex->DrawLatex(0.64,0.91,lumitag);
 
 
     TString chi2_loglin = "#chi^{2}/n.d.f = ";
@@ -352,14 +386,22 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     tex2->SetNDC();
     tex2->SetTextSize(0.035); 
     tex2->DrawLatex(0.64,0.35,chi2_loglin);
-    a[j]->Print(path+"plots/kFSR_Pt_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+    if(divide_by_lumi)a[j]->Print(path+"plots/kFSR_Pt_"+txttag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_Lumi_"+lumi_range[current_lumibin-1]+"_"+lumi_range[current_lumibin]+".pdf");
+    else a[j]->Print(path+"plots/kFSR_Pt_"+txttag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
   }
+  cout << endl << endl << "finished all fits for rel" << endl  << endl;
   fclose(fp_rel_r);
-  // create output file including the kFSR plot
-  TFile* outputfile_rel_r = new TFile(path+"Histo_KFSR_DiJet_L1.root","RECREATE");
+  cout << "closed some file, now opening output file" << endl;
+    // create output file including the kFSR plot
+  TFile* outputfile_rel_r;
+  if(divide_by_lumi) outputfile_rel_r = new TFile(path+"Histo_KFSR_DiJet_"+txttag+"_L1_Lumi_"+lumi_range[current_lumibin-1]+"_"+lumi_range[current_lumibin]+".root","RECREATE");
+  else outputfile_rel_r = new TFile(path+"Histo_KFSR_DiJet_"+txttag+"_L1.root","RECREATE");
+  cout << "now writing kFSR values" << endl;
   kFSR_DiJet->Write();
   outputfile_rel_r->Write();
+  cout << "closing output file" << endl;
   outputfile_rel_r->Close();
+  cout << "closed output file" << endl;
 
 
   // And now MPF results
@@ -384,9 +426,8 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     pTgraph_mpf_r[j]->Fit(pol1[j],"R");
     line->SetLineStyle(2);
     line->Draw("SAME");
-    // //Divide by value@alpha cut
-    // double y_al_cut = pol1[j]->GetParameter(0)+pol1[j]->GetParameter(1)*al_cut;
-    //    cout<<"y_al_cut = "<<y_al_cut<<endl;
+
+
     // fill the output.dat file
     if (fp_mpf_r!=NULL) {
       Float_t value = pol1[j]->GetParameter(0);
@@ -405,7 +446,7 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     TLatex *tex = new TLatex();
     tex->SetNDC();
     tex->SetTextSize(0.045); 
-    tex->DrawLatex(0.64,0.91,"2.11fb^{-1} (13TeV)");
+    tex->DrawLatex(0.64,0.91,lumitag);
     TString chi2_loglin = "#chi^{2}/n.d.f = ";
     chi2_loglin += trunc(pol1[j]->GetChisquare());
     chi2_loglin +="/";
@@ -416,15 +457,18 @@ void kFSR_pT_TTree(bool mpfMethod, TString path, TFile* datafile, TFile* MCfile,
     tex2->DrawLatex(0.64,0.35,chi2_loglin);
 
     //save the plots
-      b[j]->Print(path+"plots/kFSR_MPF_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+    if(divide_by_lumi)b[j]->Print(path+"plots/kFSR_MPF_"+txttag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_Lumi_"+lumi_range[current_lumibin-1]+"_"+lumi_range[current_lumibin]+".pdf");
+    else b[j]->Print(path+"plots/kFSR_MPF_"+txttag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
   }
   fclose(fp_mpf_r);
 
 
   // create output file including the kFSR plot
-    TFile* outputfile_mpf_r = new TFile(path+"Histo_KFSR_MPF_L1.root","RECREATE");
-    kFSR_MPF->Write();
-    outputfile_mpf_r->Write();
-    outputfile_mpf_r->Close();
+  TFile* outputfile_mpf_r;
+  if(divide_by_lumi) outputfile_mpf_r = new TFile(path+"Histo_KFSR_MPF_"+txttag+"_L1_Lumi_"+lumi_range[current_lumibin-1]+"_"+lumi_range[current_lumibin]+".root","RECREATE");
+  else outputfile_mpf_r = new TFile(path+"Histo_KFSR_MPF_"+txttag+"_L1.root","RECREATE");
+  kFSR_MPF->Write();
+  outputfile_mpf_r->Write();
+  outputfile_mpf_r->Close();
 
-}
+   }
