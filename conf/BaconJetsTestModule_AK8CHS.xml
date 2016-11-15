@@ -164,6 +164,8 @@
       <Item Name="trigger300_HFJEC" Value="HLT_DiPFJetAve300_HFJEC_v*"/>
 
 
+	<!-- Closure test? -->
+	<Item Name="ClosureTest" Value="false"/>
 	<!-- Systematic uncertainties -->
 	<Item Name="jersmear_direction" Value="nominal"/>
 

@@ -6,6 +6,7 @@
 #include "UHH2/core/include/Event.h"
 //#include "UHH2/core/include/EventHelper.h"
 #include "../include/JECAnalysisHists.h"
+#include "../include/JECRunnumberHists.h"
 
 #include <UHH2/common/include/MCWeight.h>
 #include <UHH2/common/include/JetCorrections.h>
@@ -48,9 +49,11 @@ using namespace uhh2;
 
   protected:
     // correctors
-    std::unique_ptr<JetCorrector> jet_corrector;
+    std::unique_ptr<JetCorrector> jet_corrector, jet_corrector_BCD, jet_corrector_E, jet_corrector_Fearly, jet_corrector_FlateGH;
+    std::unique_ptr<JetCorrector> jet_corrector_noRes, jet_corrector_noRes_BCD, jet_corrector_noRes_E, jet_corrector_noRes_Fearly, jet_corrector_noRes_FlateGH;
     std::unique_ptr<GenericJetResolutionSmearer> jetER_smearer; 
-    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner;
+    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner, JLC_BCD, JLC_E, JLC_Fearly, JLC_FlateGH;
+    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner_noRes, JLC_noRes_BCD, JLC_noRes_E, JLC_noRes_Fearly, JLC_noRes_FlateGH; 
     std::unique_ptr<JetCleaner> jetcleaner;
     // selections
     std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -97,7 +100,7 @@ using namespace uhh2;
     Event::Handle<int> tt_flavorBarreljet, tt_flavorProbejet, tt_flavorLeadingjet, tt_flavorSubleadingjet; //only MC
     Event::Handle<float> tt_response_leadingjet;
     Event::Handle<float> tt_had_n_Efrac, tt_had_ch_Efrac, tt_mu_Efrac, tt_ph_Efrac;
-    Event::Handle<float> tt_inst_lumi, tt_integrated_lumi_in_bin;
+    Event::Handle<float> tt_inst_lumi, tt_integrated_lumi_in_bin, tt_integrated_lumi;
     Event::Handle<int> tt_lumibin;
 
  
@@ -107,15 +110,17 @@ using namespace uhh2;
     std::unique_ptr<LuminosityHists> h_lumi_nocuts, h_lumi_sel, h_lumi_dijet, h_lumi_match, h_lumi_final;    
     std::unique_ptr<LuminosityHists> h_lumi_Trig40, h_lumi_Trig60, h_lumi_Trig80, h_lumi_Trig140, h_lumi_Trig200, h_lumi_Trig260, h_lumi_Trig320, h_lumi_Trig400, h_lumi_Trig500;
     std::unique_ptr<LuminosityHists> h_lumi_TrigHF60, h_lumi_TrigHF80, h_lumi_TrigHF100, h_lumi_TrigHF160, h_lumi_TrigHF220, h_lumi_TrigHF300;
+    std::unique_ptr<JECRunnumberHists> h_runnr_input;
     uhh2bacon::Selection sel;
 
     bool debug;
-    bool isMC;
+    bool isMC, split_JEC, ClosureTest;
     string jetLabel;
     JetId Jet_PFID;
     int n_evt;
     
     std::map<run_lumi, double> rl2lumi;
+    std::map<run_lumi, double> rl2intlumi;
     TBranch * brun ;
     TBranch * blumiblock;
     TBranch * bilumi;
@@ -191,6 +196,7 @@ using namespace uhh2;
     }
 
     //Jet collection used in the analysis is defined in xml config, parameters: "JetCollection"(input),"JetLabel"(output,label)
+    /* //old
     jetLabel = ctx.get("JetLabel");
     std::vector<std::string> JEC_corr;
     if(isMC){
@@ -208,6 +214,133 @@ using namespace uhh2;
     jet_corrector.reset(new JetCorrector(ctx, JEC_corr));
     if(isMC) jetER_smearer.reset(new GenericJetResolutionSmearer(ctx)); 
     jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+*/
+
+    //new
+    jetLabel = ctx.get("JetLabel");
+    split_JEC = (ctx.get("Split_JEC") == "true");
+    ClosureTest = (ctx.get("ClosureTest") == "true");
+    std::vector<std::string> JEC_corr_noRes, JEC_corr_noRes_BCD, JEC_corr_noRes_E, JEC_corr_noRes_Fearly, JEC_corr_noRes_FlateGH; 
+    std::vector<std::string> JEC_corr,       JEC_corr_BCD, JEC_corr_E, JEC_corr_Fearly, JEC_corr_FlateGH, JEC_corr_MC_FlateGH;
+    if(isMC){
+      //for MC
+      if(jetLabel == "AK4CHS"){
+	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_MC; //noRes only for DATA ;)
+	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_MC; 
+      }
+      if(jetLabel == "AK8CHS"){
+	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_MC; 
+	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_MC; 
+      }
+      if(jetLabel == "AK4PUPPI"){
+	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_MC;
+	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_MC;
+      }
+      if(jetLabel == "AK8PUPPI"){
+	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_MC;
+	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_MC;
+      }
+    }
+    else { 
+      //for calculating residual corrections DATA
+      if(jetLabel == "AK4CHS"){
+	//residual
+	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK4PFchs_DATA;
+	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_noRes_AK4PFchs_DATA;
+	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L123_noRes_AK4PFchs_DATA;
+	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_noRes_AK4PFchs_DATA;
+	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK4PFchs_DATA;
+	//closure
+	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_DATA;
+	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_AK4PFchs_DATA;
+	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L123_AK4PFchs_DATA;
+	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_AK4PFchs_DATA;
+	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_DATA;
+      }
+      if(jetLabel == "AK8CHS"){
+	//residual
+	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK8PFchs_DATA; 
+	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_noRes_AK8PFchs_DATA;
+ 	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L123_noRes_AK8PFchs_DATA; 
+	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_noRes_AK8PFchs_DATA; 
+	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK8PFchs_DATA; 
+	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_DATA; 
+	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_AK8PFchs_DATA;
+ 	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L123_AK8PFchs_DATA; 
+	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_AK8PFchs_DATA; 
+	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_DATA; 
+      }
+      if(jetLabel == "AK4PUPPI"){
+	//residual
+	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK4PFPuppi_DATA;
+	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_noRes_AK4PFPuppi_DATA;
+	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L23_noRes_AK4PFPuppi_DATA;
+	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_noRes_AK4PFPuppi_DATA;
+	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK4PFPuppi_DATA;
+	//closure
+	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_DATA;
+	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_AK4PFPuppi_DATA;
+	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L23_AK4PFPuppi_DATA;
+	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_AK4PFPuppi_DATA;
+	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_DATA;
+      }
+      if(jetLabel == "AK8PUPPI"){
+	//residual
+	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK8PFPuppi_DATA;
+	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_noRes_AK8PFPuppi_DATA;
+	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L23_noRes_AK8PFPuppi_DATA;
+	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_noRes_AK8PFPuppi_DATA;
+	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK8PFPuppi_DATA;
+	//closure
+	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_DATA;
+	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_AK8PFPuppi_DATA;
+	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L23_AK8PFPuppi_DATA;
+	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_AK8PFPuppi_DATA;
+	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_DATA;
+      }
+    }
+    
+
+
+
+
+
+    
+  
+      //for closure test
+      if(ClosureTest){
+	if(!isMC && split_JEC){ //these only exist for DATA
+	  jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD));
+	  jet_corrector_E.reset(new JetCorrector(ctx, JEC_corr_E));
+	  jet_corrector_Fearly.reset(new JetCorrector(ctx, JEC_corr_Fearly));
+	  jet_corrector_FlateGH.reset(new JetCorrector(ctx, JEC_corr_FlateGH));
+	  JLC_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_BCD));
+	  JLC_E.reset(new JetLeptonCleaner(ctx, JEC_corr_E));
+	  JLC_Fearly.reset(new JetLeptonCleaner(ctx, JEC_corr_Fearly));
+	  JLC_FlateGH.reset(new JetLeptonCleaner(ctx, JEC_corr_FlateGH));
+	}
+	jet_corrector.reset(new JetCorrector(ctx, JEC_corr));
+	jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+      }
+      //for residuals
+      else{
+	if(!isMC && split_JEC){
+	  jet_corrector_noRes_BCD.reset(new JetCorrector(ctx, JEC_corr_noRes_BCD));
+	  jet_corrector_noRes_E.reset(new JetCorrector(ctx, JEC_corr_noRes_E));
+	  jet_corrector_noRes_Fearly.reset(new JetCorrector(ctx, JEC_corr_noRes_Fearly));
+	  jet_corrector_noRes_FlateGH.reset(new JetCorrector(ctx, JEC_corr_noRes_FlateGH));
+	  JLC_noRes_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_BCD));
+	  JLC_noRes_E.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_E));
+	  JLC_noRes_Fearly.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_Fearly));
+	  JLC_noRes_FlateGH.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_FlateGH));
+	}
+	jet_corrector_noRes.reset(new JetCorrector(ctx, JEC_corr_noRes));
+	jetleptoncleaner_noRes.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes));
+      }
+    
+
+    if(isMC) jetER_smearer.reset(new GenericJetResolutionSmearer(ctx)); 
+
 
     //output
     ctx.undeclare_all_event_output();   
@@ -257,11 +390,12 @@ using namespace uhh2;
     tt_inst_lumi = ctx.declare_event_output<float>("instantaneous_lumi");
     tt_integrated_lumi_in_bin = ctx.declare_event_output<float>("integrated_lumi_in_bin");
     tt_lumibin = ctx.declare_event_output<int>("lumibin");
+    tt_integrated_lumi = ctx.declare_event_output<float>("integrated_lumi");
 
 
 
 
-
+    h_runnr_input.reset(new JECRunnumberHists(ctx,"Runnr_input"));
     h_nocuts.reset(new JECAnalysisHists(ctx,"NoCuts"));
     h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
     h_match.reset(new JECAnalysisHists(ctx,"JetMatching"));
@@ -327,6 +461,7 @@ using namespace uhh2;
 
     run_lumi rl;
     double ilumi;
+    double intlumi_pb = 0;
     brun->SetAddress(&rl.run);
     blumiblock->SetAddress(&rl.lumiblock);
     bilumi->SetAddress(&ilumi);
@@ -338,7 +473,9 @@ using namespace uhh2;
 	b->GetEntry(ientry);
       }
       double ilumi_pb = ilumi * 1e-6; // convert units in file (microbarn) to pb.
+      intlumi_pb += ilumi_pb;
       rl2lumi.insert(make_pair(rl, ilumi_pb));
+      rl2intlumi.insert(make_pair(rl, intlumi_pb));
     }
    
 
@@ -357,6 +494,7 @@ using namespace uhh2;
     lumi_in_bins.push_back(ilumi_current_bin);
     
 
+
   };
 
 
@@ -369,6 +507,7 @@ using namespace uhh2;
 
   bool TestModule::process(Event & event) {
     n_evt++;
+    h_runnr_input->fill(event);
 
     /* CMS-certified luminosity sections */
     if(event.isRealData){
@@ -382,10 +521,12 @@ using namespace uhh2;
     int event_in_lumibin = -1;
     double fill_event_integrated_lumi = 0;
     double inst_lumi = -1;
+    double int_lumi_event = -1;
     if(event.isRealData){
       run_lumi rl_event{event.run, event.luminosityBlock};
       double lumiblock_lumi = rl2lumi[rl_event];
       inst_lumi = lumiblock_lumi/23;
+      int_lumi_event = rl2intlumi[rl_event];
 
       vector<run_lumi>::iterator it;
       if(!(rl_event < upper_binborders_runnrs.back())){
@@ -414,8 +555,95 @@ using namespace uhh2;
     if(jet_n<2) return false;
     //h_2jets->fill(event);
 
+    /* //old
     jetleptoncleaner->process(event);
     jet_corrector->process(event);
+    */
+    //semi-new
+    /*
+    if(ClosureTest){
+      if(jetLabel == "AK4PUPPI" && event.run < s_runnr_Fearly && !isMC) throw runtime_error("TestModule.cxx: Closure test for AK4Puppi collection only valid for runG data. Here, runnr < 278802.");
+      if(isMC){
+	JLC_MC_FlateGH->process(event);
+	jet_corrector_MC_FlateGH->process(event);
+      }
+      else{
+	//apply different corrections for events in different run intervals
+	if(event.run <= s_runnr_BCD){
+	  JLC_BCD->process(event);
+	  jet_corrector_BCD->process(event);
+	}
+	else if(event.run <= s_runnr_E){
+	  JLC_E->process(event);
+	  jet_corrector_E->process(event);
+	}
+	else if(event.run < s_runnr_Fearly){ //< is correct, not <=
+	  JLC_Fearly->process(event);
+	  jet_corrector_Fearly->process(event); 
+	}
+	else if(event.run >= s_runnr_Fearly){
+	  JLC_FlateGH->process(event);
+	  jet_corrector_FlateGH->process(event);
+	}
+	else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+      }
+    }
+    else{
+      jetleptoncleaner_noRes->process(event);
+      jet_corrector_noRes->process(event);
+    }
+*/ 
+    if(ClosureTest){
+      if(!isMC && split_JEC){ //these only exist for DATA
+	if(event.run <= s_runnr_BCD){
+	  jet_corrector_BCD->process(event);
+	  JLC_BCD->process(event);
+	}
+	else if(event.run <= s_runnr_E){
+	  jet_corrector_E->process(event);
+	  JLC_E->process(event);
+	}
+	else if(event.run < s_runnr_Fearly){ //< is correct, not <=
+	  jet_corrector_Fearly->process(event);
+	  JLC_Fearly->process(event);
+	}
+	else if(event.run >= s_runnr_Fearly){
+	  jet_corrector_FlateGH->process(event);
+	  JLC_FlateGH->process(event);
+	}
+	else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+      }
+      else{
+	jet_corrector->process(event);
+	jetleptoncleaner->process(event);
+      }
+    }
+    else{
+      if(!isMC && split_JEC){ //these only exist for DATA
+	if(event.run <= s_runnr_BCD){
+	  jet_corrector_noRes_BCD->process(event);
+	  JLC_noRes_BCD->process(event);
+	}
+	else if(event.run <= s_runnr_E){
+	  jet_corrector_noRes_E->process(event);
+	  JLC_noRes_E->process(event);
+	}
+	else if(event.run < s_runnr_Fearly){ //< is correct, not <=
+	  jet_corrector_noRes_Fearly->process(event);
+	  JLC_noRes_Fearly->process(event);
+	}
+	else if(event.run >= s_runnr_Fearly){
+	  jet_corrector_noRes_FlateGH->process(event);
+	  JLC_noRes_FlateGH->process(event);
+	}
+	else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+      }
+      else{
+	jet_corrector_noRes->process(event);
+	jetleptoncleaner_noRes->process(event);
+      }
+    }
+
     if(jetLabel == "AK4CHS" ) {
       if(jetER_smearer.get()) jetER_smearer->process(event);  
     }
@@ -590,6 +818,7 @@ using namespace uhh2;
     event.set(tt_inst_lumi,inst_lumi);
     event.set(tt_integrated_lumi_in_bin,fill_event_integrated_lumi);
     event.set(tt_lumibin,event_in_lumibin);
+    event.set(tt_integrated_lumi,int_lumi_event);
 
     sel.SetEvent(event);
     //good primary vertex

@@ -4,7 +4,7 @@
 <!ENTITY PROOFdir "/nfs/dust/cms/user/reimersa/.proof2">      
 <!ENTITY NEVT "-1">
 <!ENTITY CACHEABLE "False">
-<!ENTITY OUTdir   "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_v2/Residuals/AK4Puppi_test">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_v2/ClosureTest/Spring16_v8/AK4Puppi">
 
 
 
@@ -29,8 +29,8 @@
 
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="2" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_AK4Puppi_v2_MC"/>
+<ConfigParse NEventsBreak="0" FileSplit="8" AutoResubmit="5"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_AK4Puppi_v2"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -93,13 +93,13 @@
        <OutputTree Name="AnalysisTree"/>
   </InputData>
 -->
-<!--
+
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunG_AK4Puppi" Cacheable="&CACHEABLE;">
        &DATA_RunG_AK4Puppi;
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
--->
+
 
 
 
@@ -166,6 +166,8 @@
       <Item Name="trigger300_HFJEC" Value="HLT_DiPFJetAve300_HFJEC_v*"/>
 
 
+	<!-- Closure test? -->
+	<Item Name="ClosureTest" Value="true"/>
 	<!-- Systematic uncertainties -->
 	<Item Name="jersmear_direction" Value="nominal"/>
 
