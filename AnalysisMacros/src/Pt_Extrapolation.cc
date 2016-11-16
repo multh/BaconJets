@@ -269,6 +269,9 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
 	  f1[j]->SetParameter(1,-0.00031);
 	}
       }
+      if(CorrectionObject::_closuretest){
+	f1[j]->SetParameters(0.000385,0.915);
+      }
     }
     if(j==13){ //to help the fit converge
       f1[j]->SetParameter(0,1.2);
@@ -276,7 +279,7 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       //f1[j]->SetParameter(0,0.87);      //CLOSURETEST
       //f1[j]->SetParameter(1,-0.00069);
     }
-
+    
 
     //Do the fit!
     TFitResultPtr fitloglin =  graph1_mpf[j]->Fit(plotname[j]+"f1","SRM");
@@ -381,6 +384,9 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     else{
       asd[j]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_Pt_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
+    delete tex2;
+    delete tex;
+    delete leg1;
   }
   fclose(fp);
   fclose(fp2);
@@ -403,35 +409,46 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     bool fit_fullrange = false;
     //VERY fragile fit, carefully set initial values
     if(CorrectionObject::_generator == "pythia"){
+
       if(CorrectionObject::_collection == "AK4Puppi"){ 
 	kfsr_fit_mpf->SetParameters(1,4.,100.);
-	//if(CorrectionObject::_runnr == "BCD") kfsr_fit_mpf->SetParameters(1.001,-0.0001,0.);
-	//if(CorrectionObject::_runnr == "F") kfsr_fit_mpf->SetParameters(1,2,100.);
-	//if(CorrectionObject::_runnr == "G") kfsr_fit_mpf->SetParameters(1,4,50.);
 	if(CorrectionObject::_runnr == "E"){
 	  kfsr_fit_mpf->SetParameters(1,-50,200);
 	  fit_fullrange = true;
 	}
       }
+      
       else if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCD"){
-	  kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001);    
+	  if(CorrectionObject::_split_JEC) kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001);    
+	  else kfsr_fit_mpf->SetParameters(1.,-1,100);    
 	  fit_fullrange = true;
 	}
-	else if(CorrectionObject::_runnr == "E") kfsr_fit_mpf->SetParameters(1.,-100,300); //CLOSURETEST
+	else if(CorrectionObject::_runnr == "E"){
+	  if(CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1.,-100,300); //CLOSURETEST
+	  else kfsr_fit_mpf->SetParameters(1.,-100,700); //residuals
+	}
 	else if(CorrectionObject::_runnr == "F") {
 	  kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001); 
-	  fit_fullrange = true;
 	} //CLOSURETEST
       }
-      else if(CorrectionObject::_collection == "AK8CHS" && CorrectionObject::_runnr == "BCD"){
+
+      else if(CorrectionObject::_collection == "AK8CHS"){
+	if(CorrectionObject::_runnr == "BCD"){
 	kfsr_fit_mpf->SetParameters(1.1,-30,300);
 	fit_fullrange = true;
       }
-      else if(CorrectionObject::_collection == "AK8Puppi" && CorrectionObject::_runnr == "G"){
-	kfsr_fit_mpf->SetParameters(1,-30,300);
-	fit_fullrange = true;
+     else kfsr_fit_mpf->SetParameters(1.001,0.,0.);
+    }
+      
+      else if(CorrectionObject::_collection == "AK8Puppi"){
+	if(CorrectionObject::_runnr == "G"){
+	  kfsr_fit_mpf->SetParameters(1,-30,300);
+	  fit_fullrange = true;
+	}
+	else kfsr_fit_mpf->SetParameters(1.001,0.,0.);
       }
+
       else kfsr_fit_mpf->SetParameters(1.001,0.,0.);
     }
     
@@ -448,7 +465,6 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
 	}
 	if(CorrectionObject::_runnr == "F"){
 	  kfsr_fit_mpf->SetParameters(1.,-50,200); 
-	    
 	}
       }
       else if(CorrectionObject::_collection == "AK8CHS"){
@@ -624,7 +640,19 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       }
       outputfile2->Write();
       outputfile2->Close();
+
+      //delete stuff
+      delete outputfile2;
+      delete outputfile;
     }
+
+    //delete stuff
+    delete Residual_logpt_MPF;
+    delete Residual_const_MPF;
+    delete ptave_const_MPF;
+    delete ptave_logpt_MPF;
+    delete kfsr_fit_mpf;
+    delete kfsr_mpf;
   } //if(mpf_method) ends here
 
 
@@ -864,9 +892,50 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       }             
       outputfile2->Write();
       outputfile2->Close();
+
+      //delete stuff
+      delete outputfile2;
+      delete outputfile;
+    }
+
+
+
+    //delete stuff
+    delete ptave_logpt_DiJet;
+    delete ptave_const_DiJet;
+    delete Residual_const_DiJet;
+    delete Residual_logpt_DiJet;
+    delete kfsr_fit_dijet;
+    delete kfsr_dijet;
+  } //end of (if(mpfMethod...else))
+
+
+
+
+//delete everything
+  delete c_kfsr_fit;
+
+  for (int j=0; j<n_eta-1; j++) {
+    delete asd[j];
+    delete f1[j];
+    delete f2[j];
+  }
+
+  delete line;
+
+  for(int j=0; j<n_eta-1; j++){
+    delete graph1_mpf[j];
+  }
+
+  for(int j=0; j<n_eta-1; j++){
+    for(int k=0; k<n_pt-1; k++){
+      delete hdata_rel_r[k][j];
+      delete hdata_mpf_r[k][j];
+      delete hmc_rel_r[k][j];
+      delete hmc_mpf_r[k][j];
     }
   }
 
-
+  delete m_gStyle;
 
 }

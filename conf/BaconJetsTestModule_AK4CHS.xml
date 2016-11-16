@@ -4,7 +4,8 @@
 <!ENTITY PROOFdir "/nfs/dust/cms/user/reimersa/.proof2">      
 <!ENTITY NEVT "-1">
 <!ENTITY CACHEABLE "False">
-<!ENTITY OUTdir   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/GlobalJEC/AK4CHS">
+<!ENTITY OUTdir   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/SplitJEC/AK4CHS">
+<!--<!ENTITY OUTdir   "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_v2/ClosureTest/Spring16_v8p2/AK4CHS_L1RC">-->
 
 
 
@@ -25,7 +26,8 @@
 <!ENTITY DATA_RunD_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunD.xml">
 <!ENTITY DATA_RunE_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunE.xml">
 <!ENTITY DATA_RunF_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunF.xml">
-<!ENTITY DATA_RunG_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunG.xml">
+<!--<!ENTITY DATA_RunG_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunG.xml">-->
+<!ENTITY DATA_RunG_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_RunG.xml">
 
 
 
@@ -33,8 +35,8 @@
 
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="40" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_ReReco_AK4CHS_global"/>
+<ConfigParse NEventsBreak="0" FileSplit="15" AutoResubmit="5"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_PromptReco_AK4CHS"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -48,7 +50,7 @@
 
 
 
-
+<!--
      <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt100to200_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
           &QCDHt100to200_madgraph_AK4CHS;
           <InputTree Name="AnalysisTree"/>
@@ -104,27 +106,29 @@
 
 
 
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
      <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_herwigpp_AK4CHS" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_herwigpp_AK4CHS;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
+
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+-->
+
+
+
  
-	
+<!--	
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunB_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunB_AK4CHS;
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData> 
-
 
 
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunC_AK4CHS" Cacheable="&CACHEABLE;">
@@ -147,20 +151,29 @@
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData> 
+-->
 
-  <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunF_AK4CHS" Cacheable="&CACHEABLE;">
+  <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunFearly_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunF_AK4CHS;
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
 
 
+  <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunFlate_AK4CHS" Cacheable="&CACHEABLE;">
+       &DATA_RunF_AK4CHS;
+       <InputTree Name="AnalysisTree"/>
+       <OutputTree Name="AnalysisTree"/>
+  </InputData>
+
+
+<!--
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunG_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunG_AK4CHS;
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
-
+-->
 
 
 
@@ -228,7 +241,7 @@
 
 	<!-- Closure test? -->
 	<Item Name="ClosureTest" Value="false"/>
-	<Item Name="Split_JEC" Value="false"/>
+	<Item Name="Split_JEC" Value="true"/>
 	<!-- Systematic uncertainties -->
 	<Item Name="jersmear_direction" Value="nominal"/>
 

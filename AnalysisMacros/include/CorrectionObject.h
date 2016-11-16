@@ -18,7 +18,7 @@ using namespace std;
 
     // Constructors, destructor
     //CorrectionObject() : _runnr(""), _collection(""), _generator(""), _jettag(""), _MCFile(NULL), _DATAFile(NULL), _closuretest(false) {}
-    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest = false);
+    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & split_JEC = true, const bool & closuretest = false);
     CorrectionObject(const CorrectionObject &) = default;
     CorrectionObject & operator = (const CorrectionObject &) = default;
     ~CorrectionObject() = default;
@@ -67,7 +67,9 @@ using namespace std;
     TString _outpath;
     TFile*  _MCFile;
     TFile*  _DATAFile;
+    bool    _split_JEC;
     bool    _closuretest;
+ 
    
 
   }; // end of class CorrectionObject

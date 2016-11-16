@@ -359,6 +359,12 @@ void CorrectionObject::kFSR(){
      tex2->DrawLatex(0.64,0.35,chi2_loglin);
      cout << "Printing kFSR plots to " << CorrectionObject::_outpath+"plots/kFSR_Pt_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf" << endl;
      a[j]->Print(CorrectionObject::_outpath+"plots/kFSR_Pt_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+
+
+     //delete stuff
+
+     delete tex2;
+     delete tex;
    }
    
    cout << endl << endl << "finished all fits for rel" << endl  << endl;
@@ -431,6 +437,10 @@ void CorrectionObject::kFSR(){
      //save the plots
      cout << "Saving the MPF plots to " << CorrectionObject::_outpath + "plots/kFSR_MPF_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf" << endl;
      b[j]->Print(CorrectionObject::_outpath + "plots/kFSR_MPF_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+
+     //delete stuff
+     delete tex2;
+     delete tex;
    }
    fclose(fp_mpf_r);
 
@@ -443,5 +453,57 @@ void CorrectionObject::kFSR(){
    outputfile_mpf_r->Write();
    outputfile_mpf_r->Close();
 
-     
+
+
+
+   cout << "+++++++++++++++++ Finished kFSR() +++++++++++++++++++" << endl;
+
+   //delete everything
+   
+
+
+
+
+   for (int j=0; j<n_eta-1; j++){ //n_eta-1
+     delete pol1[j];
+   }
+
+   delete outputfile_mpf_r;
+   delete outputfile_rel_r;
+   
+   
+
+
+   delete plotkfsr;
+   delete kFSR_DiJet;
+   delete kFSR_MPF;
+   delete line;
+   
+
+   for(int j=0; j<n_eta-1; j++){
+     for(int k=0; k<n_pt-1; k++){
+       delete graph_rel_r[k][j];
+       delete graph_mpf_r[k][j];
+     }
+   }
+   for(int j=0; j<n_eta-1; j++){
+     delete pTgraph_rel_r[j];
+     delete pTgraph_mpf_r[j];
+   }
+   
+
+
+   delete leg1;
+   for(int i=0; i<n_alpha; i++){
+     for(int j=0; j<n_eta-1; j++){
+       for(int k=0; k<n_pt-1; k++){
+	 delete hdata_rel_r[k][j][i];
+	 delete hdata_mpf_r[k][j][i];
+	 delete hmc_rel_r[k][j][i];
+	 delete hmc_mpf_r[k][j][i];
+       }
+     }
+   }
+   delete  m_gStyle;    
+   cout << "++++++++++++ Deleted everything in kFSR(), exiting ++++++++++++++" << endl;
 }

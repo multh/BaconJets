@@ -351,9 +351,14 @@ void CorrectionObject::ControlPlots(){
 
 
 
+  //delete everything
 
-
-
-
-
+  for(int i=0; i<n_pt; i++) delete linePt[i];
+  for(int i=0; i<2*n_eta; i++) delete lineEta[i];
+  delete g;
+  delete f;
+  delete leg2;
+  delete b;
+  delete leg1;
+  delete a;
 }

@@ -4,8 +4,8 @@
 #include "../include/CorrectionObject.h"
 
 
-CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest) :
-    _runnr(runnr), _collection(collection), _generator(generator), _closuretest(closuretest)
+CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & split_JEC, const bool & closuretest) :
+  _runnr(runnr), _collection(collection), _generator(generator), _split_JEC(split_JEC), _closuretest(closuretest)
     {
       TString s_tmp = _collection;
       s_tmp.ReplaceAll("CHS", "PFchs");
@@ -14,14 +14,22 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
 
       TString input_path;
       if(!_closuretest){  
-	input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/SplitJEC/" + _collection + "/";
-	_outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/SplitJEC/" + _collection + "/Run" + _runnr + "/";
+	if(split_JEC){
+	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/SplitJEC/" + _collection + "/";
+	  _outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/SplitJEC/" + _collection + "/Run" + _runnr + "/";
+	}
+	else{
+	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/GlobalJEC/" + _collection + "/";
+	  _outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/GlobalJEC/" + _collection + "/Run" + _runnr + "/";
+	}
       }
       else{
 	//input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Spring16_v8p2/" + _collection + "/";
 	//_outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Spring16_v8p2/" + _collection + "/Run" + _runnr + "/";
-	input_path = "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/Spring16_v8p2_ClosureTest/" + _collection + "/";
-	_outpath = "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/Spring16_v8p2_ClosureTest/" + _collection + "/Run" + _runnr + "/test";
+	//input_path = "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/Spring16_v8p2_ClosureTest/" + _collection + "/";
+	//_outpath = "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_standalone/Spring16_v8p2_ClosureTest/" + _collection + "/Run" + _runnr + "/test";
+	input_path = "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_v2/ClosureTest/Spring16_v8p2/" + _collection + "_L1RC/";
+	_outpath = "/nfs/dust/cms/user/reimersa/JEC/JEC_80X_v2/ClosureTest/Spring16_v8p2/" + _collection + "_L1RC/Run" + _runnr + "/";
       }
 
       if(_generator == "pythia"){

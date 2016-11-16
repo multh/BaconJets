@@ -116,6 +116,7 @@ using namespace uhh2;
     bool debug;
     bool isMC, split_JEC, ClosureTest;
     string jetLabel;
+    TString dataset_version;
     JetId Jet_PFID;
     int n_evt;
     
@@ -218,6 +219,7 @@ using namespace uhh2;
 
     //new
     jetLabel = ctx.get("JetLabel");
+    dataset_version = ctx.get("dataset_version");
     split_JEC = (ctx.get("Split_JEC") == "true");
     ClosureTest = (ctx.get("ClosureTest") == "true");
     std::vector<std::string> JEC_corr_noRes, JEC_corr_noRes_BCD, JEC_corr_noRes_E, JEC_corr_noRes_Fearly, JEC_corr_noRes_FlateGH; 
@@ -226,6 +228,7 @@ using namespace uhh2;
       //for MC
       if(jetLabel == "AK4CHS"){
 	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_MC; //noRes only for DATA ;)
+	//JEC_corr       = JERFiles::Spring16_25ns_V8_G_L1RC23_AK4PFchs_MC;
 	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_MC; 
       }
       if(jetLabel == "AK8CHS"){
@@ -256,6 +259,7 @@ using namespace uhh2;
 	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L123_AK4PFchs_DATA;
 	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_AK4PFchs_DATA;
 	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_DATA;
+	//JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L1RC23_AK4PFchs_DATA;
       }
       if(jetLabel == "AK8CHS"){
 	//residual
@@ -507,6 +511,16 @@ using namespace uhh2;
 
   bool TestModule::process(Event & event) {
     n_evt++;
+
+    if(!isMC){ //split up RunF into Fearly and Flate (the latter has to be hadd'ed to RunG manually)
+      if(dataset_version.Contains("Fearly")){
+	if(event.run >= s_runnr_Fearly) return false;
+      }
+      else if(dataset_version.Contains("Flate")){
+	if(event.run < s_runnr_Fearly) return false;
+      }
+    }
+
     h_runnr_input->fill(event);
 
     /* CMS-certified luminosity sections */

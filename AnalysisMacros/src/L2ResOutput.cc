@@ -86,11 +86,6 @@ void CorrectionObject::L2ResOutput(){
   h->GetYaxis()->SetTitleSize(0.05);
   lumi_13TeV = CorrectionObject::_lumitag;
   bool kSquare = true;
-
-  TGraphAsymmErrors* gr_pt_depend_const_mpf = new TGraphAsymmErrors(pt_depend_const_mpf);
-  TGraphAsymmErrors* gr_pt_depend_logpt_mpf = new TGraphAsymmErrors(pt_depend_logpt_mpf);
-  TGraphAsymmErrors* gr_pt_depend_const_dijet = new TGraphAsymmErrors(pt_depend_const_dijet);
-  TGraphAsymmErrors* gr_pt_depend_logpt_dijet = new TGraphAsymmErrors(pt_depend_logpt_dijet);
   
 
   TLatex *tex = new TLatex();
@@ -176,18 +171,19 @@ void CorrectionObject::L2ResOutput(){
   TString var="";
   TH1D* res_logpt_mpf_kfsrfit_var[4];
   TH1D* res_logpt_dijet_kfsrfit_var[4];
+  TFile* f_Res_mpf_var;
+  TFile* f_Res_dijet_var;
   for(int i=0;i<4;i++){
     if(i==0) var="central"; 
     if(i==1) var="down";
     if(i==2) var="up";
     if(i==3) var="doubleup";
 
-    TFile* f_Res_mpf_var;
-    TFile* f_Res_dijet_var;
     f_Res_mpf_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
     f_Res_dijet_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ"); 
     res_logpt_mpf_kfsrfit_var[i] = (TH1D*)f_Res_mpf_var->Get("res_logpt_mpf");
     res_logpt_dijet_kfsrfit_var[i] = (TH1D*)f_Res_dijet_var->Get("res_logpt_dijet");
+
   }
 
   TCanvas *c5 = tdrCanvas("L2res_logpt_MPF_kFSRfit_ptDepend",h,4,10,kSquare);
@@ -242,17 +238,25 @@ void CorrectionObject::L2ResOutput(){
 
 
 
+  cout << " ------------------- Finished L2Res(). Going to delete everything. ------------------------ " << endl;
 
+  //delete everything
+  
+  for(int i=0; i<4; i++){
+    delete res_logpt_mpf_kfsrfit_var[i];
+    delete res_logpt_dijet_kfsrfit_var[i];
+  }
 
+  delete f_Res_dijet_var;
+  delete f_Res_mpf_var;
+  
+  delete leg1;
+  delete tex_bars;
+  delete tex;
+  
+  delete line;
 
-
-
-
-
-
-
-
-
-
+  delete f_Res_dijet;
+  delete f_Res_mpf;
 
 }
