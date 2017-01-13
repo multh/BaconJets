@@ -77,13 +77,19 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       err_ratio_al_rel_r[k][j] = 0;
       ratio_al_mpf_r[k][j] = 0;
       err_ratio_al_mpf_r[k][j] = 0;
-      TString name = name1; name+=count;
+      TString eta_name = "eta_"+eta_range2[j]+"_"+eta_range2[j+1];
+      TString pt_name = "pt_"+pt_range[k]+"_"+pt_range[k+1];
+      TString name = name1 + eta_name + "_" + pt_name; 
+      //name+=count;
       hdata_rel_r[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
-      name = name2;name+=count;
+      name = name2 + eta_name + "_" + pt_name;
+      //name+=count;
       hdata_mpf_r[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
-      name = name3; name+=count;
+      name = name3 + eta_name + "_" + pt_name; 
+      // name+=count;
       hmc_rel_r[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
-      name = name4; name+=count;
+      name = name4 + eta_name + "_" + pt_name; 
+      //name+=count;
       hmc_mpf_r[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
       count++;
     }
@@ -136,12 +142,60 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     }
   }
 
+  //save 1d-responses MPF
+  TFile* test_out_mc = new TFile(CorrectionObject::_outpath+"plots/control/MPF_1d_mc.root","RECREATE");
+  for(int j=0; j<n_eta-1; j++){
+    for(int k=0; k<n_pt-1; k++){
+      hmc_mpf_r[k][j]->Write();
+    }
+  }
+  test_out_mc->Close();
+  delete test_out_mc;
+
+
+  TFile* test_out_data = new TFile(CorrectionObject::_outpath+"plots/control/MPF_1d_data.root","RECREATE");
+  for(int j=0; j<n_eta-1; j++){
+    for(int k=0; k<n_pt-1; k++){
+      hdata_mpf_r[k][j]->Write();
+    }
+  }
+  test_out_data->Close();
+  delete test_out_data;
+  //PT balance
+  TFile* test_out_mc_rel = new TFile(CorrectionObject::_outpath+"plots/control/PT_1d_mc.root","RECREATE");
+  for(int j=0; j<n_eta-1; j++){
+    for(int k=0; k<n_pt-1; k++){
+      hmc_rel_r[k][j]->Write();
+    }
+  }
+  test_out_mc_rel->Close();
+  delete test_out_mc_rel;
+
+
+  TFile* test_out_data_rel = new TFile(CorrectionObject::_outpath+"plots/control/PT_1d_data.root","RECREATE");
+  for(int j=0; j<n_eta-1; j++){
+    for(int k=0; k<n_pt-1; k++){
+      hdata_rel_r[k][j]->Write();
+    }
+  }
+  test_out_data_rel->Close();
+  delete test_out_data_rel;
 
 
   //Fill histograms with responses
   for(int j=0; j<n_eta-1; j++){
     for(int k=0; k<n_pt-1; k++){
-      
+      TString pt_number;
+      pt_number += k;
+      TCanvas* c_test_mc = new TCanvas();
+      hmc_mpf_r[k][j]->Draw();
+      c_test_mc->SaveAs(CorrectionObject::_outpath+"plots/control/MPF_1d_mc_"+CorrectionObject::_generator_tag+"_pT_" + pt_number + "_eta_" +eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+      delete c_test_mc;
+      TCanvas* c_test_data = new TCanvas();
+      hdata_mpf_r[k][j]->Draw();
+      c_test_data->SaveAs(CorrectionObject::_outpath+"plots/control/MPF_1d_data_"+CorrectionObject::_generator_tag+"_pT_" + pt_number + "_eta_" +eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
+      delete c_test_data;
+
       pair<double,double> res_mc_rel_r,res_data_rel_r;
       pair<double,double> res_mc_mpf_r,res_data_mpf_r;
       res_mc_rel_r = GetValueAndError(hmc_rel_r[k][j]);
@@ -167,7 +221,6 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       err_ratio_al_mpf_r[k][j] = ratio_res_mpf_r.second;
     }
   }
-
 
 
   // get ratio for MC to DATA responses
@@ -234,7 +287,9 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
   TCanvas* asd[n_eta-1];
   TString plotname[n_eta-1];
   double Vcov[3][n_eta-1];//covarance matrix for log lin fit results
-
+  TH1D* h_chi2_loglin = new TH1D("h_chi2_loglin", "Chi2/ndf for each eta bin;|#eta|;#chi^{2}/ndf", n_eta-1, eta_bins);
+  TH1D* h_chi2_const =  new TH1D("h_chi2_const", "Chi2/ndf for each eta bin;|#eta|;#chi^{2}/ndf", n_eta-1, eta_bins);
+ 
   for (int j=0; j<n_eta-1; j++){
     if(mpfMethod){
       plotname[j]="mpf_ptextra_"+CorrectionObject::_generator_tag+"_eta_"+eta_range[j]+"_"+eta_range[j+1];
@@ -272,12 +327,67 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       if(CorrectionObject::_closuretest){
 	f1[j]->SetParameters(0.000385,0.915);
       }
+      if(CorrectionObject::_runnr == "BCDEFearly"){
+	if(CorrectionObject::_closuretest){
+	  f1[j]->SetParameter(0,0.933);      //CLOSURETEST
+	  f1[j]->SetParameter(1,0.00037);
+	}
+      }
     }
     if(j==13){ //to help the fit converge
       f1[j]->SetParameter(0,1.2);
       f1[j]->SetParameter(1,-0.05);
-      //f1[j]->SetParameter(0,0.87);      //CLOSURETEST
-      //f1[j]->SetParameter(1,-0.00069);
+      if(CorrectionObject::_runnr == "FlateGH"){
+	f1[j]->SetParameter(0,1.17);
+	f1[j]->SetParameter(1,-0.00067);
+	if(CorrectionObject::_closuretest){
+	  f1[j]->SetParameter(0,0.89);      //CLOSURETEST
+	  f1[j]->SetParameter(1,0.00033);
+	}
+      }
+      else if(CorrectionObject::_runnr == "BCD"){
+	if(CorrectionObject::_closuretest){
+	  f1[j]->SetParameter(0,0.945);      //CLOSURETEST
+	  f1[j]->SetParameter(1,0.00035);
+	}
+      }
+      if(CorrectionObject::_runnr == "BCDEFearly"){
+	if(CorrectionObject::_closuretest){
+	  f1[j]->SetParameter(0,0.933);      //CLOSURETEST
+	  f1[j]->SetParameter(1,0.00037);
+	}
+      }
+    }
+
+    if(j==17){
+      if(CorrectionObject::_runnr == "BCD"){
+	if(!mpfMethod){ //only for pt bal
+	  f1[j]->SetParameter(0,1.19);
+	  f1[j]->SetParameter(1,-0.0012);
+	}
+      }
+      else if(CorrectionObject::_runnr == "EFearly"){
+	if(!mpfMethod){ //only for pt bal
+	  f1[j]->SetParameter(0,1.19);
+	  f1[j]->SetParameter(1,-0.0012);
+	}
+      }
+      else if(CorrectionObject::_runnr == "FlateG"){
+	if(!mpfMethod){ //only for pt bal
+	  f1[j]->SetParameter(0,1.19);
+	  f1[j]->SetParameter(1,-0.0012);
+	}
+      }
+      else if(CorrectionObject::_runnr == "H"){
+	if(mpfMethod){ //this time only for MPF
+	  f1[j]->SetParameter(0,1.19);
+	  f1[j]->SetParameter(1,-0.0012);
+	}
+	else{
+	  f1[j]->SetParameter(0,1.32);
+	  f1[j]->SetParameter(1,-0.0015);
+	}
+      }
     }
     
 
@@ -376,6 +486,12 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     tex2->DrawLatex(0.51,0.73,chi2_loglin);
     tex2->DrawLatex(0.51,0.69,chi2_const);
 
+    double chi2ndf_loglin = f1[j]->GetChisquare() / f1[j]->GetNDF();
+    double chi2ndf_const =  f2[j]->GetChisquare() / f2[j]->GetNDF();
+    h_chi2_loglin->SetBinContent(j+1,chi2ndf_loglin); //to make sure to fill the right eta-bin...
+    h_chi2_const->SetBinContent(j+1,chi2ndf_const); //to make sure to fill the right eta-bin...
+
+ 
 
     //Store plots
     if(mpfMethod){
@@ -388,6 +504,21 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     delete tex;
     delete leg1;
   }
+
+  TCanvas* c_chi2_loglin = new TCanvas();
+  h_chi2_loglin->Draw("HIST");
+  if(mpfMethod)c_chi2_loglin->SaveAs(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_chi2ndf_loglin_"+CorrectionObject::_generator_tag+".pdf");
+  else c_chi2_loglin->SaveAs(CorrectionObject::_outpath+"plots/pTextrapolation_Pt_chi2ndf_loglin_"+CorrectionObject::_generator_tag+".pdf");
+  delete c_chi2_loglin;
+  delete h_chi2_loglin;
+
+  TCanvas* c_chi2_const = new TCanvas();
+  h_chi2_const->Draw("HIST");
+  if(mpfMethod) c_chi2_const->SaveAs(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_chi2ndf_const_"+CorrectionObject::_generator_tag+".pdf");
+  else c_chi2_const->SaveAs(CorrectionObject::_outpath+"plots/pTextrapolation_Pt_chi2ndf_const_"+CorrectionObject::_generator_tag+".pdf");
+  delete c_chi2_const;
+  delete h_chi2_const;
+
   fclose(fp);
   fclose(fp2);
 
@@ -420,17 +551,19 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       
       else if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCD"){
-	  if(CorrectionObject::_split_JEC) kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001);    
-	  else kfsr_fit_mpf->SetParameters(1.,-1,100);    
+	  kfsr_fit_mpf->SetParameters(1,-100,300);      
 	  fit_fullrange = true;
 	}
 	else if(CorrectionObject::_runnr == "E"){
 	  if(CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1.,-100,300); //CLOSURETEST
-	  else kfsr_fit_mpf->SetParameters(1.,-100,700); //residuals
+	  else kfsr_fit_mpf->SetParameters(1.,-100,300); //RES
 	}
 	else if(CorrectionObject::_runnr == "F") {
 	  kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001); 
 	} //CLOSURETEST
+	else if(CorrectionObject::_runnr == "FlateG"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	}
       }
 
       else if(CorrectionObject::_collection == "AK8CHS"){
@@ -651,10 +784,11 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     delete Residual_const_MPF;
     delete ptave_const_MPF;
     delete ptave_logpt_MPF;
+    delete hist_kfsr_fit_mpf;
+    delete hist_kfsr_mpf;
     delete kfsr_fit_mpf;
     delete kfsr_mpf;
-  } //if(mpf_method) ends here
-
+  } //if(mpfMethod) ends here
 
 
   /* ++++++++++++++++++++++++++ Calculate L2Residuals PT balance ++++++++++++++++++++++++++++++ */
@@ -663,10 +797,10 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     TFile* kfsr_dijet;
     kfsr_dijet = new TFile(CorrectionObject::_outpath+"Histo_KFSR_DiJet_"+CorrectionObject::_generator_tag+"_L1.root","READ");
     TH1D* hist_kfsr_dijet = (TH1D*)kfsr_dijet->Get("kfsr_dijet");
-
+    
     //kFSR fit function
     TF1 *kfsr_fit_dijet = new TF1("kfsr_fit_dijet","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.); //Range: 0,5. by default
-
+    
     bool fit_fullrange = false;
     //tune the initial values for the fit
     if(CorrectionObject::_generator == "herwig"){
@@ -686,12 +820,44 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       if(CorrectionObject::_collection == "AK8CHS" || CorrectionObject::_collection == "AK4CHS") kfsr_fit_dijet->SetParameters(1.,-0.03,0.4); 
       else if (CorrectionObject::_collection == "AK8Puppi") kfsr_fit_dijet->SetParameters(10.,-1000.,200.); 
     }
+
     else if(CorrectionObject::_generator == "pythia"){
       //Initial values for pythia
       if(CorrectionObject::_collection == "AK4CHS"){ 
-	if(CorrectionObject::_runnr == "E") kfsr_fit_dijet->SetParameters(2,300,300.); //CLOSURETEST
+	if(CorrectionObject::_runnr == "BCD"){ 
+	  kfsr_fit_dijet->SetParameters(1,-100,300.); //RES
+	  //kfsr_fit_dijet->SetParameters(0.5,1.,1.); //RES Full QCD
+	  //fit_fullrange = true; //RES Full QCD
+	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
+	}
+	else if(CorrectionObject::_runnr == "E") kfsr_fit_dijet->SetParameters(2,300,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "F") kfsr_fit_dijet->SetParameters(3,-800,300.); //CLOSURETEST
-	else if(CorrectionObject::_runnr == "FlateG") kfsr_fit_dijet->SetParameters(2,-400,300.); //CLOSURETEST
+	else if(CorrectionObject::_runnr == "EFearly"){
+	  if(!CorrectionObject::_closuretest){
+	    kfsr_fit_dijet->SetParameters(3,-200,100); //RES
+	    //kfsr_fit_dijet->SetParameters(0,50,50); //RES Full
+	    //fit_fullrange = true;
+	  }
+	  else if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1,-100,300.); //CLOSURETEST
+	}
+	else if(CorrectionObject::_runnr == "FlateG"){
+	  if(!CorrectionObject::_closuretest){
+	    kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
+	    //kfsr_fit_dijet->SetParameters(0,150,150); //RES Full
+	    //fit_fullrange = true;
+	  }
+	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1,-100,300.); //CLOSURETEST
+	}
+	else if(CorrectionObject::_runnr == "G") kfsr_fit_dijet->SetParameters(2,-400,300.); //CLOSURETEST
+	else if(CorrectionObject::_runnr == "H"){
+	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1,-100,300.); //CLOSURETEST
+	  
+	  else{
+	    kfsr_fit_dijet->SetParameters(1,-100,200.); //RES
+	    //kfsr_fit_dijet->SetParameters(0.5,50,50); //RES Full
+	    //fit_fullrange = true;
+	  }
+	}
 	else kfsr_fit_dijet->SetParameters(0,0,200.); 
       }
       else if(CorrectionObject::_collection == "AK8CHS") {
@@ -905,6 +1071,8 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
     delete ptave_const_DiJet;
     delete Residual_const_DiJet;
     delete Residual_logpt_DiJet;
+    delete hist_kfsr_fit_dijet;
+    delete hist_kfsr_dijet;
     delete kfsr_fit_dijet;
     delete kfsr_dijet;
   } //end of (if(mpfMethod...else))
@@ -935,7 +1103,7 @@ void CorrectionObject::Pt_Extrapolation(bool mpfMethod){
       delete hmc_mpf_r[k][j];
     }
   }
-
+  for(int i=0; i<n_eta-1; i++) delete ptave_data[i];
   delete m_gStyle;
 
 }

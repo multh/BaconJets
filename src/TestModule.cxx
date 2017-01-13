@@ -49,11 +49,9 @@ using namespace uhh2;
 
   protected:
     // correctors
-    std::unique_ptr<JetCorrector> jet_corrector, jet_corrector_BCD, jet_corrector_E, jet_corrector_Fearly, jet_corrector_FlateGH;
-    std::unique_ptr<JetCorrector> jet_corrector_noRes, jet_corrector_noRes_BCD, jet_corrector_noRes_E, jet_corrector_noRes_Fearly, jet_corrector_noRes_FlateGH;
+    std::unique_ptr<JetCorrector> jet_corrector, jet_corrector_BCD, jet_corrector_EFearly, jet_corrector_FlateG, jet_corrector_H;
     std::unique_ptr<GenericJetResolutionSmearer> jetER_smearer; 
-    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner, JLC_BCD, JLC_E, JLC_Fearly, JLC_FlateGH;
-    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner_noRes, JLC_noRes_BCD, JLC_noRes_E, JLC_noRes_Fearly, JLC_noRes_FlateGH; 
+    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner, JLC_BCD, JLC_EFearly, JLC_FlateG, JLC_H;
     std::unique_ptr<JetCleaner> jetcleaner;
     // selections
     std::unique_ptr<uhh2::Selection> lumi_sel;
@@ -114,9 +112,9 @@ using namespace uhh2;
     uhh2bacon::Selection sel;
 
     bool debug;
-    bool isMC, split_JEC, ClosureTest;
+    bool isMC, split_JEC_DATA, split_JEC_MC, ClosureTest;
     string jetLabel;
-    TString dataset_version;
+    TString dataset_version, JEC_Version;
     JetId Jet_PFID;
     int n_evt;
     
@@ -135,6 +133,11 @@ using namespace uhh2;
   TestModule::TestModule(uhh2::Context & ctx) :
     sel(ctx)
   {
+
+
+    for(auto & kv : ctx.get_all()){
+      cout << " " << kv.first << " = " << kv.second << endl;
+    }
 
     cout << "start" << endl;
     isMC = (ctx.get("dataset_type") == "MC");
@@ -196,111 +199,129 @@ using namespace uhh2;
 
     }
 
-    //Jet collection used in the analysis is defined in xml config, parameters: "JetCollection"(input),"JetLabel"(output,label)
-    /* //old
-    jetLabel = ctx.get("JetLabel");
-    std::vector<std::string> JEC_corr;
-    if(isMC){
-      if(jetLabel == "AK4CHS") JEC_corr = JERFiles::Spring16_25ns_L123_AK4PFchs_MC;
-      if(jetLabel == "AK8CHS") JEC_corr = JERFiles::Spring16_25ns_L123_AK4PFchs_MC; //CARE, AK4 corrections applied!
-      if(jetLabel == "AK4PUPPI") JEC_corr = JERFiles::Spring16_25ns_L23_AK4PFPuppi_MC;
-      if(jetLabel == "AK8PUPPI") JEC_corr = JERFiles::Spring16_25ns_L23_AK4PFPuppi_MC;//CARE, AK4 corrections applied!
-    }
-    else { 
-      if(jetLabel == "AK4CHS") JEC_corr = JERFiles::Spring16_25ns_L123_noRes_AK4PFchs_DATA;
-      if(jetLabel == "AK8CHS") JEC_corr = JERFiles::Spring16_25ns_L123_noRes_AK4PFchs_DATA; //CARE, AK4 corrections applied!
-      if(jetLabel == "AK4PUPPI") JEC_corr = JERFiles::Spring16_25ns_L23_noRes_AK4PFPuppi_DATA;
-      if(jetLabel == "AK8PUPPI") JEC_corr = JERFiles::Spring16_25ns_L23_noRes_AK4PFPuppi_DATA;//CARE, AK4 corrections applied!
-    }
-    jet_corrector.reset(new JetCorrector(ctx, JEC_corr));
-    if(isMC) jetER_smearer.reset(new GenericJetResolutionSmearer(ctx)); 
-    jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
-*/
+
 
     //new
     jetLabel = ctx.get("JetLabel");
     dataset_version = ctx.get("dataset_version");
-    split_JEC = (ctx.get("Split_JEC") == "true");
     ClosureTest = (ctx.get("ClosureTest") == "true");
-    std::vector<std::string> JEC_corr_noRes, JEC_corr_noRes_BCD, JEC_corr_noRes_E, JEC_corr_noRes_Fearly, JEC_corr_noRes_FlateGH; 
-    std::vector<std::string> JEC_corr,       JEC_corr_BCD, JEC_corr_E, JEC_corr_Fearly, JEC_corr_FlateGH, JEC_corr_MC_FlateGH;
+    JEC_Version = ctx.get("JEC_Version");
+
+    split_JEC_MC   = false; //Different MC corrections only existed for Spring16_25ns_V8* 
+    split_JEC_DATA = true;
+    
+    //std::vector<std::string> JEC_corr_noRes, JEC_corr_noRes_BCD, JEC_corr_noRes_E, JEC_corr_noRes_Fearly, JEC_corr_noRes_FlateGH; 
+    std::vector<std::string> JEC_corr,       JEC_corr_BCD,       JEC_corr_EFearly,       JEC_corr_FlateG,       JEC_corr_H,      JEC_corr_MC_FlateGH;
+    std::vector<std::string> JEC_corr_L1RC,  JEC_corr_BCD_L1RC,  JEC_corr_EFearly_L1RC,  JEC_corr_FlateG_L1RC,  JEC_corr_H_L1RC, JEC_corr_MC_FlateGH_L1RC;
     if(isMC){
       //for MC
       if(jetLabel == "AK4CHS"){
-	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_MC; //noRes only for DATA ;)
-	//JEC_corr       = JERFiles::Spring16_25ns_V8_G_L1RC23_AK4PFchs_MC;
-	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_MC; 
-      }
-      if(jetLabel == "AK8CHS"){
-	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_MC; 
-	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_MC; 
-      }
-      if(jetLabel == "AK4PUPPI"){
-	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_MC;
-	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_MC;
-      }
-      if(jetLabel == "AK8PUPPI"){
-	JEC_corr       = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_MC;
-	JEC_corr_noRes = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_MC;
+	if(!ClosureTest){
+	  //residuals
+	  if(JEC_Version == "Summer16_23Sep2016"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;           
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;           //ReReco Data + Moriond17 MC
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
+	  else if(JEC_Version == "Spring16_23Sep2016"){
+	    JEC_corr              = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;              //noRes only for DATA ;), for deriving Spring16_23Sep2016
+	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;              //ReReco Data + Spring16 MC
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
+	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
+	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for deriving residuals on AK4CHS, MC specified.");
+	}
+	//closure
+	else{
+	  if(JEC_Version == "Spring16_23Sep2016"){
+	    JEC_corr              = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;               //ReReco Data + Spring16 MC
+	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
+	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, MC specified.");
+	}
       }
     }
     else { 
-      //for calculating residual corrections DATA
+      //for DATA
       if(jetLabel == "AK4CHS"){
-	//residual
-	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK4PFchs_DATA;
-	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_noRes_AK4PFchs_DATA;
-	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L123_noRes_AK4PFchs_DATA;
-	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_noRes_AK4PFchs_DATA;
-	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK4PFchs_DATA;
-	//closure
-	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_DATA;
-	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_AK4PFchs_DATA;
-	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L123_AK4PFchs_DATA;
-	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_AK4PFchs_DATA;
-	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_AK4PFchs_DATA;
-	//JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L1RC23_AK4PFchs_DATA;
-      }
-      if(jetLabel == "AK8CHS"){
-	//residual
-	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK8PFchs_DATA; 
-	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_noRes_AK8PFchs_DATA;
- 	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L123_noRes_AK8PFchs_DATA; 
-	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_noRes_AK8PFchs_DATA; 
-	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_noRes_AK8PFchs_DATA; 
-	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_DATA; 
-	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L123_AK8PFchs_DATA;
- 	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L123_AK8PFchs_DATA; 
-	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L123_AK8PFchs_DATA; 
-	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L123_AK8PFchs_DATA; 
-      }
-      if(jetLabel == "AK4PUPPI"){
-	//residual
-	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK4PFPuppi_DATA;
-	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_noRes_AK4PFPuppi_DATA;
-	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L23_noRes_AK4PFPuppi_DATA;
-	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_noRes_AK4PFPuppi_DATA;
-	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK4PFPuppi_DATA;
-	//closure
-	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_DATA;
-	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_AK4PFPuppi_DATA;
-	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L23_AK4PFPuppi_DATA;
-	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_AK4PFPuppi_DATA;
-	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_AK4PFPuppi_DATA;
-      }
-      if(jetLabel == "AK8PUPPI"){
-	//residual
-	JEC_corr_noRes         = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK8PFPuppi_DATA;
-	JEC_corr_noRes_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_noRes_AK8PFPuppi_DATA;
-	JEC_corr_noRes_E       = JERFiles::Spring16_25ns_V8_E_L23_noRes_AK8PFPuppi_DATA;
-	JEC_corr_noRes_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_noRes_AK8PFPuppi_DATA;
-	JEC_corr_noRes_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_noRes_AK8PFPuppi_DATA;
-	//closure
-	JEC_corr         = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_DATA;
-	JEC_corr_BCD     = JERFiles::Spring16_25ns_V8_BCD_L23_AK8PFPuppi_DATA;
-	JEC_corr_E       = JERFiles::Spring16_25ns_V8_E_L23_AK8PFPuppi_DATA;
-	JEC_corr_Fearly  = JERFiles::Spring16_25ns_V8_F_L23_AK8PFPuppi_DATA;
-	JEC_corr_FlateGH = JERFiles::Spring16_25ns_V8_G_L23_AK8PFPuppi_DATA;
+	if(!ClosureTest){
+	  //residuals
+	  if(JEC_Version == "Summer16_23Sep2016"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V0_BCD_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V0_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V0_E_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V0_E_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
+	  }
+	  else if(JEC_Version == "Spring16_23Sep2016"){	
+	    JEC_corr              = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Spring16 MC
+	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V1_GH_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V1_BCD_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V1_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V1_E_L123_noRes_AK4PFchs_DATA;  
+	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V1_E_L1RC_AK4PFchs_DATA;  
+	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  
+	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V1_GH_L1RC_AK4PFchs_DATA;  
+	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  
+	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V1_GH_L1RC_AK4PFchs_DATA;
+	  }
+	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for deriving residuals on AK4CHS, DATA specified.");
+	}
+	else{
+	  if(JEC_Version == "Spring16_23Sep2016"){
+	    //closure
+	    JEC_corr              = JERFiles::Spring16_23Sep2016_V2_G_L123_AK4PFchs_DATA;              //ReReco Data + Spring16 MC
+	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V2_BCD_L123_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V2_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V2_EF_L123_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V2_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V2_G_L123_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V2_H_L123_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
+	    cout << "JEC for DATA: Spring16_23Sep2016_V2_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
+	  }
+	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, DATA specified.");
+	}
       }
     }
     
@@ -313,37 +334,89 @@ using namespace uhh2;
   
       //for closure test
       if(ClosureTest){
-	if(!isMC && split_JEC){ //these only exist for DATA
-	  jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD));
-	  jet_corrector_E.reset(new JetCorrector(ctx, JEC_corr_E));
-	  jet_corrector_Fearly.reset(new JetCorrector(ctx, JEC_corr_Fearly));
-	  jet_corrector_FlateGH.reset(new JetCorrector(ctx, JEC_corr_FlateGH));
+	//DATA
+	if(!isMC){
+	  if(split_JEC_DATA){ //these only exist for DATA 
+	  jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD, JEC_corr_BCD_L1RC));
+	  jet_corrector_EFearly.reset(new JetCorrector(ctx, JEC_corr_EFearly,  JEC_corr_EFearly_L1RC));
+	  jet_corrector_FlateG.reset(new JetCorrector(ctx, JEC_corr_FlateG,  JEC_corr_FlateG_L1RC));
+	  jet_corrector_H.reset(new JetCorrector(ctx, JEC_corr_H, JEC_corr_H_L1RC));
 	  JLC_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_BCD));
-	  JLC_E.reset(new JetLeptonCleaner(ctx, JEC_corr_E));
-	  JLC_Fearly.reset(new JetLeptonCleaner(ctx, JEC_corr_Fearly));
-	  JLC_FlateGH.reset(new JetLeptonCleaner(ctx, JEC_corr_FlateGH));
+	  JLC_EFearly.reset(new JetLeptonCleaner(ctx, JEC_corr_EFearly));
+	  JLC_FlateG.reset(new JetLeptonCleaner(ctx, JEC_corr_FlateG));
+	  JLC_H.reset(new JetLeptonCleaner(ctx, JEC_corr_H));
+	  }
+	  else{
+	    jet_corrector.reset(new JetCorrector(ctx, JEC_corr, JEC_corr_L1RC));	
+	    jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+	  }
 	}
-	jet_corrector.reset(new JetCorrector(ctx, JEC_corr));
-	jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+
+	//MC
+	 //For MC: only one version of JECs exists
+	else if(isMC){
+	  if(split_JEC_MC){
+	    jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD, JEC_corr_BCD_L1RC));
+	    jet_corrector_EFearly.reset(new JetCorrector(ctx, JEC_corr_EFearly, JEC_corr_EFearly_L1RC));
+	    jet_corrector_FlateG.reset(new JetCorrector(ctx, JEC_corr_FlateG, JEC_corr_FlateG_L1RC));
+	    jet_corrector_H.reset(new JetCorrector(ctx, JEC_corr_H, JEC_corr_H_L1RC));
+	    JLC_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_BCD));
+	    JLC_EFearly.reset(new JetLeptonCleaner(ctx, JEC_corr_EFearly));
+	    JLC_FlateG.reset(new JetLeptonCleaner(ctx, JEC_corr_FlateG));
+	    JLC_H.reset(new JetLeptonCleaner(ctx, JEC_corr_H));
+	  }
+	  else{
+	    jet_corrector.reset(new JetCorrector(ctx, JEC_corr, JEC_corr_L1RC));
+	    jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+	  }
+	}
       }
       //for residuals
       else{
-	if(!isMC && split_JEC){
-	  jet_corrector_noRes_BCD.reset(new JetCorrector(ctx, JEC_corr_noRes_BCD));
-	  jet_corrector_noRes_E.reset(new JetCorrector(ctx, JEC_corr_noRes_E));
-	  jet_corrector_noRes_Fearly.reset(new JetCorrector(ctx, JEC_corr_noRes_Fearly));
-	  jet_corrector_noRes_FlateGH.reset(new JetCorrector(ctx, JEC_corr_noRes_FlateGH));
-	  JLC_noRes_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_BCD));
-	  JLC_noRes_E.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_E));
-	  JLC_noRes_Fearly.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_Fearly));
-	  JLC_noRes_FlateGH.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes_FlateGH));
+	//DATA
+	if(!isMC){
+	  if(split_JEC_DATA){
+	    jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD, JEC_corr_BCD_L1RC));
+	    jet_corrector_EFearly.reset(new JetCorrector(ctx, JEC_corr_EFearly, JEC_corr_EFearly_L1RC));
+	    jet_corrector_FlateG.reset(new JetCorrector(ctx, JEC_corr_FlateG, JEC_corr_FlateG_L1RC));
+	    jet_corrector_H.reset(new JetCorrector(ctx, JEC_corr_H, JEC_corr_H_L1RC));
+	    JLC_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_BCD));
+	    JLC_EFearly.reset(new JetLeptonCleaner(ctx, JEC_corr_EFearly));
+	    JLC_FlateG.reset(new JetLeptonCleaner(ctx, JEC_corr_FlateG));
+	    JLC_H.reset(new JetLeptonCleaner(ctx, JEC_corr_H));
+	  }
+	  else{
+	    jet_corrector.reset(new JetCorrector(ctx, JEC_corr, JEC_corr_L1RC));
+	    jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+	  }
 	}
-	jet_corrector_noRes.reset(new JetCorrector(ctx, JEC_corr_noRes));
-	jetleptoncleaner_noRes.reset(new JetLeptonCleaner(ctx, JEC_corr_noRes));
+	//MC
+	
+	else if(isMC){
+	  if(split_JEC_MC){
+	    jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD, JEC_corr_BCD_L1RC));
+	    jet_corrector_EFearly.reset(new JetCorrector(ctx, JEC_corr_EFearly, JEC_corr_EFearly_L1RC));
+	    jet_corrector_FlateG.reset(new JetCorrector(ctx, JEC_corr_FlateG, JEC_corr_FlateG_L1RC));
+	    jet_corrector_H.reset(new JetCorrector(ctx, JEC_corr_H, JEC_corr_H_L1RC));
+	    JLC_BCD.reset(new JetLeptonCleaner(ctx, JEC_corr_BCD));
+	    JLC_EFearly.reset(new JetLeptonCleaner(ctx, JEC_corr_EFearly));
+	    JLC_FlateG.reset(new JetLeptonCleaner(ctx, JEC_corr_FlateG));
+	    JLC_H.reset(new JetLeptonCleaner(ctx, JEC_corr_H));
+	  }
+	  else{
+	    jet_corrector.reset(new JetCorrector(ctx, JEC_corr, JEC_corr_L1RC));
+	    jetleptoncleaner.reset(new JetLeptonCleaner(ctx, JEC_corr));
+	    cout << "setting up jet_corrector and JLC for MC, non-split JEC." << endl;
+	  }
+	}
       }
     
 
-    if(isMC) jetER_smearer.reset(new GenericJetResolutionSmearer(ctx)); 
+      if(isMC){
+	if(JEC_Version == "Spring16_23Sep2016") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
+	else if(JEC_Version == "Summer16_23Sep2016") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_full)); 
+	else throw runtime_error("In TestModule.cxx: When setting up JER smearer, invalid 'JEC_Version' was specified.");
+      }
 
 
     //output
@@ -511,15 +584,18 @@ using namespace uhh2;
 
   bool TestModule::process(Event & event) {
     n_evt++;
+    //cout << endl << "++++++++++ NEW EVENT +++++++++" << endl << endl;
+
 
     if(!isMC){ //split up RunF into Fearly and Flate (the latter has to be hadd'ed to RunG manually)
-      if(dataset_version.Contains("Fearly")){
+     if(dataset_version.Contains("Fearly")){
 	if(event.run >= s_runnr_Fearly) return false;
       }
       else if(dataset_version.Contains("Flate")){
 	if(event.run < s_runnr_Fearly) return false;
       }
     }
+ 
 
     h_runnr_input->fill(event);
 
@@ -569,104 +645,135 @@ using namespace uhh2;
     if(jet_n<2) return false;
     //h_2jets->fill(event);
 
-    /* //old
-    jetleptoncleaner->process(event);
-    jet_corrector->process(event);
-    */
-    //semi-new
+
+    bool apply_BCD = false;
+    bool apply_EFearly = false;
+    bool apply_FlateG = false;
+    bool apply_H = false;
+    bool apply_global = false;
+
+
+
+    if(ClosureTest){
+      //closure test
+      if(!isMC){
+	//DATA
+	if(split_JEC_DATA){ 
+	  //split JEC
+	  if(event.run <= s_runnr_BCD)         apply_BCD = true;
+	  else if(event.run < s_runnr_EFearly) apply_EFearly = true; //< is correct, not <=
+	  else if(event.run <= s_runnr_FlateG) apply_FlateG = true; 
+	  else if(event.run > s_runnr_FlateG) apply_H = true;
+	  else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+	}
+	else{
+	  //not split JEC
+	  apply_global = true;
+	}
+      }
+      else{
+	//MC
+	if(split_JEC_MC){
+	  //split JEC
+	  if(dataset_version.Contains("RunBCD"))          apply_BCD = true;
+	  else if(dataset_version.Contains("RunEFearly")) apply_EFearly = true;
+	  else if(dataset_version.Contains("RunFlateG"))  apply_FlateG = true;
+	  else if(dataset_version.Contains("RunH"))       apply_H = true;
+	  else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+	}      
+	else{
+	  //not split JEC
+	  apply_global = true;
+	}
+      }
+    }
+    else{
+      //residuals
+      if(!isMC){
+	//DATA
+	if(split_JEC_DATA){ 
+	  //split JEC
+	  if(event.run <= s_runnr_BCD)         apply_BCD = true;
+	  else if(event.run < s_runnr_EFearly) apply_EFearly = true; //< is correct, not <= 
+	  else if(event.run <= s_runnr_FlateG) apply_FlateG = true; 
+	  else if(event.run > s_runnr_FlateG)  apply_H = true;
+	  else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+	}
+	else{
+	  //not split JEC
+	  apply_global = true;
+	}
+      }
+      
+      else if(isMC){
+	//MC
+	if(split_JEC_MC){
+	  //split JEC
+	  if(dataset_version.Contains("RunBCD"))          apply_BCD = true;
+	  else if(dataset_version.Contains("RunEFearly")) apply_EFearly = true;
+	  else if(dataset_version.Contains("RunFlateG"))  apply_FlateG = true;
+	  else if(dataset_version.Contains("RunH"))       apply_H = true;
+	  else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
+	}      
+	else{
+	  //not split JEC
+	  apply_global = true;
+	}
+      }
+    }
+
     /*
-    if(ClosureTest){
-      if(jetLabel == "AK4PUPPI" && event.run < s_runnr_Fearly && !isMC) throw runtime_error("TestModule.cxx: Closure test for AK4Puppi collection only valid for runG data. Here, runnr < 278802.");
-      if(isMC){
-	JLC_MC_FlateGH->process(event);
-	jet_corrector_MC_FlateGH->process(event);
-      }
-      else{
-	//apply different corrections for events in different run intervals
-	if(event.run <= s_runnr_BCD){
-	  JLC_BCD->process(event);
-	  jet_corrector_BCD->process(event);
-	}
-	else if(event.run <= s_runnr_E){
-	  JLC_E->process(event);
-	  jet_corrector_E->process(event);
-	}
-	else if(event.run < s_runnr_Fearly){ //< is correct, not <=
-	  JLC_Fearly->process(event);
-	  jet_corrector_Fearly->process(event); 
-	}
-	else if(event.run >= s_runnr_Fearly){
-	  JLC_FlateGH->process(event);
-	  jet_corrector_FlateGH->process(event);
-	}
-	else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
-      }
+    cout << "apply_BCD: " << apply_BCD << endl;
+    cout << "apply_EFearly: " << apply_EFearly << endl;
+    cout << "apply_FlateG: " << apply_FlateG << endl;
+    cout << "apply_H: " << apply_H << endl;
+    cout << "apply_global: " << apply_global << endl;
+    */
+
+    if(apply_BCD+apply_EFearly+apply_FlateG+apply_H+apply_global != 1) throw runtime_error("In TestModule.cxx: Sum of apply_* when applying JECs is not == 1. Fix this.");
+
+    //apply proper JECs
+    if(apply_BCD){
+      JLC_BCD->process(event);
+      jet_corrector_BCD->process(event);
     }
-    else{
-      jetleptoncleaner_noRes->process(event);
-      jet_corrector_noRes->process(event);
+    if(apply_EFearly){
+      JLC_EFearly->process(event);
+      jet_corrector_EFearly->process(event);
     }
-*/ 
-    if(ClosureTest){
-      if(!isMC && split_JEC){ //these only exist for DATA
-	if(event.run <= s_runnr_BCD){
-	  jet_corrector_BCD->process(event);
-	  JLC_BCD->process(event);
-	}
-	else if(event.run <= s_runnr_E){
-	  jet_corrector_E->process(event);
-	  JLC_E->process(event);
-	}
-	else if(event.run < s_runnr_Fearly){ //< is correct, not <=
-	  jet_corrector_Fearly->process(event);
-	  JLC_Fearly->process(event);
-	}
-	else if(event.run >= s_runnr_Fearly){
-	  jet_corrector_FlateGH->process(event);
-	  JLC_FlateGH->process(event);
-	}
-	else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
-      }
-      else{
-	jet_corrector->process(event);
-	jetleptoncleaner->process(event);
-      }
+   if(apply_FlateG){
+      JLC_FlateG->process(event);
+      jet_corrector_FlateG->process(event);
     }
-    else{
-      if(!isMC && split_JEC){ //these only exist for DATA
-	if(event.run <= s_runnr_BCD){
-	  jet_corrector_noRes_BCD->process(event);
-	  JLC_noRes_BCD->process(event);
-	}
-	else if(event.run <= s_runnr_E){
-	  jet_corrector_noRes_E->process(event);
-	  JLC_noRes_E->process(event);
-	}
-	else if(event.run < s_runnr_Fearly){ //< is correct, not <=
-	  jet_corrector_noRes_Fearly->process(event);
-	  JLC_noRes_Fearly->process(event);
-	}
-	else if(event.run >= s_runnr_Fearly){
-	  jet_corrector_noRes_FlateGH->process(event);
-	  JLC_noRes_FlateGH->process(event);
-	}
-	else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
-      }
-      else{
-	jet_corrector_noRes->process(event);
-	jetleptoncleaner_noRes->process(event);
-      }
+    if(apply_H){
+      JLC_H->process(event);
+      jet_corrector_H->process(event);
+    }
+    if(apply_global){
+      jetleptoncleaner->process(event);
+      jet_corrector->process(event);
     }
 
-    if(jetLabel == "AK4CHS" ) {
-      if(jetER_smearer.get()) jetER_smearer->process(event);  
-    }
-    //h_corr->fill(event);
+    //Apply JER to all jet collections
+    if(jetER_smearer.get()) jetER_smearer->process(event);  
 
-    // if(jet_n>2) {
-    //   if (event.jets->at(2).pt()<15) return false;
-    //   //h_thirdPt15->fill(event);
-    // }
+    //correct MET only AFTER smearing the jets
+    if(apply_BCD){
+      jet_corrector_BCD->correct_met(event);
+    }
+    if(apply_EFearly){
+      jet_corrector_EFearly->correct_met(event);
+    }
+   if(apply_FlateG){
+      jet_corrector_FlateG->correct_met(event);
+    }
+    if(apply_H){
+      jet_corrector_H->correct_met(event);
+    }
+    if(apply_global){
+      jet_corrector->correct_met(event);
+    }
+    
 
 
 
@@ -788,6 +895,12 @@ using namespace uhh2;
     for(int i=2;i<jet_n;i++){
       jets_pt += ((Jet*)&event.jets->at(i))->pt();
     }
+
+    //separate flat and fwd samples at |eta| = 2.853
+    if(dataset_version.Contains("Fwd") && abs(probejet_eta) < 2.853) return false;
+    if(dataset_version.Contains("Flat") && abs(probejet_eta) >= 2.853) return false;
+	
+
 
     int flavor = 0;
 

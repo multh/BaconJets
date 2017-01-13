@@ -7,6 +7,7 @@
 #include <TGraphErrors.h>
 #include <TTree.h>
 #include <TFile.h>
+#include <TF1.h>
 
 std::pair<double,double> Rmc_to_Rdata(std::pair<double,double> mc, std::pair<double,double> data);
 

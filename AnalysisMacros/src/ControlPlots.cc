@@ -16,7 +16,7 @@ void CorrectionObject::ControlPlots(){
   TString dirName = "Selection";
   TString DATAtitle = "DATA";
   TString MCtitle = "MC";
-  TString SavePlots = CorrectionObject::_outpath + "plots/ControlPlots_" + dirName + "_" + CorrectionObject::_generator_tag;
+  TString SavePlots = CorrectionObject::_outpath + "plots/control/ControlPlots_" + dirName + "_" + CorrectionObject::_generator_tag;
 
 
   /* ++++++++++++++++ Collect all histograms ++++++++++++++++ */
@@ -341,8 +341,13 @@ void CorrectionObject::ControlPlots(){
   g->Print(SavePlots + "_Pt_aveVsEtaProbe.pdf");
 
 
-  //CorrectionObject::_DATAFile->Close();
-  //CorrectionObject::_MCFile->Close();
+
+
+
+
+
+
+
 
 
 

@@ -324,6 +324,9 @@ void CorrectionObject::kFSR(){
      pol1[j] = new TF1("pol1","pol1",0.09,0.36);
 
      pol1[j]->SetParameters(0,0);
+     if(j == 13){
+       pol1[j]->SetParameters(0.985,0.05);
+     }
      pTgraph_rel_r[j]->Fit(pol1[j],"R");
      line->SetLineStyle(2);
      line->Draw("SAME");

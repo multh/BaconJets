@@ -33,6 +33,7 @@ using namespace std;
     inline TString MCPath(){return _MCpath;}
     inline TString DATAPath(){return _DATApath;}
     inline TString OutPath(){return _outpath;}
+    inline TString lumitag(){return _lumitag;}
     inline const TString runnr() const{return _runnr;}
     inline const TString collection() const{return _collection;}
     inline const TString generator() const{return _generator;}
@@ -41,6 +42,7 @@ using namespace std;
     inline const TString MCPath() const {return _MCpath;}
     inline const TString DATAPath() const {return _DATApath;}
     inline const TString OutPath() const {return _outpath;}
+    inline const TString lumitag() const {return _lumitag;}
     inline void set_runnr(TString x){_runnr = x;}
     inline void set_collection(TString x){_collection = x;}
     inline void set_generator(TString x){_generator = x;}
@@ -49,12 +51,16 @@ using namespace std;
     inline void set_MCPath(TString x){_MCpath = x; _MCFile->Close(); _MCFile = new TFile(_MCpath,"READ");}
     inline void set_DATAPath(TString x){_DATApath = x; _DATAFile->Close(); _DATAFile = new TFile(_DATApath,"READ");}
     inline void set_outpath(TString x){_outpath = x;}
+    inline void set_lumitag(TString x){_lumitag = x;}
 
     //Main functions for calculating L2 residuals, defined in CorrectionObject.cc
     void ControlPlots();
     void kFSR();
     void Pt_Extrapolation(bool mpfMethod = true);
     void L2ResOutput();
+    void L2ResAllRuns();
+    void InputForGlobalFit();
+    void FinalControlPlots();
     void FullCycle();
 
   private:

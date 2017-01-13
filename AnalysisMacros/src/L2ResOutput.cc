@@ -3,7 +3,7 @@
 #include <TH1.h>
 #include <TLatex.h>
 #include <TLegend.h>
-#include "tdrstyle_mod15.C"
+#include "../include/tdrstyle_mod15.h"
 #include <TFile.h>
 #include <iostream>
 #include <assert.h>
@@ -16,6 +16,7 @@ using namespace std;
 
 void CorrectionObject::L2ResOutput(){
   cout << "--------------- Starting L2ResOutput() ---------------" << endl << endl;
+
 
   TFile* f_Res_mpf = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
   TFile* f_Res_dijet = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
@@ -46,7 +47,9 @@ void CorrectionObject::L2ResOutput(){
   TH1D* res_const_dijet_kfsrfit = (TH1D*)f_Res_dijet->Get("res_const_dijet");
   TH1D* res_logpt_mpf_kfsrfit = (TH1D*)f_Res_mpf->Get("res_logpt_mpf");
   TH1D* res_logpt_dijet_kfsrfit = (TH1D*)f_Res_dijet->Get("res_logpt_dijet");
-
+  
+  //default Canvas
+  TCanvas* c1 = new TCanvas();
 
   // create horizontal line for plotting ("ideal value")
   TLine *line = new TLine(0.,1,5.191,1);
@@ -76,18 +79,18 @@ void CorrectionObject::L2ResOutput(){
   kfsr_mpf->SetLineColor(kRed+1);
   kfsr_dijet->SetLineWidth(2);
   kfsr_dijet->SetLineColor(kBlue+1);
-
-
+  
+  bool kSquare = true;
   // Draw results
   TH1D *h = new TH1D("h",";|#eta|;Relative correction",41,0,5.191);
   h->SetMaximum(1.2);
   h->SetMinimum(0.8);
-  h->GetXaxis()->SetTitleSize(0.05);
-  h->GetYaxis()->SetTitleSize(0.05);
-  lumi_13TeV = CorrectionObject::_lumitag;
-  bool kSquare = true;
+  //h->GetXaxis()->SetTitleSize(0.05);
+  //h->GetYaxis()->SetTitleSize(0.05);
+  //lumi_13TeV = CorrectionObject::_lumitag;
+  tdrCanvas(c1,"c1",h,4,10,kSquare,CorrectionObject::_lumitag);
   
-
+  
   TLatex *tex = new TLatex();
   tex->SetNDC();
   tex->SetTextSize(0.045);  
@@ -97,14 +100,15 @@ void CorrectionObject::L2ResOutput(){
   tex_bars->SetNDC();
   tex_bars->SetTextSize(0.039);
 
-  TLegend *leg1 = tdrLeg(0.17,0.19,0.40,0.40);
-  leg1 -> AddEntry(pt_depend_const_mpf, "MPF Flat","L");
-  leg1 -> AddEntry(pt_depend_const_dijet, "Pt Flat","L");
-  leg1 -> AddEntry(pt_depend_logpt_mpf, "MPF Loglin","L");
-  leg1 -> AddEntry(pt_depend_logpt_dijet, "Pt Loglin","L"); 
-
-  TCanvas *c2 = tdrCanvas("c2",h,4,10,kSquare);
-
+  TLegend leg1 = tdrLeg(0.17,0.19,0.40,0.40);
+  leg1.AddEntry(pt_depend_const_mpf, "MPF Flat","L");
+  leg1.AddEntry(pt_depend_const_dijet, "Pt Flat","L");
+  leg1.AddEntry(pt_depend_logpt_mpf, "MPF Loglin","L");
+  leg1.AddEntry(pt_depend_logpt_dijet, "Pt Loglin","L"); 
+  
+  TCanvas* c2 = new TCanvas();
+  tdrCanvas(c2,"c2",h,4,10,kSquare,CorrectionObject::_lumitag);
+  
   TString alVal;
   alVal.Form("%0.2f\n",alpha_cut);
   TString altitle = "{#alpha<"+alVal+"}";
@@ -123,12 +127,13 @@ void CorrectionObject::L2ResOutput(){
   pt_depend_logpt_dijet->Draw("E1 SAME");
 
   line->Draw("SAME");
-  leg1->Draw();
+  leg1.Draw();
   tex->DrawLatex(0.45,0.87,JetDescrib);
   c2->SaveAs(CorrectionObject::_outpath+"plots/Ratio_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
 
-
-  TCanvas *c3 = tdrCanvas("c3",h,4,10,kSquare);
+  
+  TCanvas *c3 = new TCanvas();
+  tdrCanvas(c3,"c3",h,4,10,kSquare,CorrectionObject::_lumitag);
   h->GetYaxis()->SetTitle("k_{FSR}");
   h->GetYaxis()->SetRangeUser(0.81,1.15);
   kfsr_dijet_fit->SetMarkerStyle(1);
@@ -141,15 +146,16 @@ void CorrectionObject::L2ResOutput(){
   kfsr_dijet->Draw("E1 SAME");
   line->Draw("SAME");
 
-  TLegend *leg2 = tdrLeg(0.17,0.19,0.40,0.30);
-  leg2 -> AddEntry(kfsr_mpf, "MPF","L");
-  leg2 -> AddEntry(kfsr_dijet, "Pt","L");
-  leg2->Draw();
+  TLegend leg2 = tdrLeg(0.17,0.19,0.40,0.30);
+  leg2 . AddEntry(kfsr_mpf, "MPF","L");
+  leg2 . AddEntry(kfsr_dijet, "Pt","L");
+  leg2.Draw();
   tex->DrawLatex(0.45,0.87,JetDescrib);
   c3->SaveAs(CorrectionObject::_outpath+"plots/kFSR_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
 
 
-  TCanvas *c4 = tdrCanvas("L2res_kFSRfit",h,4,10,kSquare);
+  TCanvas *c4 = new TCanvas();
+  tdrCanvas(c4,"L2res_kFSRfit",h,4,10,kSquare,CorrectionObject::_lumitag);
   h->GetYaxis()->SetTitle("Relative correction");
   h->GetYaxis()->SetRangeUser(0.8,1.2);
   res_const_mpf_kfsrfit->SetMarkerStyle(1);
@@ -160,7 +166,7 @@ void CorrectionObject::L2ResOutput(){
   res_const_dijet_kfsrfit->Draw("E1 SAME");
   res_logpt_mpf_kfsrfit->Draw("E1 SAME");
   res_logpt_dijet_kfsrfit->Draw("E1 SAME");
-  leg1->Draw();
+  leg1.Draw();
   tex->DrawLatex(0.45,0.87,JetDescrib);
   line->Draw();
   c4->SaveAs(CorrectionObject::_outpath+"plots/L2Res_kFSRfit_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
@@ -186,7 +192,8 @@ void CorrectionObject::L2ResOutput(){
 
   }
 
-  TCanvas *c5 = tdrCanvas("L2res_logpt_MPF_kFSRfit_ptDepend",h,4,10,kSquare);
+  TCanvas *c5 = new TCanvas();
+  tdrCanvas(c5,"L2res_logpt_MPF_kFSRfit_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
   res_logpt_mpf_kfsrfit->SetLineColor(kBlack);
   res_logpt_mpf_kfsrfit->Draw("E1 SAME");
   for(int i=0;i<4;i++){
@@ -196,18 +203,19 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_mpf_kfsrfit_var[i]->Draw("E1 SAME"); 
   }
 
-  leg2 = tdrLeg(0.17,0.19,0.40,0.42); 
-  leg2 -> AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
-  leg2 -> AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
-  leg2 -> AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
-  leg2 -> AddEntry(res_logpt_mpf_kfsrfit_var[3] , "480 GeV","LP");
-  leg2 -> AddEntry(res_logpt_mpf_kfsrfit, "Nominal","LP");
-  leg2->Draw();              
+  TLegend leg3 = tdrLeg(0.17,0.19,0.40,0.42); 
+  leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
+  leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
+  leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
+  leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[3] , "480 GeV","LP");
+  leg3 . AddEntry(res_logpt_mpf_kfsrfit, "Nominal","LP");
+  leg3.Draw();              
   tex->DrawLatex(0.45,0.87,JetDescrib);      
   c5->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_kFSRfit_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
 
 
-  TCanvas *c6 = tdrCanvas("L2res_logpt_DiJet_kFSRfit_ptDepend",h,4,10,kSquare);
+  TCanvas *c6 = new TCanvas();
+  tdrCanvas(c6,"L2res_logpt_DiJet_kFSRfit_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
   res_logpt_dijet_kfsrfit->SetLineColor(kBlack);
   res_logpt_dijet_kfsrfit->Draw("E1 SAME");
   for(int i=0;i<4;i++){
@@ -217,18 +225,15 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_dijet_kfsrfit_var[i]->Draw("E1 SAME");  
 
   }
-  leg2 = tdrLeg(0.17,0.19,0.40,0.42); 
-  leg2 -> AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
-  leg2 -> AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
-  leg2 -> AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
-  leg2 -> AddEntry(res_logpt_dijet_kfsrfit_var[3] , "480 GeV","LP");
-  leg2 -> AddEntry(res_logpt_dijet_kfsrfit, "Nominal","LP");
-  leg2->Draw();
+  TLegend leg4 = tdrLeg(0.17,0.19,0.40,0.42); 
+  leg4 . AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
+  leg4 . AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
+  leg4 . AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
+  leg4 . AddEntry(res_logpt_dijet_kfsrfit_var[3] , "480 GeV","LP");
+  leg4 . AddEntry(res_logpt_dijet_kfsrfit, "Nominal","LP");
+  leg4.Draw();
   tex->DrawLatex(0.45,0.87,JetDescrib);                    
   c6->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_DiJet_kFSRfit_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
-
-  f_Res_mpf->Close();
-  f_Res_dijet->Close();
 
 
 
@@ -242,6 +247,13 @@ void CorrectionObject::L2ResOutput(){
 
   //delete everything
   
+  delete c6;
+  delete c5;
+  delete c4;
+  delete c3;
+  delete c2;
+  delete c1;
+  
   for(int i=0; i<4; i++){
     delete res_logpt_mpf_kfsrfit_var[i];
     delete res_logpt_dijet_kfsrfit_var[i];
@@ -249,13 +261,28 @@ void CorrectionObject::L2ResOutput(){
 
   delete f_Res_dijet_var;
   delete f_Res_mpf_var;
-  
-  delete leg1;
+
+  //delete leg2;
+  //delete leg1;
   delete tex_bars;
   delete tex;
   
+  delete h;
   delete line;
 
+
+  delete res_logpt_dijet_kfsrfit;
+  delete res_logpt_mpf_kfsrfit;
+  delete res_const_dijet_kfsrfit;
+  delete res_const_mpf_kfsrfit;
+  delete kfsr_dijet_fit;
+  delete kfsr_dijet;
+  delete kfsr_mpf_fit;
+  delete kfsr_mpf;
+  delete pt_depend_logpt_dijet;
+  delete pt_depend_const_dijet;
+  delete pt_depend_logpt_mpf;
+  delete pt_depend_const_mpf;
   delete f_Res_dijet;
   delete f_Res_mpf;
 

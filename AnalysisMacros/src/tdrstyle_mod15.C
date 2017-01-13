@@ -1,37 +1,13 @@
-// Collect all the #includes here
-#include "TROOT.h"
-#include "TGraph.h"
-#include "TLegend.h"
+#include "../include/tdrstyle_mod15.h"
 
-#include "TStyle.h"
 
-#include "TPad.h"
-#include "TLatex.h"
-#include "TLine.h"
-#include "TBox.h"
-#include "TASImage.h"
-
-#include "TFrame.h"
-
-////////////////////////////////////
-// Useful small macros (by Mikko) //
-////////////////////////////////////
-
-#include "TCanvas.h"
-#include "TH1D.h"
-
-#include <iostream>
-#include <assert.h>
-
-const bool kSquare = true;
-const bool kRectangular = false;
 
 using namespace std;
 
 void tdrDraw(TH1* h, string opt,
-	     int marker=kFullCircle, int mcolor = kBlack,
-	     int lstyle=kSolid, int lcolor=-1,
-	     int fstyle=1001, int fcolor=kYellow+1) {
+	     int marker, int mcolor ,
+	     int lstyle, int lcolor,
+	     int fstyle, int fcolor) {
   h->SetMarkerStyle(marker);
   h->SetMarkerColor(mcolor);
   h->SetLineStyle(lstyle);
@@ -42,9 +18,9 @@ void tdrDraw(TH1* h, string opt,
 }
 
 void tdrDraw(TGraph* g, string opt,
-	     int marker=kFullCircle, int mcolor = kBlack,
-	     int lstyle=kSolid, int lcolor=-1,
-	     int fstyle=1001, int fcolor=kYellow+1) {
+	     int marker, int mcolor ,
+	     int lstyle, int lcolor,
+	     int fstyle, int fcolor) {
   g->SetMarkerStyle(marker);
   g->SetMarkerColor(mcolor);
   g->SetLineStyle(lstyle);
@@ -54,12 +30,13 @@ void tdrDraw(TGraph* g, string opt,
   g->Draw((opt+"SAME").c_str());
 }
 
-TLegend *tdrLeg(double x1, double y1, double x2, double y2) {
-  TLegend *leg = new TLegend(x1, y1, x2, y2, "", "brNDC");
-  leg->SetFillStyle(kNone);
-  leg->SetBorderSize(0);
-  leg->SetTextSize(0.045);
-  leg->Draw();
+TLegend tdrLeg(double x1, double y1, double x2, double y2) {
+  
+  TLegend leg = TLegend(x1, y1, x2, y2, "", "brNDC");
+  leg.SetFillStyle(kNone);
+  leg.SetBorderSize(0);
+  leg.SetTextSize(0.045);
+  leg.Draw();
   return leg;
 }
 
@@ -80,6 +57,7 @@ void tdrGrid(bool gridOn) {
   TStyle *tdrStyle = (TStyle*)gROOT->FindObject("tdrStyle"); assert(tdrStyle);
   tdrStyle->SetPadGridX(gridOn);
   tdrStyle->SetPadGridY(gridOn);
+  delete tdrStyle;
 }
 
 // fixOverlay: Redraws the axis
@@ -89,188 +67,149 @@ void fixOverlay() {
 }
 
 void setTDRStyle() {
-  TStyle *tdrStyle = new TStyle("tdrStyle","Style for P-TDR");
+  TStyle* tdrStyle = new TStyle("tdrStyle","Style for P-TDR");
 
 // For the canvas:
-  tdrStyle->SetCanvasBorderMode(0);
-  tdrStyle->SetCanvasColor(kWhite);
-  tdrStyle->SetCanvasDefH(600); //Height of canvas
-  tdrStyle->SetCanvasDefW(600); //Width of canvas
-  tdrStyle->SetCanvasDefX(0);   //POsition on screen
-  tdrStyle->SetCanvasDefY(0);
+  gStyle->SetCanvasBorderMode(0);
+  gStyle->SetCanvasColor(kWhite);
+  gStyle->SetCanvasDefH(600); //Height of canvas
+  gStyle->SetCanvasDefW(600); //Width of canvas
+  gStyle->SetCanvasDefX(0);   //POsition on screen
+  gStyle->SetCanvasDefY(0);
 
 // For the Pad:
-  tdrStyle->SetPadBorderMode(0);
-  // tdrStyle->SetPadBorderSize(Width_t size = 1);
-  tdrStyle->SetPadColor(kWhite);
-  tdrStyle->SetPadGridX(false);
-  tdrStyle->SetPadGridY(false);
-  tdrStyle->SetGridColor(0);
-  tdrStyle->SetGridStyle(3);
-  tdrStyle->SetGridWidth(1);
+  gStyle->SetPadBorderMode(0);
+  // gStyle->SetPadBorderSize(Width_t size = 1);
+  gStyle->SetPadColor(kWhite);
+  gStyle->SetPadGridX(false);
+  gStyle->SetPadGridY(false);
+  gStyle->SetGridColor(0);
+  gStyle->SetGridStyle(3);
+  gStyle->SetGridWidth(1);
 
 // For the frame:
-  tdrStyle->SetFrameBorderMode(0);
-  tdrStyle->SetFrameBorderSize(1);
-  tdrStyle->SetFrameFillColor(0);
-  tdrStyle->SetFrameFillStyle(0);
-  tdrStyle->SetFrameLineColor(1);
-  tdrStyle->SetFrameLineStyle(1);
-  tdrStyle->SetFrameLineWidth(1);
+  gStyle->SetFrameBorderMode(0);
+  gStyle->SetFrameBorderSize(1);
+  gStyle->SetFrameFillColor(0);
+  gStyle->SetFrameFillStyle(0);
+  gStyle->SetFrameLineColor(1);
+  gStyle->SetFrameLineStyle(1);
+  gStyle->SetFrameLineWidth(1);
   
 // For the histo:
-  // tdrStyle->SetHistFillColor(1);
-  // tdrStyle->SetHistFillStyle(0);
-  tdrStyle->SetHistLineColor(1);
-  tdrStyle->SetHistLineStyle(0);
-  tdrStyle->SetHistLineWidth(1);
-  // tdrStyle->SetLegoInnerR(Float_t rad = 0.5);
-  // tdrStyle->SetNumberContours(Int_t number = 20);
+  // gStyle->SetHistFillColor(1);
+  // gStyle->SetHistFillStyle(0);
+  gStyle->SetHistLineColor(1);
+  gStyle->SetHistLineStyle(0);
+  gStyle->SetHistLineWidth(1);
+  // gStyle->SetLegoInnerR(Float_t rad = 0.5);
+  // gStyle->SetNumberContours(Int_t number = 20);
 
-  tdrStyle->SetEndErrorSize(2);
-  // tdrStyle->SetErrorMarker(20);
-  //tdrStyle->SetErrorX(0.);
+  gStyle->SetEndErrorSize(2);
+  // gStyle->SetErrorMarker(20);
+  //gStyle->SetErrorX(0.);
   
-  tdrStyle->SetMarkerStyle(20);
+  gStyle->SetMarkerStyle(20);
   
 //For the fit/function:
-  tdrStyle->SetOptFit(1);
-  tdrStyle->SetFitFormat("5.4g");
-  tdrStyle->SetFuncColor(2);
-  tdrStyle->SetFuncStyle(1);
-  tdrStyle->SetFuncWidth(1);
+  gStyle->SetOptFit(1);
+  gStyle->SetFitFormat("5.4g");
+  gStyle->SetFuncColor(2);
+  gStyle->SetFuncStyle(1);
+  gStyle->SetFuncWidth(1);
 
 //For the date:
-  tdrStyle->SetOptDate(0);
-  // tdrStyle->SetDateX(Float_t x = 0.01);
-  // tdrStyle->SetDateY(Float_t y = 0.01);
+  gStyle->SetOptDate(0);
+  // gStyle->SetDateX(Float_t x = 0.01);
+  // gStyle->SetDateY(Float_t y = 0.01);
 
 // For the statistics box:
-  tdrStyle->SetOptFile(0);
-  tdrStyle->SetOptStat(0); // To display the mean and RMS:   SetOptStat("mr");
-  tdrStyle->SetStatColor(kWhite);
-  tdrStyle->SetStatFont(42);
-  tdrStyle->SetStatFontSize(0.025);
-  tdrStyle->SetStatTextColor(1);
-  tdrStyle->SetStatFormat("6.4g");
-  tdrStyle->SetStatBorderSize(1);
-  tdrStyle->SetStatH(0.1);
-  tdrStyle->SetStatW(0.15);
-  // tdrStyle->SetStatStyle(Style_t style = 1001);
-  // tdrStyle->SetStatX(Float_t x = 0);
-  // tdrStyle->SetStatY(Float_t y = 0);
+  gStyle->SetOptFile(0);
+  gStyle->SetOptStat(0); // To display the mean and RMS:   SetOptStat("mr");
+  gStyle->SetStatColor(kWhite);
+  gStyle->SetStatFont(42);
+  gStyle->SetStatFontSize(0.025);
+  gStyle->SetStatTextColor(1);
+  gStyle->SetStatFormat("6.4g");
+  gStyle->SetStatBorderSize(1);
+  gStyle->SetStatH(0.1);
+  gStyle->SetStatW(0.15);
+  // gStyle->SetStatStyle(Style_t style = 1001);
+  // gStyle->SetStatX(Float_t x = 0);
+  // gStyle->SetStatY(Float_t y = 0);
 
 // Margins:
-  tdrStyle->SetPadTopMargin(0.05);
-  tdrStyle->SetPadBottomMargin(0.13);
-  tdrStyle->SetPadLeftMargin(0.16);
-  tdrStyle->SetPadRightMargin(0.02);
+  gStyle->SetPadTopMargin(0.05);
+  gStyle->SetPadBottomMargin(0.13);
+  gStyle->SetPadLeftMargin(0.16);
+  gStyle->SetPadRightMargin(0.02);
 
 // For the Global title:
 
-  tdrStyle->SetOptTitle(0);
-  tdrStyle->SetTitleFont(42);
-  tdrStyle->SetTitleColor(1);
-  tdrStyle->SetTitleTextColor(1);
-  tdrStyle->SetTitleFillColor(10);
-  tdrStyle->SetTitleFontSize(0.05);
-  // tdrStyle->SetTitleH(0); // Set the height of the title box
-  // tdrStyle->SetTitleW(0); // Set the width of the title box
-  // tdrStyle->SetTitleX(0); // Set the position of the title box
-  // tdrStyle->SetTitleY(0.985); // Set the position of the title box
-  // tdrStyle->SetTitleStyle(Style_t style = 1001);
-  // tdrStyle->SetTitleBorderSize(2);
+  gStyle->SetOptTitle(0);
+  gStyle->SetTitleFont(42);
+  gStyle->SetTitleColor(1);
+  gStyle->SetTitleTextColor(1);
+  gStyle->SetTitleFillColor(10);
+  gStyle->SetTitleFontSize(0.05);
+  // gStyle->SetTitleH(0); // Set the height of the title box
+  // gStyle->SetTitleW(0); // Set the width of the title box
+  // gStyle->SetTitleX(0); // Set the position of the title box
+  // gStyle->SetTitleY(0.985); // Set the position of the title box
+  // gStyle->SetTitleStyle(Style_t style = 1001);
+  // gStyle->SetTitleBorderSize(2);
 
 // For the axis titles:
 
-  tdrStyle->SetTitleColor(1, "XYZ");
-  tdrStyle->SetTitleFont(42, "XYZ");
-  tdrStyle->SetTitleSize(0.06, "XYZ");
-  // tdrStyle->SetTitleXSize(Float_t size = 0.02); // Another way to set the size?
-  // tdrStyle->SetTitleYSize(Float_t size = 0.02);
-  tdrStyle->SetTitleXOffset(0.9);
-  tdrStyle->SetTitleYOffset(1.25);
-  // tdrStyle->SetTitleOffset(1.1, "Y"); // Another way to set the Offset
+  gStyle->SetTitleColor(1, "XYZ");
+  gStyle->SetTitleFont(42, "XYZ");
+  //gStyle->SetTitleSize(0.06, "XYZ");
+  //gStyle->SetTitleXOffset(0.9);
+  //gStyle->SetTitleYOffset(1.25);
+  // gStyle->SetTitleOffset(1.1, "Y"); // Another way to set the Offset
 
 // For the axis labels:
 
-  tdrStyle->SetLabelColor(1, "XYZ");
-  tdrStyle->SetLabelFont(42, "XYZ");
-  tdrStyle->SetLabelOffset(0.007, "XYZ");
-  tdrStyle->SetLabelSize(0.05, "XYZ");
+  gStyle->SetLabelColor(1, "XYZ");
+  gStyle->SetLabelFont(42, "XYZ");
+  //gStyle->SetLabelOffset(0.007, "XYZ");
+  //gStyle->SetLabelSize(0.05, "XYZ");
 
 // For the axis:
 
-  tdrStyle->SetAxisColor(1, "XYZ");
-  tdrStyle->SetStripDecimals(kTRUE);
-  tdrStyle->SetTickLength(0.03, "XYZ");
-  tdrStyle->SetNdivisions(510, "XYZ");
-  tdrStyle->SetPadTickX(1);  // To get tick marks on the opposite side of the frame
-  tdrStyle->SetPadTickY(1);
+  gStyle->SetAxisColor(1, "XYZ");
+  gStyle->SetStripDecimals(kTRUE);
+  gStyle->SetTickLength(0.03, "XYZ");
+  gStyle->SetNdivisions(510, "XYZ");
+  gStyle->SetPadTickX(1);  // To get tick marks on the opposite side of the frame
+  gStyle->SetPadTickY(1);
 
 // Change for log plots:
-  tdrStyle->SetOptLogx(0);
-  tdrStyle->SetOptLogy(0);
-  tdrStyle->SetOptLogz(0);
+  gStyle->SetOptLogx(0);
+  gStyle->SetOptLogy(0);
+  gStyle->SetOptLogz(0);
 
 // Postscript options:
-  tdrStyle->SetPaperSize(20.,20.);
-  // tdrStyle->SetLineScalePS(Float_t scale = 3);
-  // tdrStyle->SetLineStyleString(Int_t i, const char* text);
-  // tdrStyle->SetHeaderPS(const char* header);
-  // tdrStyle->SetTitlePS(const char* pstitle);
+  gStyle->SetPaperSize(20.,20.);
+  // gStyle->SetLineScalePS(Float_t scale = 3);
+  // gStyle->SetLineStyleString(Int_t i, const char* text);
+  // gStyle->SetHeaderPS(const char* header);
+  // gStyle->SetTitlePS(const char* pstitle);
 
-  // tdrStyle->SetBarOffset(Float_t baroff = 0.5);
-  // tdrStyle->SetBarWidth(Float_t barwidth = 0.5);
-  // tdrStyle->SetPaintTextFormat(const char* format = "g");
-  // tdrStyle->SetPalette(Int_t ncolors = 0, Int_t* colors = 0);
-  // tdrStyle->SetTimeOffset(Double_t toffset);
-  // tdrStyle->SetHistMinimumZero(kTRUE);
+  // gStyle->SetBarOffset(Float_t baroff = 0.5);
+  // gStyle->SetBarWidth(Float_t barwidth = 0.5);
+  // gStyle->SetPaintTextFormat(const char* format = "g");
+  // gStyle->SetPalette(Int_t ncolors = 0, Int_t* colors = 0);
+  // gStyle->SetTimeOffset(Double_t toffset);
+  // gStyle->SetHistMinimumZero(kTRUE);
 
-  tdrStyle->SetHatchesLineWidth(5);
-  tdrStyle->SetHatchesSpacing(0.05);
+  gStyle->SetHatchesLineWidth(5);
+  gStyle->SetHatchesSpacing(0.05);
 
-  tdrStyle->cd();
-
+  //gStyle->cd();
+  delete tdrStyle;
 }
 
-////////////////
-// CMS_lumi.h //
-////////////////
-
-//
-// Global variables
-//
-
-TString cmsText     = "CMS";
-float cmsTextFont   = 61;  // default is helvetic-bold
-
-bool writeExtraText = true;//false;
-TString extraText   = "Simulation"; //Simulation, Preliminary
-TString extraText2   = ""; // For Simulation Preliminary on two lines
-float extraTextFont = 52;  // default is helvetica-italics
-
-// text sizes and text offsets with respect to the top frame
-// in unit of the top margin size
-float lumiTextSize     = 0.6;
-float lumiTextOffset   = 0.2;
-float cmsTextSize      = 0.75;
-float cmsTextOffset    = 0.1;  // only used in outOfFrame version
-
-float relPosX    = 0.045;
-float relPosY    = 0.035;
-float relExtraDY = 1.2;
-
-// ratio of "CMS" and extra text size
-float extraOverCmsTextSize  = 0.76;
-
-TString lumi_13TeV = ""; //"12.9 fb^{-1}"
-TString lumi_8TeV  = "19.7 fb^{-1}";
-TString lumi_7TeV  = "5.1 fb^{-1}";
-
-bool drawLogo      = false;
-
-void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10 );
 
 
 ////////////////
@@ -280,7 +219,7 @@ void CMS_lumi( TPad* pad, int iPeriod=3, int iPosX=10 );
 //#include "CMS_lumi.h"
 
 void 
-CMS_lumi( TPad* pad, int iPeriod, int iPosX )
+CMS_lumi( TPad* pad, int iPeriod, int iPosX , TString lumi_13TeV)
 {            
   bool outOfFrame    = false;
   if( iPosX/10==0 ) 
@@ -296,7 +235,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   if( iPosX/10==2 ) alignX_=2;
   if( iPosX/10==3 ) alignX_=3;
   //if( iPosX == 0  ) relPosX = 0.12;
-  if( iPosX == 0  ) relPosX = pad->GetLeftMargin();
+  //if( iPosX == 0  ) relPosX = pad->GetLeftMargin();
   int align_ = 10*alignX_ + alignY_;
 
   float H = pad->GetWh();
@@ -456,9 +395,10 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
 
 // Give the macro an empty histogram for h->Draw("AXIS");
 // Create h after calling setTDRStyle to get all the settings right
-TCanvas* tdrCanvas(const char* canvName, TH1D *h,
-		   int iPeriod = 2, int iPos = 11,
-		   bool square = kRectangular) {
+void tdrCanvas(TCanvas *&canv_in, const char* canvName, TH1D *&h,
+		   int iPeriod, int iPos ,
+		   bool square, TString lumi_13TeV) {
+
 
   setTDRStyle();
 
@@ -501,32 +441,40 @@ TCanvas* tdrCanvas(const char* canvName, TH1D *h,
   float L = (square ? 0.15*W_ref : 0.12*W_ref);
   float R = (square ? 0.05*W_ref : 0.04*W_ref);
 
-  TCanvas *canv = new TCanvas(canvName,canvName,50,50,W,H);
-  canv->SetFillColor(0);
-  canv->SetBorderMode(0);
-  canv->SetFrameFillStyle(0);
-  canv->SetFrameBorderMode(0);
-  canv->SetLeftMargin( L/W );
-  canv->SetRightMargin( R/W );
-  canv->SetTopMargin( T/H );
-  canv->SetBottomMargin( B/H );
+  //TCanvas* canv = new TCanvas(canvName,canvName,50,50,W,H);
+  canv_in->SetName(canvName);
+  canv_in->SetTitle(canvName);
+  canv_in->SetWindowSize(W,H);
+  canv_in->SetFillColor(0);
+  canv_in->SetBorderMode(0);
+  canv_in->SetFrameFillStyle(0);
+  canv_in->SetFrameBorderMode(0);
+  canv_in->SetLeftMargin( L/W );
+  canv_in->SetRightMargin( R/W );
+  canv_in->SetTopMargin( T/H );
+  canv_in->SetBottomMargin( B/H );
   // FOR JEC plots, prefer to keep ticks on both sides
-  //canv->SetTickx(0);
-  //canv->SetTicky(0);
+  //canv_in->SetTickx(0);
+  //canv_in->SetTicky(0);
 
   assert(h);
-  h->GetYaxis()->SetTitleOffset(square ? 1.25 : 1);
+  h->GetXaxis()->SetTitleSize(0.036);
+  h->GetYaxis()->SetTitleSize(0.036);
+  h->GetXaxis()->SetLabelSize(0.036);
+  h->GetYaxis()->SetLabelSize(0.036);
+  h->GetYaxis()->SetTitleOffset(square ? 1.55 : 1);
   h->GetXaxis()->SetTitleOffset(square ? 1.0 : 0.9);
   h->Draw("AXIS");
 
   // writing the lumi information and the CMS "logo"
-  CMS_lumi( canv, iPeriod, iPos );
+  CMS_lumi( canv_in, iPeriod, iPos, lumi_13TeV);
   
-  canv->Update();
-  canv->RedrawAxis();
-  canv->GetFrame()->Draw();
-  
-  return canv;
+  canv_in->Update();
+  canv_in->RedrawAxis();
+  canv_in->GetFrame()->Draw();
+  //canv_in = (TCanvas*)canv->Clone("canv_in");
+  //delete h_tmp;
+  return /*canv*/;
 }
 
 
@@ -535,7 +483,7 @@ TCanvas* tdrCanvas(const char* canvName, TH1D *h,
 // Create h after calling setTDRStyle to get all the settings right
 // Created by: Mikko Voutilainen (HIP)
 TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
-		   int iPeriod = 2, int iPos = 11) {
+		     int iPeriod , int iPos , TString lumi_13TeV) {
 
   setTDRStyle();
 
@@ -602,7 +550,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
   hup->Draw("AXIS");
 
   // writing the lumi information and the CMS "logo"
-  CMS_lumi( (TCanvas*)gPad, iPeriod, iPos );
+  CMS_lumi( (TCanvas*)gPad, iPeriod, iPos , lumi_13TeV);
 
   canv->cd(2);
   gPad->SetPad(0, 0, 1, Hdw / H);

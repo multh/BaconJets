@@ -96,10 +96,10 @@ constexpr static float s_Pt_Ave220HF_cut  = 319;
 constexpr static float s_Pt_Ave300HF_cut  = 433;
 
 //Runnumbers for applying different corrections
-constexpr static int s_runnr_BCD = 276811; //up to this one, including this one
-constexpr static int s_runnr_E = 277420; //up to this one, including this one
-constexpr static int s_runnr_Fearly = 278802; //up to this one, EXCLUDING this one
-
+constexpr static int s_runnr_BCD     = 276811; //up to this one, including this one
+constexpr static int s_runnr_EFearly = 278802; //up to this one, EXCLUDING this one
+constexpr static int s_runnr_Fearly  = 278802; //up to this one, EXCLUDING this one
+constexpr static int s_runnr_FlateG  = 280385; //up to this one, including this one
 
 
 /** \brief Jet Resolution Smearering **/
