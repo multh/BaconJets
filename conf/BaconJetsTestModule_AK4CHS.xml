@@ -4,15 +4,18 @@
 <!ENTITY PROOFdir       "/nfs/dust/cms/user/reimersa/.proof2">      
 <!ENTITY NEVT           "-1">
 <!ENTITY CACHEABLE      "False">
-<!ENTITY OUTdir         "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Spring16_23Sep2016_V2/AK4CHS">
+<!ENTITY OUTdir         "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V2/AK4CHS">
 <!--<!ENTITY OUTdir         "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Moriond17/SplitJEC/AK4CHS">-->
 <!ENTITY b_closuretest  "true">
-<!ENTITY jec_version    "Spring16_23Sep2016">
+<!ENTITY jec_version    "Summer16_23Sep2016_V2">
 
 
 
-<!ENTITY QCDPt15to7000_pythia8_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_Pt-15to7000_Flat_pythia8.xml">
 <!--<!ENTITY QCDPt15to7000_pythia8_AK4CHS SYSTEM "/nfs/dust/cms/user/karavdia/Summer16MC/MC_QCD_PtFlat_Summer16MC.xml">-->
+<!--<!ENTITY QCDPt15to7000_pythia8_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_Pt-15to7000_Flat_pythia8.xml">-->
+<!--<!ENTITY QCDPt15to7000_pythia8_AK4CHS SYSTEM "/nfs/dust/cms/user/karavdia/Summer16MC/MC_QCD_PtFlat_Summer16MC.xml">-->
+<!ENTITY QCDPt15to7000_pythia8_AK4CHS_Flat SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_Pt-15to7000_Flat_pythia8_full.xml">
+<!ENTITY QCDPt15to7000_pythia8_AK4CHS_Fwd SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_FwdEnriched_Flat_pythia8.xml">
 <!ENTITY QCDPt15to7000_herwigpp_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_Pt-15to7000_Flat_herwigpp.xml">
 <!ENTITY QCDHt100to200_madgraph_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_HT100to200.xml">
 <!ENTITY QCDHt200to300_madgraph_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_HT200to300.xml">
@@ -43,7 +46,7 @@
 
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="3" AutoResubmit="5"/>
+<ConfigParse NEventsBreak="0" FileSplit="30" AutoResubmit="5"/>
 <ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_Spring16_23Sep2016_V2_AK4CHS"/>
 -->
 
@@ -139,13 +142,18 @@
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
-<!--
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS;
+
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
 
 
 
@@ -198,7 +206,7 @@
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
--->
+
 
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunH_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunH_AK4CHS;

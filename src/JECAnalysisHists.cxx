@@ -62,7 +62,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
 
     book<TH1F>("pt_rel","p_{T}^{jet3} / p_{T}^{ave}; #alpha ", 50, 0, 1);
 
-    book<TH1F>("asym","asymmetrie jet 1 and jet 2; Asymmetry",150,-1.5,1.5);
+    book<TH1F>("asym","asymmetry jet 1 and jet 2; Asymmetry",150,-1.5,1.5);
     book<TH1F>("mpf","MPF response; MPF response",250,0.,2.5);
     book<TH1F>("r_rel","R_{rel}; R_{rel}; Relative response",250,0.,2.5);
  
@@ -70,7 +70,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH2D>("mpf_vs_etaProbe","MPF response vs. #eta probe jet; #eta probe; MPF response",100,-5,5,100,0.,2.);
     book<TH2D>("r_rel_vs_etaProbe","Relative response vs. #eta probe jet; #eta probe; R_{rel}",100,-5,5,100,0.,2.);
     book<TH2D>("pt_ave_vs_etaProbe","pt ave vs #eta probe jet; #eta probe; pT_{ave}, GeV",100,-5.2,5.2,200,0,1000);
-  
+    book<TH2D>("dPhi_vs_alpha","#Delta #Phi vs #alpha; #alpha; #Delta #Phi",150,0,3,200,-M_PI,4);
 
 
 
@@ -159,6 +159,9 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
   ((TH2D*)hist("r_rel_vs_etaProbe"))->Fill(ev.get(tt_probejet_eta),ev.get(tt_rel_r),weight);
   float pt_ave = (0.5*(ev.get(tt_jet1_pt) + ev.get(tt_jet2_pt)));
   ((TH2D*)hist("pt_ave_vs_etaProbe"))->Fill(ev.get(tt_probejet_eta),pt_ave,weight);
+
+  double deltaPhi = std::abs(TVector2::Phi_mpi_pi(jet1->phi() - jet2->phi()));
+  ((TH2D*)hist("dPhi_vs_alpha"))->Fill(ev.get(tt_alpha),deltaPhi, weight);
 
   if (njets > 2){
     Jet* jet3 = &ev.jets->at(2);

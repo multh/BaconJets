@@ -289,7 +289,7 @@ bool Selection::DiJetAdvanced(uhh2::Event& evt)
     // at least one barrel jet
     if((fabs(jet1->eta()) >= s_eta_barr) && (fabs(jet2->eta()) >= s_eta_barr)) return false; 
 
-    // delta phi < 2.7
+    // delta phi > 2.7
     double deltaPhi = std::abs(TVector2::Phi_mpi_pi(jet1->phi() - jet2->phi()));
     if (deltaPhi < s_delta_phi) return false;
 

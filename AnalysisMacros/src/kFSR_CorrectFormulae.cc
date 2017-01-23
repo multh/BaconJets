@@ -5,6 +5,7 @@
 #include <TStyle.h>
 #include <TH1.h>
 #include <TH1D.h>
+#include <TH2D.h>
 #include <TString.h>
 #include <TLegend.h>
 #include <TCanvas.h>
@@ -16,12 +17,13 @@
 #include <TTreeReaderValue.h>
 #include <TGraphErrors.h>
 #include <TMultiGraph.h>
+#include <TProfile.h>
 
 
 
 using namespace std;
 
-void CorrectionObject::kFSR(){
+void CorrectionObject::kFSR_CorrectFormulae(){
   cout << "--------------- Starting kFSR() ---------------" << endl << endl;
   TStyle* m_gStyle = new TStyle();
   m_gStyle->SetOptFit(0);
@@ -31,15 +33,19 @@ void CorrectionObject::kFSR(){
   double err_ratio_al_rel_r[n_pt-1][n_eta-1][n_alpha]; //error of ratio at pt,eta,alpha bins
   double ratio_al_mpf_r[n_pt-1][n_eta-1][n_alpha]; //ratio at pt,eta,alpha bins
   double err_ratio_al_mpf_r[n_pt-1][n_eta-1][n_alpha]; //error of ratio at pt,eta,alpha bins
-  TH1D *hdata_rel_r[n_pt-1][n_eta-1][n_alpha];// pT-balance response for data
-  TH1D *hdata_mpf_r[n_pt-1][n_eta-1][n_alpha];//MPF response for data
-  TH1D *hmc_rel_r[n_pt-1][n_eta-1][n_alpha];// pT-balanse responce for MC
-  TH1D *hmc_mpf_r[n_pt-1][n_eta-1][n_alpha];//MPF response for MC
+  TProfile *pr_data_asymmetry[n_eta-1][n_alpha];// pT-balance response for data  
+  TProfile *pr_data_B[n_eta-1][n_alpha];//MPF response for data
+  TProfile *pr_mc_asymmetry[n_eta-1][n_alpha];// pT-balanse responce for MC  
+  TProfile *pr_mc_B[n_eta-1][n_alpha];//MPF response for MC
+  TH2D *hdata_asymmetry[n_eta-1][n_alpha];
+  TH2D *hdata_B[n_eta-1][n_alpha];
+  TH2D *hmc_asymmetry[n_eta-1][n_alpha];
+  TH2D *hmc_B[n_eta-1][n_alpha];
   int count = 0;
-  TString name1 = "hist_data_rel_r_";
-  TString name2 = "hist_data_mpf_r_";
-  TString name3 = "hist_mc_rel_r_";
-  TString name4 = "hist_mc_mpf_r_";
+  TString name1 = "hist_data_asymmetry_";
+  TString name2 = "hist_data_B_";
+  TString name3 = "hist_mc_asymmetry_";
+  TString name4 = "hist_mc_B_";
   for(int i=0; i<n_alpha; i++){
     for(int j=0; j<n_eta-1; j++){
       for(int k=0; k<n_pt-1; k++){
@@ -48,13 +54,13 @@ void CorrectionObject::kFSR(){
 	ratio_al_mpf_r[k][j][i] = 0;
 	err_ratio_al_mpf_r[k][j][i] = 0;
 	TString name = name1; name+=count;
-	hdata_rel_r[k][j][i] = new TH1D(name,"",nResponseBins, 0, 2.5);
+	hdata_asymmetry[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, 0, 2.5);
 	name = name2;name+=count;
-	hdata_mpf_r[k][j][i] = new TH1D(name,"",nResponseBins, 0, 2.5);
+	hdata_B[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, 0, 2.5);
 	name = name3; name+=count;
-	hmc_rel_r[k][j][i] = new TH1D(name,"",nResponseBins, 0, 2.5);
+	hmc_asymmetry[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, 0, 2.5);
 	name = name4; name+=count;
-	hmc_mpf_r[k][j][i] = new TH1D(name,"",nResponseBins, 0, 2.5);
+	hmc_B[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, 0, 2.5);
 	count++;
       }
     }
@@ -66,31 +72,27 @@ void CorrectionObject::kFSR(){
   TTreeReaderValue<Float_t> pt_ave_data(myReader_DATA, "pt_ave");
   TTreeReaderValue<Float_t> probejet_eta_data(myReader_DATA, "probejet_eta");
   TTreeReaderValue<Float_t> alpha_data(myReader_DATA, "alpha");
-  TTreeReaderValue<Float_t> rel_r_data(myReader_DATA, "rel_r");
-  TTreeReaderValue<Float_t> mpf_r_data(myReader_DATA, "mpf_r");   
+  TTreeReaderValue<Float_t> asymmetry_data(myReader_DATA, "asymmetry");
+  TTreeReaderValue<Float_t> B_data(myReader_DATA, "B");   
   TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
   int idx = 0;
   
   cout << "starting to loop over DATA events." << endl;
 
   while (myReader_DATA.Next()) {
-    for(int k=0; k<n_pt-1; k++){
-       if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
-       for(int j=0; j<n_eta-1; j++){
-	 if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
-	     
-	 for(int i=0; i<n_alpha; i++){
-	   if(*alpha_data>alpha_bins[i]) continue;
-	   else{
-	     hdata_rel_r[k][j][i]->Fill(*rel_r_data,*weight_data);
-	     hdata_mpf_r[k][j][i]->Fill(*mpf_r_data,*weight_data);
-	     idx++;
-	     if(idx%1000000==0) cout << "looping over data-TTree: Idx = " << idx << endl;
-	   }
-	 }
-       }
-     }
-   }
+    for(int j=0; j<n_eta-1; j++){
+      if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
+      for(int i=0; i<n_alpha; i++){
+	if(*alpha_data>alpha_bins[i]) continue;
+	else{
+	  hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
+	  hdata_B[j][i]->Fill(*pt_ave_data,*B_data,*weight_data);
+	  idx++;
+	  if(idx%1000000==0) cout << "looping over data-TTree: Idx = " << idx << endl;
+	}
+      }
+    }
+  }
   cout << "Finished running over DATA events. Read in a total of " << idx << " events." << endl;
 
    // Get relevant quantities from MC, loop over events
@@ -98,83 +100,104 @@ void CorrectionObject::kFSR(){
    TTreeReaderValue<Float_t> pt_ave_mc(myReader_MC, "pt_ave");
    TTreeReaderValue<Float_t> probejet_eta_mc(myReader_MC, "probejet_eta");
    TTreeReaderValue<Float_t> alpha_mc(myReader_MC, "alpha");
-   TTreeReaderValue<Float_t> rel_r_mc(myReader_MC, "rel_r");
-   TTreeReaderValue<Float_t> mpf_r_mc(myReader_MC, "mpf_r");
+   TTreeReaderValue<Float_t> asymmetry_mc(myReader_MC, "asymmetry");
+   TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
    TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
    idx = 0;
 
    while (myReader_MC.Next()) {
-     for(int k=0; k<n_pt-1; k++){
-       if(*pt_ave_mc<pt_bins[k] || *pt_ave_mc>pt_bins[k+1]) continue;
-       for(int j=0; j<n_eta-1; j++){
-   	 if(fabs(*probejet_eta_mc)>eta_bins[j+1] || fabs(*probejet_eta_mc)<eta_bins[j]) continue;
-   	 for(int i=0; i<n_alpha; i++){
-   	   if(*alpha_mc>alpha_bins[i]) continue;
-   	   else{
-   	     hmc_rel_r[k][j][i]->Fill(*rel_r_mc,*weight_mc);
-   	     hmc_mpf_r[k][j][i]->Fill(*mpf_r_mc,*weight_mc);
-   	     idx++;
-   	     if(idx%1000000==0) cout << "looping over MC-TTree: Idx = " << idx << endl;
-   	   }
-   	 }
+     for(int j=0; j<n_eta-1; j++){
+       if(fabs(*probejet_eta_mc)>eta_bins[j+1] || fabs(*probejet_eta_mc)<eta_bins[j]) continue;
+       for(int i=0; i<n_alpha; i++){
+	 if(*alpha_mc>alpha_bins[i]) continue;
+	 else{
+	   hmc_asymmetry[j][i]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
+	   hmc_B[j][i]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
+	   idx++;
+	   if(idx%1000000==0) cout << "looping over MC-TTree: Idx = " << idx << endl;
+	 }
        }
      }
    }
 
 
 
-   //normalize histograms to their integral
-   for(int i=0; i<n_alpha; i++){
-     for(int j=0; j<n_eta-1; j++){
-       for(int k=0; k<n_pt-1; k++){
-	 double integ_rel_mc = hmc_rel_r[k][j][i]->Integral();
-	 hmc_rel_r[k][j][i]->Scale(1./integ_rel_mc);
-	 double integ_mpf_mc = hmc_mpf_r[k][j][i]->Integral();
-	 hmc_mpf_r[k][j][i]->Scale(1./integ_mpf_mc);
-	 double integ_rel_data = hdata_rel_r[k][j][i]->Integral();
-	 hdata_rel_r[k][j][i]->Scale(1./integ_rel_data);
-	 double integ_mpf_data = hdata_mpf_r[k][j][i]->Integral();
-	 hdata_mpf_r[k][j][i]->Scale(1./integ_mpf_data);
-       }
+   //build profiles out of asymmetry and B 2d-histos to get <A> and <B> as a function of pT in bins of eta,alpha
+   for(int j=0; j<n_eta-1; j++){
+     for(int i=0; i<n_alpha; i++){
+       //print TH2D histos
+       TCanvas* c_dummy1 = new TCanvas();
+       hdata_asymmetry[j][i]->Draw("COLZ");
+       c_dummy1->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy1;
+       TCanvas* c_dummy2 = new TCanvas();
+       hmc_asymmetry[j][i]->Draw("COLZ");
+       c_dummy2->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy2;
+       TCanvas* c_dummy3 = new TCanvas();
+       hdata_B[j][i]->Draw("COLZ");
+       c_dummy3->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy3;
+       TCanvas* c_dummy4 = new TCanvas();
+       hmc_B[j][i]->Draw("COLZ");
+       c_dummy4->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy4;
+
+       //build profiles
+       pr_data_asymmetry[j][i] = (TProfile*)hdata_asymmetry[j][i]->ProfileX();
+       pr_data_B[j][i]         = (TProfile*)hdata_B[j][i]->ProfileX();
+       pr_mc_asymmetry[j][i]   = (TProfile*)hmc_asymmetry[j][i]->ProfileX();
+       pr_mc_B[j][i]           = (TProfile*)hmc_B[j][i]->ProfileX();
+
+       //print profiles
+       TCanvas* c_dummy5 = new TCanvas();
+       pr_data_asymmetry[j][i]->Draw();
+       c_dummy5->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy5;
+       TCanvas* c_dummy6 = new TCanvas();
+       pr_mc_asymmetry[j][i]->Draw();
+       c_dummy6->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy6;
+       TCanvas* c_dummy7 = new TCanvas();
+       pr_data_B[j][i]->Draw();
+       c_dummy7->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy7;
+       TCanvas* c_dummy8 = new TCanvas();
+       pr_mc_B[j][i]->Draw();
+       c_dummy8->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       delete c_dummy8;
      }
    }
+   
+   //calculate response from <A> and <B> in bins of pt,eta,alpha
+   //gaussian error propagation from errors on <A> and <B>
 
-   //Get mean responses and respective errors from filled histograms
-   for(int i=0; i<n_alpha; i++){
+   for(int k=0; k<n_pt-1; k++){
      for(int j=0; j<n_eta-1; j++){
-       int n_sum = 0;
-       for(int k=0; k<n_pt-1; k++){
-	 if(k==0 && j==0) cout << "Alpha-bin from " << alpha_bins[i] << " to " << alpha_bins[i+1] << endl;
-	 if(k==0) cout<<eta_bins[j]<<" ";
-	 cout<<"& "<<hmc_rel_r[k][j][i]->GetEntries();//MC
-	 n_sum += hmc_rel_r[k][j][i]->GetEntries(); //MC
-	 //cout<<"& "<<hdata_rel_r[k][j][i]->GetEntries();//DATA
-	 //n_sum += hdata_rel_r[k][j][i]->GetEntries(); //DATA
+       for(int i=0; i<n_alpha; i++){
 
-	 pair<double,double> res_mc_rel_r,res_data_rel_r;
-	 pair<double,double> res_mc_mpf_r,res_data_mpf_r;
-	 res_mc_rel_r = GetValueAndError(hmc_rel_r[k][j][i]);
-	 res_data_rel_r = GetValueAndError(hdata_rel_r[k][j][i]);
-	 res_mc_mpf_r = GetValueAndError(hmc_mpf_r[k][j][i]);
-	 res_data_mpf_r = GetValueAndError(hdata_mpf_r[k][j][i]);
+	 //responses for data, MC separately. Only for bins with >= 30 entries
+	 double mpf_mc = (1+pr_mc_B[j][i]->GetBinContent(k+1))/(1-pr_mc_B[j][i]->GetBinContent(k+1));
+	 if(pr_mc_B[j][i]->GetBinEntries(k+1) < 30) mpf_mc = 0;
+	 double mpf_data = (1+pr_data_B[j][i]->GetBinContent(k+1))/(1-pr_data_B[j][i]->GetBinContent(k+1));
+	 if(pr_data_B[j][i]->GetBinEntries(k+1) < 30) mpf_data = 0;
+	 double rel_mc = (1+pr_mc_asymmetry[j][i]->GetBinContent(k+1))/(1-pr_mc_asymmetry[j][i]->GetBinContent(k+1));
+	 if(pr_mc_asymmetry[j][i]->GetBinEntries(k+1) < 30) rel_mc = 0;
+	 double rel_data = (1+pr_data_asymmetry[j][i]->GetBinContent(k+1))/(1-pr_data_asymmetry[j][i]->GetBinContent(k+1));
+	 if(pr_data_asymmetry[j][i]->GetBinEntries(k+1) < 30) rel_data = 0;
+	 double err_mpf_mc = 2/(pow((1-pr_mc_B[j][i]->GetBinContent(k+1)),2)) * pr_mc_B[j][i]->GetBinError(k+1);
+	 double err_mpf_data = 2/(pow((1-pr_data_B[j][i]->GetBinContent(k+1)),2)) * pr_data_B[j][i]->GetBinError(k+1);
+	 double err_rel_mc = 2/(pow((1-pr_mc_asymmetry[j][i]->GetBinContent(k+1)),2)) * pr_mc_asymmetry[j][i]->GetBinError(k+1);
+	 double err_rel_data = 2/(pow((1-pr_data_asymmetry[j][i]->GetBinContent(k+1)),2)) * pr_data_asymmetry[j][i]->GetBinError(k+1);
 
-	 pair<double,double> ratio_res_rel_r;
-	 if(res_mc_rel_r.first>0 && res_data_rel_r.first>0)
-	   ratio_res_rel_r = Rmc_to_Rdata(res_mc_rel_r,res_data_rel_r);
-	 else 
-	   ratio_res_rel_r.first = 0;
-	 pair<double,double> ratio_res_mpf_r;
-	 if(res_mc_mpf_r.first>0 && res_data_mpf_r.first>0)
-	   ratio_res_mpf_r = Rmc_to_Rdata(res_mc_mpf_r,res_data_mpf_r);
-	 else 
-	   ratio_res_mpf_r.first = 0;
-
-	 ratio_al_rel_r[k][j][i] = ratio_res_rel_r.first;
-	 err_ratio_al_rel_r[k][j][i] = ratio_res_rel_r.second;
-	 ratio_al_mpf_r[k][j][i] = ratio_res_mpf_r.first;
-	 err_ratio_al_mpf_r[k][j][i] = ratio_res_mpf_r.second;
+	 //ratio of responses, again gaussian error propagation
+	 if(rel_data > 0) ratio_al_rel_r[k][j][i] = rel_mc/rel_data;
+	 else ratio_al_rel_r[k][j][i] = 0;
+	 err_ratio_al_rel_r[k][j][i] = sqrt(pow(1/rel_data*err_rel_mc,2) + pow(rel_mc/(rel_data*rel_data)*err_rel_data,2));
+	 if(mpf_data > 0) ratio_al_mpf_r[k][j][i] = mpf_mc/mpf_data;
+	 else ratio_al_mpf_r[k][j][i] = 0;
+	 err_ratio_al_mpf_r[k][j][i] = sqrt(pow(1/mpf_data*err_mpf_mc,2) + pow(mpf_mc/(mpf_data*mpf_data)*err_mpf_data,2));
        }
-       cout << ",   SUM: " << n_sum <<endl;
      }
    }
 
@@ -495,20 +518,22 @@ void CorrectionObject::kFSR(){
      delete pTgraph_rel_r[j];
      delete pTgraph_mpf_r[j];
    }
-   
-
 
    delete leg1;
    for(int i=0; i<n_alpha; i++){
      for(int j=0; j<n_eta-1; j++){
-       for(int k=0; k<n_pt-1; k++){
-	 delete hdata_rel_r[k][j][i];
-	 delete hdata_mpf_r[k][j][i];
-	 delete hmc_rel_r[k][j][i];
-	 delete hmc_mpf_r[k][j][i];
+       delete pr_data_asymmetry[j][i];
+       delete pr_data_B[j][i];
+       delete pr_mc_asymmetry[j][i];
+       delete pr_mc_B[j][i];
+       delete hdata_asymmetry[j][i];
+       delete hdata_B[j][i];
+       delete hmc_asymmetry[j][i];
+       delete hmc_B[j][i];
        }
      }
-   }
+	       
+   
    delete  m_gStyle;    
    cout << "++++++++++++ Deleted everything in kFSR(), exiting ++++++++++++++" << endl;
 }

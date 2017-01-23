@@ -25,7 +25,7 @@
 using namespace std;
 
 
-void CorrectionObject::InputForGlobalFit(){
+void CorrectionObject::InputForGlobalFit_eta_0_13(){
   const int min_number_events = 20;//required number of events in response histogram
   TStyle* m_gStyle = new TStyle();
   m_gStyle->SetOptFit(0);
@@ -33,24 +33,24 @@ void CorrectionObject::InputForGlobalFit(){
   cout << "hello, it's mikkos macro" << endl;
   //calculate ratio in MC to DATA responses
 
-  double mc_al_mpf[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double err_mc_al_mpf[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double mc_al_pTbal[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double err_mc_al_pTbal[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double data_al_mpf[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double err_data_al_mpf[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double data_al_pTbal[n_alpha_common][n_eta_common-1][n_pt-1]; 
-  double err_data_al_pTbal[n_alpha_common][n_eta_common-1][n_pt-1]; 
+  double mc_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double err_mc_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double mc_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double err_mc_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double data_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double err_data_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double data_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
+  double err_data_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
 
-  double ratio_al_mpf[n_alpha_common][n_eta_common-1][n_pt-1]; //ratio at pt,eta,alpha bins
-  double err_ratio_al_mpf[n_alpha_common][n_eta_common-1][n_pt-1]; //error of ratio at pt,eta,alpha bins
-  double ratio_al_pTbal[n_alpha_common][n_eta_common-1][n_pt-1]; //ratio at pt,eta,alpha bins
-  double err_ratio_al_pTbal[n_alpha_common][n_eta_common-1][n_pt-1]; //error of ratio at pt,eta,alpha bins
+  double ratio_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; //ratio at pt,eta,alpha bins
+  double err_ratio_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; //error of ratio at pt,eta,alpha bins
+  double ratio_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; //ratio at pt,eta,alpha bins
+  double err_ratio_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; //error of ratio at pt,eta,alpha bins
 
-  TH1D *hdata_rel_r[n_pt-1][n_eta_common-1][n_alpha_common];// pT-balance responce for data
-  TH1D *hdata_mpf_r[n_pt-1][n_eta_common-1][n_alpha_common];//MPF responce for data
-  TH1D *hmc_rel_r[n_pt-1][n_eta_common-1][n_alpha_common];// pT-balance responce for MC
-  TH1D *hmc_mpf_r[n_pt-1][n_eta_common-1][n_alpha_common];//MPF responce for MC
+  TH1D *hdata_rel_r[n_pt-1][n_eta_common_2-1][n_alpha_common];// pT-balance responce for data
+  TH1D *hdata_mpf_r[n_pt-1][n_eta_common_2-1][n_alpha_common];//MPF responce for data
+  TH1D *hmc_rel_r[n_pt-1][n_eta_common_2-1][n_alpha_common];// pT-balance responce for MC
+  TH1D *hmc_mpf_r[n_pt-1][n_eta_common_2-1][n_alpha_common];//MPF responce for MC
   int count = 0;
   TString name1 = "hist_data_rel_r_";
   TString name2 = "hist_data_mpf_r_";
@@ -59,7 +59,7 @@ void CorrectionObject::InputForGlobalFit(){
 
   //Initialize with 0 values
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       for(int k=0; k<n_pt-1; k++){
 	ratio_al_mpf[i][j][k] = 0;
 	err_ratio_al_mpf[i][j][k] = 0;
@@ -101,8 +101,8 @@ void CorrectionObject::InputForGlobalFit(){
    while (myReader_DATA.Next()) {
      for(int k=0; k<n_pt-1; k++){
    	   if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
-	   for(int j=0; j<n_eta_common-1; j++){
-	     if(fabs(*probejet_eta_data)>eta_common_bins[j+1] || fabs(*probejet_eta_data)<eta_common_bins[j]) continue;
+	   for(int j=0; j<n_eta_common_2-1; j++){
+	     if(fabs(*probejet_eta_data)>eta_common_bins_2[j+1] || fabs(*probejet_eta_data)<eta_common_bins_2[j]) continue;
 	     for(int i=0; i<n_alpha_common; i++){
 	       if(*alpha_data>alpha_bins_common[i]) continue;
 	       else{
@@ -124,8 +124,8 @@ void CorrectionObject::InputForGlobalFit(){
    while (myReader_MC.Next()) {
      for(int k=0; k<n_pt-1; k++){
        if(*pt_ave_mc<pt_bins[k] || *pt_ave_mc>pt_bins[k+1]) continue;
-       for(int j=0; j<n_eta_common-1; j++){
-   	 if(fabs(*probejet_eta_mc)>eta_common_bins[j+1] || fabs(*probejet_eta_mc)<eta_common_bins[j]) continue;
+       for(int j=0; j<n_eta_common_2-1; j++){
+   	 if(fabs(*probejet_eta_mc)>eta_common_bins_2[j+1] || fabs(*probejet_eta_mc)<eta_common_bins_2[j]) continue;
    	 for(int i=0; i<n_alpha_common; i++){
    	   if(*alpha_mc>alpha_bins_common[i]) continue;
    	   else{
@@ -141,7 +141,7 @@ void CorrectionObject::InputForGlobalFit(){
 
 
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       for(int k=0; k<n_pt-1; k++){
 	pair<double,double> res_mc_rel_r,res_data_rel_r;
 	pair<double,double> res_mc_mpf_r,res_data_mpf_r;
@@ -177,15 +177,15 @@ void CorrectionObject::InputForGlobalFit(){
     res_zero[i]=(pt_bins[i+1]-pt_bins[i])/2 ;
   }
 
-  TGraphErrors *mpf_data[n_alpha_common][n_eta_common-1];
-  TGraphErrors *rrel_data[n_alpha_common][n_eta_common-1];
-  TGraphErrors *mpf_mc[n_alpha_common][n_eta_common-1];
-  TGraphErrors *rrel_mc[n_alpha_common][n_eta_common-1];
-  TGraphErrors *mpf_ratio[n_alpha_common][n_eta_common-1];
-  TGraphErrors *rrel_ratio[n_alpha_common][n_eta_common-1];
+  TGraphErrors *mpf_data[n_alpha_common][n_eta_common_2-1];
+  TGraphErrors *rrel_data[n_alpha_common][n_eta_common_2-1];
+  TGraphErrors *mpf_mc[n_alpha_common][n_eta_common_2-1];
+  TGraphErrors *rrel_mc[n_alpha_common][n_eta_common_2-1];
+  TGraphErrors *mpf_ratio[n_alpha_common][n_eta_common_2-1];
+  TGraphErrors *rrel_ratio[n_alpha_common][n_eta_common_2-1];
 
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       mpf_data[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,data_al_mpf[i][j],res_zero,err_data_al_mpf[i][j]);
       mpf_mc[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,mc_al_mpf[i][j],res_zero,err_mc_al_mpf[i][j]);
       rrel_data[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,data_al_pTbal[i][j],res_zero,err_data_al_pTbal[i][j]);
@@ -198,7 +198,7 @@ void CorrectionObject::InputForGlobalFit(){
 
   // Cleaning for empty points (with low statistic)
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       mpf_data[i][j] = CleanEmptyPoints(mpf_data[i][j]);
       mpf_mc[i][j] = CleanEmptyPoints(mpf_mc[i][j]);
       rrel_data[i][j] = CleanEmptyPoints(rrel_data[i][j]);
@@ -216,31 +216,31 @@ void CorrectionObject::InputForGlobalFit(){
     }
 
   //Save results in root file
-  TFile* outputfile = new TFile(CorrectionObject::_outpath+"output/JEC_L2_Dijet_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".root","RECREATE");
+  TFile* outputfile = new TFile(CorrectionObject::_outpath+"output/JEC_L2_Dijet_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+"_eta_0_13.root","RECREATE");
   outputfile->Print();
 
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       if(i==0){
-	outputfile->mkdir("ratio/"+eta_output[j]);
-	outputfile->mkdir("data/"+eta_output[j]);
-	outputfile->mkdir("mc/"+eta_output[j]);
+	outputfile->mkdir("ratio/"+eta_output_2[j]);
+	outputfile->mkdir("data/"+eta_output_2[j]);
+	outputfile->mkdir("mc/"+eta_output_2[j]);
       }
-      outputfile->cd("ratio/"+eta_output[j]);
+      outputfile->cd("ratio/"+eta_output_2[j]);
       mpf_ratio[i][j]->Write();
       rrel_ratio[i][j]->Write();
     
-      outputfile->cd("data/"+eta_output[j]);
+      outputfile->cd("data/"+eta_output_2[j]);
       mpf_data[i][j]->Write();
       rrel_data[i][j]->Write();
       
-      outputfile->cd("mc/"+eta_output[j]);
+      outputfile->cd("mc/"+eta_output_2[j]);
       mpf_mc[i][j]->Write();
       rrel_mc[i][j]->Write();
     }
  }
 
-  cout<<"Draw result for alpha = "<<alpha_range_common[3]<<" eta = "<<eta_common_range[n_eta_common-2]<<" "<<eta_common_range[n_eta_common-1]<<endl;
+  cout<<"Draw result for alpha = "<<alpha_range_common[3]<<" eta = "<<eta_common_range_2[n_eta_common_2-2]<<" "<<eta_common_range_2[n_eta_common_2-1]<<endl;
   mpf_ratio[3][0]->Draw();
 
   outputfile->Write();
@@ -260,7 +260,7 @@ void CorrectionObject::InputForGlobalFit(){
   delete outputfile;
 
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       delete mpf_data[i][j];
       delete mpf_mc[i][j];
       delete rrel_data[i][j];
@@ -275,7 +275,7 @@ void CorrectionObject::InputForGlobalFit(){
 
 
   for(int i=0; i<n_alpha_common; i++){
-    for(int j=0; j<n_eta_common-1; j++){
+    for(int j=0; j<n_eta_common_2-1; j++){
       for(int k=0; k<n_pt-1; k++){
 	delete hdata_rel_r[k][j][i];
 	delete hdata_mpf_r[k][j][i];

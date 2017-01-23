@@ -88,7 +88,10 @@ using namespace uhh2;
     Event::Handle<float> tt_barreljet_eta;  Event::Handle<float> tt_barreljet_phi; Event::Handle<float> tt_barreljet_pt; Event::Handle<float> tt_barreljet_ptRaw;
     Event::Handle<float> tt_pt_ave;
     Event::Handle<float> tt_alpha;
-    Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; Event::Handle<float> tt_asymmetry; Event::Handle<int> tt_nPU;
+    Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; 
+    Event::Handle<float> tt_asymmetry;
+    Event::Handle<float> tt_B;
+    Event::Handle<int> tt_nPU;
     Event::Handle<float> tt_ev_weight;
     Event::Handle<float> tt_jets_pt;//sum of jets pT
     Event::Handle<int> tt_jet_n;//number of jets
@@ -218,7 +221,7 @@ using namespace uhh2;
       if(jetLabel == "AK4CHS"){
 	if(!ClosureTest){
 	  //residuals
-	  if(JEC_Version == "Summer16_23Sep2016"){
+	  if(JEC_Version == "Summer16_23Sep2016_V0"){
 	    JEC_corr              = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
 	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;           
 	    //dummies, in this version, MC is not split
@@ -230,6 +233,22 @@ using namespace uhh2;
 	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
 	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
 	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
+	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;           
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;           //ReReco Data + Moriond17 MC
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
 	    cout << "This is MC, JECs used are: ";
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
@@ -270,6 +289,22 @@ using namespace uhh2;
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
 	  }
+	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, MC specified.");
 	}
       }
@@ -279,7 +314,7 @@ using namespace uhh2;
       if(jetLabel == "AK4CHS"){
 	if(!ClosureTest){
 	  //residuals
-	  if(JEC_Version == "Summer16_23Sep2016"){
+	  if(JEC_Version == "Summer16_23Sep2016_V0"){
 	    JEC_corr              = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
 	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
 	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V0_BCD_L123_noRes_AK4PFchs_DATA;
@@ -290,6 +325,18 @@ using namespace uhh2;
 	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
 	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;
 	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
+	  }
+	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_H_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_BCD_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_EF_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_G_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_H_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
 	  }
 	  else if(JEC_Version == "Spring16_23Sep2016"){	
 	    JEC_corr              = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Spring16 MC
@@ -319,6 +366,20 @@ using namespace uhh2;
 	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V2_H_L123_AK4PFchs_DATA;
 	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
 	    cout << "JEC for DATA: Spring16_23Sep2016_V2_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
+	  }
+	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
+	    //closure
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_BCD_L123_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_EF_L123_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_G_L123_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_H_L123_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
+	    cout << "JEC for DATA: Summer16_23Sep2016_V2_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
 	  }
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, DATA specified.");
 	}
@@ -414,7 +475,7 @@ using namespace uhh2;
 
       if(isMC){
 	if(JEC_Version == "Spring16_23Sep2016") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
-	else if(JEC_Version == "Summer16_23Sep2016") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_full)); 
+	else if(JEC_Version == "Summer16_23Sep2016" || JEC_Version == "Summer16_23Sep2016_V2") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_full)); 
 	else throw runtime_error("In TestModule.cxx: When setting up JER smearer, invalid 'JEC_Version' was specified.");
       }
 
@@ -449,6 +510,7 @@ using namespace uhh2;
     tt_rel_r = ctx.declare_event_output<float>("rel_r");
     tt_mpf_r = ctx.declare_event_output<float>("mpf_r");
     tt_asymmetry = ctx.declare_event_output<float>("asymmetry");
+    tt_B = ctx.declare_event_output<float>("B");
     tt_nPU = ctx.declare_event_output<int>("nPU");
     tt_ev_weight = ctx.declare_event_output<float>("weight");
     tt_jets_pt= ctx.declare_event_output<float>("sum_jets_pt");
@@ -891,14 +953,16 @@ using namespace uhh2;
     met.Set(event.met->pt() * cos(event.met->phi()),event.met->pt() * sin(event.met->phi()));
     pt.Set(barreljet_pt * cos(barreljet_phi),barreljet_pt* sin(barreljet_phi));
     float mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
+    float B = (met.Px()*pt.Px() + met.Py()*pt.Py())/((probejet_pt + barreljet_pt) * sqrt(pt.Px()*pt.Px() + pt.Py()*pt.Py())); //vec_MET*vec_ptbarr/(2ptave*ptbarr)
+
     float jets_pt = 0;
     for(int i=2;i<jet_n;i++){
       jets_pt += ((Jet*)&event.jets->at(i))->pt();
     }
 
     //separate flat and fwd samples at |eta| = 2.853
-    if(dataset_version.Contains("Fwd") && abs(probejet_eta) < 2.853) return false;
-    if(dataset_version.Contains("Flat") && abs(probejet_eta) >= 2.853) return false;
+    if(dataset_version.Contains("Fwd") && fabs(probejet_eta) < 2.853) return false;
+    if(dataset_version.Contains("Flat") && fabs(probejet_eta) >= 2.853) return false;
 	
 
 
@@ -930,6 +994,7 @@ using namespace uhh2;
     event.set(tt_pt_ave,pt_ave);
     event.set(tt_alpha,alpha);
     event.set(tt_asymmetry,asymmetry);
+    event.set(tt_B,B);
     event.set(tt_rel_r,rel_r);
     event.set(tt_mpf_r,mpf_r);
     event.set(tt_nPU,nPU);

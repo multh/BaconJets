@@ -15,8 +15,8 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       TString input_path;
       if(!_closuretest){  
 	if(split_JEC){
-	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V1/" + _collection + "/SplitQCD/";
-	  _outpath =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V1/" + _collection + "/SplitQCD/Run" + _runnr + "/";
+	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/";
+	  _outpath =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/Run" + _runnr + "/";
 	  //input_path =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/";
 	  //_outpath =     "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/Run" + _runnr + "/";
 	}
@@ -26,8 +26,8 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
 	}
       }
       else{
-	input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Spring16_23Sep2016_V2/" + _collection + "/";
-	_outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Spring16_23Sep2016_V2/" + _collection + "/Run" + _runnr + "/";
+	input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V2/" + _collection + "/";
+	_outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V2/" + _collection + "/Run" + _runnr + "/";
       }
 
       if(_generator == "pythia"){
@@ -67,6 +67,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       else if(_runnr == "FlateGH") _lumitag = "RunFlateGH  X.X fb^{-1}";
       else if(_runnr == "H") _lumitag = "RunH  X.X fb^{-1}";
       else if(_runnr == "BCDEFearly") _lumitag = "RunBCDEFearly  19.7 fb^{-1}";
+      else if(_runnr == "BCDEFGH") _lumitag = "RunBCDEFGH  36.8 fb^{-1}";
       else throw runtime_error("In constructor: Invalid RunNr. specified.");
 
 

@@ -35,3 +35,8 @@ const int n_eta_common = 8;
 const double eta_common_bins[n_eta_common] ={0, 0.783, 1.305, 1.93, 2.5, 2.964, 3.2, 5.191};
 const TString eta_common_range[n_eta_common] = {"0.000", "0.783", "1.305", "1.930", "2.500", "2.964", "3.200", "5.191"};
 const TString eta_output[n_eta_common-1] = {"eta00-08", "eta08-13","eta13-19","eta19-25","eta25-30","eta30-32","eta32-52"};
+
+const int n_eta_common_2 = 7;
+const double eta_common_bins_2[n_eta_common] ={0, 1.305, 1.93, 2.5, 2.964, 3.2, 5.191};
+const TString eta_common_range_2[n_eta_common] = {"0.000", "1.305", "1.930", "2.500", "2.964", "3.200", "5.191"};
+const TString eta_output_2[n_eta_common-1] = {"eta00-13","eta13-19","eta19-25","eta25-30","eta30-32","eta32-52"};

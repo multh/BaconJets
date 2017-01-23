@@ -22,22 +22,33 @@ int main(){
   //Objects.emplace_back(CorrectionObject("H", "pythia", "AK4CHS", true, true));
 
   //New residuals
-  Objects.emplace_back(CorrectionObject("BCD", "pythia", "AK4CHS", true, false));
+  //Objects.emplace_back(CorrectionObject("BCD", "pythia", "AK4CHS", true, false));
   Objects.emplace_back(CorrectionObject("EFearly", "pythia", "AK4CHS", true, false));
-  Objects.emplace_back(CorrectionObject("FlateG", "pythia", "AK4CHS", true, false));
-  Objects.emplace_back(CorrectionObject("H", "pythia", "AK4CHS", true, false));
+  //Objects.emplace_back(CorrectionObject("FlateG", "pythia", "AK4CHS", true, false));
+  //Objects.emplace_back(CorrectionObject("H", "pythia", "AK4CHS", true, false));
+  //Objects.emplace_back(CorrectionObject("BCDEFGH", "pythia", "AK4CHS", true, false));
+
   cout << "testobject is " << Objects[0] << endl;
 
 
   for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR();
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation(true);
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation(false);
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput();
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit();
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots();
-  Objects[0].L2ResAllRuns();
-  
+
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR();
+  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae();
+
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation(true);
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation(false);
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative(true);
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative(false);
+
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput();
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit();
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_eta_0_13();
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots();
+  //Objects[0].L2ResAllRuns();
+
+
+
 
 
   cout << endl << "Closing MC and DATA files." << endl;

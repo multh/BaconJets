@@ -33,6 +33,7 @@ void CorrectionObject::FinalControlPlots(){
   TH1D *hmc_rel_r[n_pt-1][n_eta-1];// pT-balance response for MC
   TH1D *hmc_mpf_r[n_pt-1][n_eta-1];//MPF response for MC
 
+
   int count = 0;
   TString name1 = "hist_data_rel_r_";
   TString name2 = "hist_data_mpf_r_";
@@ -101,10 +102,9 @@ void CorrectionObject::FinalControlPlots(){
   
 
 
-  //cout << "pT = [" << pt_bins[k] << setprecision(4) <<  "," << pt_bins[k+1] << setprecision(4) << "]: ";
 
 
-  //hmc_rel_r[k][j][i]->GetEntries();//MC
+ 
 
   ofstream output;
   output.open(CorrectionObject::_outpath+"plots/control/Number_Events_Pt_Eta_bins_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
@@ -206,6 +206,7 @@ void CorrectionObject::FinalControlPlots(){
   TCanvas* c_0 = new TCanvas();
   tdrCanvas(c_0,"c_0",h,4,10,true,CorrectionObject::_lumitag);
 
+  
   for(int i=0; i<n_eta-1; i++){
     //Create and fill TGraphErrors
     double xbin_tgraph[n_pt-1];
@@ -214,6 +215,9 @@ void CorrectionObject::FinalControlPlots(){
       xbin_tgraph[i]=(pt_bins[i]+pt_bins[i+1])/2;
       zero[i]=(pt_bins[i+1]-pt_bins[i])/2 ;
     }
+
+
+ 
 
     TGraphErrors *graph_mpf_mc   = new TGraphErrors(n_pt-1, xbin_tgraph, val_mpf_mc[i], zero, err_mpf_mc[i]);
     TGraphErrors *graph_mpf_data = new TGraphErrors(n_pt-1, xbin_tgraph, val_mpf_data[i], zero, err_mpf_data[i]);
@@ -287,7 +291,7 @@ void CorrectionObject::FinalControlPlots(){
     h->GetXaxis()->SetTitleSize(0.05);
     h->GetXaxis()->SetTitleOffset(0.80);
     h->GetXaxis()->SetLimits(30,pt_bins[n_pt-1]+100);
-    h->GetYaxis()->SetRangeUser(0.70,1.30);
+    h->GetYaxis()->SetRangeUser(0.50,1.50);
     graph_mpf_mc->Draw("P SAME");
     graph_mpf_data->Draw("P SAME");
     gPad->SetLogx();
@@ -316,7 +320,7 @@ void CorrectionObject::FinalControlPlots(){
     h->GetXaxis()->SetTitleSize(0.05);
     h->GetXaxis()->SetTitleOffset(0.80);
     h->GetXaxis()->SetLimits(30,pt_bins[n_pt-1]+100);
-    h->GetYaxis()->SetRangeUser(0.70,1.30);
+    h->GetYaxis()->SetRangeUser(0.50,1.50);
     graph_rel_mc->Draw("P SAME");
     graph_rel_data->Draw("P SAME");
     gPad->SetLogx();

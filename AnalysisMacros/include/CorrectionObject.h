@@ -56,10 +56,13 @@ using namespace std;
     //Main functions for calculating L2 residuals, defined in CorrectionObject.cc
     void ControlPlots();
     void kFSR();
+    void kFSR_CorrectFormulae();
     void Pt_Extrapolation(bool mpfMethod = true);
+    void Pt_Extrapolation_Alternative(bool mpfMethod = true);
     void L2ResOutput();
     void L2ResAllRuns();
     void InputForGlobalFit();
+    void InputForGlobalFit_eta_0_13();
     void FinalControlPlots();
     void FullCycle();
 
