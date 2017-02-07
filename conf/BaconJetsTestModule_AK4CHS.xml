@@ -4,10 +4,10 @@
 <!ENTITY PROOFdir       "/nfs/dust/cms/user/reimersa/.proof2">      
 <!ENTITY NEVT           "-1">
 <!ENTITY CACHEABLE      "False">
-<!ENTITY OUTdir         "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V2/AK4CHS">
+<!ENTITY OUTdir         "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/AK4CHS">
 <!--<!ENTITY OUTdir         "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Moriond17/SplitJEC/AK4CHS">-->
 <!ENTITY b_closuretest  "true">
-<!ENTITY jec_version    "Summer16_23Sep2016_V2">
+<!ENTITY jec_version    "Summer16_23Sep2016_V3">
 
 
 
@@ -47,7 +47,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="30" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_Spring16_23Sep2016_V2_AK4CHS"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_Summer16_23Sep2016_V3_AK4CHS"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->

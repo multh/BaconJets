@@ -4,9 +4,10 @@
 <!ENTITY PROOFdir        "/nfs/dust/cms/user/reimersa/.proof2">      
 <!ENTITY NEVT            "-1">
 <!ENTITY CACHEABLE       "False">
-<!ENTITY OUTdir          "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/">
+<!ENTITY OUTdir          "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta/">
 <!ENTITY b_closuretest   "false">
 <!ENTITY jec_version     "Summer16_23Sep2016_V2">
+<!ENTITY APPLY_WEIGHTS   "true">
 
 
 
@@ -45,7 +46,7 @@
 
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="7" AutoResubmit="5"/>
+<ConfigParse NEventsBreak="0" FileSplit="6" AutoResubmit="5"/>
 <ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_Summer16_23Sep2016_V2_AK4CHS"/>
 -->
 
@@ -149,19 +150,19 @@
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
-<!--
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat" Cacheable="&CACHEABLE;">
+
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunEFearly" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Flat;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd" Cacheable="&CACHEABLE;">
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunEFearly" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
--->
+
 
 
  
@@ -186,7 +187,7 @@
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
--->
+
 	
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunE_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunE_AK4CHS;
@@ -201,7 +202,7 @@
        <OutputTree Name="AnalysisTree"/>
   </InputData>
 
-<!--
+
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunFlate_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunF_AK4CHS;
        <InputTree Name="AnalysisTree"/>
@@ -293,6 +294,9 @@
 	<Item Name="JEC_Version" Value="&jec_version;"/>
 	<!-- Systematic uncertainties -->
 	<Item Name="jersmear_direction" Value="nominal"/>
+
+	<Item Name="Apply_Weights" Value="&APPLY_WEIGHTS;"/>
+	<Item Name="MC_Weights_Path" Value="/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/"/>
 
 
 	<!-- always apply MET smearing -->

@@ -62,6 +62,7 @@ TGraphErrors* CleanEmptyPoints(TGraphErrors* input){
   int count=0;
   vector<double> Xnew,Ynew,Xerrornew,Yerrornew;
   for(int i=0;i<input->GetN();i++){
+    cout << "Yval[" << i << "] = " << Yval[i] << endl;
     if(Yval[i]!=0){
       count++;
       Xnew.push_back(Xval[i]);       

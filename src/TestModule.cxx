@@ -115,11 +115,12 @@ using namespace uhh2;
     uhh2bacon::Selection sel;
 
     bool debug;
-    bool isMC, split_JEC_DATA, split_JEC_MC, ClosureTest;
+    bool isMC, split_JEC_DATA, split_JEC_MC, ClosureTest, apply_weights;
     string jetLabel;
     TString dataset_version, JEC_Version;
     JetId Jet_PFID;
     int n_evt;
+    std::unique_ptr<TFile> f_weights;
     
     std::map<run_lumi, double> rl2lumi;
     std::map<run_lumi, double> rl2intlumi;
@@ -147,6 +148,7 @@ using namespace uhh2;
     //// COMMON MODULES
     if(!isMC) lumi_sel.reset(new LumiSelection(ctx));
     Jet_PFID = JetPFID(JetPFID::WP_LOOSE);
+    //Jet_PFID = JetPFID(JetPFID::WP_TIGHT);
     jetcleaner.reset(new JetCleaner(ctx, Jet_PFID));
 
     if(!isMC){
@@ -305,6 +307,22 @@ using namespace uhh2;
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
 	  }
+	  else if(JEC_Version == "Summer16_23Sep2016_V3"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, MC specified.");
 	}
       }
@@ -380,6 +398,20 @@ using namespace uhh2;
 	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_H_L123_AK4PFchs_DATA;
 	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
 	    cout << "JEC for DATA: Summer16_23Sep2016_V2_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
+	  }
+	  else if(JEC_Version == "Summer16_23Sep2016_V3"){
+	    //closure
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V3_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V3_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V3_BCD_L123_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V3_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V3_EF_L123_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V3_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V3_G_L123_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V3_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V3_H_L123_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V3_H_L1RC_AK4PFchs_DATA;
+	    cout << "JEC for DATA: Summer16_23Sep2016_V3_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
 	  }
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, DATA specified.");
 	}
@@ -475,7 +507,7 @@ using namespace uhh2;
 
       if(isMC){
 	if(JEC_Version == "Spring16_23Sep2016") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
-	else if(JEC_Version == "Summer16_23Sep2016" || JEC_Version == "Summer16_23Sep2016_V2") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_full)); 
+	else if(JEC_Version == "Summer16_23Sep2016" || JEC_Version == "Summer16_23Sep2016_V2" || JEC_Version == "Summer16_23Sep2016_V3") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_full)); 
 	else throw runtime_error("In TestModule.cxx: When setting up JER smearer, invalid 'JEC_Version' was specified.");
       }
 
@@ -584,6 +616,23 @@ using namespace uhh2;
 
     debug = false;
     n_evt = 0;
+    TString name_weights = ctx.get("MC_Weights_Path");
+    apply_weights = ctx.get("Apply_Weights") == true;
+    if(apply_weights){
+      if(isMC && dataset_version.Contains("BCD")){
+	name_weights += "MC_ReWeights_RunBCD.root";
+      }
+      if(isMC && dataset_version.Contains("EFearly")){
+	name_weights += "MC_ReWeights_RunEFearly.root";
+      }
+      if(isMC && dataset_version.Contains("FlateG")){
+	name_weights += "MC_ReWeights_RunFlateG.root";
+      }
+      if(isMC && dataset_version.Contains("H")){
+	name_weights += "MC_ReWeights_RunH.root";
+      }
+      f_weights.reset(new TFile(name_weights,"READ"));
+    }
     
     string lumifile = ctx.get("lumi_file");
     std::unique_ptr<TFile> file(TFile::Open(lumifile.c_str(), "read"));
@@ -692,7 +741,7 @@ using namespace uhh2;
     }
     
  
-    event.weight = 1;
+    //event.weight = 1;
 
     int n_jets_beforeCleaner = event.jets->size();
     //JetID
@@ -878,10 +927,18 @@ using namespace uhh2;
       pass_trigger160_HFJEC = (trigger160_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[3]);
       pass_trigger220_HFJEC = (trigger220_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[4]);
       pass_trigger300_HFJEC = (trigger300_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[5]);
+      
       const bool pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
 				 || pass_trigger260 || pass_trigger320 || pass_trigger400 || pass_trigger500
 				 || pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
 				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC || pass_trigger300_HFJEC);
+      /*
+      //removed the trigger500 and HF300 triggers
+      const bool pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
+				 || pass_trigger260 || pass_trigger320 || pass_trigger400 
+				 || pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
+				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC );
+	*/
       if(debug){
 	cout << "before triggers: " << endl;
 	cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
@@ -924,7 +981,7 @@ using namespace uhh2;
     float nPU = 0 ;//todo for data?
     if(!event.isRealData) nPU = event.genInfo->pileup_TrueNumInteractions();
 
-    float ev_weight = event.weight;
+    //float ev_weight = event.weight;
 
     auto factor_raw1 = jet1->JEC_factor_raw();     auto factor_raw2 = jet2->JEC_factor_raw();
     float jet1_ptRaw = jet1_pt*factor_raw1;  float jet2_ptRaw = jet2_pt*factor_raw2;
@@ -963,7 +1020,16 @@ using namespace uhh2;
     //separate flat and fwd samples at |eta| = 2.853
     if(dataset_version.Contains("Fwd") && fabs(probejet_eta) < 2.853) return false;
     if(dataset_version.Contains("Flat") && fabs(probejet_eta) >= 2.853) return false;
-	
+
+    //obtain weights from MC reweighting
+    if(apply_weights){
+      TH2D* h_weights = (TH2D*)f_weights->Get("pt_ave_data");
+      int idx_x=0;
+      int idx_y=0;
+      while(pt_ave > idx_x*5) idx_x++;
+      while(fabs(probejet_eta) > eta_range[idx_y]) idx_y++;
+      event.weight *= h_weights->GetBinContent(idx_x, idx_y);
+    }
 
 
     int flavor = 0;
@@ -998,7 +1064,7 @@ using namespace uhh2;
     event.set(tt_rel_r,rel_r);
     event.set(tt_mpf_r,mpf_r);
     event.set(tt_nPU,nPU);
-    event.set(tt_ev_weight,ev_weight);
+    event.set(tt_ev_weight,event.weight);
     event.set(tt_jets_pt,jets_pt);
     event.set(tt_jet_n,jet_n);
     event.set(tt_rho,event.rho);    

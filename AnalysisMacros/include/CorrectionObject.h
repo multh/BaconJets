@@ -17,7 +17,6 @@ using namespace std;
   public:
 
     // Constructors, destructor
-    //CorrectionObject() : _runnr(""), _collection(""), _generator(""), _jettag(""), _MCFile(NULL), _DATAFile(NULL), _closuretest(false) {}
     CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & split_JEC = true, const bool & closuretest = false);
     CorrectionObject(const CorrectionObject &) = default;
     CorrectionObject & operator = (const CorrectionObject &) = default;
@@ -59,11 +58,15 @@ using namespace std;
     void kFSR_CorrectFormulae();
     void Pt_Extrapolation(bool mpfMethod = true);
     void Pt_Extrapolation_Alternative(bool mpfMethod = true);
+    void Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMethod = true);
     void L2ResOutput();
     void L2ResAllRuns();
+    void L2ResOverlay();
     void InputForGlobalFit();
     void InputForGlobalFit_eta_0_13();
     void FinalControlPlots();
+    void FinalControlPlots_CorrectFormulae();
+    void CalculateMCWeights();
     void FullCycle();
 
   private:
@@ -74,6 +77,7 @@ using namespace std;
     TString _lumitag;
     TString _MCpath, _DATApath;
     TString _outpath;
+    TString _basepath;
     TFile*  _MCFile;
     TFile*  _DATAFile;
     bool    _split_JEC;
