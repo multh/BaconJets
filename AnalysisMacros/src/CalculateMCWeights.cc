@@ -174,9 +174,9 @@ void CorrectionObject::CalculateMCWeights(){
   c2->SaveAs(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_scaled_PtEta_Fine_binned.pdf");
 
 
-  //TFile* out = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
-  //SF->Write();
-  //out->Close();
+  TFile* out = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
+  SF->Write();
+  out->Close();
 
   //delete out;
   delete l2;
