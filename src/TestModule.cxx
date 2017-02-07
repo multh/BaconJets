@@ -617,7 +617,7 @@ using namespace uhh2;
     debug = false;
     n_evt = 0;
     TString name_weights = ctx.get("MC_Weights_Path");
-    apply_weights = ctx.get("Apply_Weights") == true;
+    apply_weights = (ctx.get("Apply_Weights") == true && isMC);
     if(apply_weights){
       if(isMC && dataset_version.Contains("BCD")){
 	name_weights += "MC_ReWeights_RunBCD.root";
