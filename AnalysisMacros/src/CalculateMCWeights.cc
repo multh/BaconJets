@@ -25,6 +25,7 @@ using namespace std;
 
 void CorrectionObject::CalculateMCWeights(){
   cout << "--------------- Starting CalculateMCWeights() ---------------" << endl << endl;
+  gStyle->SetOptStat(0);
 
   const int n_pt_bins = 1000;
 
@@ -37,12 +38,17 @@ void CorrectionObject::CalculateMCWeights(){
   TH2D* h_pt_ave_mc = new TH2D("pt_ave_mc","pt_ave mc;p_{T}^{ave};|#eta|", n_pt_bins,0,5000,n_eta-1, eta_bins);
   TH2D* h_pt_ave_data = new TH2D("pt_ave_data","pt_ave data;p_{T}^{ave};|#eta|", n_pt_bins,0,5000,n_eta-1,eta_bins);
   TH2D* h_pt_ave_mc_scaled = new TH2D("pt_ave_mc_scaled","pt_ave mc scaled;p_{T}^{ave};|#eta|", n_pt_bins,0,5000,n_eta-1,eta_bins);
+  TH1D* h1_pt_ave_mc_scaled = new TH1D("h1_pt_ave_mc_scaled", "pt_ave mc scaled;p_{T}^{ave};entries", n_pt_bins, 0, 5000); //cross-check 1d
+  TH1D* h1_pt_ave_data = new TH1D("h1_pt_ave_data", "pt_ave data;p_{T}^{ave};entries", n_pt_bins, 0, 5000);                //cross-check 1d
 
   //normalization histograms for MC & DATA
   double bins[16] = {51, 73, 95, 100, 126, 152, 163, 230, 250, 299, 319, 365, 433, 453, 566, 10000};
+  double bins2[16] = {51, 73, 95, 100, 126, 152, 163, 230, 250, 299, 319, 365, 433, 453, 566, 1000};
   TH2D* h_pt_ave_binned_mc = new TH2D("pt_ave_binned_mc","pt_ave binned mc;p_{T}^{ave};|#eta|", 15, bins,n_eta-1,eta_bins);
   TH2D* h_pt_ave_binned_data = new TH2D("pt_ave_binned_data","pt_ave binned data;p_{T}^{ave};|#eta|", 15, bins,n_eta-1,eta_bins);
   TH2D* h_pt_ave_binned_mc_scaled = new TH2D("pt_ave_binned_mc_scaled","pt_ave binned mc scaled;p_{T}^{ave};|#eta|", 15, bins,n_eta-1,eta_bins);
+  TH1D* h1_pt_ave_binned_mc_scaled = new TH1D("h1_pt_ave_binned_mc_scaled", "pt_ave mc scaled;p_{T}^{ave};entries", 15, bins2);   //cross-check 1d
+  TH1D* h1_pt_ave_binned_data = new TH1D("h1_pt_ave_binned_data", "pt_ave data;p_{T}^{ave};entries", 15, bins2);                  //cross-check 1d 
 
 
   //Fill histograms
@@ -55,6 +61,8 @@ void CorrectionObject::CalculateMCWeights(){
     if(*alpha_data >= 0.3) continue;
     h_pt_ave_data->Fill(*pt_ave_data, fabs(*probejet_eta_data), *weight_data);
     h_pt_ave_binned_data->Fill(*pt_ave_data, fabs(*probejet_eta_data), *weight_data);
+    h1_pt_ave_data->Fill(*pt_ave_data, *weight_data);
+    h1_pt_ave_binned_data->Fill(*pt_ave_data, *weight_data);
   }
 
   TTreeReader myReader_mc("AnalysisTree", f_mc);
@@ -115,6 +123,8 @@ void CorrectionObject::CalculateMCWeights(){
 
     h_pt_ave_mc_scaled->Fill(pt, eta, right_weight);
     h_pt_ave_binned_mc_scaled->Fill(pt, eta, right_weight);
+    h1_pt_ave_mc_scaled->Fill(pt, right_weight);
+    h1_pt_ave_binned_mc_scaled->Fill(pt, right_weight);
 
     ind++;
   } //looping over events for the 2nd time
@@ -127,13 +137,52 @@ void CorrectionObject::CalculateMCWeights(){
     }
   }
 
+  TCanvas* c1 = new TCanvas();
+  h1_pt_ave_mc_scaled->SetLineWidth(2);
+  h1_pt_ave_mc_scaled->GetXaxis()->SetTitle("p_{T}^{ave} [GeV]");
+  h1_pt_ave_mc_scaled->GetXaxis()->SetRangeUser(20,1000);
+  h1_pt_ave_mc_scaled->Draw("HIST");
+  h1_pt_ave_data->SetLineColor(2);
+  h1_pt_ave_data->SetMarkerColor(2);
+  h1_pt_ave_data->SetMarkerSize(0.5);
+  h1_pt_ave_data->SetMarkerStyle(20);
+  h1_pt_ave_data->Draw("P SAME");
+
+  TLegend* l1 = new TLegend(0.52,0.7,0.9,0.9);    
+  l1->AddEntry(h1_pt_ave_mc_scaled,"MC after reweighting","l");
+  l1->AddEntry(h1_pt_ave_data,"DATA","p");
+  l1->Draw();
+
+  c1->SaveAs(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_scaled_PtEta_Fine.pdf");
 
 
-  TFile* out = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
-  SF->Write();
-  out->Close();
+  TCanvas* c2 = new TCanvas();
+  h1_pt_ave_binned_mc_scaled->SetLineWidth(2);
+  h1_pt_ave_binned_mc_scaled->GetXaxis()->SetTitle("p_{T}^{ave} [GeV]");
+  h1_pt_ave_binned_mc_scaled->GetXaxis()->SetRangeUser(20,1000);
+  h1_pt_ave_binned_mc_scaled->Draw("HIST");
+  h1_pt_ave_binned_data->SetLineColor(2);
+  h1_pt_ave_binned_data->SetMarkerColor(2);
+  h1_pt_ave_binned_data->SetMarkerStyle(20);
+  h1_pt_ave_binned_data->Draw("P SAME");
 
-  delete out;
+  TLegend* l2 = new TLegend(0.52,0.2,0.90,0.4);    
+  l2->AddEntry(h1_pt_ave_binned_mc_scaled,"MC after reweighting","l");
+  l2->AddEntry(h1_pt_ave_binned_data,"DATA","p");
+  l2->Draw();
+
+  c2->SaveAs(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_scaled_PtEta_Fine_binned.pdf");
+
+
+  //TFile* out = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
+  //SF->Write();
+  //out->Close();
+
+  //delete out;
+  delete l2;
+  delete c2;
+  delete l1;
+  delete c1;
   delete for_SF_mc;
   delete SF;
   delete h_pt_ave_binned_mc_scaled;

@@ -15,9 +15,9 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       TString input_path;
       if(!_closuretest){  
 	if(split_JEC){
-	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted/";
+	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta/";
 	  _basepath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/";
-	  _outpath =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted/Run" + _runnr + "/";
+	  _outpath =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta/Run" + _runnr + "/";
 	  //input_path =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/";
 	  //_outpath =     "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/Run" + _runnr + "/";
 	}

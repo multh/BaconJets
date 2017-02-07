@@ -617,18 +617,18 @@ using namespace uhh2;
     debug = false;
     n_evt = 0;
     TString name_weights = ctx.get("MC_Weights_Path");
-    apply_weights = (ctx.get("Apply_Weights") == true && isMC);
+    apply_weights = (ctx.get("Apply_Weights") == "true" && isMC);
     if(apply_weights){
-      if(isMC && dataset_version.Contains("BCD")){
+      if(isMC && dataset_version.Contains("RunBCD")){
 	name_weights += "MC_ReWeights_RunBCD.root";
       }
-      if(isMC && dataset_version.Contains("EFearly")){
+      else if(isMC && dataset_version.Contains("RunEFearly")){
 	name_weights += "MC_ReWeights_RunEFearly.root";
       }
-      if(isMC && dataset_version.Contains("FlateG")){
+      else if(isMC && dataset_version.Contains("RunFlateG")){
 	name_weights += "MC_ReWeights_RunFlateG.root";
       }
-      if(isMC && dataset_version.Contains("H")){
+      else if(isMC && dataset_version.Contains("RunH")){
 	name_weights += "MC_ReWeights_RunH.root";
       }
       f_weights.reset(new TFile(name_weights,"READ"));
