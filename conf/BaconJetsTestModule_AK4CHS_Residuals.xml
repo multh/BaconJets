@@ -40,101 +40,23 @@
     <Package Name="SUHH2BaconJets.par" />
 
 <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="12900" >
-<!--<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="12900" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="20">-->
  
 
 
 
-<!--
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt100to200_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt100to200_madgraph_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
 
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt200to300_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt200to300_madgraph_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt300to500_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt300to500_madgraph_AK4CHS;
+    <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunBCD" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
 
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt500to700_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt500to700_madgraph_AK4CHS;
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunBCD" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
-
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt700to1000_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt700to1000_madgraph_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt1000to1500_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt1000to1500_madgraph_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt1500to2000_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt1500to2000_madgraph_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDHt2000toInf_madgraph_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDHt2000toInf_madgraph_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_herwigpp_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_herwigpp_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
--->
-
-<!--
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_RunBCD_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_RunE_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_RunFearly_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
-     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_RunFlateGH_pythia8_AK4CHS" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
--->
-
 <!--
      <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunEFearly" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Flat;
@@ -144,6 +66,32 @@
 
 
      <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunEFearly" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunFlateG" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunFlateG" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunH" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+
+     <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunH" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
@@ -172,7 +120,7 @@
        <OutputTree Name="AnalysisTree"/>
   </InputData>
 
-<!--
+
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunE_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunE_AK4CHS;
        <InputTree Name="AnalysisTree"/>
@@ -185,7 +133,7 @@
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
--->
+
 
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunFlate_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunF_AK4CHS;
