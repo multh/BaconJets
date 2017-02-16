@@ -1,0 +1,7 @@
+How to compile the program:
+$> g++ -std=c++0x -Wall -o main main.C CorrectionObject.cc ControlPlots.cc kFSR.cc Pt_Extrapolation.cc useful_functions.cc `root-config --cflags --evelibs` 
+
+
+
+How to execute the program:
+./main
