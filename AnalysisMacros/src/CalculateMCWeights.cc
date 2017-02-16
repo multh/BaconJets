@@ -30,8 +30,8 @@ void CorrectionObject::CalculateMCWeights(){
   const int n_pt_bins = 1000;
 
   //Files
-  TFile* f_mc   = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/DefaultWeights/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Full.root","READ");
-  TFile* f_data = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/DefaultWeights/uhh2.AnalysisModuleRunner.DATA.DATA_Run" + CorrectionObject::_runnr  + "_AK4CHS.root","READ");
+  TFile* f_mc   = new TFile(CorrectionObject::_MCpath_ForWeights,"READ");
+  TFile* f_data = new TFile(CorrectionObject::_DATApath_ForWeights,"READ");
 
  //pT_ave-histograms for MC & DATA
 
@@ -42,7 +42,7 @@ void CorrectionObject::CalculateMCWeights(){
   TH1D* h1_pt_ave_data = new TH1D("h1_pt_ave_data", "pt_ave data;p_{T}^{ave};entries", n_pt_bins, 0, 5000);                //cross-check 1d
 
   //normalization histograms for MC & DATA
-  double bins[16] = {51, 73, 95, 100, 126, 152, 163, 230, 250, 299, 319, 365, 433, 453, 566, 10000};
+  double bins[16] = {51, 73, 95, 100, 126, 152, 163, 230, 250, 299, 319, 365, 433, 453, 566, 1000};
   double bins2[16] = {51, 73, 95, 100, 126, 152, 163, 230, 250, 299, 319, 365, 433, 453, 566, 1000};
   TH2D* h_pt_ave_binned_mc = new TH2D("pt_ave_binned_mc","pt_ave binned mc;p_{T}^{ave};|#eta|", 15, bins,n_eta-1,eta_bins);
   TH2D* h_pt_ave_binned_data = new TH2D("pt_ave_binned_data","pt_ave binned data;p_{T}^{ave};|#eta|", 15, bins,n_eta-1,eta_bins);
@@ -153,7 +153,7 @@ void CorrectionObject::CalculateMCWeights(){
   l1->AddEntry(h1_pt_ave_data,"DATA","p");
   l1->Draw();
 
-  c1->SaveAs(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_scaled_PtEta_Fine.pdf");
+  c1->SaveAs(CorrectionObject::_weightpath + "MC_scaled_PtEta_Fine.pdf");
 
 
   TCanvas* c2 = new TCanvas();
@@ -171,10 +171,10 @@ void CorrectionObject::CalculateMCWeights(){
   l2->AddEntry(h1_pt_ave_binned_data,"DATA","p");
   l2->Draw();
 
-  c2->SaveAs(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_scaled_PtEta_Fine_binned.pdf");
+  c2->SaveAs(CorrectionObject::_weightpath + "MC_scaled_PtEta_Fine_binned.pdf");
 
 
-  TFile* out = new TFile(CorrectionObject::_basepath + CorrectionObject::_collection + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
+  TFile* out = new TFile(CorrectionObject::_weightpath + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
   SF->Write();
   out->Close();
 

@@ -59,13 +59,13 @@ void CorrectionObject::kFSR_CorrectFormulae(){
       }
       
       TString name = name1; name+=count;
-      hdata_asymmetry[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hdata_asymmetry[j][i] = new TH2D(name,"A in DATA; p_{T}^{ave} [GeV]; A",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       name = name2;name+=count;
-      hdata_B[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hdata_B[j][i] = new TH2D(name,"B in DATA;p_{T}^{ave} [GeV];B",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       name = name3; name+=count;
-      hmc_asymmetry[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hmc_asymmetry[j][i] = new TH2D(name,"A in MC;p_{T}^{ave} [GeV];A",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       name = name4; name+=count;
-      hmc_B[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hmc_B[j][i] = new TH2D(name,"B in MC;p_{T}^{ave} [GeV];B",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       /*
       TString name = name1; name+=count;
       hdata_asymmetry[j][i] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -2.5, 0);
@@ -202,18 +202,38 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        //print profiles
        TCanvas* c_dummy5 = new TCanvas();
        pr_data_asymmetry[j][i]->Draw();
+       c_dummy5->SetLogx();
+       pr_data_asymmetry[j][i]->GetYaxis()->SetTitle("<A>");
+       pr_data_asymmetry[j][i]->SetLineWidth(2);
+       pr_data_asymmetry[j][i]->SetMinimum(-0.3);
+       pr_data_asymmetry[j][i]->SetMaximum(0.3);
        c_dummy5->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy5;
        TCanvas* c_dummy6 = new TCanvas();
        pr_mc_asymmetry[j][i]->Draw();
+       c_dummy6->SetLogx();
+       pr_mc_asymmetry[j][i]->GetYaxis()->SetTitle("<A>");
+       pr_mc_asymmetry[j][i]->SetLineWidth(2);
+       pr_mc_asymmetry[j][i]->SetMinimum(-0.3);
+       pr_mc_asymmetry[j][i]->SetMaximum(0.3);
        c_dummy6->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy6;
        TCanvas* c_dummy7 = new TCanvas();
        pr_data_B[j][i]->Draw();
+       c_dummy7->SetLogx();
+       pr_data_B[j][i]->GetYaxis()->SetTitle("<B>");
+       pr_data_B[j][i]->SetLineWidth(2);
+       pr_data_B[j][i]->SetMinimum(-0.3);
+       pr_data_B[j][i]->SetMaximum(0.3);
        c_dummy7->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy7;
        TCanvas* c_dummy8 = new TCanvas();
        pr_mc_B[j][i]->Draw();
+       c_dummy8->SetLogx();
+       pr_mc_B[j][i]->GetYaxis()->SetTitle("<B>");
+       pr_mc_B[j][i]->SetLineWidth(2);
+       pr_mc_B[j][i]->SetMinimum(-0.3);
+       pr_mc_B[j][i]->SetMaximum(0.3);
        c_dummy8->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy8;
      }
@@ -359,6 +379,8 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      pTgraph_rel_r[j] = new TMultiGraph();
      pTgraph_mpf_r[j] = new TMultiGraph();
      for(int k=0; k<n_pt-1; k++){
+
+       if(pt_bins[k]<95) continue;
 
        graph_rel_r[k][j] = new TGraphErrors(n_alpha,xbin_tgraph,ratio_al_rel_r[k][j],zero,err_ratio_al_rel_r[k][j]);
        graph_rel_r[k][j] = (TGraphErrors*)CleanEmptyPoints(graph_rel_r[k][j]);

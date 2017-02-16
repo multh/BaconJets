@@ -67,7 +67,7 @@ using namespace std;
     void FinalControlPlots();
     void FinalControlPlots_CorrectFormulae();
     void CalculateMCWeights();
-    void FullCycle();
+    void FullCycle_CorrectFormulae();
 
   private:
     TString _runnr;
@@ -75,9 +75,9 @@ using namespace std;
     TString _generator, _generator_tag;
     TString _jettag;
     TString _lumitag;
-    TString _MCpath, _DATApath;
+    TString _MCpath, _MCpath_ForWeights, _DATApath, _DATApath_ForWeights;
     TString _outpath;
-    TString _basepath;
+    TString _weightpath;
     TFile*  _MCFile;
     TFile*  _DATAFile;
     bool    _split_JEC;

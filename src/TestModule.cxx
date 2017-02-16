@@ -204,8 +204,6 @@ using namespace uhh2;
 
     }
 
-
-
     //new
     jetLabel = ctx.get("JetLabel");
     dataset_version = ctx.get("dataset_version");
@@ -833,13 +831,6 @@ using namespace uhh2;
       }
     }
 
-    /*
-    cout << "apply_BCD: " << apply_BCD << endl;
-    cout << "apply_EFearly: " << apply_EFearly << endl;
-    cout << "apply_FlateG: " << apply_FlateG << endl;
-    cout << "apply_H: " << apply_H << endl;
-    cout << "apply_global: " << apply_global << endl;
-    */
 
     if(apply_BCD+apply_EFearly+apply_FlateG+apply_H+apply_global != 1) throw runtime_error("In TestModule.cxx: Sum of apply_* when applying JECs is not == 1. Fix this.");
 
@@ -939,6 +930,15 @@ using namespace uhh2;
 				 || pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
 				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC );
 	*/
+      /* //Only FWD triggers
+      const bool pass_trigger = (pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
+				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC || pass_trigger300_HFJEC);
+      */
+      /*//Only 'standard' triggers
+      const bool pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
+				 || pass_trigger260 || pass_trigger320 || pass_trigger400 || pass_trigger500);
+      */
+
       if(debug){
 	cout << "before triggers: " << endl;
 	cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
@@ -1018,11 +1018,11 @@ using namespace uhh2;
     }
 
     //separate flat and fwd samples at |eta| = 2.853
-    if(dataset_version.Contains("Fwd") && fabs(probejet_eta) < 2.853) return false;
-    if(dataset_version.Contains("Flat") && fabs(probejet_eta) >= 2.853) return false;
+    if(dataset_version.Contains("Fwd") && fabs(probejet_eta) < 2.853 && isMC) return false;
+    if(dataset_version.Contains("Flat") && fabs(probejet_eta) >= 2.853 && isMC) return false;
 
     //obtain weights from MC reweighting
-    if(apply_weights){
+    if(apply_weights && isMC){
       TH2D* h_weights = (TH2D*)f_weights->Get("pt_ave_data");
       int idx_x=0;
       int idx_y=0;

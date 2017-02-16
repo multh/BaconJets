@@ -507,7 +507,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
     //Do the fit!
     if(graph_filled[j]){
-      TFitResultPtr fitloglin =  graph1_mpf[j]->Fit(plotname[j]+"f1","SRM");
+      TFitResultPtr fitloglin =  graph1_mpf[j]->Fit(plotname[j]+"f1","SM","",95,1000);
       TMatrixDSym cov = fitloglin->GetCovarianceMatrix();
       Vcov[0][j] = cov(0,0);
       Vcov[1][j] = cov(1,1);     
@@ -523,7 +523,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     }
     
     if(graph_filled[j]){
-      graph1_mpf[j]->Fit(plotname[j]+"f2","SRM + SAME");
+      graph1_mpf[j]->Fit(plotname[j]+"f2","SM + SAME","",95,1000);
     }
     else{
       f2[j]->SetParameter(0,0.0001);
@@ -622,7 +622,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       double chi2ndf_loglin = f1[j]->GetChisquare() / f1[j]->GetNDF();
       double chi2ndf_const =  f2[j]->GetChisquare() / f2[j]->GetNDF();
       h_chi2_loglin->SetBinContent(j+1,chi2ndf_loglin); //to make sure to fill the right eta-bin...
-      h_chi2_const->SetBinContent(j+1,chi2ndf_const); //to make sure to fill the right eta-bin...
+      h_chi2_const->SetBinContent(j+1,chi2ndf_const);   //to make sure to fill the right eta-bin...
     }
  
 
