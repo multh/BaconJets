@@ -32,13 +32,13 @@ void CorrectionObject::L2ResOverlay(){
   h->GetYaxis()->SetTitleSize(0.05);
   tdrCanvas(c1,"c1",h,4,10,true,CorrectionObject::_lumitag);
 
-  TLegend leg1 = tdrLeg(0.17,0.19,0.35,0.5);
+  TLegend leg1 = tdrLeg(0.17,0.14,0.35,0.45);
 
   TLine *line = new TLine(0.,1,5.191,1);              
 
-  const int n_runs = 1;
-  //TString runnr_v[n_runs]={"BCD","EFearly","FlateG","H"};
-  TString runnr_v[n_runs]={"EFearly"};
+  const int n_runs = 4;
+  TString runnr_v[n_runs]={"BCD","EFearly","FlateG","H"};
+  //TString runnr_v[n_runs]={"EFearly"};
   TCanvas* c2 = new TCanvas;
   tdrCanvas(c2,"c2",h,4,10,true,"V3 vs. newest");
   TFile* f_Res_mpf;
@@ -73,8 +73,8 @@ void CorrectionObject::L2ResOverlay(){
       res_logpt_mpf_kfsrfit_old->SetLineColor(kGreen-2);
       res_diff[j]->SetLineColor(kGreen-2);
     }
-    leg1.AddEntry(res_logpt_mpf_kfsrfit,runnr+"newest","L");
-    leg1.AddEntry(res_logpt_mpf_kfsrfit_old,runnr+"V3","L");
+    leg1.AddEntry(res_logpt_mpf_kfsrfit,runnr+" newest","L");
+    leg1.AddEntry(res_logpt_mpf_kfsrfit_old,runnr+" V3","L");
     res_logpt_mpf_kfsrfit->Draw("E SAME");  
     res_logpt_mpf_kfsrfit_old->Draw("E SAME");  
   }
@@ -91,7 +91,7 @@ void CorrectionObject::L2ResOverlay(){
   h->SetMinimum(-0.3); 
   h->GetYaxis()->SetTitle("V3 - 'newest'");
   tdrCanvas(c3,"c3",h,4,10,true,"V3 - newest");
-  TLegend leg2 = tdrLeg(0.17,0.19,0.35,0.5);
+  TLegend leg2 = tdrLeg(0.17,0.14,0.35,0.45);
   for(int i=0; i<n_runs; i++){
     TString runnr=runnr_v[i];
     leg2.AddEntry(res_diff[i],runnr+": (V3-newest)","L");

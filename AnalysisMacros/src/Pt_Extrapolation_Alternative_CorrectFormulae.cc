@@ -684,8 +684,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       
       else if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCD"){
-	  kfsr_fit_mpf->SetParameters(1,-100,300);      
-	  fit_fullrange = true;
+	  kfsr_fit_mpf->SetParameters(0.5,200,300);
 	}
 	else if(CorrectionObject::_runnr == "E"){
 	  if(CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1.,-100,300); //CLOSURETEST
@@ -695,7 +694,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	  kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001); 
 	} //CLOSURETEST
 	else if(CorrectionObject::_runnr == "FlateG"){
-	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	  //if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,100,400); //MC reweight + RES
 	}
       }
 
@@ -718,6 +718,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       else kfsr_fit_mpf->SetParameters(1.001,0.,0.);
     }
     
+
     else if(CorrectionObject::_generator == "herwig"){
       if(CorrectionObject::_collection == "AK4CHS") {
 	kfsr_fit_mpf->SetParameters(1.,-0.001,0.04);
@@ -976,7 +977,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	  kfsr_fit_dijet->SetParameters(1,-100,300.); //RES
 	  //kfsr_fit_dijet->SetParameters(0.5,1.,1.); //RES Full QCD
 	  //fit_fullrange = true; //RES Full QCD
-	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
+	  //if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
+	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1, 500, -100.); //reweighted MC, RES
 	}
 	else if(CorrectionObject::_runnr == "E") kfsr_fit_dijet->SetParameters(2,300,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "F") kfsr_fit_dijet->SetParameters(3,-800,300.); //CLOSURETEST
@@ -991,7 +993,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	}
 	else if(CorrectionObject::_runnr == "FlateG"){
 	  if(!CorrectionObject::_closuretest){
-	    kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
+	    //kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
+	    kfsr_fit_dijet->SetParameters(1,500,-100.); //RES
 	    //kfsr_fit_dijet->SetParameters(0,150,150); //RES Full
 	    //fit_fullrange = true;
 	  }
@@ -1003,11 +1006,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	    kfsr_fit_dijet->SetParameters(2,-200,100.); //CLOSURETEST
 	    fit_fullrange = true;
 	  }
-	  
 	  else{
-	    kfsr_fit_dijet->SetParameters(1,-100,200.); //RES
-	    //kfsr_fit_dijet->SetParameters(0.5,50,50); //RES Full
-	    //fit_fullrange = true;
+	    //kfsr_fit_dijet->SetParameters(1,-100,200.); //RES
+	    kfsr_fit_dijet->SetParameters(1,500,-100.); //reweighted MC, RES
 	  }
 	}
 	else kfsr_fit_dijet->SetParameters(0,0,200.); 

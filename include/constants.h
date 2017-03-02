@@ -102,6 +102,23 @@ constexpr static int s_runnr_EFearly = 278802; //up to this one, EXCLUDING this 
 constexpr static int s_runnr_Fearly  = 278802; //up to this one, EXCLUDING this one
 constexpr static int s_runnr_FlateG  = 280385; //up to this one, including this one
 
+//Lumi recorded by different triggers in pb-1
+constexpr static float s_lumi_cent_40 = 0.101;
+constexpr static float s_lumi_cent_60 = 1.704;
+constexpr static float s_lumi_cent_80 = 4.203;
+constexpr static float s_lumi_cent_140 = 27.769;
+constexpr static float s_lumi_cent_200 = 139.732;
+constexpr static float s_lumi_cent_260 = 521.863;
+constexpr static float s_lumi_cent_320 = 2965.774;
+constexpr static float s_lumi_cent_400 = 9021.331;
+constexpr static float s_lumi_cent_500 = 29280.311;
+constexpr static float s_lumi_HF_60 = 19.605;
+constexpr static float s_lumi_HF_80 = 28.773;
+constexpr static float s_lumi_HF_100 = 98.341;
+constexpr static float s_lumi_HF_160 = 561.485;
+constexpr static float s_lumi_HF_220 = 28983.619;
+constexpr static float s_lumi_HF_300 = 35672.846;
+
 
 /** \brief Jet Resolution Smearering **/
 // doing the matching from GEN to RECO
