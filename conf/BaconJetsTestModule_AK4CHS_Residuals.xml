@@ -6,7 +6,7 @@
 <!ENTITY CACHEABLE          "False">
 <!ENTITY OUTdir             "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward/TriggerThresholds_NoUnflat">
 <!ENTITY b_closuretest      "false">
-<!ENTITY jec_version        "Summer16_23Sep2016_V2">
+<!ENTITY jec_version        "Summer16_23Sep2016_V4">
 <!ENTITY APPLY_WEIGHTS      "true">
 <!ENTITY WEIGHT_PATH        "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/FWD/">
 <!ENTITY APPLY_LUMIWEIGHTS  "false">
