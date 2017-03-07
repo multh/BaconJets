@@ -4,11 +4,11 @@
 <!ENTITY PROOFdir           "/nfs/dust/cms/user/reimersa/.proof2">      
 <!ENTITY NEVT               "-1">
 <!ENTITY CACHEABLE          "False">
-<!ENTITY OUTdir             "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/Jens_FreshCMSSW/">
+<!ENTITY OUTdir             "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward/TriggerThresholds_NoUnflat">
 <!ENTITY b_closuretest      "false">
-<!ENTITY jec_version        "Summer16_23Sep2016_V4">
+<!ENTITY jec_version        "Summer16_23Sep2016_V2">
 <!ENTITY APPLY_WEIGHTS      "true">
-<!ENTITY WEIGHT_PATH        "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/FWD/">
+<!ENTITY WEIGHT_PATH        "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/FWD/">
 <!ENTITY APPLY_LUMIWEIGHTS  "false">
 <!ENTITY APPLY_UNFLATTENING "false">
 
@@ -30,7 +30,7 @@
 
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="10" AutoResubmit="5"/>
+<ConfigParse NEventsBreak="0" FileSplit="5" AutoResubmit="5"/>
 <ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_Summer16_23Sep2016_V2_AK4CHS"/>
 -->
 
@@ -65,13 +65,13 @@
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
-
+<!--
      <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunEFearly" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
-
+-->
 <!--
    <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunFlateG" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Flat;
@@ -200,7 +200,7 @@
       <Item Name="GenJetCollection"        Value="slimmedGenJets"/>
       <!--          <Item Name="METName"                 Value="slimmedMETs"/>-->
       <Item Name="METName"                 Value="slMETsCHS"/>
-      <Item Name="lumi_file" Value="/nfs/dust/cms/user/reimersa/CMSSW_8_0_24_patch1/src/UHH2/common/data/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.root"/>
+      <Item Name="lumi_file" Value="/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/data/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.root"/>
 
       <!--
       	 <Item Name="pileup_directory"           Value="/afs/desy.de/user/k/karavdia/CMSSW_8_0_20/src/UHH2/BaconJets/data/PileUp/80X/PileUP_MC_pythia8_PUFlat.root"/>
