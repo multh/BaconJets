@@ -17,7 +17,7 @@ using namespace std;
   public:
 
     // Constructors, destructor
-    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & split_JEC = true, const bool & closuretest = false);
+    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest = false);
     CorrectionObject(const CorrectionObject &) = default;
     CorrectionObject & operator = (const CorrectionObject &) = default;
     ~CorrectionObject() = default;
@@ -67,6 +67,7 @@ using namespace std;
     void FinalControlPlots();
     void FinalControlPlots_CorrectFormulae();
     void CalculateMCWeights();
+    void CalculateMCWeights_TriggerThresholds(bool CentralTriggers);
     void FullCycle_CorrectFormulae();
 
   private:
@@ -75,12 +76,11 @@ using namespace std;
     TString _generator, _generator_tag;
     TString _jettag;
     TString _lumitag;
-    TString _MCpath, _MCpath_ForWeights, _DATApath, _DATApath_ForWeights;
+    TString _MCpath, _MCpath_ForWeights_FLAT, _MCpath_ForWeights_FWD, _DATApath, _DATApath_ForWeights, _DATApath_ForWeights_FLAT, _DATApath_ForWeights_FWD;
     TString _outpath;
-    TString _weightpath;
+    TString _weightpath_FLAT, _weightpath_FWD;
     TFile*  _MCFile;
     TFile*  _DATAFile;
-    bool    _split_JEC;
     bool    _closuretest;
  
    

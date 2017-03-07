@@ -986,12 +986,25 @@ using namespace uhh2;
 
     //obtain weights from MC reweighting
     if(apply_weights && isMC){
-      TH2D* h_weights = (TH2D*)f_weights->Get("pt_ave_data");
-      int idx_x=0;
-      int idx_y=0;
-      while(pt_ave > idx_x*5) idx_x++;
-      while(fabs(probejet_eta) > eta_range[idx_y]) idx_y++;
-      event.weight *= h_weights->GetBinContent(idx_x, idx_y);
+      // TH2D* h_weights = (TH2D*)f_weights->Get("pt_ave_data");
+      // int idx_x=0;
+      // int idx_y=0;
+      // while(pt_ave > idx_x*5) idx_x++;
+      // while(fabs(probejet_eta) > eta_range[idx_y]) idx_y++;
+      // event.weight *= h_weights->GetBinContent(idx_x, idx_y);
+
+      TH1D* h_weights = (TH1D*)f_weights->Get("pt_ave_binned_data");
+      int idx=0;
+      if(dataset_version.Contains("_Fwd")){
+	double bins[7] = {100,126,152,250,316,433,1000};
+	while(pt_ave > bins[idx]) idx++;
+      }
+      else{
+	double bins[10] = {51,73,95,163,230,299,365,453,566,1000};
+	while(pt_ave > bins[idx]) idx++;
+      }
+      if(idx == 0) return false;
+      event.weight *= h_weights->GetBinContent(idx);
     }
 
     h_afterPtEtaReweight->fill(event);

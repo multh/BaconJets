@@ -40,7 +40,7 @@ void CorrectionObject::L2ResOverlay(){
   TString runnr_v[n_runs]={"BCD","EFearly","FlateG","H"};
   //TString runnr_v[n_runs]={"EFearly"};
   TCanvas* c2 = new TCanvas;
-  tdrCanvas(c2,"c2",h,4,10,true,"V3 vs. newest");
+  tdrCanvas(c2,"c2",h,4,10,true,"V4 vs. V5");
   TFile* f_Res_mpf;
   TFile* f_Res_mpf_old;
   TH1D* res_logpt_mpf_kfsrfit;
@@ -73,8 +73,8 @@ void CorrectionObject::L2ResOverlay(){
       res_logpt_mpf_kfsrfit_old->SetLineColor(kGreen-2);
       res_diff[j]->SetLineColor(kGreen-2);
     }
-    leg1.AddEntry(res_logpt_mpf_kfsrfit,runnr+" newest","L");
-    leg1.AddEntry(res_logpt_mpf_kfsrfit_old,runnr+" V3","L");
+    leg1.AddEntry(res_logpt_mpf_kfsrfit,runnr+" V5","L");
+    leg1.AddEntry(res_logpt_mpf_kfsrfit_old,runnr+" V4","L");
     res_logpt_mpf_kfsrfit->Draw("E SAME");  
     res_logpt_mpf_kfsrfit_old->Draw("E SAME");  
   }
@@ -82,25 +82,25 @@ void CorrectionObject::L2ResOverlay(){
   line->Draw("SAME");
   leg1.Draw();
 
-  TString save_as = CorrectionObject::_outpath + "../plots/L2Res_MPF_LOGLIN_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_nominal_VersionComparison_Summer16_23Sep2016_V3_vs_CorrectFormulae_MCReweighting.pdf";
+  TString save_as = CorrectionObject::_outpath + "../plots/L2Res_MPF_LOGLIN_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_nominal_VersionComparison_Summer16_23Sep2016_V5_vs_CorrectFormulae_MCReweighting.pdf";
   cout << "save-as = " << save_as << endl;
   c2->SaveAs(save_as); 
 
   TCanvas* c3 = new TCanvas;
   h->SetMaximum(0.3); 
   h->SetMinimum(-0.3); 
-  h->GetYaxis()->SetTitle("V3 - 'newest'");
-  tdrCanvas(c3,"c3",h,4,10,true,"V3 - newest");
+  h->GetYaxis()->SetTitle("V4 - V5");
+  tdrCanvas(c3,"c3",h,4,10,true,"V4 - V5");
   TLegend leg2 = tdrLeg(0.17,0.14,0.35,0.45);
   for(int i=0; i<n_runs; i++){
     TString runnr=runnr_v[i];
-    leg2.AddEntry(res_diff[i],runnr+": (V3-newest)","L");
+    leg2.AddEntry(res_diff[i],runnr+": (V4-V5)","L");
     res_diff[i]->Draw("E SAME");
   }
   line->Draw("SAME");
   leg2.Draw();
 
-  TString save_as_diff = CorrectionObject::_outpath + "../plots/L2Res_MPF_LOGLIN_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_nominal_VersionComparison_Summer16_23Sep2016_V3_vs_CorrectFormulae_MCReweighting_diff.pdf";
+  TString save_as_diff = CorrectionObject::_outpath + "../plots/L2Res_MPF_LOGLIN_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_nominal_VersionComparison_Summer16_23Sep2016_V5_vs_CorrectFormulae_MCReweighting_diff.pdf";
   cout << "save-as_diff = " << save_as_diff << endl;
   c3->SaveAs(save_as_diff); 
 
@@ -113,9 +113,7 @@ void CorrectionObject::L2ResOverlay(){
   delete res_logpt_mpf_kfsrfit_old;
   delete f_Res_mpf;
   delete f_Res_mpf_old;
-  //delete c2;
   delete line;
-  //delete leg1;
   delete h;
   delete c1;
 

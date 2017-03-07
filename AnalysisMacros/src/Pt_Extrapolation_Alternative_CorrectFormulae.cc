@@ -684,7 +684,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       
       else if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCD"){
-	  kfsr_fit_mpf->SetParameters(0.5,200,300);
+	  kfsr_fit_mpf->SetParameters(1,100,500);
 	}
 	else if(CorrectionObject::_runnr == "E"){
 	  if(CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1.,-100,300); //CLOSURETEST
