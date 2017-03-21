@@ -61,7 +61,7 @@ using namespace std;
     void Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMethod = true);
     void L2ResOutput();
     void L2ResAllRuns();
-    void L2ResOverlay();
+    void L2ResOverlay(bool is_MPF);
     void InputForGlobalFit();
     void InputForGlobalFit_eta_0_13();
     void FinalControlPlots();

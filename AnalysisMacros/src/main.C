@@ -21,9 +21,9 @@ int main(){
    //eine Klasse: enthaelt Info ueber runnr, Generator, collection, Strings zu MC/DATA-files, memberfunctions: controlPlots, kFSR etc.
   vector<CorrectionObject> Objects;
 
-  Objects.emplace_back(CorrectionObject("BCD", generator, "AK4CHS", closure_test));
+  //Objects.emplace_back(CorrectionObject("BCD", generator, "AK4CHS", closure_test));
   //Objects.emplace_back(CorrectionObject("EFearly", generator, "AK4CHS", closure_test));
-  //Objects.emplace_back(CorrectionObject("FlateG", generator, "AK4CHS", closure_test));
+  Objects.emplace_back(CorrectionObject("FlateG", generator, "AK4CHS", closure_test));
   //Objects.emplace_back(CorrectionObject("H", generator, "AK4CHS", closure_test));
   //Objects.emplace_back(CorrectionObject("BCDEFGH", generator, "AK4CHS", closure_test));
 
@@ -55,8 +55,9 @@ int main(){
 
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
   
-  Objects[0].L2ResAllRuns();
-  Objects[0].L2ResOverlay();
+  //Objects[0].L2ResAllRuns();
+  Objects[0].L2ResOverlay(true);
+  Objects[0].L2ResOverlay(false);
 
 
 

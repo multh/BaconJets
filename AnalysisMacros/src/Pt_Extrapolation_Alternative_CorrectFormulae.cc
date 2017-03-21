@@ -322,10 +322,30 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   }
 
   //Mikko's request: delete super-high data point in 2.8-2.9 bin (j==13) above ~400 GeV pT (point no 6 & 7 [c++])
-
-  graph1_mpf[13]->RemovePoint(8);
-  graph1_mpf[13]->RemovePoint(7);
-  if(CorrectionObject::_runnr == "H")  graph1_mpf[13]->RemovePoint(7);
+  if(graph1_mpf[13]->GetN() == 10){
+    graph1_mpf[13]->RemovePoint(9);
+    graph1_mpf[13]->RemovePoint(8);
+    graph1_mpf[13]->RemovePoint(7);
+    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(6);
+  }
+  else if(graph1_mpf[13]->GetN() == 9){
+    graph1_mpf[13]->RemovePoint(8);
+    graph1_mpf[13]->RemovePoint(7);
+    graph1_mpf[13]->RemovePoint(6);
+    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(5);
+  }
+  else if(graph1_mpf[13]->GetN() == 8){
+    graph1_mpf[13]->RemovePoint(7);
+    graph1_mpf[13]->RemovePoint(6);
+    graph1_mpf[13]->RemovePoint(5);
+    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(4);
+  }
+  else if(graph1_mpf[13]->GetN() == 7){
+    graph1_mpf[13]->RemovePoint(6);
+    graph1_mpf[13]->RemovePoint(5);
+    graph1_mpf[13]->RemovePoint(4);
+    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(3);
+  }
 
   for(int k=0; k<n_pt-1; k++){
     double x = 0;
