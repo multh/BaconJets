@@ -15,8 +15,11 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       TString input_path;
       if(!_closuretest){  
 	if(split_JEC){
-	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95/";
-	  _weightpath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/";
+	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_test_with_ReReco_JEC_Summer16_23Sep2016_V4/";
+	  _weightpath = "/nfs/dust/cms/user/karavdia/JEC_80X_test_with_ReReco_JEC_Summer16_23Sep2016_V4/MC_Reweighted/";
+
+	  //	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95/";
+	  //	  _weightpath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/";
 	  _outpath =   input_path + "Run" + _runnr + "/";
 	  //input_path =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/";
 	  //_outpath =     "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/Run" + _runnr + "/";
@@ -34,8 +37,10 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       }
 
       if(_generator == "pythia"){
-	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
-	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full.root";
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
+	//	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full.root";
+	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
+	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
 	//_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + ".root";
 	_generator_tag = "pythia8";
       }

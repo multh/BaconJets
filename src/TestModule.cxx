@@ -15,10 +15,10 @@
 #include "UHH2/common/include/CleaningModules.h"
 
 #include "UHH2/BaconJets/include/selection.h"
-#include "UHH2/BaconJets/include/jet_corrections.h"
-#include "UHH2/BaconJets/include/mc_weight.h"
+// #include "UHH2/BaconJets/include/jet_corrections.h"
+// #include "UHH2/BaconJets/include/mc_weight.h"
 #include "UHH2/BaconJets/include/constants.h"
-#include "UHH2/BaconJets/include/TSetTree.h"
+//#include "UHH2/BaconJets/include/TSetTree.h"
 //#include "UHH2/BaconJets/include/dijet_event.h"
 #include "UHH2/core/include/Jet.h"
 #include "UHH2/common/include/PrintingModules.h"
@@ -28,7 +28,9 @@
 //#include "UHH2/BaconJets/include/data_corrections.h"
 #include "TClonesArray.h"
 #include "TString.h"
-
+#include "TFile.h"
+#include "TTree.h"
+// #include "TBranch.h"
 
 //TTree   *fCurrentTree;
 Int_t   Runnr;
@@ -221,50 +223,18 @@ using namespace uhh2;
       if(jetLabel == "AK4CHS"){
 	if(!ClosureTest){
 	  //residuals
-	  if(JEC_Version == "Summer16_23Sep2016_V0"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;           
+	  if(JEC_Version == "Summer16_23Sep2016_V4"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;           
 	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;           //ReReco Data + Moriond17 MC
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V0_L123_AK4PFchs_MC;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V0_L1RC_AK4PFchs_MC;
-	    cout << "This is MC, JECs used are: ";
-	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
-	    cout << endl;
-	  }
-	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;           
-	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;           //ReReco Data + Moriond17 MC
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    cout << "This is MC, JECs used are: ";
-	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
-	    cout << endl;
-	  }
-	  else if(JEC_Version == "Spring16_23Sep2016"){
-	    JEC_corr              = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;              //noRes only for DATA ;), for deriving Spring16_23Sep2016
-	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;              //ReReco Data + Spring16 MC
-	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
-	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
-	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
-	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
-	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
-	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V1_L123_AK4PFchs_MC;
-	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V1_L1RC_AK4PFchs_MC;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;           //ReReco Data + Moriond17 MC
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
 	    cout << "This is MC, JECs used are: ";
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
@@ -273,55 +243,23 @@ using namespace uhh2;
 	}
 	//closure
 	else{
-	  if(JEC_Version == "Spring16_23Sep2016"){
-	    JEC_corr              = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;               //ReReco Data + Spring16 MC
-	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	 if(JEC_Version == "Summer16_23Sep2016_V4"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
 	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V2_L1RC_AK4PFchs_MC;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
 	    cout << "This is MC, JECs used are: ";
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
 	  }
-	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_L123_AK4PFchs_MC;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_L1RC_AK4PFchs_MC;
-	    cout << "This is MC, JECs used are: ";
-	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
-	    cout << endl;
-	  }
-	  else if(JEC_Version == "Summer16_23Sep2016_V3"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
-	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V3_L123_AK4PFchs_MC;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V3_L1RC_AK4PFchs_MC;
-	    cout << "This is MC, JECs used are: ";
-	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
-	    cout << endl;
-	  }
-	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, MC specified.");
+	 else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, MC specified.");
 	}
       }
     }
@@ -330,97 +268,39 @@ using namespace uhh2;
       if(jetLabel == "AK4CHS"){
 	if(!ClosureTest){
 	  //residuals
-	  if(JEC_Version == "Summer16_23Sep2016_V0"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V0_BCD_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V0_BCD_L1RC_AK4PFchs_DATA;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V0_E_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V0_E_L1RC_AK4PFchs_DATA;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V0_GH_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V0_GH_L1RC_AK4PFchs_DATA;
+	 if(JEC_Version == "Summer16_23Sep2016_V4"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_H_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_BCD_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V4_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V4_EF_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V4_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V4_G_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V4_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V4_H_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
 	  }
-	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_H_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_BCD_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_BCD_L1RC_AK4PFchs_DATA;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_EF_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_EF_L1RC_AK4PFchs_DATA;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_G_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_H_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
-	  }
-	  else if(JEC_Version == "Spring16_23Sep2016"){	
-	    JEC_corr              = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Spring16 MC
-	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V1_GH_L1RC_AK4PFchs_DATA;
-	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V1_BCD_L123_noRes_AK4PFchs_DATA;
-	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V1_BCD_L1RC_AK4PFchs_DATA;
-	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V1_E_L123_noRes_AK4PFchs_DATA;  
-	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V1_E_L1RC_AK4PFchs_DATA;  
-	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  
-	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V1_GH_L1RC_AK4PFchs_DATA;  
-	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V1_GH_L123_noRes_AK4PFchs_DATA;  
-	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V1_GH_L1RC_AK4PFchs_DATA;
-	  }
-	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for deriving residuals on AK4CHS, DATA specified.");
+	 else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for deriving residuals on AK4CHS, DATA specified.");
 	}
 	else{
-	  if(JEC_Version == "Spring16_23Sep2016"){
+	 if(JEC_Version == "Summer16_23Sep2016_V4"){
 	    //closure
-	    JEC_corr              = JERFiles::Spring16_23Sep2016_V2_G_L123_AK4PFchs_DATA;              //ReReco Data + Spring16 MC
-	    JEC_corr_L1RC         = JERFiles::Spring16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_BCD          = JERFiles::Spring16_23Sep2016_V2_BCD_L123_AK4PFchs_DATA;
-	    JEC_corr_BCD_L1RC     = JERFiles::Spring16_23Sep2016_V2_BCD_L1RC_AK4PFchs_DATA;
-	    JEC_corr_EFearly      = JERFiles::Spring16_23Sep2016_V2_EF_L123_AK4PFchs_DATA;
-	    JEC_corr_EFearly_L1RC = JERFiles::Spring16_23Sep2016_V2_EF_L1RC_AK4PFchs_DATA;
-	    JEC_corr_FlateG       = JERFiles::Spring16_23Sep2016_V2_G_L123_AK4PFchs_DATA;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Spring16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_H            = JERFiles::Spring16_23Sep2016_V2_H_L123_AK4PFchs_DATA;
-	    JEC_corr_H_L1RC       = JERFiles::Spring16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
-	    cout << "JEC for DATA: Spring16_23Sep2016_V2_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 MC
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V4_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V4_EF_L123_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V4_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V4_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
+	    cout << "JEC for DATA: Summer16_23Sep2016_V4_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
 	  }
-	  else if(JEC_Version == "Summer16_23Sep2016_V2"){
-	    //closure
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V2_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 MC
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V2_BCD_L123_AK4PFchs_DATA;
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V2_BCD_L1RC_AK4PFchs_DATA;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V2_EF_L123_AK4PFchs_DATA;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V2_EF_L1RC_AK4PFchs_DATA;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V2_G_L123_AK4PFchs_DATA;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V2_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V2_H_L123_AK4PFchs_DATA;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V2_H_L1RC_AK4PFchs_DATA;
-	    cout << "JEC for DATA: Summer16_23Sep2016_V2_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
-	  }
-	  else if(JEC_Version == "Summer16_23Sep2016_V3"){
-	    //closure
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V3_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 MC
-	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V3_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V3_BCD_L123_AK4PFchs_DATA;
-	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V3_BCD_L1RC_AK4PFchs_DATA;
-	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V3_EF_L123_AK4PFchs_DATA;
-	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V3_EF_L1RC_AK4PFchs_DATA;
-	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V3_G_L123_AK4PFchs_DATA;
-	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V3_G_L1RC_AK4PFchs_DATA;
-	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V3_H_L123_AK4PFchs_DATA;
-	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V3_H_L1RC_AK4PFchs_DATA;
-	    cout << "JEC for DATA: Summer16_23Sep2016_V3_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
-	  }
-	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, DATA specified.");
+	 else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, DATA specified.");
 	}
       }
     }
-    
-
-
-
-
-
     
   
       //for closure test
@@ -505,7 +385,7 @@ using namespace uhh2;
 
       if(isMC){
 	if(JEC_Version == "Spring16_23Sep2016") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
-	else if(JEC_Version == "Summer16_23Sep2016" || JEC_Version == "Summer16_23Sep2016_V2" || JEC_Version == "Summer16_23Sep2016_V3") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_full)); 
+	else if(JEC_Version == "Summer16_23Sep2016_V4") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
 	else throw runtime_error("In TestModule.cxx: When setting up JER smearer, invalid 'JEC_Version' was specified.");
       }
 

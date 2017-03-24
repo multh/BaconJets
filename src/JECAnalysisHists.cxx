@@ -4,9 +4,9 @@
 #include "UHH2/core/include/Jet.h"
 
 // #include "UHH2/BaconTrans/baconheaders/TJet.hh"
-#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
-#include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
-#include "UHH2/BaconTrans/baconheaders/TVertex.hh"
+// #include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
+// #include "UHH2/BaconTrans/baconheaders/BaconAnaDefs.hh"
+// #include "UHH2/BaconTrans/baconheaders/TVertex.hh"
 
 
 
@@ -19,7 +19,7 @@
 #include <getopt.h>
 using namespace std;
 using namespace uhh2;
-using namespace baconhep;
+//using namespace baconhep;
     uhh2::Event::Handle<TClonesArray> h_pv;
 JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists(ctx, dirname){
     // book all histograms here

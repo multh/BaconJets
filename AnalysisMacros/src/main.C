@@ -29,7 +29,7 @@ int main(){
 
   cout << "testobject is " << Objects[0] << endl;
 
-  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
+  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
 
 
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
@@ -51,7 +51,7 @@ int main(){
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots();
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots_CorrectFormulae();
 
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
+  // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
   
   //Objects[0].L2ResAllRuns();
   //Objects[0].L2ResOverlay();
