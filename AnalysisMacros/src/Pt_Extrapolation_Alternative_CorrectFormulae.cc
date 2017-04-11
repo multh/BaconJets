@@ -624,8 +624,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       h_chi2_loglin->SetBinContent(j+1,chi2ndf_loglin); //to make sure to fill the right eta-bin...
       h_chi2_const->SetBinContent(j+1,chi2ndf_const);   //to make sure to fill the right eta-bin...
     }
- 
 
+    h_chi2_loglin->GetYaxis()->SetRangeUser(0,20);
+    h_chi2_const->GetYaxis()->SetRangeUser(0,20);
     //Store plots
     if(mpfMethod){
       asd[j]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
@@ -671,6 +672,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     TF1 *kfsr_fit_mpf = new TF1("kfsr_fit_mpf","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.);   //Range: 0,5. by default
 
     bool fit_fullrange = false;
+    //    bool fit_fullrange = true;
     //VERY fragile fit, carefully set initial values
     if(CorrectionObject::_generator == "pythia"){
 
@@ -696,6 +698,11 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	} //CLOSURETEST
 	else if(CorrectionObject::_runnr == "FlateG"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	}
+	else if(CorrectionObject::_runnr == "H"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	  else kfsr_fit_mpf->SetParameters(1.,-100,300); //RES
+	  fit_fullrange = true;
 	}
       }
 
@@ -747,7 +754,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
     //Finally perform the fit!
     kfsr_fit_mpf->SetLineColor(kRed+1);
+    std::cout<<"!!! kFSR MPF fit !!!"<<std::endl;
     if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,3.14);
+    //    if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,2.4);
     else hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,5.);
     
 
@@ -950,6 +959,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     TF1 *kfsr_fit_dijet = new TF1("kfsr_fit_dijet","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.); //Range: 0,5. by default
     
     bool fit_fullrange = false;
+    //    bool fit_fullrange = true;
     //tune the initial values for the fit
     if(CorrectionObject::_generator == "herwig"){
       //Initial values for herwig
@@ -999,16 +1009,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	}
 	else if(CorrectionObject::_runnr == "G") kfsr_fit_dijet->SetParameters(2,-400,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "H"){
-	  if(CorrectionObject::_closuretest){
-	    kfsr_fit_dijet->SetParameters(2,-200,100.); //CLOSURETEST
-	    fit_fullrange = true;
-	  }
-	  
-	  else{
-	    kfsr_fit_dijet->SetParameters(1,-100,200.); //RES
-	    //kfsr_fit_dijet->SetParameters(0.5,50,50); //RES Full
-	    //fit_fullrange = true;
-	  }
+	  kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
 	}
 	else kfsr_fit_dijet->SetParameters(0,0,200.); 
       }
@@ -1055,8 +1056,10 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
     //Finally perform the fit 
     kfsr_fit_dijet->SetLineColor(kBlue+1);
+    std::cout<<"------ !!! kFSR pT-balance fit !!! ------"<<std::endl;
     if(fit_fullrange) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,5.);
     else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,3.14);
+    //    else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.4);
 
 
     //Create a histogram to hold the confidence intervals                                                                                        

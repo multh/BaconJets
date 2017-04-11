@@ -15,9 +15,18 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       TString input_path;
       if(!_closuretest){  
 	if(split_JEC){
-	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_test_with_ReReco_JEC_Summer16_23Sep2016_V4/";
-	  _weightpath = "/nfs/dust/cms/user/karavdia/JEC_80X_test_with_ReReco_JEC_Summer16_23Sep2016_V4/MC_Reweighted/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_ReReco_JEC_Summer16_23Sep2016_V4/";
+//	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
+//	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/";
+//	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight_METoverJetsPt02/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight_METoverJetsPt02/";
+	  //input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_ReReco_JEC_Summer16_23Sep2016_V4_STDHLT/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_ReReco_JEC_Summer16_23Sep2016_V4_DATAonly/";
+	  //	  _weightpath = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
 
+	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
+	  _weightpath = "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
 	  //	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95/";
 	  //	  _weightpath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/";
 	  _outpath =   input_path + "Run" + _runnr + "/";
@@ -37,10 +46,13 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       }
 
       if(_generator == "pythia"){
-	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
-	//	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full.root";
-	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
-	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
+	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunH_AK4CHS_PromtReco.root"; //FOR preLegacy plots
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunBCD_AK4CHS_PromtReco.root"; //FOR preLegacy plots
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunBCD_AK4CHS_reMINIAOD.root"; //FOR preLegacy plots
+	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full.root";
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
+	//	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
 	//_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + ".root";
 	_generator_tag = "pythia8";
       }
@@ -55,6 +67,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
 	_generator_tag = "madgraphMLM";
       }
       _DATApath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
+      //      _DATApath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunBCD_AK4CHS_PromtReco.root"; //TEST for preLegacy
       _DATApath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       //_DATApath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/AK4CHS/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS.root";
       cout << "Opening MC file:   " << _MCpath << endl;

@@ -44,7 +44,8 @@ class Selection {
     bool triggerFired(float bin1, float bin2);
 
     //  bool FullSelection();
-
+    //Cut events with pthat in PU higher than pthat
+    bool PUpthat(uhh2::Event& evt);
 
 };
 

@@ -369,6 +369,20 @@ bool Selection::DiJetAdvanced(uhh2::Event& evt)
 
 // }
 
+  bool Selection::PUpthat(uhh2::Event& evt)
+  {
+    assert(event);
+  
+   double  pt_hat = event->genInfo->binningValues()[0];
+   double  PU_pt_hat = event->genInfo->PU_pT_hat_max();
+  
+   double Ratio = PU_pt_hat/pt_hat;
+
+    if(Ratio < 1) return true;
+
+    return false;
+  }
+
 Selection::~Selection()
 {
 }
