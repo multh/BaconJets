@@ -189,7 +189,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   for(int j=0; j<n_eta-1; j++){
     for(int k=0; k<n_pt-1; k++){
       enough_entries[j][k] = false;
-      if(n_entries_mc[j][k] > 30 && n_entries_data[j][k] > 30) enough_entries[j][k] = true;
+      if(n_entries_mc[j][k] > 100 && n_entries_data[j][k] > 100) enough_entries[j][k] = true;
     }
   }
 
@@ -211,28 +211,29 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       //responses for data, MC separately. Only for bins with >= 30 entries
       double mpf_mc = (1+pr_mc_B[j]->GetBinContent(k+1))/(1-pr_mc_B[j]->GetBinContent(k+1));
       //if(pr_mc_B[j]->GetBinEntries(k+1) < 30) mpf_mc = 0;
-      if(!enough_entries[j][k]) mpf_mc = 0;
+      if(!enough_entries[j][k] || pr_mc_B[j]->GetBinContent(k+1)==0) mpf_mc = 0;
       double mpf_data = (1+pr_data_B[j]->GetBinContent(k+1))/(1-pr_data_B[j]->GetBinContent(k+1));
+      //      if (j==10 || j==14) std::cout<<"@"<<eta_range[j]<<" mpf_mc = "<<mpf_mc<<" mpf_data = "<<mpf_data<<" B_MC = "<<pr_mc_B[j]->GetBinContent(k+1)<<" B_DATA = "<<pr_data_B[j]->GetBinContent(k+1)<<std::endl;
       //if(pr_data_B[j]->GetBinEntries(k+1) < 30) mpf_data = 0;
-      if(!enough_entries[j][k]) mpf_data = 0;
+      if(!enough_entries[j][k] || pr_data_B[j]->GetBinContent(k+1)==0) mpf_data = 0;
       double rel_mc = (1+pr_mc_asymmetry[j]->GetBinContent(k+1))/(1-pr_mc_asymmetry[j]->GetBinContent(k+1));
       //if(pr_mc_asymmetry[j]->GetBinEntries(k+1) < 30) rel_mc = 0;
-      if(!enough_entries[j][k]) rel_mc = 0;
+      if(!enough_entries[j][k] || pr_mc_asymmetry[j]->GetBinContent(k+1)==0) rel_mc = 0;
       double rel_data = (1+pr_data_asymmetry[j]->GetBinContent(k+1))/(1-pr_data_asymmetry[j]->GetBinContent(k+1));
       //if(pr_data_asymmetry[j]->GetBinEntries(k+1) < 30) rel_data = 0;
-      if(!enough_entries[j][k]) rel_data = 0;
+      if(!enough_entries[j][k] || pr_data_asymmetry[j]->GetBinContent(k+1)==0) rel_data = 0;
       double err_mpf_mc = 2/(pow((1-pr_mc_B[j]->GetBinContent(k+1)),2)) * pr_mc_B[j]->GetBinError(k+1);
       //if(pr_mc_B[j]->GetBinEntries(k+1) < 30) err_mpf_mc = 0;
-      if(!enough_entries[j][k]) err_mpf_mc = 0;
+      if(!enough_entries[j][k] || pr_mc_B[j]->GetBinContent(k+1)==0) err_mpf_mc = 0;
       double err_mpf_data = 2/(pow((1-pr_data_B[j]->GetBinContent(k+1)),2)) * pr_data_B[j]->GetBinError(k+1);
       //if(pr_data_B[j]->GetBinEntries(k+1) < 30) err_mpf_data = 0;
-      if(!enough_entries[j][k]) err_mpf_data = 0;
+      if(!enough_entries[j][k] || pr_data_B[j]->GetBinContent(k+1)==0) err_mpf_data = 0;
       double err_rel_mc = 2/(pow((1-pr_mc_asymmetry[j]->GetBinContent(k+1)),2)) * pr_mc_asymmetry[j]->GetBinError(k+1);
       //if(pr_mc_asymmetry[j]->GetBinEntries(k+1) < 30) err_rel_mc = 0;
-      if(!enough_entries[j][k]) err_rel_mc = 0;
+      if(!enough_entries[j][k] || pr_mc_asymmetry[j]->GetBinContent(k+1)==0) err_rel_mc = 0;
       double err_rel_data = 2/(pow((1-pr_data_asymmetry[j]->GetBinContent(k+1)),2)) * pr_data_asymmetry[j]->GetBinError(k+1);
       //if(pr_data_asymmetry[j]->GetBinEntries(k+1) < 30) err_rel_data = 0;
-      if(!enough_entries[j][k]) err_rel_data = 0;
+      if(!enough_entries[j][k] || pr_data_asymmetry[j]->GetBinContent(k+1)==0) err_rel_data = 0;
 
       //ratio of responses, again gaussian error propagation
       if(rel_data > 0) ratio_al_rel_r[k][j] = rel_mc/rel_data;
@@ -279,6 +280,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       if(mpfMethod){
 	ratio_mpf[j][k] = ratio_al_mpf_r[k][j];
 	err_ratio_mpf[j][k] = err_ratio_al_mpf_r[k][j];
+	//	std::cout<<"ratio_mpf[j][k] = @"<<eta_range[j]<<" "<<ratio_mpf[j][k]<<std::endl;
       }
       else{
 	ratio_mpf[j][k] = ratio_al_rel_r[k][j];
@@ -299,8 +301,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       // zero[i]=(pt_bins[j+1]-pt_bins[j])/2 ;
       xbin_tgraph[j][i] = hdata_ptave[i][j]->GetMean();
       zero[j][i] = hdata_ptave[i][j]->GetStdDev();
-      cout << "x before: " << (pt_bins[i]+pt_bins[i+1])/2 << " +- " << (pt_bins[i+1]-pt_bins[i])/2 << endl;
-      cout << "x now:    " << xbin_tgraph[j][i] << " +- " << zero[j][i] << endl << endl;
+      // cout << "x before: " << (pt_bins[i]+pt_bins[i+1])/2 << " +- " << (pt_bins[i+1]-pt_bins[i])/2 << endl;
+      // cout << "x now:    " << xbin_tgraph[j][i] << " +- " << zero[j][i] << endl << endl;
     }
   }
   TGraphErrors *graph1_mpf[n_eta-1];
@@ -311,14 +313,14 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     graph1_mpf[j] = new TGraphErrors(n_pt-1, xbin_tgraph[j], ratio_mpf[j], zero[j], err_ratio_mpf[j]);
     graph1_mpf[j] = (TGraphErrors*)CleanEmptyPoints(graph1_mpf[j]); 
     if(graph1_mpf[j]->GetN() > 0) graph_filled[j] = true;
-    cout << "Eta bin no: " << j << ", graph filled?: " << graph_filled[j] << endl;
+    // cout << "Eta bin no: " << j << ", graph filled?: " << graph_filled[j] << endl;
   }
 
   for(int k=0; k<n_pt-1; k++){
     double x = 0;
     double val = 0;
     graph1_mpf[13]->GetPoint(k,x,val);
-    cout << "BEFORE: In eta bin no 13: ratio of responses in pT bin no " << k << " at " << x << " : " << val << endl; 
+    // cout << "BEFORE: In eta bin no 13: ratio of responses in pT bin no " << k << " at " << x << " : " << val << endl; 
   }
 
   //Mikko's request: delete super-high data point in 2.8-2.9 bin (j==13) above ~400 GeV pT (point no 6 & 7 [c++])
@@ -358,7 +360,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     double x = 0;
     double val = 0;
     graph1_mpf[13]->GetPoint(k,x,val);
-    cout << "AFTER: In eta bin no 13: ratio of responses in pT bin no " << k << " at " << x << " : " << val << endl; 
+    // cout << "AFTER: In eta bin no 13: ratio of responses in pT bin no " << k << " at " << x << " : " << val << endl; 
   }
 
 

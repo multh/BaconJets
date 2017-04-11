@@ -6,6 +6,7 @@ using namespace std;
 pair<double,double> Rmc_to_Rdata(pair<double,double> mc, pair<double,double> data){
   pair<double,double> out;
   out.first =0;   out.second =0;
+  //  out.first =-1;   out.second =-1;
   if(abs(data.first)>1e-3){ 
     double ratio = mc.first/data.first;
     double ratioError = sqrt(pow(mc.second/data.first,2) + pow(mc.first*data.second/data.first/data.first,2));
@@ -18,8 +19,8 @@ pair<double,double> Rmc_to_Rdata(pair<double,double> mc, pair<double,double> dat
 //Get mean value and RMS of a TH1D
 pair<double,double> GetValueAndError(TH1D *hin){
   pair<double,double> res;
-  //  res.first = 0; res.second = 0;
-  res.first = -1; res.second = -1;
+  res.first = 0; res.second = 0;
+  //  res.first = -1; res.second = -1;
   //  if(hin->GetEntries()>30){
   //  if(hin->GetEntries()>50){
   if(hin->GetEntries()>100){
@@ -65,8 +66,9 @@ TGraphErrors* CleanEmptyPoints(TGraphErrors* input){
   int count=0;
   vector<double> Xnew,Ynew,Xerrornew,Yerrornew;
   for(int i=0;i<input->GetN();i++){
-    //    cout << "Yval[" << i << "] = " << Yval[i] << endl;
-    if(Yval[i]!=0){
+    //    cout << "Yval[" << i << "] = " << Yval[i] <<" +/- "<<YvalError[i]<< endl;
+    //    if(Yval[i]!=0 && YvalError[i]!=0){
+    if(YvalError[i]!=0){
       count++;
       Xnew.push_back(Xval[i]);       
       Ynew.push_back(Yval[i]);

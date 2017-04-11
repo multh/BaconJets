@@ -515,9 +515,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c1,"c1",h,4,10,kSquare,"MC");
     TLegend leg1 = tdrLeg(0.62,0.46,0.85,0.81);
     TH1D* htemp_mpf_mc;
-    //    for(int j=0; j<n_pt-1; j++){
+    for(int j=0; j<n_pt-1; j++){
     //    for(int j=0; j<5; j++){ //TEST
-    for(int j=5; j<n_pt-1; j++){//TEST
+    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_mpf_mc = "hist_mc_B_"+eta_name+"_"+pt_name;
@@ -546,9 +546,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c2,"c2",h,4,10,kSquare,CorrectionObject::_lumitag);
     TLegend leg2 = tdrLeg(0.62,0.46,0.85,0.81);
     TH1D* htemp_mpf_data;
-    //    for(int j=0; j<n_pt-1; j++){
+    for(int j=0; j<n_pt-1; j++){
     //    for(int j=0; j<5; j++){ //TEST
-    for(int j=5; j<n_pt-1; j++){//TEST
+    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_mpf_data = "hist_data_B_"+eta_name+"_"+pt_name;
@@ -632,9 +632,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c5,"c5",h,4,10,kSquare,"MC");
     TLegend leg5 = tdrLeg(0.62,0.46,0.85,0.81);
     TH1D* htemp_met_mc;
-    //    for(int j=0; j<n_pt-1; j++){
+    for(int j=0; j<n_pt-1; j++){
     //    for(int j=0; j<5; j++){ //TEST
-    for(int j=5; j<n_pt-1; j++){//TEST
+    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_met_mc = "hist_mc_METoverJetsPt_"+eta_name+"_"+pt_name;
@@ -664,9 +664,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c6,"c6",h,4,10,kSquare,CorrectionObject::_lumitag);
     TLegend leg6 = tdrLeg(0.62,0.46,0.85,0.81);
     TH1D* htemp_met_data;
-    //    for(int j=0; j<n_pt-1; j++){
+    for(int j=0; j<n_pt-1; j++){
     //    for(int j=0; j<5; j++){ //TEST
-    for(int j=5; j<n_pt-1; j++){//TEST
+    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_met_data = "hist_data_METoverJetsPt_"+eta_name+"_"+pt_name;

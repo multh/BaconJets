@@ -38,13 +38,17 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
     f_data = new TFile(CorrectionObject::_DATApath_ForWeights_FWD,"READ");
 
   }
-
+  double eta_min,eta_max;
   int n_pt_bins;
   if(CentralTriggers){
     n_pt_bins = 10;
+    eta_min = 0;
+    eta_max = 2.853;
   }
   else{
     n_pt_bins = 7;
+    eta_min = 2.853;
+    eta_max = 5.3;
  
   }
   double bins[n_pt_bins];
@@ -78,14 +82,15 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
   
 
 
-
+  //  std::cout<<"bins[0] = "<<bins[0]<<std::endl;
   //Fill histograms
   TTreeReader myReader_data("AnalysisTree", f_data);
   TTreeReaderValue<Float_t> pt_ave_data(myReader_data, "pt_ave");
+  TTreeReaderValue<Float_t> probejet_eta_data(myReader_data, "probejet_eta");
   TTreeReaderValue<Float_t> weight_data(myReader_data, "weight");
   TTreeReaderValue<Float_t> alpha_data(myReader_data, "alpha");
   while (myReader_data.Next()){
-    if(*alpha_data >= 0.3) continue;
+    if(*alpha_data >= 0.3 || *pt_ave_data < bins[0] || *probejet_eta_data < eta_min || *probejet_eta_data > eta_max) continue;
     h_pt_ave_binned_data->Fill(*pt_ave_data, *weight_data);
     h_pt_ave_data->Fill(*pt_ave_data, *weight_data);
   }
@@ -95,7 +100,7 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
   TTreeReaderValue<Float_t> weight_mc(myReader_mc, "weight");
   TTreeReaderValue<Float_t> alpha_mc(myReader_mc, "alpha");
   while (myReader_mc.Next()){
-    if(*alpha_mc >= 0.3) continue;
+    if(*alpha_mc >= 0.3 || *pt_ave_mc<bins[0]) continue;
     h_pt_ave_binned_mc->Fill(*pt_ave_mc, *weight_mc);
   }
 
@@ -109,6 +114,7 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
     double mc = for_SF_mc->GetBinContent(i+1);
     if(mc > 0) content = data/mc;
     else content = 0;
+    //    std::cout<<"bin #"<<i<<" SF = "<<content<<std::endl;
     SF->SetBinContent(i+1, content);
   }
   
@@ -185,8 +191,8 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
 
 
   TFile* out;
-  if(CentralTriggers) out = new TFile(CorrectionObject::_weightpath_FLAT + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
-  else                out = new TFile(CorrectionObject::_weightpath_FWD + "/MC_ReWeights_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
+  if(CentralTriggers) out = new TFile(CorrectionObject::_weightpath_FLAT + "/MC_ReWeights_CENTRAL_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
+  else                out = new TFile(CorrectionObject::_weightpath_FWD + "/MC_ReWeights_FWD_Run" + CorrectionObject::_runnr  + ".root","RECREATE");
   SF->Write();
   out->Close();
 

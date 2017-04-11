@@ -541,16 +541,28 @@ using namespace uhh2;
     apply_weights = (ctx.get("Apply_Weights") == "true" && isMC);
     if(apply_weights){
       if(isMC && dataset_version.Contains("RunBCD")){
-	name_weights += "MC_ReWeights_RunBCD.root";
+	if(dataset_version.Contains("_Fwd"))
+	  name_weights += "MC_ReWeights_FWD_RunBCD.root";
+	else
+	  name_weights += "MC_ReWeights_CENTRAL_RunBCD.root";
       }
       else if(isMC && dataset_version.Contains("RunEFearly")){
-	name_weights += "MC_ReWeights_RunEFearly.root";
+	if(dataset_version.Contains("_Fwd"))
+	  name_weights += "MC_ReWeights_FWD_RunEFearly.root";
+	else 
+	  name_weights += "MC_ReWeights_CENTRAL_RunEFearly.root";
       }
       else if(isMC && dataset_version.Contains("RunFlateG")){
-	name_weights += "MC_ReWeights_RunFlateG.root";
+	if(dataset_version.Contains("_Fwd"))
+	  name_weights += "MC_ReWeights_FWD_RunFlateG.root";
+	else
+	  name_weights += "MC_ReWeights_CENTRAL_RunFlateG.root";
       }
       else if(isMC && dataset_version.Contains("RunH")){
-	name_weights += "MC_ReWeights_RunH.root";
+	if(dataset_version.Contains("_Fwd"))
+	name_weights += "MC_ReWeights_FWD_RunH.root";
+	else
+	name_weights += "MC_ReWeights_CENTRAL_RunH.root";
       }
       f_weights.reset(new TFile(name_weights,"READ"));
     }
@@ -993,7 +1005,6 @@ using namespace uhh2;
       jets_pt += ((Jet*)&event.jets->at(i))->pt();
     }
 
-    //<<<<<<< HEAD
     h_beforeFlatFwd->fill(event);
 
     //separate flat and fwd samples at |eta| = 2.853

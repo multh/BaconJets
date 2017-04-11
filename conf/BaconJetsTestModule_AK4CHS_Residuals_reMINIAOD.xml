@@ -8,14 +8,15 @@
 <!ENTITY CACHEABLE       "False">
 
 <!-- <!ENTITY OUTdir         "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight_METoverJetsPt02/Weights/"> -->
-<!ENTITY OUTdir         "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/"> 
+<!-- <!ENTITY OUTdir         "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/"> -->
+<!ENTITY OUTdir         "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/"> 
 <!ENTITY b_closuretest   "false">
 <!ENTITY jec_version     "Summer16_23Sep2016_V4">
-<!ENTITY APPLY_WEIGHTS   "false">
+<!ENTITY APPLY_WEIGHTS   "true">
 <!ENTITY APPLY_LUMIWEIGHTS  "false">
 <!ENTITY APPLY_UNFLATTENING "false">
 <!ENTITY WEIGHT_PATH     "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/">
-<!ENTITY APPLY_METoverPTcut   "false">
+<!ENTITY APPLY_METoverPTcut   "true">
 
 <!--
 <!ENTITY QCDPt15to7000_pythia8_AK4CHS_Flat SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_Pt-15to7000_Flat_pythia8_full.xml">
@@ -60,13 +61,13 @@
  <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="12900" > 
 <!-- <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="12900" RunMode="PROOF" ProofServer="lite://" ProofWorkDir="&PROOFdir;/" ProofNodes="15" > -->
 
-  <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunH" Cacheable="&CACHEABLE;">
+  <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunH" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Flat;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
-  <InputData Lumi="12900" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunH" Cacheable="&CACHEABLE;">
+  <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunH" Cacheable="&CACHEABLE;">
     &QCDPt15to7000_pythia8_AK4CHS_Fwd;
     <InputTree Name="AnalysisTree"/>
     <OutputTree Name="AnalysisTree"/>
