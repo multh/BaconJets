@@ -17,7 +17,7 @@ using namespace std;
   public:
 
     // Constructors, destructor
-    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest = false);
+    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & split_JEC = true, const bool & closuretest = false);
     CorrectionObject(const CorrectionObject &) = default;
     CorrectionObject & operator = (const CorrectionObject &) = default;
     ~CorrectionObject() = default;
@@ -81,6 +81,8 @@ using namespace std;
     TString _weightpath_FLAT, _weightpath_FWD;
     TFile*  _MCFile;
     TFile*  _DATAFile;
+    TString _weightpath;
+    bool    _split_JEC;
     bool    _closuretest;
  
    

@@ -119,7 +119,6 @@ constexpr static float s_lumi_HF_160 = 561.485;
 constexpr static float s_lumi_HF_220 = 28983.619;
 constexpr static float s_lumi_HF_300 = 35672.846;
 
-
 /** \brief Jet Resolution Smearering **/
 // doing the matching from GEN to RECO
 constexpr static float s_delta_R   = 0.3; 

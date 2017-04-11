@@ -465,7 +465,9 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 
      }
 
-     pol1[j] = new TF1("pol1","pol1",0.09,0.36);
+     //pol1[j] = new TF1("pol1","pol1",0.09,0.36);
+     pol1[j] = new TF1("pol1","pol1",0.14,0.36);
+     //     pol1[j] = new TF1("pol1","pol1",0.09,0.42);
  
      pol1[j]->SetParameters(0,0);
      if(j == 13){
@@ -560,7 +562,10 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pTgraph_mpf_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})");
        pTgraph_mpf_r[j]->GetXaxis()->SetTitle("cut on #alpha");
      }
-     pol1[j] = new TF1("pol1","pol1",0.09,0.36);  //TEST AK4
+
+     //pol1[j] = new TF1("pol1","pol1",0.09,0.36);  //TEST AK4
+     pol1[j] = new TF1("pol1","pol1",0.14,0.36);  //TEST AK4
+     //pol1[j] = new TF1("pol1","pol1",0.09,0.42);  //TEST AK4
      pol1[j]->SetParameters(0,0);
 
      if(!multigraph_mpf_empty[j]) pTgraph_mpf_r[j]->Fit(pol1[j],"R");

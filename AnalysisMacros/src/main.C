@@ -21,17 +21,16 @@ int main(){
    //eine Klasse: enthaelt Info ueber runnr, Generator, collection, Strings zu MC/DATA-files, memberfunctions: controlPlots, kFSR etc.
   vector<CorrectionObject> Objects;
 
-  //Objects.emplace_back(CorrectionObject("BCD", generator, "AK4CHS", closure_test));
-  //Objects.emplace_back(CorrectionObject("EFearly", generator, "AK4CHS", closure_test));
-  Objects.emplace_back(CorrectionObject("FlateG", generator, "AK4CHS", closure_test));
-  //Objects.emplace_back(CorrectionObject("H", generator, "AK4CHS", closure_test));
-  //Objects.emplace_back(CorrectionObject("BCDEFGH", generator, "AK4CHS", closure_test));
+  //  Objects.emplace_back(CorrectionObject("BCD", generator, "AK4CHS", true, closure_test));
+  //  Objects.emplace_back(CorrectionObject("EFearly", generator, "AK4CHS", true, closure_test));
+  //Objects.emplace_back(CorrectionObject("FlateG", generator, "AK4CHS", true, closure_test));
+  Objects.emplace_back(CorrectionObject("H", generator, "AK4CHS", true, closure_test));
+  //  Objects.emplace_back(CorrectionObject("D", generator, "AK4CHS", true, closure_test));
+  //Objects.emplace_back(CorrectionObject("BCDEFGH", generator, "AK4CHS", true, closure_test));
 
   cout << "testobject is " << Objects[0] << endl;
 
-  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
-  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights_TriggerThresholds(true);
-  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights_TriggerThresholds(false);
+  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
 
 
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
@@ -43,7 +42,7 @@ int main(){
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation(false);
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative(true);
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative(false);
-  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(true);
+  //  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(true);
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(false);
 
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput();
@@ -56,12 +55,14 @@ int main(){
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
   
   //Objects[0].L2ResAllRuns();
-  Objects[0].L2ResOverlay(true);
-  Objects[0].L2ResOverlay(false);
+  //  Objects[0].L2ResOverlay(true);
+  //  Objects[0].L2ResOverlay(false);
+  //  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots_CorrectFormulae();
 
-
-
-
+  //  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
+  
+  //Objects[0].L2ResAllRuns();
+  //Objects[0].L2ResOverlay();
 
   cout << endl << "Closing MC and DATA files." << endl;
   for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CloseFiles();

@@ -322,30 +322,37 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   }
 
   //Mikko's request: delete super-high data point in 2.8-2.9 bin (j==13) above ~400 GeV pT (point no 6 & 7 [c++])
-  if(graph1_mpf[13]->GetN() == 10){
-    graph1_mpf[13]->RemovePoint(9);
-    graph1_mpf[13]->RemovePoint(8);
-    graph1_mpf[13]->RemovePoint(7);
-    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(6);
-  }
-  else if(graph1_mpf[13]->GetN() == 9){
-    graph1_mpf[13]->RemovePoint(8);
-    graph1_mpf[13]->RemovePoint(7);
-    graph1_mpf[13]->RemovePoint(6);
-    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(5);
-  }
-  else if(graph1_mpf[13]->GetN() == 8){
-    graph1_mpf[13]->RemovePoint(7);
-    graph1_mpf[13]->RemovePoint(6);
-    graph1_mpf[13]->RemovePoint(5);
-    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(4);
-  }
-  else if(graph1_mpf[13]->GetN() == 7){
-    graph1_mpf[13]->RemovePoint(6);
-    graph1_mpf[13]->RemovePoint(5);
-    graph1_mpf[13]->RemovePoint(4);
-    if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(3);
-  }
+// <<<<<<< HEAD
+//   if(graph1_mpf[13]->GetN() == 10){
+//     graph1_mpf[13]->RemovePoint(9);
+//     graph1_mpf[13]->RemovePoint(8);
+//     graph1_mpf[13]->RemovePoint(7);
+//     if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(6);
+//   }
+//   else if(graph1_mpf[13]->GetN() == 9){
+//     graph1_mpf[13]->RemovePoint(8);
+//     graph1_mpf[13]->RemovePoint(7);
+//     graph1_mpf[13]->RemovePoint(6);
+//     if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(5);
+//   }
+//   else if(graph1_mpf[13]->GetN() == 8){
+//     graph1_mpf[13]->RemovePoint(7);
+//     graph1_mpf[13]->RemovePoint(6);
+//     graph1_mpf[13]->RemovePoint(5);
+//     if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(4);
+//   }
+//   else if(graph1_mpf[13]->GetN() == 7){
+//     graph1_mpf[13]->RemovePoint(6);
+//     graph1_mpf[13]->RemovePoint(5);
+//     graph1_mpf[13]->RemovePoint(4);
+//     if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(3);
+//   }
+// =======
+
+  // graph1_mpf[13]->RemovePoint(8);
+  // graph1_mpf[13]->RemovePoint(7);
+  // if(CorrectionObject::_runnr == "H")  graph1_mpf[13]->RemovePoint(7);
+
 
   for(int k=0; k<n_pt-1; k++){
     double x = 0;
@@ -644,8 +651,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       h_chi2_loglin->SetBinContent(j+1,chi2ndf_loglin); //to make sure to fill the right eta-bin...
       h_chi2_const->SetBinContent(j+1,chi2ndf_const);   //to make sure to fill the right eta-bin...
     }
- 
 
+    h_chi2_loglin->GetYaxis()->SetRangeUser(0,20);
+    h_chi2_const->GetYaxis()->SetRangeUser(0,20);
     //Store plots
     if(mpfMethod){
       asd[j]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
@@ -691,6 +699,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     TF1 *kfsr_fit_mpf = new TF1("kfsr_fit_mpf","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.);   //Range: 0,5. by default
 
     bool fit_fullrange = false;
+    //    bool fit_fullrange = true;
     //VERY fragile fit, carefully set initial values
     if(CorrectionObject::_generator == "pythia"){
 
@@ -704,7 +713,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       
       else if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCD"){
-	  kfsr_fit_mpf->SetParameters(1,100,500);
+	  //	  kfsr_fit_mpf->SetParameters(1,100,500);
+	  kfsr_fit_mpf->SetParameters(1,-100,300);      
+	  fit_fullrange = true;
 	}
 	else if(CorrectionObject::_runnr == "E"){
 	  if(CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1.,-100,300); //CLOSURETEST
@@ -714,8 +725,12 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	  kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001); 
 	} //CLOSURETEST
 	else if(CorrectionObject::_runnr == "FlateG"){
-	  //if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
-	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,100,400); //MC reweight + RES
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	}
+	else if(CorrectionObject::_runnr == "H"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	  else kfsr_fit_mpf->SetParameters(1.,-100,300); //RES
+	  fit_fullrange = true;
 	}
       }
 
@@ -738,7 +753,6 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       else kfsr_fit_mpf->SetParameters(1.001,0.,0.);
     }
     
-
     else if(CorrectionObject::_generator == "herwig"){
       if(CorrectionObject::_collection == "AK4CHS") {
 	kfsr_fit_mpf->SetParameters(1.,-0.001,0.04);
@@ -768,7 +782,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
     //Finally perform the fit!
     kfsr_fit_mpf->SetLineColor(kRed+1);
+    std::cout<<"!!! kFSR MPF fit !!!"<<std::endl;
     if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,3.14);
+    //    if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,2.4);
     else hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,5.);
     
 
@@ -971,6 +987,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     TF1 *kfsr_fit_dijet = new TF1("kfsr_fit_dijet","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.); //Range: 0,5. by default
     
     bool fit_fullrange = false;
+    //    bool fit_fullrange = true;
     //tune the initial values for the fit
     if(CorrectionObject::_generator == "herwig"){
       //Initial values for herwig
@@ -999,6 +1016,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	  //fit_fullrange = true; //RES Full QCD
 	  //if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
 	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1, 500, -100.); //reweighted MC, RES
+	  //	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
 	}
 	else if(CorrectionObject::_runnr == "E") kfsr_fit_dijet->SetParameters(2,300,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "F") kfsr_fit_dijet->SetParameters(3,-800,300.); //CLOSURETEST
@@ -1015,6 +1033,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	  if(!CorrectionObject::_closuretest){
 	    //kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
 	    kfsr_fit_dijet->SetParameters(1,500,-100.); //RES
+	    //	    kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
 	    //kfsr_fit_dijet->SetParameters(0,150,150); //RES Full
 	    //fit_fullrange = true;
 	  }
@@ -1076,8 +1095,10 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
     //Finally perform the fit 
     kfsr_fit_dijet->SetLineColor(kBlue+1);
+    std::cout<<"------ !!! kFSR pT-balance fit !!! ------"<<std::endl;
     if(fit_fullrange) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,5.);
     else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,3.14);
+    //    else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.4);
 
 
     //Create a histogram to hold the confidence intervals                                                                                        

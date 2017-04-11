@@ -133,7 +133,8 @@ void CorrectionObject::CalculateMCWeights(){
     for(int j=0; j<n_eta-1; j++){
       //cout << "Data: " << h_pt_ave_data->GetBinContent(i+1, j+1) << ", MC: " << h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) << endl;
       //cout << "Data: " << h_pt_ave_data->GetBinContent(i+1, j+1) << ", SF: " << SF->GetBinContent(i+1, j+1) << endl << endl;
-      if(fabs(h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) - h_pt_ave_data->GetBinContent(i+1, j+1)) > 0.05) cout << "Eta_low: " << eta_bins[j] << ", pT: " << i*5 << ", MC: " << h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) << ", DATA: " << h_pt_ave_data->GetBinContent(i+1, j+1) << endl;//throw runtime_error("In CalculateMCWeights.cc: Scaled MC bin-content does not match the bin-content in data.");
+      //      if(fabs(h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) - h_pt_ave_data->GetBinContent(i+1, j+1)) > 0.05) cout << "Eta_low: " << eta_bins[j] << ", pT: " << i*5 << ", MC: " << h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) << ", DATA: " << h_pt_ave_data->GetBinContent(i+1, j+1) << endl;//throw runtime_error("In CalculateMCWeights.cc: Scaled MC bin-content does not match the bin-content in data.");
+      if(fabs(h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) - h_pt_ave_data->GetBinContent(i+1, j+1)) > 0.05) cout << " MC: " << h_pt_ave_mc_scaled->GetBinContent(i+1, j+1) << ", DATA: " << h_pt_ave_data->GetBinContent(i+1, j+1) << endl;//throw runtime_error("In CalculateMCWeights.cc: Scaled MC bin-content does not match the bin-content in data.");
     }
   }
 

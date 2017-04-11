@@ -18,8 +18,11 @@ pair<double,double> Rmc_to_Rdata(pair<double,double> mc, pair<double,double> dat
 //Get mean value and RMS of a TH1D
 pair<double,double> GetValueAndError(TH1D *hin){
   pair<double,double> res;
-  res.first = 0; res.second = 0;
-  if(hin->GetEntries()>30){
+  //  res.first = 0; res.second = 0;
+  res.first = -1; res.second = -1;
+  //  if(hin->GetEntries()>30){
+  //  if(hin->GetEntries()>50){
+  if(hin->GetEntries()>100){
     res.first = hin->GetMean();
     // GetMeanError calculates the uncertainty on the mean value, arising due to limited statistics in the sample. We dont care for the width itself, only the uncertainty on the predicted mean is relevant.
     res.second = hin->GetMeanError();
@@ -62,7 +65,7 @@ TGraphErrors* CleanEmptyPoints(TGraphErrors* input){
   int count=0;
   vector<double> Xnew,Ynew,Xerrornew,Yerrornew;
   for(int i=0;i<input->GetN();i++){
-    cout << "Yval[" << i << "] = " << Yval[i] << endl;
+    //    cout << "Yval[" << i << "] = " << Yval[i] << endl;
     if(Yval[i]!=0){
       count++;
       Xnew.push_back(Xval[i]);       

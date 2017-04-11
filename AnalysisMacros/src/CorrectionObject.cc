@@ -4,8 +4,8 @@
 #include "../include/CorrectionObject.h"
 
 
-CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest) :
-  _runnr(runnr), _collection(collection), _generator(generator), _closuretest(closuretest)
+CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & split_JEC, const bool & closuretest) :
+  _runnr(runnr), _collection(collection), _generator(generator), _split_JEC(split_JEC), _closuretest(closuretest)
     {
       TString s_tmp = _collection;
       s_tmp.ReplaceAll("CHS", "PFchs");
@@ -13,29 +13,56 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       _jettag = s_tmp;
 
       TString input_path;
-      if(!_closuretest){ 
-	input_path       = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95_CentralForward/TriggerThresholds_NoUnflat/";
-	_weightpath_FLAT = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/CENTRAL/";
-	_weightpath_FWD  = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/FWD/";
-	_outpath =   input_path + "Run" + _runnr + "/";
+      if(!_closuretest){  
+	if(split_JEC){
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_ReReco_JEC_Summer16_23Sep2016_V4/";
+//	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
+//	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/";
+//	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight_METoverJetsPt02/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight_METoverJetsPt02/";
+	  //input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_ReReco_JEC_Summer16_23Sep2016_V4_STDHLT/";
+	  //	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_ReReco_JEC_Summer16_23Sep2016_V4_DATAonly/";
+	  //	  _weightpath = "/nfs/dust/cms/user/karavdia/JEC_80X_preLegacy_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
+
+	  input_path = "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
+	  _weightpath = "/nfs/dust/cms/user/karavdia/JEC_80X_03FebreMINIAOD_JEC_Summer16_23Sep2016_V4_TEST_jetIDtight/Weights/";
+	  //	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95/";
+	  //	  _weightpath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/";
+	  _outpath =   input_path + "Run" + _runnr + "/";
+	  //input_path =   "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/";
+	  //_outpath =     "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_23Sep2016_V1/" + _collection + "/Run" + _runnr + "/";
+	}
+	else{
+	  input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/GlobalJEC/" + _collection + "/";
+	  _weightpath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/GlobalJEC/";
+	  _outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Spring16_v8p2/GlobalJEC/" + _collection + "/Run" + _runnr + "/";
+	}
       }
       else{
-	input_path  = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/" + _collection + "/";
-	_weightpath_FLAT = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/ForWeights/CENTRAL/";
-	_weightpath_FWD  = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/ForWeights/FWD/";
-	_outpath    = input_path + "Run" + _runnr + "/";
+	input_path = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/" + _collection + "/";
+	_weightpath =  "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/";
+	_outpath = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/" + _collection + "/Run" + _runnr + "/";
       }
 
       if(_generator == "pythia"){
 	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Fwd.root";
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunH_AK4CHS_PromtReco.root"; //FOR preLegacy plots
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunBCD_AK4CHS_PromtReco.root"; //FOR preLegacy plots
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_RunBCD_AK4CHS_reMINIAOD.root"; //FOR preLegacy plots
+	//	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full.root";
+	//	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
+	//	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat_Run" + _runnr  + ".root";
+	//_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + ".root";
 	_generator_tag = "pythia8";
       }
       else if(_generator == "herwig"){
 	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_"+ _collection  +".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + "_Fwd.root";
+	_MCpath_ForWeights = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + ".root";
 	_generator_tag = "herwigpp";
       }
       else if(_generator == "madgraph"){
