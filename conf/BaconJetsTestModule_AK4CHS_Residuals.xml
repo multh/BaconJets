@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
 
-<!ENTITY PROOFdir           "/nfs/dust/cms/user/reimersa/.proof2">      
+<!ENTITY PROOFdir           "/nfs/dust/cms/user/multh/.proof2">      
 <!ENTITY NEVT               "-1">
 <!ENTITY CACHEABLE          "False">
-<!ENTITY OUTdir             "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward/TriggerThresholds_NoUnflat">
-<!ENTITY b_closuretest      "false">
-<!ENTITY jec_version        "Summer16_23Sep2016_V4">
-<!ENTITY APPLY_WEIGHTS      "true">
-<!ENTITY WEIGHT_PATH        "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/AK4CHS/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/FWD/">
+<!ENTITY OUTdir             "/nfs/dust/cms/user/multh/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V6/AK4CHS/MC_Reweighted_PU_pt_hat_cut/">
+<!ENTITY b_closuretest      "true">                   <!--For Closure-Test: true -->
+<!ENTITY jec_version        "Summer16_23Sep2016_V6">  <!--After Moriond: Summer16_23Sep2016_V6-->
+<!ENTITY APPLY_WEIGHTS      "true">                  <!--For Weight Calculation: First: false; Second: true -->
+<!ENTITY WEIGHT_PATH        "/nfs/dust/cms/user/multh/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V6/AK4CHS/MC_Reweighted_PU_pt_hat_cut_ForWeights/CENTRAL/"> <!-- Change Weight-Path: CENTRAL/FWD --> 
 <!ENTITY APPLY_LUMIWEIGHTS  "false">
 <!ENTITY APPLY_UNFLATTENING "false">
+<!ENTITY TRIGGER_CENTRAL    "true">
+<!ENTITY TRIGGER_FWD        "true">
 
+<!--  For MC Weight Outlayers -->
+<!ENTITY QCDPt15to7000_pythia8_AK4CHS_Flat SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_FlatP6_pythia8_PUpthat.xml">
+<!ENTITY QCDPt15to7000_pythia8_AK4CHS_Fwd SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_FwdEnriched_Flat_pythia8_PUpthat.xml">
 
-
-<!ENTITY QCDPt15to7000_pythia8_AK4CHS_Flat SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_Pt-15to7000_Flat_pythia8_full.xml">
-<!ENTITY QCDPt15to7000_pythia8_AK4CHS_Fwd SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/MC_QCD_FwdEnriched_Flat_pythia8.xml">
+<!-- For Moriond -->
+<!--
 <!ENTITY DATA_RunB_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunB.xml">
 <!ENTITY DATA_RunC_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunC.xml">
 <!ENTITY DATA_RunD_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunD.xml">
@@ -23,15 +27,24 @@
 <!ENTITY DATA_RunF_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunF.xml">
 <!ENTITY DATA_RunG_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_ReReco_RunG.xml">
 <!ENTITY DATA_RunH_AK4CHS SYSTEM "/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/datasets/RunII_80X_v2/DATA_JetHT_RunH_full.xml">
+-->
 
+<!--  New 03Feb Dataset -->
+<!ENTITY DATA_RunB_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016B_03Feb.xml">
+<!ENTITY DATA_RunC_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016C_03Feb.xml">
+<!ENTITY DATA_RunD_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016D_03Feb.xml">
+<!ENTITY DATA_RunE_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016E_03Feb.xml">
+<!ENTITY DATA_RunF_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016F_03Feb.xml">
+<!ENTITY DATA_RunG_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016G_03Feb.xml">
+<!ENTITY DATA_RunH_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016H_03Feb.xml">
 
 
 ]>
 
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="5" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="arne.reimers@desy.de" Notification="as" Workdir="workdir_Summer16_23Sep2016_V2_AK4CHS"/>
+<ConfigParse NEventsBreak="0" FileSplit="20" AutoResubmit="5"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_23Sep2016_V4_AK4CHS"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -42,30 +55,31 @@
 <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTdir;/" PostFix="" TargetLumi="12900" >
  
 
-
-
+<!-- PU pt Hat -->
+<!--Closure Test Central Sample-->
 <!--
-    <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunBCD" Cacheable="&CACHEABLE;">
+    <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Flat;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
-
-     <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunBCD" Cacheable="&CACHEABLE;">
+<!--Closure Test FWD Sample -->
+<!--
+     <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+-->
+<!--
+    <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunBCD" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
-<!--
-     <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunEFearly" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS_Flat;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
--->
-<!--
+
      <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunEFearly" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
@@ -73,20 +87,41 @@
      </InputData>
 -->
 <!--
-   <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunFlateG" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS_Flat;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
--->
-
      <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunFlateG" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Fwd;
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 
+
+     <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunH" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+-->
+
+    <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunBCD" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+ 
+
+     <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunEFearly" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
 <!--
+   <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunFlateG" Cacheable="&CACHEABLE;">
+          &QCDPt15to7000_pythia8_AK4CHS_Flat;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+
      <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat_RunH" Cacheable="&CACHEABLE;">
           &QCDPt15to7000_pythia8_AK4CHS_Flat;
           <InputTree Name="AnalysisTree"/>
@@ -94,27 +129,6 @@
      </InputData>
 -->
 
-     <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd_RunH" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-<!--
-    <InputData Lumi="0.005" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Flat" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS_Flat;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
-
-
-     <InputData Lumi="24.042" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to7000_pythia8_AK4CHS_Fwd" Cacheable="&CACHEABLE;">
-          &QCDPt15to7000_pythia8_AK4CHS_Fwd;
-          <InputTree Name="AnalysisTree"/>
-          <OutputTree Name="AnalysisTree"/>
-     </InputData>
- -->
-<!--
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunB_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunB_AK4CHS;
        <InputTree Name="AnalysisTree"/>
@@ -157,7 +171,7 @@
        <OutputTree Name="AnalysisTree"/>
   </InputData>
 
-
+<!--
   <InputData Lumi="12900" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunG_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunG_AK4CHS;
        <InputTree Name="AnalysisTree"/>
@@ -170,13 +184,8 @@
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData>
+
 -->
-
-
-
-
-
-
 
 
     <UserConfig>
@@ -200,7 +209,7 @@
       <Item Name="GenJetCollection"        Value="slimmedGenJets"/>
       <!--          <Item Name="METName"                 Value="slimmedMETs"/>-->
       <Item Name="METName"                 Value="slMETsCHS"/>
-      <Item Name="lumi_file" Value="/nfs/dust/cms/user/reimersa/CMSSW_8_0_20/src/UHH2/common/data/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.root"/>
+      <Item Name="lumi_file" Value="/nfs/dust/cms/user/multh/CMSSW_8_0_24_JEC/CMSSW_8_0_24_patch1/src/UHH2/common/data/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.root"/>
 
       <!--
       	 <Item Name="pileup_directory"           Value="/afs/desy.de/user/k/karavdia/CMSSW_8_0_20/src/UHH2/BaconJets/data/PileUp/80X/PileUP_MC_pythia8_PUFlat.root"/>
@@ -247,6 +256,8 @@
 	<Item Name="Apply_Lumiweights"  Value="&APPLY_LUMIWEIGHTS;"/>
 	<Item Name="Apply_Unflattening" Value="&APPLY_UNFLATTENING;"/>
 
+	<Item Name="Trigger_Central"    Value="&TRIGGER_CENTRAL;"/>
+	<Item Name="Trigger_FWD"        Value="&TRIGGER_FWD;"/>
 	<!-- always apply MET smearing -->
 
             <!-- tell AnalysisModuleRunner that we use a completely user-defined event format -->

@@ -24,9 +24,13 @@ JECCrossCheckHists::JECCrossCheckHists(Context & ctx, const string & dirname): H
     // book all histograms here
     // jets
     TH1::SetDefaultSumw2();
+    TH2::SetDefaultSumw2();
 
     book<TH1F>("N_jets", "N_{jets}", 50, -0.5, 49.5);
     book<TH1F>("pt_hat", "p_{T} hat", 150, 0, 6000);
+    book<TH1F>("PU_pt_hat","PU p_{T} hat", 150,0,6000);
+    book<TH1F>("PU_pt_hat_Ratio","PU p_{T} hat  Ratio", 50,0,5);
+     PU_vs_pt_hat = book<TH2F>("PU_pt_hat_vs_pt_hat","x=p_{T}hat y=PUp_{T}hat",150,0,6000 ,150,0,6000);
     book<TH1F>("pt","p_{T} all jets; p_{T} (GeV)",100,0,1500);
     book<TH1F>("eta","#eta all jets; #eta",100,-5,5);
     double eta_bins[n_eta];
@@ -37,8 +41,9 @@ JECCrossCheckHists::JECCrossCheckHists(Context & ctx, const string & dirname): H
 
     book<TH1F>("nPu","Number of PU events",60,0,60);
     book<TH1F>("N_PV","Number of PVtx",60,0,60);
-    book<TH1F>("weight_histo","weight_histo ",20,0,2);
-
+    book<TH1F>("weight_histo","weight_histo ",200,0,2000);
+    Weight_vs_pt_hat = book<TH2F>("Weight_vs_pt_hat","x=p_{T}hat y=Weight",150,0,3000 ,150,0,3000);
+    Weight_vs_pt_hat_zoom = book<TH2F>("Weight_vs_pt_hat_zoom","x=p_{T}hat y=Weight",100,0,500 ,100,0,500);
     book<TH1F>("pt_1","p_{T} jet 1",100,0,600);
     book<TH1F>("eta_1","#eta jet 1",100,-5,5);
 
@@ -52,6 +57,7 @@ JECCrossCheckHists::JECCrossCheckHists(Context & ctx, const string & dirname): H
 
     book<TH1F>("asym","asymmetry jet 1 and jet 2; Asymmetry",150,-1.5,1.5);
 
+ 
 
 }
 
@@ -71,7 +77,12 @@ void JECCrossCheckHists::fill(const uhh2::Event & ev, const int rand){
   hist("N_jets")->Fill(njets, weight);
   if(!ev.isRealData){
     double pt_hat = ev.genInfo->binningValues()[0];
+    double PU_pt_hat = ev.genInfo->PU_pT_hat_max();
     hist("pt_hat")->Fill(pt_hat,weight);
+    hist("PU_pt_hat")->Fill(PU_pt_hat, weight);
+    hist("PU_pt_hat_Ratio")->Fill(PU_pt_hat/pt_hat, weight);
+    PU_vs_pt_hat->Fill(pt_hat, PU_pt_hat,weight);
+    Weight_vs_pt_hat->Fill(pt_hat, weight, weight);
   }
     
   for (int i=0; i<njets; i++){

@@ -4,55 +4,66 @@
 #include "../include/CorrectionObject.h"
 
 
-CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest) :
-  _runnr(runnr), _collection(collection), _generator(generator), _closuretest(closuretest)
+
+CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const TString & input_path, const TString & weight_path, const bool & closuretest) :
+  _runnr(runnr), _collection(collection), _generator(generator),_input_path(input_path),_weight_path(weight_path), _closuretest(closuretest)
     {
       TString s_tmp = _collection;
       s_tmp.ReplaceAll("CHS", "PFchs");
       s_tmp.ReplaceAll("Puppi", "PFpuppi");
       _jettag = s_tmp;
 
-      TString input_path;
+      TString inputPath;
       if(!_closuretest){ 
-	input_path       = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95_CentralForward/TriggerThresholds_NoUnflat/";
-	_weightpath_FLAT = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/CENTRAL/";
-	_weightpath_FWD  = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/Residuals/Summer16_23Sep2016_V3/" + _collection + "/MC_Reweighted_PtEta_Pt95_CentralForward_ForWeights/TriggerThresholds_NoUnflat/FWD/";
-	_outpath =   input_path + "Run" + _runnr + "/";
+	inputPath       = _input_path;
+	_weightpath_FLAT = _weight_path+ "/CENTRAL/";
+	_weightpath_FWD  = _weight_path+ "/FWD/";
+	_outpath =   inputPath + "Run" + _runnr + "/";
       }
       else{
-	input_path  = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/" + _collection + "/";
-	_weightpath_FLAT = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/ForWeights/CENTRAL/";
-	_weightpath_FWD  = "/nfs/dust/cms/user/reimersa/JEC/2016ReReco/ClosureTest/Summer16_23Sep2016_V3/ForWeights/FWD/";
-	_outpath    = input_path + "Run" + _runnr + "/";
+	inputPath  = _input_path;
+	_weightpath_FLAT = _weight_path+"/CENTRAL/";
+	_weightpath_FWD  = _weight_path+"/FWD/";
+	_outpath    = inputPath + "Run" + _runnr + "/";
+	cout<< "Enter Closure Test Process: "<<endl<<endl; 
+
       }
 
       if(_generator == "pythia"){
-	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
+        _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Flat.root";
+
+       	//_MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Fwd.root";
 	_generator_tag = "pythia8";
       }
       else if(_generator == "herwig"){
-	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_"+ _collection  +".root";
+	_MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_"+ _collection  +".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + "_Fwd.root";
 	_generator_tag = "herwigpp";
       }
       else if(_generator == "madgraph"){
-	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDHtFULL_madgraph_"+ _collection  +".root";
+	_MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDHtFULL_madgraph_"+ _collection  +".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDHtFULL_madgraph_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDHtFULL_madgraph_" + _collection  + "_Fwd.root";
 	_generator_tag = "madgraphMLM";
       }
 
-      _DATApath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
+      _DATApath = inputPath + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
 
+      
       cout << "Opening MC file:   " << _MCpath << endl;
       cout << "Opening DATA file: " << _DATApath << endl << endl;
+
+
       _MCFile = new TFile(_MCpath,"READ");
       _DATAFile = new TFile(_DATApath,"READ");
+
+      if(_MCFile->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _MCpath+" does not exist!");
+      if(_DATAFile->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _DATApath+" does not exist!");
 
       //lumitags
       if(_runnr == "BCD")    _lumitag      = "RunBCD  12.9 fb^{-1}";

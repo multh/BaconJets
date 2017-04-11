@@ -51,99 +51,100 @@ using namespace uhh2;
     ~TestModule();
 
   protected:
-    // correctors
-    std::unique_ptr<JetCorrector> jet_corrector, jet_corrector_BCD, jet_corrector_EFearly, jet_corrector_FlateG, jet_corrector_H;
+    // Jet Correctors
+    std::unique_ptr<JetCorrector>                jet_corrector, jet_corrector_BCD, jet_corrector_EFearly, jet_corrector_FlateG, jet_corrector_H;
     std::unique_ptr<GenericJetResolutionSmearer> jetER_smearer; 
-    std::unique_ptr<JetLeptonCleaner> jetleptoncleaner, JLC_BCD, JLC_EFearly, JLC_FlateG, JLC_H;
-    std::unique_ptr<JetCleaner> jetcleaner;
-    // selections
-    std::unique_ptr<uhh2::Selection> lumi_sel;
-    //    std::unique_ptr<uhh2::AndSelection> trigger_sel;
-    std::unique_ptr<uhh2::Selection> trigger40_sel;
-    std::unique_ptr<uhh2::Selection> trigger60_sel;
-    std::unique_ptr<uhh2::Selection> trigger80_sel;
-    std::unique_ptr<uhh2::Selection> trigger140_sel;
-    std::unique_ptr<uhh2::Selection> trigger200_sel;
-    std::unique_ptr<uhh2::Selection> trigger260_sel;
-    std::unique_ptr<uhh2::Selection> trigger320_sel;
-    std::unique_ptr<uhh2::Selection> trigger400_sel;
-    std::unique_ptr<uhh2::Selection> trigger500_sel;
-    std::unique_ptr<uhh2::Selection> trigger60_HFJEC_sel;
-    std::unique_ptr<uhh2::Selection> trigger80_HFJEC_sel;
-    std::unique_ptr<uhh2::Selection> trigger100_HFJEC_sel;
-    std::unique_ptr<uhh2::Selection> trigger160_HFJEC_sel;
-    std::unique_ptr<uhh2::Selection> trigger220_HFJEC_sel;
-    std::unique_ptr<uhh2::Selection> trigger300_HFJEC_sel;
-    //// Data/MC scale factors
-    std::unique_ptr<uhh2::AnalysisModule> pileupSF;
-    unique_ptr<AnalysisModule>  Jet_printer, GenParticles_printer;
-
-   
-
-
+    std::unique_ptr<JetLeptonCleaner>            jetleptoncleaner, JLC_BCD, JLC_EFearly, JLC_FlateG, JLC_H;
+    std::unique_ptr<JetCleaner>                  jetcleaner;
+    
+    // Selections
+    std::unique_ptr<uhh2::Selection>             lumi_sel;
+    //    std::unique_ptr<uhh2::AndSelection>    trigger_sel;
+    std::unique_ptr<uhh2::Selection>             trigger40_sel;        //CENTRAL TRIGGERS
+    std::unique_ptr<uhh2::Selection>             trigger60_sel;
+    std::unique_ptr<uhh2::Selection>             trigger80_sel;
+    std::unique_ptr<uhh2::Selection>             trigger140_sel;
+    std::unique_ptr<uhh2::Selection>             trigger200_sel;
+    std::unique_ptr<uhh2::Selection>             trigger260_sel;
+    std::unique_ptr<uhh2::Selection>             trigger320_sel;
+    std::unique_ptr<uhh2::Selection>             trigger400_sel;
+    std::unique_ptr<uhh2::Selection>             trigger500_sel;
+    std::unique_ptr<uhh2::Selection>             trigger60_HFJEC_sel;  //FWD TRIGGERS
+    std::unique_ptr<uhh2::Selection>             trigger80_HFJEC_sel;
+    std::unique_ptr<uhh2::Selection>             trigger100_HFJEC_sel;
+    std::unique_ptr<uhh2::Selection>             trigger160_HFJEC_sel;
+    std::unique_ptr<uhh2::Selection>             trigger220_HFJEC_sel;
+    std::unique_ptr<uhh2::Selection>             trigger300_HFJEC_sel;
  
+    // Data/MC scale factors
+    std::unique_ptr<uhh2::AnalysisModule>        pileupSF;              //PileUp
+    
+    //Printer Modules
+    unique_ptr<AnalysisModule>                   Jet_printer, GenParticles_printer;
 
-    Event::Handle<float> tt_gen_pthat; Event::Handle<float> tt_gen_weight;
-    Event::Handle<float> tt_jet1_pt;     Event::Handle<float> tt_jet2_pt;     Event::Handle<float> tt_jet3_pt;
-    Event::Handle<float> tt_jet1_ptRaw;  Event::Handle<float> tt_jet2_ptRaw;  Event::Handle<float> tt_jet3_ptRaw;
-    Event::Handle<float> tt_jet1_ptGen;  Event::Handle<float> tt_jet2_ptGen;  Event::Handle<float> tt_jet3_ptGen;
-    Event::Handle<int> tt_nvertices;
-    Event::Handle<float> tt_probejet_eta;  Event::Handle<float> tt_probejet_phi; Event::Handle<float> tt_probejet_pt; Event::Handle<float> tt_probejet_ptRaw;
-    Event::Handle<float> tt_barreljet_eta;  Event::Handle<float> tt_barreljet_phi; Event::Handle<float> tt_barreljet_pt; Event::Handle<float> tt_barreljet_ptRaw;
+    
+    Event::Handle<float> tt_gen_pthat,            tt_gen_weight;
+    Event::Handle<float> tt_jet1_pt,              tt_jet2_pt,                 tt_jet3_pt;
+    Event::Handle<float> tt_jet1_ptRaw,           tt_jet2_ptRaw,              tt_jet3_ptRaw;
+    Event::Handle<float> tt_jet1_ptGen,           tt_jet2_ptGen,              tt_jet3_ptGen;
+    Event::Handle<int>   tt_nvertices;
+    Event::Handle<float> tt_probejet_eta,         tt_probejet_phi,            tt_probejet_pt,       tt_probejet_ptRaw;
+    Event::Handle<float> tt_barreljet_eta,        tt_barreljet_phi,           tt_barreljet_pt,      tt_barreljet_ptRaw;
     Event::Handle<float> tt_pt_ave;
     Event::Handle<float> tt_alpha;
-    Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; 
+    Event::Handle<float> tt_rel_r,                tt_mpf_r; 
     Event::Handle<float> tt_asymmetry;
     Event::Handle<float> tt_B;
-    Event::Handle<int> tt_nPU;
+    Event::Handle<int>   tt_nPU;
     Event::Handle<float> tt_ev_weight;
-    Event::Handle<float> tt_jets_pt;//sum of jets pT
-    Event::Handle<int> tt_jet_n;//number of jets
-    Event::Handle<float> tt_rho;//event energy density
-    Event::Handle<int> tt_nGoodvertices;
-    Event::Handle<int> tt_partonFlavor; //only MC
-    Event::Handle<int> tt_flavorBarreljet, tt_flavorProbejet, tt_flavorLeadingjet, tt_flavorSubleadingjet; //only MC
+    Event::Handle<float> tt_jets_pt;              //sum of jets pT
+    Event::Handle<int>   tt_jet_n;                //number of jets
+    Event::Handle<float> tt_rho;                  //event energy density
+    Event::Handle<int>   tt_nGoodvertices;
+    Event::Handle<int>   tt_partonFlavor;         //only MC
+    Event::Handle<int>   tt_flavorBarreljet,      tt_flavorProbejet,          tt_flavorLeadingjet,  tt_flavorSubleadingjet; //only MC
     Event::Handle<float> tt_response_leadingjet;
-    Event::Handle<float> tt_had_n_Efrac, tt_had_ch_Efrac, tt_mu_Efrac, tt_ph_Efrac;
-    Event::Handle<float> tt_inst_lumi, tt_integrated_lumi_in_bin, tt_integrated_lumi;
-    Event::Handle<int> tt_lumibin;
+    Event::Handle<float> tt_had_n_Efrac,          tt_had_ch_Efrac,            tt_mu_Efrac,          tt_ph_Efrac;
+    Event::Handle<float> tt_inst_lumi,            tt_integrated_lumi_in_bin,  tt_integrated_lumi;
+    Event::Handle<int>   tt_lumibin;
 
- 
-    std::unique_ptr<JECAnalysisHists> h_nocuts, h_sel, h_dijet, h_match, h_final;
-    std::unique_ptr<JECAnalysisHists> h_trg40, h_trg60, h_trg80, h_trg140, h_trg200,h_trg260,h_trg320,h_trg400,h_trg500;
-    std::unique_ptr<JECAnalysisHists> h_trgHF60, h_trgHF80,h_trgHF100, h_trgHF160,h_trgHF220, h_trgHF300;   
-    std::unique_ptr<LuminosityHists> h_lumi_nocuts, h_lumi_sel, h_lumi_dijet, h_lumi_match, h_lumi_final;    
-    std::unique_ptr<LuminosityHists> h_lumi_Trig40, h_lumi_Trig60, h_lumi_Trig80, h_lumi_Trig140, h_lumi_Trig200, h_lumi_Trig260, h_lumi_Trig320, h_lumi_Trig400, h_lumi_Trig500;
-    std::unique_ptr<LuminosityHists> h_lumi_TrigHF60, h_lumi_TrigHF80, h_lumi_TrigHF100, h_lumi_TrigHF160, h_lumi_TrigHF220, h_lumi_TrigHF300;
-    std::unique_ptr<JECRunnumberHists> h_runnr_input;
-    std::unique_ptr<JECCrossCheckHists> h_input,h_lumisel, h_beforeCleaner,h_afterCleaner,h_2jets,h_beforeJEC,h_afterJEC,h_afterJER,h_afterMET,h_beforeTriggerData,h_afterTriggerData,h_beforeFlatFwd,h_afterFlatFwd,h_afterPtEtaReweight,h_afterLumiReweight,h_afterUnflat,h_afternVts;
-    uhh2bacon::Selection sel;
+    //Declare Histograms
+    std::unique_ptr<JECAnalysisHists>   h_nocuts,        h_sel,           h_dijet,          h_match,          h_final;
+    std::unique_ptr<JECAnalysisHists>   h_trg40,         h_trg60,         h_trg80,          h_trg140,         h_trg200,         h_trg260,        h_trg320,       h_trg400,       h_trg500;
+    std::unique_ptr<JECAnalysisHists>   h_trgHF60,       h_trgHF80,       h_trgHF100,       h_trgHF160,       h_trgHF220,       h_trgHF300;   
+    std::unique_ptr<LuminosityHists>    h_lumi_nocuts,   h_lumi_sel,      h_lumi_dijet,     h_lumi_match,     h_lumi_final;    
+    std::unique_ptr<LuminosityHists>    h_lumi_Trig40,   h_lumi_Trig60,   h_lumi_Trig80,    h_lumi_Trig140,   h_lumi_Trig200,   h_lumi_Trig260,  h_lumi_Trig320, h_lumi_Trig400, h_lumi_Trig500;
+    std::unique_ptr<LuminosityHists>    h_lumi_TrigHF60, h_lumi_TrigHF80, h_lumi_TrigHF100, h_lumi_TrigHF160, h_lumi_TrigHF220, h_lumi_TrigHF300;
+    std::unique_ptr<JECRunnumberHists>  h_runnr_input;
 
-    bool debug;
-    bool isMC, split_JEC_DATA, split_JEC_MC, ClosureTest, apply_weights, apply_lumiweights, apply_unflattening;
-    double lumiweight;
-    string jetLabel;
-    TString dataset_version, JEC_Version;
-    JetId Jet_PFID;
-    int n_evt;
-    std::unique_ptr<TFile> f_weights;
-    
+    //Declare CrossCheckHist 
+    std::unique_ptr<JECCrossCheckHists> h_input, h_lumisel, h_beforeCleaner, h_afterCleaner, h_2jets, h_beforeJEC,h_afterJEC,h_afterJER,h_afterMET,h_beforeTriggerData,h_afterTriggerData,h_beforeFlatFwd,h_afterFlatFwd,h_afterPtEtaReweight,h_afterLumiReweight,h_afterUnflat,h_afternVts, h_with_PU_cut, h_after_PU_cut, h_Weight_cut_200, h_Weight_cut_400, h_Weight_cut_600, h_Weight_cut_800, h_Weight_cut_1000, h_Weight_cut_Inf, h_Ratio_cut_1;
+
+    //Declare Selection
+    uhh2bacon::Selection       sel;
+
+    bool                       debug;
+    bool                       isMC, split_JEC_DATA, split_JEC_MC, ClosureTest, apply_weights, apply_lumiweights, apply_unflattening, trigger_central, trigger_fwd;
+    double                     lumiweight;
+    string                     jetLabel;
+    TString                    dataset_version, JEC_Version;
+    JetId                      Jet_PFID;
+    int                        n_evt;
+    std::unique_ptr<TFile>     f_weights;
     std::map<run_lumi, double> rl2lumi;
     std::map<run_lumi, double> rl2intlumi;
-    TBranch * brun ;
-    TBranch * blumiblock;
-    TBranch * bilumi;
-    double integrated_lumi;
-    vector<run_lumi> upper_binborders_runnrs;
-    vector<double> lumi_in_bins;
-
-
+    TBranch *                  brun ;
+    TBranch *                  blumiblock;
+    TBranch *                  bilumi;
+    double                     integrated_lumi;
+    vector<run_lumi>           upper_binborders_runnrs;
+    vector<double>             lumi_in_bins;
   };
+
 
   TestModule::TestModule(uhh2::Context & ctx) :
     sel(ctx)
   {
-
 
     for(auto & kv : ctx.get_all()){
       cout << " " << kv.first << " = " << kv.second << endl;
@@ -151,24 +152,31 @@ using namespace uhh2;
 
     cout << "start" << endl;
     isMC = (ctx.get("dataset_type") == "MC");
+
     //// COMMON MODULES
     if(!isMC) lumi_sel.reset(new LumiSelection(ctx));
+
+    //Jet ID/Cleaner
     Jet_PFID = JetPFID(JetPFID::WP_LOOSE);
     //Jet_PFID = JetPFID(JetPFID::WP_TIGHT);
     jetcleaner.reset(new JetCleaner(ctx, Jet_PFID));
 
+    //#############################################  Trigger  #########################################################
+    trigger_central = (ctx.get("Trigger_Central") == "true");
+    trigger_fwd     = (ctx.get("Trigger_FWD") == "true");
+
     if(!isMC){
-    const std::string& trigger40 = ctx.get("trigger40", "NULL");
-    const std::string& trigger60 = ctx.get("trigger60", "NULL");
-    const std::string& trigger80 = ctx.get("trigger80", "NULL");
-    const std::string& trigger140 = ctx.get("trigger140", "NULL");
-    const std::string& trigger200 = ctx.get("trigger200", "NULL");
-    const std::string& trigger260 = ctx.get("trigger260", "NULL");
-    const std::string& trigger320 = ctx.get("trigger320", "NULL");
-    const std::string& trigger400 = ctx.get("trigger400", "NULL");
-    const std::string& trigger500 = ctx.get("trigger500", "NULL");
-    const std::string& trigger60_HFJEC = ctx.get("trigger60_HFJEC", "NULL");
-    const std::string& trigger80_HFJEC = ctx.get("trigger80_HFJEC", "NULL");
+    const std::string& trigger40        = ctx.get("trigger40", "NULL");
+    const std::string& trigger60        = ctx.get("trigger60", "NULL");
+    const std::string& trigger80        = ctx.get("trigger80", "NULL");
+    const std::string& trigger140       = ctx.get("trigger140", "NULL");
+    const std::string& trigger200       = ctx.get("trigger200", "NULL");
+    const std::string& trigger260       = ctx.get("trigger260", "NULL");
+    const std::string& trigger320       = ctx.get("trigger320", "NULL");
+    const std::string& trigger400       = ctx.get("trigger400", "NULL");
+    const std::string& trigger500       = ctx.get("trigger500", "NULL");
+    const std::string& trigger60_HFJEC  = ctx.get("trigger60_HFJEC", "NULL");
+    const std::string& trigger80_HFJEC  = ctx.get("trigger80_HFJEC", "NULL");
     const std::string& trigger100_HFJEC = ctx.get("trigger100_HFJEC", "NULL");
     const std::string& trigger160_HFJEC = ctx.get("trigger160_HFJEC", "NULL");
     const std::string& trigger220_HFJEC = ctx.get("trigger220_HFJEC", "NULL");
@@ -207,19 +215,22 @@ using namespace uhh2;
       else trigger220_HFJEC_sel.reset(new uhh2::AndSelection(ctx));
       if(trigger300_HFJEC != "NULL") trigger300_HFJEC_sel.reset(new TriggerSelection(trigger300_HFJEC));
       else trigger300_HFJEC_sel.reset(new uhh2::AndSelection(ctx));
-
     }
+    //##################################################################################################################
 
-    //new
-    jetLabel = ctx.get("JetLabel");
+    //Out of XML-File
+    jetLabel        = ctx.get("JetLabel");
     dataset_version = ctx.get("dataset_version");
-    ClosureTest = (ctx.get("ClosureTest") == "true");
-    JEC_Version = ctx.get("JEC_Version");
+    ClosureTest     =(ctx.get("ClosureTest") == "true");
+    JEC_Version     = ctx.get("JEC_Version");
 
-    split_JEC_MC   = false; //Different MC corrections only existed for Spring16_25ns_V8* 
-    split_JEC_DATA = true;
+    split_JEC_MC    = false;          //Different MC corrections only existed for Spring16_25ns_V8* 
+    split_JEC_DATA  = true;
     
-    //std::vector<std::string> JEC_corr_noRes, JEC_corr_noRes_BCD, JEC_corr_noRes_E, JEC_corr_noRes_Fearly, JEC_corr_noRes_FlateGH; 
+    //##########################################  Jet-Corrections  #################################################################
+  
+  //Jet-Energy Corrections Version 6 
+  //std::vector<std::string> JEC_corr_noRes, JEC_corr_noRes_BCD, JEC_corr_noRes_E, JEC_corr_noRes_Fearly, JEC_corr_noRes_FlateGH; 
     std::vector<std::string> JEC_corr,       JEC_corr_BCD,       JEC_corr_EFearly,       JEC_corr_FlateG,       JEC_corr_H,      JEC_corr_MC_FlateGH;
     std::vector<std::string> JEC_corr_L1RC,  JEC_corr_BCD_L1RC,  JEC_corr_EFearly_L1RC,  JEC_corr_FlateG_L1RC,  JEC_corr_H_L1RC, JEC_corr_MC_FlateGH_L1RC;
     if(isMC){
@@ -227,11 +238,12 @@ using namespace uhh2;
       if(jetLabel == "AK4CHS"){
 	if(!ClosureTest){
 	  //residuals
+	    //JEC-Version: V4
 	  if(JEC_Version == "Summer16_23Sep2016_V4"){
 	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
 	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;           
 	    //dummies, in this version, MC is not split
-	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;           //ReReco Data + Moriond17 MC
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;           
 	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
 	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
 	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
@@ -243,12 +255,30 @@ using namespace uhh2;
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
 	  }
+	   //JEC-Version:V6 
+	  else if(JEC_Version == "Summer16_23Sep2016_V6"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_23Sep2016
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;           
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;          
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for deriving residuals on AK4CHS, MC specified.");
 	}
 	//closure
 	else{
+	   //JEC-Version: V4
 	  if(JEC_Version == "Summer16_23Sep2016_V4"){
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC V4
 	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_L1RC_AK4PFchs_MC;
 	    //dummies, in this version, MC is not split
 	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_L123_AK4PFchs_MC;
@@ -263,6 +293,24 @@ using namespace uhh2;
 	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
 	    cout << endl;
 	  }
+	   //JEC-Version: V6
+	  else if(JEC_Version == "Summer16_23Sep2016_V6"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC V6
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    //dummies, in this version, MC is not split
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V6_L123_AK4PFchs_MC;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V6_L1RC_AK4PFchs_MC;
+	    cout << "This is MC, JECs used are: ";
+	    for(unsigned int i=0; i<JEC_corr.size(); i++) cout << JEC_corr[i] << ", ";
+	    cout << endl;
+	  }
+
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, MC specified.");
 	}
       }
@@ -272,6 +320,7 @@ using namespace uhh2;
       if(jetLabel == "AK4CHS"){
 	if(!ClosureTest){
 	  //residuals
+	   //JEC-Version: V4
 	  if(JEC_Version == "Summer16_23Sep2016_V4"){
 	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_H_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC
 	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
@@ -284,12 +333,27 @@ using namespace uhh2;
 	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V4_H_L123_noRes_AK4PFchs_DATA;
 	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
 	  }
+	   //JEC-Version: V6
+	  else if(JEC_Version == "Summer16_23Sep2016_V6"){
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V6_H_L123_noRes_AK4PFchs_DATA;  //ReReco Data + Moriond17 MC V6
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V6_H_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V6_BCD_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V6_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V6_EF_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V6_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V6_G_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V6_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V6_H_L123_noRes_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V6_H_L1RC_AK4PFchs_DATA;
+	  }
+
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for deriving residuals on AK4CHS, DATA specified.");
 	}
 	else{
+	   //JEC-Version: V4
 	  if(JEC_Version == "Summer16_23Sep2016_V4"){
 	    //closure
-	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 MC
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V4_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 
 	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V4_G_L1RC_AK4PFchs_DATA;
 	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V4_BCD_L123_AK4PFchs_DATA;
 	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V4_BCD_L1RC_AK4PFchs_DATA;
@@ -300,20 +364,28 @@ using namespace uhh2;
 	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V4_H_L123_AK4PFchs_DATA;
 	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V4_H_L1RC_AK4PFchs_DATA;
 	    cout << "JEC for DATA: Summer16_23Sep2016_V4_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
+	  } 
+	   //JEC-Version: V6
+	  else if(JEC_Version == "Summer16_23Sep2016_V6"){
+	    //closure
+	    JEC_corr              = JERFiles::Summer16_23Sep2016_V6_G_L123_AK4PFchs_DATA;              //ReReco Data + Summer16 V6
+	    JEC_corr_L1RC         = JERFiles::Summer16_23Sep2016_V6_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_BCD          = JERFiles::Summer16_23Sep2016_V6_BCD_L123_AK4PFchs_DATA;
+	    JEC_corr_BCD_L1RC     = JERFiles::Summer16_23Sep2016_V6_BCD_L1RC_AK4PFchs_DATA;
+	    JEC_corr_EFearly      = JERFiles::Summer16_23Sep2016_V6_EF_L123_AK4PFchs_DATA;
+	    JEC_corr_EFearly_L1RC = JERFiles::Summer16_23Sep2016_V6_EF_L1RC_AK4PFchs_DATA;
+	    JEC_corr_FlateG       = JERFiles::Summer16_23Sep2016_V6_G_L123_AK4PFchs_DATA;
+	    JEC_corr_FlateG_L1RC  = JERFiles::Summer16_23Sep2016_V6_G_L1RC_AK4PFchs_DATA;
+	    JEC_corr_H            = JERFiles::Summer16_23Sep2016_V6_H_L123_AK4PFchs_DATA;
+	    JEC_corr_H_L1RC       = JERFiles::Summer16_23Sep2016_V6_H_L1RC_AK4PFchs_DATA;
+	    cout << "JEC for DATA: Summer16_23Sep2016_V6_BCD/EFearly/FlateG/H_L123_AK4PFchs_DATA;" << endl;
 	  }
 	  else throw runtime_error("In TestModule.cxx: Invalid JEC_Version for closure test on AK4CHS, DATA specified.");
 	}
       }
     }
-    
-
-
-
-
-
-    
-  
-      //for closure test
+      
+      //Only for Closure Test
       if(ClosureTest){
 	//DATA
 	if(!isMC){
@@ -372,7 +444,6 @@ using namespace uhh2;
 	  }
 	}
 	//MC
-	
 	else if(isMC){
 	  if(split_JEC_MC){
 	    jet_corrector_BCD.reset(new JetCorrector(ctx, JEC_corr_BCD, JEC_corr_BCD_L1RC));
@@ -391,13 +462,13 @@ using namespace uhh2;
 	  }
 	}
       }
-    
-
+    //JER Smearing for corresponding JEC-Version
       if(isMC){
 	if(JEC_Version == "Summer16_23Sep2016_V4") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
+	else if(JEC_Version == "Summer16_23Sep2016_V6") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016)); 
 	else throw runtime_error("In TestModule.cxx: When setting up JER smearer, invalid 'JEC_Version' was specified.");
       }
-
+    //############################################################################################################################################# 
 
     //output
     ctx.undeclare_all_event_output();   
@@ -454,77 +525,96 @@ using namespace uhh2;
     tt_integrated_lumi = ctx.declare_event_output<float>("integrated_lumi");
 
 
+    //###############################  Setup Histograms ########################################################
+     //Run Number
+    h_runnr_input       .reset(new JECRunnumberHists(ctx,"Runnr_input"));
 
-
-    h_runnr_input.reset(new JECRunnumberHists(ctx,"Runnr_input"));
-
-    h_input.reset(new JECCrossCheckHists(ctx,"CrossCheck_input"));
-    h_lumisel.reset(new JECCrossCheckHists(ctx,"CrossCheck_lumisel"));
-    h_beforeCleaner.reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeCleaner"));
-    h_afterCleaner.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterCleaner"));
-    h_2jets.reset(new JECCrossCheckHists(ctx,"CrossCheck_2jets"));
-    h_beforeJEC.reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeJEC"));
-    h_afterJEC.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterJEC"));
-    h_afterJER.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterJER"));
-    h_afterMET.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterMET"));
-    h_beforeTriggerData.reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeTriggerData"));
-    h_afterTriggerData.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterTriggerData"));
-    h_beforeFlatFwd.reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeFlatFwd"));
-    h_afterFlatFwd.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterFlatFwd"));
+    //CrossCheckHists
+    h_input             .reset(new JECCrossCheckHists(ctx,"CrossCheck_input"));
+    h_lumisel           .reset(new JECCrossCheckHists(ctx,"CrossCheck_lumisel"));
+    h_beforeCleaner     .reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeCleaner"));
+    h_afterCleaner      .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterCleaner"));
+    h_2jets             .reset(new JECCrossCheckHists(ctx,"CrossCheck_2jets"));
+    h_beforeJEC         .reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeJEC"));
+    h_afterJEC          .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterJEC"));
+    h_afterJER          .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterJER"));
+    h_afterMET          .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterMET"));
+    h_beforeTriggerData .reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeTriggerData"));
+    h_afterTriggerData  .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterTriggerData"));
+    h_beforeFlatFwd     .reset(new JECCrossCheckHists(ctx,"CrossCheck_beforeFlatFwd"));
+    h_afterFlatFwd      .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterFlatFwd"));
     h_afterPtEtaReweight.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterPtEtaReweight"));
-    h_afterLumiReweight.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterLumiReweight"));
-    h_afterUnflat.reset(new JECCrossCheckHists(ctx,"CrossCheck_afterUnflat"));
-    h_afternVts.reset(new JECCrossCheckHists(ctx,"CrossCheck_afternVts"));
+    h_afterLumiReweight .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterLumiReweight"));
+    h_afterUnflat       .reset(new JECCrossCheckHists(ctx,"CrossCheck_afterUnflat"));
+    h_afternVts         .reset(new JECCrossCheckHists(ctx,"CrossCheck_afternVts"));
+    h_with_PU_cut       .reset(new JECCrossCheckHists(ctx,"CrossCheck_with_PUcut"));
+    h_after_PU_cut      .reset(new JECCrossCheckHists(ctx,"CrossCheck_after_PUcut"));
+    h_Weight_cut_200    .reset(new JECCrossCheckHists(ctx,"Weight_Cut200"));
+    h_Weight_cut_400    .reset(new JECCrossCheckHists(ctx,"Weight_Cut400"));
+    h_Weight_cut_600    .reset(new JECCrossCheckHists(ctx,"Weight_Cut600"));
+    h_Weight_cut_800    .reset(new JECCrossCheckHists(ctx,"Weight_Cut800"));
+    h_Weight_cut_1000   .reset(new JECCrossCheckHists(ctx,"Weight_Cut1000"));
+    h_Weight_cut_Inf    .reset(new JECCrossCheckHists(ctx,"Weight_CutInf"));
+    h_Ratio_cut_1       .reset(new JECCrossCheckHists(ctx,"Ratio_Cut1"));
+ 
+    //Analysis Hists
+    h_nocuts            .reset(new JECAnalysisHists(ctx,"NoCuts"));
+    h_dijet             .reset(new JECAnalysisHists(ctx,"diJet"));
+    h_match             .reset(new JECAnalysisHists(ctx,"JetMatching"));
+    h_sel               .reset(new JECAnalysisHists(ctx,"Selection"));
+    h_final             .reset(new JECAnalysisHists(ctx,"Final"));
 
-    h_nocuts.reset(new JECAnalysisHists(ctx,"NoCuts"));
-    h_dijet.reset(new JECAnalysisHists(ctx,"diJet"));
-    h_match.reset(new JECAnalysisHists(ctx,"JetMatching"));
-    h_sel.reset(new JECAnalysisHists(ctx,"Selection"));
-    h_final.reset(new JECAnalysisHists(ctx,"Final"));
+    //CENTRAL Trigger Hists
+    h_trg40             .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve40"));
+    h_trg60             .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve60"));
+    h_trg80             .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve80"));
+    h_trg140            .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve140"));
+    h_trg200            .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve200"));
+    h_trg260            .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve260"));
+    h_trg320            .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve320"));
+    h_trg400            .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve400"));
+    h_trg500            .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve500"));
 
-    h_trg40.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve40"));
-    h_trg60.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve60"));
-    h_trg80.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve80"));
-    h_trg140.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve140"));
-    h_trg200.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve200"));
-    h_trg260.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve260"));
-    h_trg320.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve320"));
-    h_trg400.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve400"));
-    h_trg500.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve500"));
+    //FWD Trigger Hists
+    h_trgHF60           .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve60_HFJEC"));
+    h_trgHF80           .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve80_HFJEC"));
+    h_trgHF100          .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve100_HFJEC"));
+    h_trgHF160          .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve160_HFJEC"));
+    h_trgHF220          .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve220_HFJEC"));
+    h_trgHF300          .reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve300_HFJEC"));
 
-    h_trgHF60.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve60_HFJEC"));
-    h_trgHF80.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve80_HFJEC"));
-    h_trgHF100.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve100_HFJEC"));
-    h_trgHF160.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve160_HFJEC"));
-    h_trgHF220.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve220_HFJEC"));
-    h_trgHF300.reset(new JECAnalysisHists(ctx,"HLT_DiPFJetAve300_HFJEC"));
+    //Lumi Hists
+    h_lumi_nocuts       .reset(new LuminosityHists(ctx,"Lumi_noCuts"));  
+    h_lumi_sel          .reset(new LuminosityHists(ctx,"Lumi_Selection"));
+    h_lumi_dijet        .reset(new LuminosityHists(ctx,"Lumi_diJet"));
+    h_lumi_match        .reset(new LuminosityHists(ctx,"Lumi_JetMatching"));
+    h_lumi_final        .reset(new LuminosityHists(ctx,"Lumi_Final"));
+    h_lumi_Trig40       .reset(new LuminosityHists(ctx,"Lumi_Trig40"));  
+    h_lumi_Trig60       .reset(new LuminosityHists(ctx,"Lumi_Trig60")); 
+    h_lumi_Trig80       .reset(new LuminosityHists(ctx,"Lumi_Trig80")); 
+    h_lumi_Trig140      .reset(new LuminosityHists(ctx,"Lumi_Trig140")); 
+    h_lumi_Trig200      .reset(new LuminosityHists(ctx,"Lumi_Trig200")); 
+    h_lumi_Trig260      .reset(new LuminosityHists(ctx,"Lumi_Trig260")); 
+    h_lumi_Trig320      .reset(new LuminosityHists(ctx,"Lumi_Trig320")); 
+    h_lumi_Trig400      .reset(new LuminosityHists(ctx,"Lumi_Trig400")); 
+    h_lumi_Trig500      .reset(new LuminosityHists(ctx,"Lumi_Trig500")); 
+    h_lumi_TrigHF60     .reset(new LuminosityHists(ctx,"Lumi_TrigHF60")); 
+    h_lumi_TrigHF80     .reset(new LuminosityHists(ctx,"Lumi_TrigHF80")); 
+    h_lumi_TrigHF100    .reset(new LuminosityHists(ctx,"Lumi_TrigHF100")); 
+    h_lumi_TrigHF160    .reset(new LuminosityHists(ctx,"Lumi_TrigHF160")); 
+    h_lumi_TrigHF220    .reset(new LuminosityHists(ctx,"Lumi_TrigHF220")); 
+    h_lumi_TrigHF300    .reset(new LuminosityHists(ctx,"Lumi_TrigHF300")); 
 
-    h_lumi_nocuts.reset(new LuminosityHists(ctx,"Lumi_noCuts"));  
-    h_lumi_sel.reset(new LuminosityHists(ctx,"Lumi_Selection"));
-    h_lumi_dijet.reset(new LuminosityHists(ctx,"Lumi_diJet"));
-    h_lumi_match.reset(new LuminosityHists(ctx,"Lumi_JetMatching"));
-    h_lumi_final.reset(new LuminosityHists(ctx,"Lumi_Final"));
-    h_lumi_Trig40.reset(new LuminosityHists(ctx,"Lumi_Trig40"));  
-    h_lumi_Trig60.reset(new LuminosityHists(ctx,"Lumi_Trig60")); 
-    h_lumi_Trig80.reset(new LuminosityHists(ctx,"Lumi_Trig80")); 
-    h_lumi_Trig140.reset(new LuminosityHists(ctx,"Lumi_Trig140")); 
-    h_lumi_Trig200.reset(new LuminosityHists(ctx,"Lumi_Trig200")); 
-    h_lumi_Trig260.reset(new LuminosityHists(ctx,"Lumi_Trig260")); 
-    h_lumi_Trig320.reset(new LuminosityHists(ctx,"Lumi_Trig320")); 
-    h_lumi_Trig400.reset(new LuminosityHists(ctx,"Lumi_Trig400")); 
-    h_lumi_Trig500.reset(new LuminosityHists(ctx,"Lumi_Trig500")); 
-    h_lumi_TrigHF60.reset(new LuminosityHists(ctx,"Lumi_TrigHF60")); 
-    h_lumi_TrigHF80.reset(new LuminosityHists(ctx,"Lumi_TrigHF80")); 
-    h_lumi_TrigHF100.reset(new LuminosityHists(ctx,"Lumi_TrigHF100")); 
-    h_lumi_TrigHF160.reset(new LuminosityHists(ctx,"Lumi_TrigHF160")); 
-    h_lumi_TrigHF220.reset(new LuminosityHists(ctx,"Lumi_TrigHF220")); 
-    h_lumi_TrigHF300.reset(new LuminosityHists(ctx,"Lumi_TrigHF300")); 
-    
-    Jet_printer.reset(new JetPrinter("Jet-Printer", 0));
+  //###############################################################################################
+    //Printer Modules
+    Jet_printer         .reset(new JetPrinter("Jet-Printer", 0));
     GenParticles_printer.reset(new GenParticlesPrinter(ctx));
 
     debug = false;
     n_evt = 0;
+
+    //###############################################  Apply Weights  #############################
+    //Apply MC-Weights
     TString name_weights = ctx.get("MC_Weights_Path");
     apply_weights = (ctx.get("Apply_Weights") == "true" && isMC);
     if(apply_weights){
@@ -543,6 +633,7 @@ using namespace uhh2;
       f_weights.reset(new TFile(name_weights,"READ"));
     }
 
+    //Apply Lumi Weights/Unflattening
     apply_lumiweights = (ctx.get("Apply_Lumiweights") == "true" && isMC);
     apply_unflattening = (ctx.get("Apply_Unflattening") == "true" && isMC);
     if(apply_weights && apply_lumiweights) throw runtime_error("In TestModule.cxx: 'apply_weights' and 'apply_lumiweights' are set 'true' simultaneously. This won't work, please decide on one");
@@ -560,8 +651,6 @@ using namespace uhh2;
     brun = tree->GetBranch("run");
     blumiblock = tree->GetBranch("luminosityBlock");
     bilumi = tree->GetBranch("intgRecLumi");
-
-
 
     run_lumi rl;
     double ilumi;
@@ -596,11 +685,8 @@ using namespace uhh2;
     }
     upper_binborders_runnrs.push_back(last_entry); //this is not exactly an UPPER limit because it is equal to the highest possible entry, not greater than it...created exception for this case.
     lumi_in_bins.push_back(ilumi_current_bin);
-    
-
-
+    //############################################################################################################################
   };
-
 
 
 
@@ -610,11 +696,26 @@ using namespace uhh2;
   }
 
   bool TestModule::process(Event & event) {
+    //###############################################################
+    //
+    //Selection Module for L2 Residual Calculation  
+    //
+    //Select Di-Jet Events 
+    //Define Barrel and Probe Jet
+    //Use possible third Jet to estimate alpha
+    //Apply MC-Weights out of Reweighting (Second Iteration)
+    //
+    //###############################################################
+
+
     n_evt++;
     //cout << endl << "++++++++++ NEW EVENT +++++++++" << endl << endl;
+
+    //Dump Input
     h_input->fill(event);
 
-    if(!isMC){ //split up RunF into Fearly and Flate (the latter has to be hadd'ed to RunG manually)
+    //Split up RunF into Fearly and Flate (the latter has to be hadd'ed to RunG manually)
+    if(!isMC){ 
      if(dataset_version.Contains("Fearly")){
 	if(event.run >= s_runnr_Fearly) return false;
       }
@@ -623,7 +724,6 @@ using namespace uhh2;
       }
     }
  
-
     h_runnr_input->fill(event);
 
     /* CMS-certified luminosity sections */
@@ -635,14 +735,14 @@ using namespace uhh2;
 
     h_lumisel->fill(event);
 
-    int event_in_lumibin = -1;
+    int    event_in_lumibin = -1;
     double fill_event_integrated_lumi = 0;
     double inst_lumi = -1;
     double int_lumi_event = -1;
     if(event.isRealData){
       run_lumi rl_event{event.run, event.luminosityBlock};
-      double lumiblock_lumi = rl2lumi[rl_event];
-      inst_lumi = lumiblock_lumi/23;
+      double   lumiblock_lumi = rl2lumi[rl_event];
+      inst_lumi      = lumiblock_lumi/23;
       int_lumi_event = rl2intlumi[rl_event];
 
       vector<run_lumi>::iterator it;
@@ -652,13 +752,15 @@ using namespace uhh2;
       }
       else it = upper_bound(upper_binborders_runnrs.begin(), upper_binborders_runnrs.end(), rl_event); //find the first entry in the vector of binborders that is greater than rl_event
       
-      event_in_lumibin = distance(upper_binborders_runnrs.begin(), it); //find how many elements of the vector of binborders are smaller than 'it', this is the bin to be filled
+      event_in_lumibin           = distance(upper_binborders_runnrs.begin(), it); //find how many elements of the vector of binborders are smaller than 'it', this is the bin to be filled
       fill_event_integrated_lumi = lumi_in_bins.at(event_in_lumibin);
     }
     
     h_beforeCleaner->fill(event);
 
+    //############### Jet Cleaner and First Selection (N_Jets >=2) ##############################
     int n_jets_beforeCleaner = event.jets->size();
+
     //JetID
     if(jetLabel == "AK4CHS" || jetLabel == "AK8CHS") jetcleaner->process(event);
     int n_jets_afterCleaner = event.jets->size();
@@ -669,18 +771,20 @@ using namespace uhh2;
 
     h_afterCleaner->fill(event);
 
+    //discard Events with less than 2 Jets
     const int jet_n = event.jets->size();
     if(jet_n<2) return false;
 
     h_2jets->fill(event);
-
+    //###########################################################################################
+  
+    //####################  Select and Apply proper JEC-Versions for every Run ##################
+    //Fisrt: Choose JEC-Version
     bool apply_BCD = false;
     bool apply_EFearly = false;
     bool apply_FlateG = false;
     bool apply_H = false;
     bool apply_global = false;
-
-
 
     if(ClosureTest){
       //closure test
@@ -691,7 +795,7 @@ using namespace uhh2;
 	  if(event.run <= s_runnr_BCD)         apply_BCD = true;
 	  else if(event.run < s_runnr_EFearly) apply_EFearly = true; //< is correct, not <=
 	  else if(event.run <= s_runnr_FlateG) apply_FlateG = true; 
-	  else if(event.run > s_runnr_FlateG) apply_H = true;
+	  else if(event.run > s_runnr_FlateG)  apply_H = true;
 	  else throw runtime_error("TestModule.cxx: run number not covered by if-statements in process-routine.");
 	}
 	else{
@@ -749,77 +853,80 @@ using namespace uhh2;
 	}
       }
     }
-
-
+    
     if(apply_BCD+apply_EFearly+apply_FlateG+apply_H+apply_global != 1) throw runtime_error("In TestModule.cxx: Sum of apply_* when applying JECs is not == 1. Fix this.");
 
     h_beforeJEC->fill(event);
 
-    //apply proper JECs
+    //Second: Apply proper JECs
     if(apply_BCD){
-      JLC_BCD->process(event);
-      jet_corrector_BCD->process(event);
+      JLC_BCD                 ->process(event);
+      jet_corrector_BCD       ->process(event);
     }
     if(apply_EFearly){
-      JLC_EFearly->process(event);
-      jet_corrector_EFearly->process(event);
+      JLC_EFearly            ->process(event);
+      jet_corrector_EFearly  ->process(event);
     }
    if(apply_FlateG){
-      JLC_FlateG->process(event);
-      jet_corrector_FlateG->process(event);
+      JLC_FlateG             ->process(event);
+      jet_corrector_FlateG   ->process(event);
     }
     if(apply_H){
-      JLC_H->process(event);
-      jet_corrector_H->process(event);
+      JLC_H                  ->process(event);
+      jet_corrector_H        ->process(event);
     }
     if(apply_global){
-      jetleptoncleaner->process(event);
-      jet_corrector->process(event);
+      jetleptoncleaner      ->process(event);
+      jet_corrector         ->process(event);
     }
 
     h_afterJEC->fill(event);
+    //#############################################################################################################
 
+    //################################  Apply JER and MET  ########################################################
     //Apply JER to all jet collections
-    if(jetER_smearer.get()) jetER_smearer->process(event);
+    if(jetER_smearer.get()) jetER_smearer ->process(event);
 
     h_afterJER->fill(event); 
 
     //correct MET only AFTER smearing the jets
     if(apply_BCD){
-      jet_corrector_BCD->correct_met(event);
+      jet_corrector_BCD     ->correct_met(event);
     }
     if(apply_EFearly){
-      jet_corrector_EFearly->correct_met(event);
+      jet_corrector_EFearly ->correct_met(event);
     }
    if(apply_FlateG){
-      jet_corrector_FlateG->correct_met(event);
+      jet_corrector_FlateG  ->correct_met(event);
     }
     if(apply_H){
-      jet_corrector_H->correct_met(event);
+      jet_corrector_H       ->correct_met(event);
     }
     if(apply_global){
-      jet_corrector->correct_met(event);
+      jet_corrector         ->correct_met(event);
     }
 
     h_afterMET->fill(event); 
-    
+    //############################################################################################################    
 
 
-
-    Jet* jet1 = &event.jets->at(0);// leading jet
-    Jet* jet2 = &event.jets->at(1);// sub-leading jet
+    //Calculate pt_ave = (jet1_pt + jet2_pt)/2
+    Jet* jet1     = &event.jets->at(0);// leading jet
+    Jet* jet2     = &event.jets->at(1);// sub-leading jet
     float jet1_pt = jet1->pt(); float jet2_pt = jet2->pt();
-    float pt_ave = (jet1_pt + jet2_pt)/2.;
-    //// HLT selection
-    bool pass_trigger40=false; bool pass_trigger60=false; bool pass_trigger80=false;
-    bool pass_trigger140=false; bool pass_trigger200=false; bool pass_trigger260=false;
-    bool pass_trigger320=false; bool pass_trigger400=false; bool pass_trigger500=false;
-    bool pass_trigger60_HFJEC=false; bool pass_trigger80_HFJEC=false;
-    bool pass_trigger100_HFJEC=false; bool pass_trigger160_HFJEC=false;
-    bool pass_trigger220_HFJEC=false; bool pass_trigger300_HFJEC=false;
+    float pt_ave  = (jet1_pt + jet2_pt)/2.;
+
+    ////###############################################  Trigger  ################################################
+ 
+    bool pass_trigger40        =false;  bool pass_trigger60        =false;  bool pass_trigger80=false;
+    bool pass_trigger140       =false;  bool pass_trigger200       =false;  bool pass_trigger260=false;
+    bool pass_trigger320       =false;  bool pass_trigger400       =false;  bool pass_trigger500=false;
+    bool pass_trigger60_HFJEC  =false;  bool pass_trigger80_HFJEC  =false;
+    bool pass_trigger100_HFJEC =false;  bool pass_trigger160_HFJEC =false;
+    bool pass_trigger220_HFJEC =false;  bool pass_trigger300_HFJEC =false;
     //double trg_thresh[9] = {56,78,100,168,232,300,366,453,562}; //2015
     //double trgHF_thresh[6] = {77,131,154,244,321,426}; //2015
-    double trg_thresh[9] = {s_Pt_Ave40_cut,s_Pt_Ave60_cut,s_Pt_Ave80_cut,s_Pt_Ave140_cut,s_Pt_Ave200_cut,s_Pt_Ave260_cut,s_Pt_Ave320_cut,s_Pt_Ave400_cut,s_Pt_Ave500_cut}; 
+    double trg_thresh[9]   = {s_Pt_Ave40_cut,  s_Pt_Ave60_cut,  s_Pt_Ave80_cut,   s_Pt_Ave140_cut,  s_Pt_Ave200_cut,  s_Pt_Ave260_cut,  s_Pt_Ave320_cut,  s_Pt_Ave400_cut,  s_Pt_Ave500_cut}; 
     double trgHF_thresh[6] = {s_Pt_Ave60HF_cut,s_Pt_Ave80HF_cut,s_Pt_Ave100HF_cut,s_Pt_Ave160HF_cut,s_Pt_Ave220HF_cut,s_Pt_Ave300HF_cut};
 
     if(event.isRealData){
@@ -830,6 +937,8 @@ using namespace uhh2;
       // }
       //      cout << " =================== " << endl;
       //       pass_trigger = trigger_sel->passes(event);
+
+      //CENTRAL Trigger
       pass_trigger40 = (trigger40_sel->passes(event) && pt_ave>trg_thresh[0]);
       pass_trigger60 = (trigger60_sel->passes(event) && pt_ave>trg_thresh[1]);
       pass_trigger80 = (trigger80_sel->passes(event) && pt_ave>trg_thresh[2]);
@@ -839,6 +948,8 @@ using namespace uhh2;
       pass_trigger320 = (trigger320_sel->passes(event) && pt_ave>trg_thresh[6]);
       pass_trigger400 = (trigger400_sel->passes(event) && pt_ave>trg_thresh[7]);
       pass_trigger500 = (trigger500_sel->passes(event) && pt_ave>trg_thresh[8]);
+      
+      //FWD Trigger
       pass_trigger60_HFJEC = (trigger60_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[0]);
       pass_trigger80_HFJEC = (trigger80_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[1]);
       pass_trigger100_HFJEC = (trigger100_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[2]);
@@ -846,11 +957,7 @@ using namespace uhh2;
       pass_trigger220_HFJEC = (trigger220_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[4]);
       pass_trigger300_HFJEC = (trigger300_HFJEC_sel->passes(event) && pt_ave>trgHF_thresh[5]);
       
-      const bool pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
-				 || pass_trigger260 || pass_trigger320 || pass_trigger400 || pass_trigger500
-				 || pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
-				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC || pass_trigger300_HFJEC);
-      
+      //Count Events passed Trigger
       int n_trig = 0;
       if(pass_trigger40) n_trig++;
       if(pass_trigger60) n_trig++;
@@ -868,23 +975,33 @@ using namespace uhh2;
       if(pass_trigger220_HFJEC) n_trig++;
       if(pass_trigger300_HFJEC) n_trig++;
       //cout << "Number of triggers that fired: " << n_trig << endl;
-      /*
-      //removed the trigger500 and HF300 triggers
-      const bool pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
-				 || pass_trigger260 || pass_trigger320 || pass_trigger400 
+      
+      //HLT Selection
+      bool pass_trigger;
+
+      //Standard Usage
+      if(trigger_fwd && trigger_central){
+	//	cout<<"Enter Trigger "<<endl;
+      pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
+				 || pass_trigger260 || pass_trigger320 || pass_trigger400 || pass_trigger500
 				 || pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
-				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC );
-	*/
-      /*
-       //Only FWD triggers
-      const bool pass_trigger = (pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
 				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC || pass_trigger300_HFJEC);
-      */
-      /*
+      }
+
+      //For Weight Calculation
+     //Only FWD triggers
+      else if(trigger_fwd){
+	//cout<<"Enter Trigger Forward "<<endl;
+      pass_trigger = (pass_trigger60_HFJEC || pass_trigger80_HFJEC || pass_trigger100_HFJEC
+				 || pass_trigger160_HFJEC || pass_trigger220_HFJEC || pass_trigger300_HFJEC);
+      }
       //Only 'standard' triggers
-      const bool pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
+      else if(trigger_central){
+	//cout<<"Enter Trigger Central "<<endl;
+      pass_trigger = (pass_trigger40 || pass_trigger60 || pass_trigger80 || pass_trigger140 || pass_trigger200 
 				 || pass_trigger260 || pass_trigger320 || pass_trigger400 || pass_trigger500);
-      */
+       }
+      else throw runtime_error("TestModule.cxx: No Trigger Applied! Check xml-File.");
 
       if(debug){
 	cout << "before triggers: " << endl;
@@ -896,9 +1013,11 @@ using namespace uhh2;
       if(!pass_trigger)
 	return false;
     }
-
     h_afterTriggerData->fill(event);
+    //##########################################################################################################
 
+
+    //###############################  Declare Probe and Barrel Jet  ###########################################
     Jet* jet_probe = jet1; Jet* jet_barrel = jet2;
     if ((fabs(jet1->eta())<s_eta_barr)&&(fabs(jet2->eta())<s_eta_barr)) {
       int ran = rand();
@@ -922,9 +1041,10 @@ using namespace uhh2;
 	jet_barrel = jet2;
       }
     }
+    //##########################################################################################################
 
     //read or calculated values for dijet events
-    float gen_pthat = 0; //pt hat (from QCD simulation) //todo!
+    float gen_pthat = 0; //pt hat (from QCD simulation) 
     if(isMC) gen_pthat = event.genInfo->binningValues()[0];
     float gen_weight = 0;
     if(!event.isRealData)
@@ -955,6 +1075,7 @@ using namespace uhh2;
     auto factor_raw_barrel = jet_barrel->JEC_factor_raw();
     float barreljet_ptRaw = barreljet_pt*factor_raw_barrel;
 
+    //##########################  Get third Jet for alpha, asymmetry calculation  ################################
     float jet3_pt = 0; float jet3_ptRaw = 0;
     if(jet_n>2){
       Jet* jet3 = &event.jets->at(2);
@@ -975,6 +1096,7 @@ using namespace uhh2;
     for(int i=2;i<jet_n;i++){
       jets_pt += ((Jet*)&event.jets->at(i))->pt();
     }
+    //###############################################################################################################
 
     h_beforeFlatFwd->fill(event);
 
@@ -984,8 +1106,10 @@ using namespace uhh2;
     
     h_afterFlatFwd->fill(event);
 
-    //obtain weights from MC reweighting
+    //###########################################  Obtain weights from MC reweighting  ###############################
     if(apply_weights && isMC){
+      //Not Used by ForWeight-Run
+
       // TH2D* h_weights = (TH2D*)f_weights->Get("pt_ave_data");
       // int idx_x=0;
       // int idx_y=0;
@@ -1006,9 +1130,11 @@ using namespace uhh2;
       if(idx == 0) return false;
       event.weight *= h_weights->GetBinContent(idx);
     }
-
-    h_afterPtEtaReweight->fill(event);
+  h_afterPtEtaReweight->fill(event);
+    //################################################################################################################
+  
     
+    //#############################################  Apply Lumi-Weight  ############################################## 
     if(apply_lumiweights){
       double factor = -1.;
       //find correct trigger lumi, depending on fwd/flat and pT_ave
@@ -1053,6 +1179,7 @@ using namespace uhh2;
     }
 
     h_afterLumiReweight->fill(event);
+    //#####################################################################################################################
 
     if(apply_unflattening){
       //un-flatten QCD pT spectrum
@@ -1112,6 +1239,8 @@ using namespace uhh2;
     event.set(tt_integrated_lumi,int_lumi_event);
 
     sel.SetEvent(event);
+
+    //##################################################   Advanced Selections   ##################################################################
     //good primary vertex
     int nGoodVts = sel.goodPVertex();
 
@@ -1120,11 +1249,12 @@ using namespace uhh2;
       cout << "before good vertex selection : " << endl;
       cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
     }
-
+    //
     if(nGoodVts<=0) return false;
     event.set(tt_nGoodvertices, nGoodVts);
     h_afternVts->fill(event);
 
+    //DiJet-Events
     if(debug){
       cout << "before 'dijet selection' : " << endl;
       cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
@@ -1133,11 +1263,30 @@ using namespace uhh2;
     if(!sel.DiJet()) return false;
     h_nocuts->fill(event);
     h_lumi_nocuts->fill(event);
-   if(debug){
-     cout << "before 'dijet advanced selection' : " << endl;
-     cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
-   }
+  
+    //Pu_pt_hat/pt_hat Selection
+    //Add Selection to Sel. Vector
+    if(!event.isRealData){
+   
+      double Event_Weight=event.weight;
 
+    //Only for Selection Checks (isolate MC-Outlayers)
+    if(Event_Weight<200) h_Weight_cut_200->fill(event);
+    else if(Event_Weight<400) h_Weight_cut_400->fill(event);
+    else if(Event_Weight<600) h_Weight_cut_600->fill(event);
+    else if(Event_Weight<800) h_Weight_cut_800->fill(event);
+    else if(Event_Weight<1000) h_Weight_cut_1000->fill(event);
+    else if(Event_Weight>1000) h_Weight_cut_Inf->fill(event);
+    else {
+    }
+
+    if(!sel.PUpthat(event)) return false;
+
+    h_Ratio_cut_1->fill(event);
+   
+    }
+
+    //Advanced Selection: DiJet Events
     if(!sel.DiJetAdvanced(event)) return false;
     h_dijet->fill(event);
     h_lumi_dijet->fill(event);
@@ -1165,8 +1314,12 @@ using namespace uhh2;
 	cout << "before Pt selection (MC only) : " << endl;
 	cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
       }
+
+      //PtMC Selection ?? Search in sel. 
       if(!sel.PtMC(event)) return false; // For MC only one Pt threshold
     }
+    //######################################################################################################################################
+
     if (event.get(tt_alpha) < 0.3) {
       h_sel->fill(event);
       h_lumi_sel->fill(event);
@@ -1322,8 +1475,6 @@ using namespace uhh2;
 
 
       event.set(tt_response_leadingjet,response_jet1);  
-     
-
 
     } //isMC
 
@@ -1339,7 +1490,6 @@ using namespace uhh2;
 
     return true;
   }
-
 
 
   // as we want to run the ExampleCycleNew directly with AnalysisModuleRunner,

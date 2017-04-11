@@ -17,8 +17,7 @@ void CorrectionObject::ControlPlots(){
   TString DATAtitle = "DATA";
   TString MCtitle = "MC";
   TString SavePlots = CorrectionObject::_outpath + "plots/control/ControlPlots_" + dirName + "_" + CorrectionObject::_generator_tag;
-
-
+ 
   /* ++++++++++++++++ Collect all histograms ++++++++++++++++ */
   TH1F* pt_jet1_DATA = (TH1F*)CorrectionObject::_DATAFile->Get(dirName+"/pt_1");
   TH1F*pt_jet2_DATA = (TH1F*)CorrectionObject::_DATAFile->Get(dirName+"/pt_2");
@@ -56,7 +55,7 @@ void CorrectionObject::ControlPlots(){
   TH1F *Eta_assym_bot_MC = (TH1F*)Eta_pos_MC->Clone();
   Eta_assym_bot_MC->Add(Eta_neg_MC,+1);
   Eta_assym_top_MC->Divide(Eta_assym_bot_MC);
-
+ cout<<"SavePlots: "<<SavePlots<<endl;
 
   /* +++++++++++++++++++++ Plot extremely nice histograms ++++++++++++++++++++++++++++ */
   TCanvas* a = new TCanvas();

@@ -17,7 +17,7 @@ using namespace std;
   public:
 
     // Constructors, destructor
-    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const bool & closuretest = false);
+    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const TString & input_path, const TString & weight_path, const bool & closuretest = false);
     CorrectionObject(const CorrectionObject &) = default;
     CorrectionObject & operator = (const CorrectionObject &) = default;
     ~CorrectionObject() = default;
@@ -26,6 +26,8 @@ using namespace std;
     // Setter and getter functions
     inline TString runnr(){ return _runnr;}
     inline TString collection(){ return _collection;}
+    inline TString input_path(){return _input_path;}
+    inline TString weight_path(){return _weight_path;}
     inline TString generator(){ return _generator;}
     inline TString jettag(){ return _jettag;}
     inline bool closuretest(){return _closuretest;}
@@ -35,6 +37,8 @@ using namespace std;
     inline TString lumitag(){return _lumitag;}
     inline const TString runnr() const{return _runnr;}
     inline const TString collection() const{return _collection;}
+    inline const TString input_path()const{return _input_path;}
+    inline const TString weight_path()const{return _weight_path;}
     inline const TString generator() const{return _generator;}
     inline const TString jettag() const{return _jettag;}
     inline const bool closuretest() const {return _closuretest;}
@@ -45,6 +49,8 @@ using namespace std;
     inline void set_runnr(TString x){_runnr = x;}
     inline void set_collection(TString x){_collection = x;}
     inline void set_generator(TString x){_generator = x;}
+    inline void set_input_path(TString x){_input_path = x;}
+    inline void set_weight_path(TString x){_weight_path = x;}
     inline void set_jettag(TString x){_jettag = x;}
     inline void set_closuretest(bool x){_closuretest = x;}
     inline void set_MCPath(TString x){_MCpath = x; _MCFile->Close(); _MCFile = new TFile(_MCpath,"READ");}
@@ -74,6 +80,8 @@ using namespace std;
     TString _runnr;
     TString _collection;
     TString _generator, _generator_tag;
+    TString _input_path;
+    TString _weight_path;
     TString _jettag;
     TString _lumitag;
     TString _MCpath, _MCpath_ForWeights_FLAT, _MCpath_ForWeights_FWD, _DATApath, _DATApath_ForWeights, _DATApath_ForWeights_FLAT, _DATApath_ForWeights_FWD;
@@ -106,7 +114,7 @@ inline ostream & operator << (ostream & os, const CorrectionObject & q) {
   return os << "(" << q.runnr() << "," << endl 
                   << q.generator() << ","  << endl
                   << q.collection() << "," << endl 
-                  << q.closuretest() << "," << endl
+	          << q.closuretest() << "," << endl
                   << q.MCPath() << ","  << endl 
 	          << q.DATAPath() << "," << endl
 	          << q.OutPath() << ")";
