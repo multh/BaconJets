@@ -22,5 +22,7 @@ public:
     virtual ~JECCrossCheckHists();
 
 private:
-   
+    TH2F * PU_vs_pt_hat;   
+    TH2F * Weight_vs_pt_hat;
+    TH2F * Weight_vs_pt_hat_zoom;
 };
