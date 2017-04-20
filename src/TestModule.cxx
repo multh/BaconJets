@@ -14,7 +14,9 @@
 #include <UHH2/common/include/LumiSelection.h> //includes also LuminosityHists.h
 #include <UHH2/common/include/TriggerSelection.h>
 #include "UHH2/common/include/CleaningModules.h"
-
+#include <UHH2/common/include/NSelections.h> 
+#include <UHH2/common/include/MuonIds.h> 
+#include <UHH2/common/include/ElectronIds.h>
 #include "UHH2/BaconJets/include/selection.h"
 // #include "UHH2/BaconJets/include/jet_corrections.h"
 // #include "UHH2/BaconJets/include/mc_weight.h"
@@ -59,6 +61,9 @@ using namespace uhh2;
     std::unique_ptr<GenericJetResolutionSmearer> jetER_smearer; 
     std::unique_ptr<JetLeptonCleaner> jetleptoncleaner, JLC_BCD, JLC_EFearly, JLC_FlateG, JLC_H;
     std::unique_ptr<JetCleaner> jetcleaner;
+    // cleaners                                                                                                                                                       
+    std::unique_ptr<MuonCleaner>     muoSR_cleaner;   
+    std::unique_ptr<ElectronCleaner> eleSR_cleaner;       
     // selections
     std::unique_ptr<uhh2::Selection> lumi_sel;
     //    std::unique_ptr<uhh2::AndSelection> metfilters_sel;     
@@ -89,6 +94,7 @@ using namespace uhh2;
     Event::Handle<int> tt_nvertices;
     Event::Handle<float> tt_probejet_eta;  Event::Handle<float> tt_probejet_phi; Event::Handle<float> tt_probejet_pt; Event::Handle<float> tt_probejet_ptRaw;
     Event::Handle<float> tt_barreljet_eta;  Event::Handle<float> tt_barreljet_phi; Event::Handle<float> tt_barreljet_pt; Event::Handle<float> tt_barreljet_ptRaw;
+    Event::Handle<float> tt_probejet_ptgen;         Event::Handle<float> tt_barreljet_ptgen;     
     Event::Handle<float> tt_pt_ave;
     Event::Handle<float> tt_alpha;
     Event::Handle<float> tt_rel_r; Event::Handle<float> tt_mpf_r; 
@@ -166,6 +172,12 @@ using namespace uhh2;
     //    Jet_PFID = JetPFID(JetPFID::WP_LOOSE);
     Jet_PFID = JetPFID(JetPFID::WP_TIGHT);
     jetcleaner.reset(new JetCleaner(ctx, Jet_PFID));
+
+    //Lepton cleaner
+    const     MuonId muoSR(AndId<Muon>    (PtEtaCut  (15, 2.4), MuonIDTight()));
+    const ElectronId eleSR(AndId<Electron>(PtEtaSCCut(15, 2.4), ElectronID_MVAGeneralPurpose_Spring16_tight)); 
+    muoSR_cleaner.reset(new     MuonCleaner(muoSR));                                                                                                                  
+    eleSR_cleaner.reset(new ElectronCleaner(eleSR));   
 
     if(!isMC){
     const std::string& trigger40 = ctx.get("trigger40", "NULL");
@@ -428,10 +440,12 @@ using namespace uhh2;
     tt_probejet_eta = ctx.declare_event_output<float>("probejet_eta");
     tt_probejet_phi = ctx.declare_event_output<float>("probejet_phi");
     tt_probejet_pt = ctx.declare_event_output<float>("probejet_pt");
+    tt_probejet_ptgen = ctx.declare_event_output<float>("probejet_ptgen");
     tt_probejet_ptRaw = ctx.declare_event_output<float>("probejet_ptRaw");
     tt_barreljet_eta = ctx.declare_event_output<float>("barreljet_eta");
     tt_barreljet_phi = ctx.declare_event_output<float>("barreljet_phi");
     tt_barreljet_pt = ctx.declare_event_output<float>("barreljet_pt");
+    tt_barreljet_ptgen = ctx.declare_event_output<float>("barreljet_ptgen");
     tt_barreljet_ptRaw = ctx.declare_event_output<float>("barreljet_ptRaw");
     tt_pt_ave = ctx.declare_event_output<float>("pt_ave");
     tt_alpha = ctx.declare_event_output<float>("alpha");
@@ -634,12 +648,19 @@ using namespace uhh2;
 
   bool TestModule::process(Event & event) {
     n_evt++;
-    //cout << endl << "++++++++++ NEW EVENT +++++++++" << endl << endl;
+    if(debug) cout << endl << "++++++++++ NEW EVENT +++++++++" << endl << endl;
     h_input->fill(event);
-    sort_by_pt<Muon>(*event.muons); 
-    sort_by_pt<Electron>(*event.electrons);
+
+    //// LEPTON selection
+    muoSR_cleaner->process(event);   
+    sort_by_pt<Muon>(*event.muons);
+    //    std::cout<<"#muons = "<<event.muons->size()<<std::endl;
+    eleSR_cleaner->process(event);
+    sort_by_pt<Electron>(*event.electrons);      
+    //std::cout<<"#electrons = "<<event.electrons->size()<<std::endl;
+
     //cout << endl << "++++++++++ NEW EVENT +++++++++" << endl << endl;
-    //    if (event.electrons->size()>0 || event.muons->size()>0) return false; //TEST
+    if (event.electrons->size()>0 || event.muons->size()>0) return false; //TEST lepton cleaning
     if(!isMC){ //split up RunF into Fearly and Flate (the latter has to be hadd'ed to RunG manually)
      if(dataset_version.Contains("Fearly")){
 	if(event.run >= s_runnr_Fearly) return false;
@@ -655,11 +676,15 @@ using namespace uhh2;
     /* CMS-certified luminosity sections */
     if(event.isRealData){
       if(!lumi_sel->passes(event)){
-	return false;
+	return false; //TEST JERC
+	//std::cout<<"Event didn't pass lumi selection! "<<std::endl;
       }
+      else    
+	h_lumisel->fill(event);
     }
 
-    h_lumisel->fill(event);
+    //    std::cout<<"Event DID pass lumi selection! "<<std::endl;
+    //    h_lumisel->fill(event);
     /* MET filters */   
     //    if(!metfilters_sel->passes(event)) return false;   
 
@@ -688,7 +713,8 @@ using namespace uhh2;
     
     h_beforeCleaner->fill(event);
 
-
+    //    const int jet_n = event.jets->size();
+    //TEST switched OFF for JERC test
     int n_jets_beforeCleaner = event.jets->size();
     //JetID
     if(jetLabel == "AK4CHS" || jetLabel == "AK8CHS") jetcleaner->process(event);
@@ -704,7 +730,8 @@ using namespace uhh2;
     if(jet_n<2) return false;
 
     h_2jets->fill(event);
-
+     
+    
     bool apply_BCD = false;
     bool apply_EFearly = false;
     bool apply_FlateG = false;
@@ -729,6 +756,7 @@ using namespace uhh2;
 	  //not split JEC
 	  apply_global = true;
 	}
+	//	std::cout<<"apply_BCD = "<<apply_BCD<<" apply_EFearly = "<<apply_EFearly<<" apply_FlateG = "<<apply_FlateG<<" apply_H = "<<apply_H<<std::endl;
       }
       else{
 	//MC
@@ -834,6 +862,15 @@ using namespace uhh2;
     }
     h_afterMET->fill(event); 
 
+
+
+    //    if(debug && (event.event==3862276 || event.event==3862276 || event.event==4505845 || event.event==4649507 || event.event==4894208 || event.event==4826459 || event.event==4826459 || event.event==4641331 || event.event==3591884 || event.event==3615828 || event.event==4155444 || event.event==5114370 || event.event==5155251 || event.event==5071159 || event.event==4926328 || event.event==4926328 || event.event==3737885 || event.event==4410652 || event.event==4141427 || event.event==3573777 ||  event.event==4498838 || event.event==3789858|| event.event==3916585)){
+    if(debug){      
+      for(unsigned int i=0;i<event.jets->size();i++){
+	Jet* jet = &event.jets->at(i);
+	std::cout<<"jet #"<<i<<" with eta = "<<jet->eta()<<" and corrected pt = "<<jet->pt()<<std::endl;
+      }
+    }
  
     Jet* jet1 = &event.jets->at(0);// leading jet
     Jet* jet2 = &event.jets->at(1);// sub-leading jet
@@ -917,11 +954,14 @@ using namespace uhh2;
       if(debug){
 	cout << "before triggers: " << endl;
 	cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
+
       }
       h_beforeTriggerData->fill(event);
 
+      //TEST JERC
       if(!pass_trigger)
-	return false;
+       	return false;
+      
     }
 
     h_afterTriggerData->fill(event);
@@ -1188,7 +1228,7 @@ using namespace uhh2;
     h_nocuts->fill(event);
     h_lumi_nocuts->fill(event);
     if(!event.isRealData){
-      if(!sel.PUpthat(event)) return false;
+      if(!sel.PUpthat(event)) return false; //TEST: switched off
     }
     h_nocuts->fill(event);
     h_lumi_nocuts->fill(event);
@@ -1198,10 +1238,10 @@ using namespace uhh2;
      cout << "before 'dijet advanced selection' : " << endl;
      cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
    }
-
-    if(!sel.DiJetAdvanced(event)) return false;
-    h_dijet->fill(event);
-    h_lumi_dijet->fill(event);
+   // TEST JERC
+   if(!sel.DiJetAdvanced(event)) return false; 
+   h_dijet->fill(event);
+   h_lumi_dijet->fill(event);
     h_match->fill(event);
     h_lumi_match->fill(event);
     if(event.isRealData){
@@ -1226,7 +1266,7 @@ using namespace uhh2;
 	cout << "before Pt selection (MC only) : " << endl;
 	cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
       }
-      if(!sel.PtMC(event)) return false; // For MC only one Pt threshold
+      if(!sel.PtMC(event)) return false; // For MC only one Pt threshold TEST: switched OFF
     }
     if (event.get(tt_alpha) < 0.3) {
       h_sel->fill(event);
@@ -1247,10 +1287,11 @@ using namespace uhh2;
       event.set(tt_ele_pt,0);
 
     if(debug){
-    //    if(B>0.3){
+    //    if(B<-0.9){
       cout<<"-- Event -- "<<endl;
       cout<<" Evt# "<<event.event<<" Run: "<<event.run<<" "<<endl;
-      cout<<" Npv = "<<event.get(tt_nvertices)<<" jet_pt_ave = "<<event.get(tt_pt_ave)<<" MET = "<<met.Mod()<<" "<<event.met->pt()<<endl;
+      cout<<" Npv = "<<event.get(tt_nvertices)<<" jet_pt_ave = "<<event.get(tt_pt_ave)<<" MET = "<<met.Mod()<<" "<<event.met->pt()<<" "<<event.met->uncorr_pt()<<endl;
+      cout<<"MET/pts = "<<event.get(tt_MET)/(event.get(tt_jets_pt)+event.get(tt_barreljet_pt)+event.get(tt_probejet_pt))<<endl;
       cout<<"Probe: "<<event.get(tt_probejet_eta)<<" "<<event.get(tt_probejet_phi)
 	  <<" "<<event.get(tt_probejet_pt)<<" "<<event.get(tt_probejet_ptRaw)<<endl;
       cout<<" Barrel: "<<event.get(tt_barreljet_eta)<<" "<<event.get(tt_barreljet_phi)
@@ -1283,7 +1324,8 @@ using namespace uhh2;
       double flavor_subleadingjet = 0;
       const unsigned int genjets_n = event.genjets->size();
       int idx_jet_matching_genjet[genjets_n];
-
+      double probejet_ptgen = -1; 
+      double barreljet_ptgen = -1; 
       //match genp to gen-jets
       int idx_j=0;
       int idx_genp_min = -1;
@@ -1334,8 +1376,8 @@ using namespace uhh2;
 	idx_j++;
       }
 
-      //only consider jets that could be matched to a genparticle, these shall take the partons flavor by definition
-      //TEST
+      //only  consider jets that  could be  matched to  a genparticle,
+      //these shall take the partons flavor by definition TES
       if(debug){
 	for (int i=0; i<jet_n; i++){
 	  if(idx_matched_jets[i] != -1) cout << "Jet no. " << i << " is matching genpart no. " << idx_matched_jets[i] << endl;
@@ -1357,10 +1399,12 @@ using namespace uhh2;
       if(idx_matched_jets[idx_barreljet] != -1){	
 	flavor_barreljet = fabs(event.genparticles->at(idx_matched_jets[idx_barreljet]).flavor());
 	response_barreljet = jet_barrel->pt() / event.genparticles->at(idx_matched_jets[idx_barreljet]).pt();
+	barreljet_ptgen = event.genparticles->at(idx_matched_jets[idx_barreljet]).pt();  
       }
       else{
 	flavor_barreljet = -1;
 	response_barreljet = -1;
+	barreljet_ptgen = -1;
       }
       if(debug) cout << "barreljet is jet no. " << idx_barreljet << ", alpha = " << event.get(tt_alpha) << ", flavor of barreljet = " << flavor_barreljet << endl;
     
@@ -1372,10 +1416,12 @@ using namespace uhh2;
       if(idx_matched_jets[idx_probejet] != -1){
 	flavor_probejet = fabs(event.genparticles->at(idx_matched_jets[idx_probejet]).flavor());
 	response_probejet = jet_probe->pt() / event.genparticles->at(idx_matched_jets[idx_probejet]).pt();
+	probejet_ptgen = event.genparticles->at(idx_matched_jets[idx_probejet]).pt();
       }
       else{ 
 	flavor_probejet = -1;
 	response_probejet = -1;
+	probejet_ptgen = -1;
       }
       if(debug) cout << "probejet is jet no. " << idx_probejet << ", alpha = " << event.get(tt_alpha) << ", flavor of probejet = " << flavor_probejet << endl;
       
@@ -1395,11 +1441,12 @@ using namespace uhh2;
 
       event.set(tt_flavorBarreljet,flavor_barreljet);   
       event.set(tt_responseBarreljet,response_barreljet);   
+      event.set(tt_barreljet_ptgen,barreljet_ptgen);   
       event.set(tt_flavorProbejet,flavor_probejet);  
       event.set(tt_responseProbejet,response_probejet);   
       event.set(tt_flavorLeadingjet,flavor_leadingjet);  
       event.set(tt_flavorSubleadingjet,flavor_subleadingjet);  
-
+      event.set(tt_probejet_ptgen,probejet_ptgen);   
       //response of leading jet
       //find corresponding genjet
       int idx_corresponding_genjet = -1;
@@ -1423,6 +1470,8 @@ using namespace uhh2;
       event.set(tt_flavorLeadingjet,-1);  
       event.set(tt_flavorSubleadingjet,-1);  
       event.set(tt_response_leadingjet,-1.);  
+      event.set(tt_probejet_ptgen,-1.);  
+      event.set(tt_barreljet_ptgen,-1);   
     }
     
  
