@@ -5,8 +5,8 @@
 using namespace std;
 
 
-const double alpha_cut = 0.15;
-const TString s_alpha_cut = "0.15";
+const double alpha_cut = 0.3;
+const TString s_alpha_cut = "0.3";
 
 
 
