@@ -83,6 +83,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   TString name3 = "hist_mc_asymmetry_";
   TString name4 = "hist_mc_B_";
   TString name5 = "hist_data_pt_ave";
+
   for(int j=0; j<n_eta-1; j++){
     TString eta_name = "eta_"+eta_range2[j]+"_"+eta_range2[j+1];
     
@@ -94,6 +95,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     hmc_asymmetry[j] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
     name = name4 + eta_name;
     hmc_B[j] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+ 
     /*
     TString name = name1 + eta_name;
     hdata_asymmetry[j] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -2.5, 0);
@@ -149,6 +151,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       else{
 	hdata_asymmetry[j]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
 	hdata_B[j]->Fill(*pt_ave_data,*B_data,*weight_data);
+
 	for(int k=0; k<n_pt-1; k++){
 	  if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
 	  hdata_ptave[k][j]->Fill(*pt_ave_data,*weight_data);
@@ -208,31 +211,31 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   //gaussian error propagation from errors on <A> and <B>
   for(int k=0; k<n_pt-1; k++){
     for(int j=0; j<n_eta-1; j++){
-      //responses for data, MC separately. Only for bins with >= 30 entries
+      //responses for data, MC separately. Only for bins with >= 100 entries
       double mpf_mc = (1+pr_mc_B[j]->GetBinContent(k+1))/(1-pr_mc_B[j]->GetBinContent(k+1));
-      //if(pr_mc_B[j]->GetBinEntries(k+1) < 30) mpf_mc = 0;
+      //if(pr_mc_B[j]->GetBinEntries(k+1) < 100) mpf_mc = 0;
       if(!enough_entries[j][k] || pr_mc_B[j]->GetBinContent(k+1)==0) mpf_mc = 0;
       double mpf_data = (1+pr_data_B[j]->GetBinContent(k+1))/(1-pr_data_B[j]->GetBinContent(k+1));
       //      if (j==10 || j==14) std::cout<<"@"<<eta_range[j]<<" mpf_mc = "<<mpf_mc<<" mpf_data = "<<mpf_data<<" B_MC = "<<pr_mc_B[j]->GetBinContent(k+1)<<" B_DATA = "<<pr_data_B[j]->GetBinContent(k+1)<<std::endl;
-      //if(pr_data_B[j]->GetBinEntries(k+1) < 30) mpf_data = 0;
+      //if(pr_data_B[j]->GetBinEntries(k+1) < 100) mpf_data = 0;
       if(!enough_entries[j][k] || pr_data_B[j]->GetBinContent(k+1)==0) mpf_data = 0;
       double rel_mc = (1+pr_mc_asymmetry[j]->GetBinContent(k+1))/(1-pr_mc_asymmetry[j]->GetBinContent(k+1));
-      //if(pr_mc_asymmetry[j]->GetBinEntries(k+1) < 30) rel_mc = 0;
+      //if(pr_mc_asymmetry[j]->GetBinEntries(k+1) < 100) rel_mc = 0;
       if(!enough_entries[j][k] || pr_mc_asymmetry[j]->GetBinContent(k+1)==0) rel_mc = 0;
       double rel_data = (1+pr_data_asymmetry[j]->GetBinContent(k+1))/(1-pr_data_asymmetry[j]->GetBinContent(k+1));
-      //if(pr_data_asymmetry[j]->GetBinEntries(k+1) < 30) rel_data = 0;
+      //if(pr_data_asymmetry[j]->GetBinEntries(k+1) < 100) rel_data = 0;
       if(!enough_entries[j][k] || pr_data_asymmetry[j]->GetBinContent(k+1)==0) rel_data = 0;
       double err_mpf_mc = 2/(pow((1-pr_mc_B[j]->GetBinContent(k+1)),2)) * pr_mc_B[j]->GetBinError(k+1);
-      //if(pr_mc_B[j]->GetBinEntries(k+1) < 30) err_mpf_mc = 0;
+      //if(pr_mc_B[j]->GetBinEntries(k+1) < 100) err_mpf_mc = 0;
       if(!enough_entries[j][k] || pr_mc_B[j]->GetBinContent(k+1)==0) err_mpf_mc = 0;
       double err_mpf_data = 2/(pow((1-pr_data_B[j]->GetBinContent(k+1)),2)) * pr_data_B[j]->GetBinError(k+1);
-      //if(pr_data_B[j]->GetBinEntries(k+1) < 30) err_mpf_data = 0;
+      //if(pr_data_B[j]->GetBinEntries(k+1) < 100) err_mpf_data = 0;
       if(!enough_entries[j][k] || pr_data_B[j]->GetBinContent(k+1)==0) err_mpf_data = 0;
       double err_rel_mc = 2/(pow((1-pr_mc_asymmetry[j]->GetBinContent(k+1)),2)) * pr_mc_asymmetry[j]->GetBinError(k+1);
-      //if(pr_mc_asymmetry[j]->GetBinEntries(k+1) < 30) err_rel_mc = 0;
+      //if(pr_mc_asymmetry[j]->GetBinEntries(k+1) < 100) err_rel_mc = 0;
       if(!enough_entries[j][k] || pr_mc_asymmetry[j]->GetBinContent(k+1)==0) err_rel_mc = 0;
       double err_rel_data = 2/(pow((1-pr_data_asymmetry[j]->GetBinContent(k+1)),2)) * pr_data_asymmetry[j]->GetBinError(k+1);
-      //if(pr_data_asymmetry[j]->GetBinEntries(k+1) < 30) err_rel_data = 0;
+      //if(pr_data_asymmetry[j]->GetBinEntries(k+1) < 100) err_rel_data = 0;
       if(!enough_entries[j][k] || pr_data_asymmetry[j]->GetBinContent(k+1)==0) err_rel_data = 0;
 
       //ratio of responses, again gaussian error propagation
@@ -343,12 +346,21 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 //     graph1_mpf[13]->RemovePoint(5);
 //     if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(4);
 //   }
-//   else if(graph1_mpf[13]->GetN() == 7){
-//     graph1_mpf[13]->RemovePoint(6);
-//     graph1_mpf[13]->RemovePoint(5);
-//     graph1_mpf[13]->RemovePoint(4);
-//     if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(3);
-//   }
+/*
+ if(graph1_mpf[13]->GetN() == 7){
+    graph1_mpf[13]->RemovePoint(6);
+    graph1_mpf[13]->RemovePoint(5);
+     graph1_mpf[13]->RemovePoint(4);
+     //  if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(3);
+  }
+ else if(graph1_mpf[13]->GetN() == 6){
+    graph1_mpf[13]->RemovePoint(5);
+     graph1_mpf[13]->RemovePoint(4);
+     graph1_mpf[13]->RemovePoint(4);
+     // if(CorrectionObject::_runnr == "H") graph1_mpf[13]->RemovePoint(3);
+  }
+*/
+
 // =======
 
   // graph1_mpf[13]->RemovePoint(8);
@@ -416,6 +428,12 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     f2[j] = new TF1(plotname[j]+"f2","pol0", 50 , pt_bins[n_pt-1]+10);
     f2[j]->SetLineColor(kBlue);
     f2[j]->SetLineStyle(3);
+
+    //FOR LEGACY DATA TRY Quadratic Function
+    /*
+    f3[j] = new TF1(plotname[j]+"f1","[0]+[1]*TMath::Log(x*x)", 50 , pt_bins[n_pt-1]+10);
+    f3[j]->SetParameters(1,0);
+    */
 
     if(j==12){ //to help the fit converge
       f1[j]->SetParameter(0,1.32);
@@ -558,6 +576,25 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       f2[j]->SetParameter(0,0.0001);
       f2[j]->SetParError(0,0.0001);
     }
+    /*
+    if(graph_filled[j]){
+      TFitResultPtr fitlogquad =  graph1_mpf[j]->Fit(plotname[j]+"f3","SM","",95,1000);
+      TMatrixDSym cov1 = fitlogquad->GetCovarianceMatrix();
+      Vcov[0][j] = cov1(0,0);
+      Vcov[1][j] = cov1(1,1);     
+      Vcov[2][j] = cov1(0,1);
+    }
+    else{
+      f3[j]->SetParameters(0.0001,0.0001);
+      f3[j]->SetParError(0,0.0001);
+      f3[j]->SetParError(1,0.0001);
+      Vcov[0][j] = 0.0001;
+      Vcov[1][j] = 0.0001;     
+      Vcov[2][j] = 0.0001;
+    }
+    */
+
+
     graph1_mpf[j]->Draw("AP");
     if(graph_filled[j]){
       graph1_mpf[j]->GetXaxis()->SetTitle("#bar{p}_{T} [GeV]");
@@ -716,7 +753,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       else if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCD"){
 	  //	  kfsr_fit_mpf->SetParameters(1,100,500);
-	  kfsr_fit_mpf->SetParameters(1,-100,300);      
+	  kfsr_fit_mpf->SetParameters(1,100,300);      
 	  fit_fullrange = true;
 	}
 	else if(CorrectionObject::_runnr == "E"){
@@ -727,11 +764,12 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	  kfsr_fit_mpf->SetParameters(1.002,-0.0005,0.001); 
 	} //CLOSURETEST
 	else if(CorrectionObject::_runnr == "FlateG"){
-	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,100,300); //RES
 	}
 	else if(CorrectionObject::_runnr == "H"){
-	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,-100,300); //RES
-	  else kfsr_fit_mpf->SetParameters(1.,-100,300); //RES
+	  cout<<"HELLO ANYBODY?"<<endl;
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,100,300); //RES
+	  else kfsr_fit_mpf->SetParameters(1.,150,250); //CLOSURETEST
 	  fit_fullrange = true;
 	}
       }
@@ -786,7 +824,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     kfsr_fit_mpf->SetLineColor(kRed+1);
     std::cout<<"!!! kFSR MPF fit !!!"<<std::endl;
     if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,3.14);
-    //    if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,2.4);
+    //   if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,2.4);
     else hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,5.);
     
 
@@ -908,10 +946,12 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	ptave_const_MPF->SetBinContent(j+1,f2[j]->GetParameter(0));
 	ptave_const_MPF->SetBinError(j+1,f2[j]->GetParError(0));
 
+	/*
 	cout << "res log MPF:" << Residual_logpt_MPF->GetBinContent(j+1) << " +- " << Residual_logpt_MPF->GetBinError(j+1) << endl;
 	cout << "const MPF:" << Residual_const_MPF->GetBinContent(j+1) << " +- " << Residual_const_MPF->GetBinError(j+1) << endl;
 	cout << "RATIO log MPF:" << ptave_logpt_MPF->GetBinContent(j+1) << " +- " << ptave_logpt_MPF->GetBinError(j+1) << endl;
 	cout << "RATIO const MPF:" << ptave_const_MPF->GetBinContent(j+1) << " +- " << ptave_const_MPF->GetBinError(j+1) << endl;
+	*/
       }
 
       //File containing the results with kFSR correction applied
@@ -981,6 +1021,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   /* ++++++++++++++++++++++++++ Calculate L2Residuals PT balance ++++++++++++++++++++++++++++++ */
 
   else{
+    cout<<"HELLO EVERYBODY!"<<endl;
+
     TFile* kfsr_dijet;
     kfsr_dijet = new TFile(CorrectionObject::_outpath+"Histo_KFSR_DiJet_"+CorrectionObject::_generator_tag+"_L1.root","READ");
     TH1D* hist_kfsr_dijet = (TH1D*)kfsr_dijet->Get("kfsr_dijet");
@@ -989,6 +1031,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     TF1 *kfsr_fit_dijet = new TF1("kfsr_fit_dijet","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.); //Range: 0,5. by default
     
     bool fit_fullrange = false;
+    bool fit_285 = false;
     //    bool fit_fullrange = true;
     //tune the initial values for the fit
     if(CorrectionObject::_generator == "herwig"){
@@ -1009,51 +1052,49 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       else if (CorrectionObject::_collection == "AK8Puppi") kfsr_fit_dijet->SetParameters(10.,-1000.,200.); 
     }
 
+    ///Set Parameter for kFSR Fit (pT-Balance)
     else if(CorrectionObject::_generator == "pythia"){
       //Initial values for pythia
       if(CorrectionObject::_collection == "AK4CHS"){ 
+	//RunBCD
 	if(CorrectionObject::_runnr == "BCD"){ 
-	  kfsr_fit_dijet->SetParameters(1,-100,300.); //RES
-	  //kfsr_fit_dijet->SetParameters(0.5,1.,1.); //RES Full QCD
-	  //fit_fullrange = true; //RES Full QCD
-	  //if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
-	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1, 500, -100.); //reweighted MC, RES
-	  //	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(5,-600,200.); //RES
+	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,500,150.); //Closure Test
+	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(6, 700, -100.); //reweighted MC, RES
+	
+	fit_fullrange = false;
+        fit_285 = true;
 	}
+	
 	else if(CorrectionObject::_runnr == "E") kfsr_fit_dijet->SetParameters(2,300,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "F") kfsr_fit_dijet->SetParameters(3,-800,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "EFearly"){
-	  if(!CorrectionObject::_closuretest){
-	    //kfsr_fit_dijet->SetParameters(3,-200,100); //RES
-	    //kfsr_fit_dijet->SetParameters(0,50,50); //RES Full
-	    //fit_fullrange = true;
-	    kfsr_fit_dijet->SetParameters(1,500,-100); //reweighted MC, RES
-	  }
-	  else if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1,-100,300.); //CLOSURETEST
+	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-6,2000,300); //CLOSURETEST
+	  if(!CorrectionObject::_closuretest)kfsr_fit_dijet->SetParameters(1,500,-100); //reweighted MC, RES
+	  
+	fit_fullrange = false;
+        fit_285 = true;
 	}
+
 	else if(CorrectionObject::_runnr == "FlateG"){
-	  if(!CorrectionObject::_closuretest){
-	    //kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
-	    kfsr_fit_dijet->SetParameters(1,500,-100.); //RES
-	    //	    kfsr_fit_dijet->SetParameters(2,-400,300.); //RES
-	    //kfsr_fit_dijet->SetParameters(0,150,150); //RES Full
-	    //fit_fullrange = true;
-	  }
-	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(1,-100,100.); //CLOSURETEST
+	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-5,2000,300); //CLOSURETEST
+	  if(!CorrectionObject::_closuretest)  kfsr_fit_dijet->SetParameters(1,3000,300.); //RES
+	  
+	fit_fullrange = false;
+	fit_285 = true; 	
 	}
 	else if(CorrectionObject::_runnr == "G") kfsr_fit_dijet->SetParameters(2,-400,300.); //CLOSURETEST
 	else if(CorrectionObject::_runnr == "H"){
-	  if(CorrectionObject::_closuretest){
-	    kfsr_fit_dijet->SetParameters(2,-200,100.); //CLOSURETEST
-	    fit_fullrange = true;
-	  }
-	  else{
-	    //kfsr_fit_dijet->SetParameters(1,-100,200.); //RES
-	    kfsr_fit_dijet->SetParameters(1,500,-100.); //reweighted MC, RES
-	  }
+	  if(CorrectionObject::_closuretest)   kfsr_fit_dijet->SetParameters(-9,5000,500); //CLOSURETEST
+	  if(!CorrectionObject::_closuretest)  kfsr_fit_dijet->SetParameters(-4,1000,200); //reweighted MC, RES
+	  
+	fit_fullrange = false;
+	fit_285 = false;
+	  
 	}
 	else kfsr_fit_dijet->SetParameters(0,0,200.); 
       }
+
+
       else if(CorrectionObject::_collection == "AK8CHS") {
 	kfsr_fit_dijet->SetParameters(1.,0,0.05); 
 	if(CorrectionObject::_runnr == "BCD") {
@@ -1099,7 +1140,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     kfsr_fit_dijet->SetLineColor(kBlue+1);
     std::cout<<"------ !!! kFSR pT-balance fit !!! ------"<<std::endl;
     if(fit_fullrange) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,5.);
-    else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,3.14);
+    else if(!fit_285) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.65);
+    else              hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.85);
     //    else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.4);
 
 
@@ -1207,11 +1249,12 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	ptave_const_DiJet->SetBinContent(j+1,f2[j]->GetParameter(0));
 	ptave_const_DiJet->SetBinError(j+1,f2[j]->GetParError(0));
 
+	/*
 	cout << "res log pt balance:" << Residual_logpt_DiJet->GetBinContent(j+1) << " +- " << Residual_logpt_DiJet->GetBinError(j+1) << endl;
 	cout << "res const pt balance:" << Residual_const_DiJet->GetBinContent(j+1) << " +- " << Residual_const_DiJet->GetBinError(j+1) << endl;
 	cout << "RATIO log pt balance:" << ptave_logpt_DiJet->GetBinContent(j+1) << " +- " << ptave_logpt_DiJet->GetBinError(j+1) << endl;
 	cout << "RATIO const pt balance:" << ptave_const_DiJet->GetBinContent(j+1) << " +- " << ptave_const_DiJet->GetBinError(j+1) << endl;
-
+	*/
       }
 
 

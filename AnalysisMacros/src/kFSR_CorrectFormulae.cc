@@ -119,10 +119,10 @@ void CorrectionObject::kFSR_CorrectFormulae(){
       for(int i=0; i<n_alpha; i++){
 	if(*alpha_data>alpha_bins[i]) continue;
 	else{
-	  hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
+ 	  hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
 	  hdata_B[j][i]->Fill(*pt_ave_data,*B_data,*weight_data);
-	  for(int k=0; k<n_pt-1; k++){
-	    if((*pt_ave_data < pt_bins[k]) || (*pt_ave_data >= pt_bins[k+1])) continue;
+	  for(int k=0; k<n_pt-1; k++){                                                 ///int k=0; k<n_pt-1; k++
+	      if((*pt_ave_data < pt_bins[k]) || (*pt_ave_data >= pt_bins[k+1])) continue;
 	       n_entries_data[j][i][k]++;
 	    }
 	  idx++;
@@ -151,8 +151,8 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	 else{
 	   hmc_asymmetry[j][i]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
 	   hmc_B[j][i]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
-	  for(int k=0; k<n_pt-1; k++){
-	    if((*pt_ave_mc < pt_bins[k]) || (*pt_ave_mc >= pt_bins[k+1])) continue;
+	   for(int k=0; k<n_pt-1; k++){                                                          ///int k=0; k<n_pt-1; k++
+	     if((*pt_ave_mc < pt_bins[k]) || (*pt_ave_mc >= pt_bins[k+1])) continue;              //pt_bins[k]    pt_bins[k+1]
 	       n_entries_mc[j][i][k]++;
 	    }
 	   idx++;
@@ -169,7 +169,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        for(int k=0; k<n_pt-1; k++){
 	 enough_entries[i][j][k] = false;
 	 if(n_entries_mc[j][i][k] > 30 && n_entries_data[j][i][k] > 30) enough_entries[i][j][k] = true;
-       }
+	}
      }
    }
    //build profiles out of asymmetry and B 2d-histos to get <A> and <B> as a function of pT in bins of eta,alpha
@@ -245,10 +245,6 @@ void CorrectionObject::kFSR_CorrectFormulae(){
    for(int k=0; k<n_pt-1; k++){
      for(int j=0; j<n_eta-1; j++){
        for(int i=0; i<n_alpha; i++){
-	 if(i == 5){
-	 cout << "Get Bin entries: " << pr_mc_B[j][i]->GetBinEntries(k+1) << endl;
-	 cout << "Get Bin content: " << pr_mc_B[j][i]->GetBinContent(k+1) << endl;
-	 }
 	 //responses for data, MC separately. Only for bins with >= 30 entries
 	 double mpf_mc = (1+pr_mc_B[j][i]->GetBinContent(k+1))/(1-pr_mc_B[j][i]->GetBinContent(k+1));
 	 //if(pr_mc_B[j][i]->GetBinEntries(k+1) < 30) mpf_mc = 0;
@@ -274,15 +270,6 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	 if(mpf_data > 0) ratio_al_mpf_r[k][j][i] = mpf_mc/mpf_data;
 	 else ratio_al_mpf_r[k][j][i] = 0;
 	 err_ratio_al_mpf_r[k][j][i] = sqrt(pow(1/mpf_data*err_mpf_mc,2) + pow(mpf_mc/(mpf_data*mpf_data)*err_mpf_data,2));
-	 if(i == 5){
-	 cout<<"pt-Bin :       "<<k<<endl;
-	 cout<<"eta Bin:       "<<j<<endl;
-	 cout<<"alpha Bin:     "<<i<<endl;
-	 cout<<"Relative MC:   "<<rel_mc<<endl;
-	 cout<<"Relative Data: "<<rel_data<<endl;
-	 cout<<"MPF MC:        "<<mpf_mc<<endl;
-	 cout<<"MPF Data:      "<<mpf_data<<endl<<endl;
-	 }
        }
      }
    }
@@ -332,34 +319,27 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        double norm_alref_mpf_r = ratio_al_mpf_r[k][j][al_ref];
        double err_norm_alref_mpf_r = err_ratio_al_mpf_r[k][j][al_ref];
        for(int i=0; i<n_alpha; i++){
-	 if(i == 5){
-	 cout<<"eta Bin:       "<<j<<endl;
-	 cout<<"pt-Bin :       "<<k<<endl;
-	 cout<<"alpha Bin:     "<<i<<endl;
-	 cout<<"Norm al Rel:   "<<norm_alref_rel_r<<endl;
-	 cout<<"Norm al MPF:   "<<norm_alref_mpf_r<<endl;
-	 }
-	 if(norm_alref_rel_r>0){ //WHAT IS HAPPENING HERE? NO PROPER ERROR PROPAGATION !?!
-	   ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r; //original
-	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r,2)));
-	   //err_ratio_al_rel_r[k][j][i] = err_ratio_al_rel_r[k][j][i] / norm_alref_rel_r;
 
-	   //err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i] / (ratio_al_rel_r[k][j][i]) ,2)+pow(err_norm_alref_rel_r / norm_alref_rel_r,2))) * ratio_al_rel_r[k][j][i] / norm_alref_rel_r ; //self
-	   //ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r;
+	 if(norm_alref_rel_r>0){ //WHAT IS HAPPENING HERE? NO PROPER ERROR PROPAGATION !?! Ask other group that does kFSR-Extrapolation about error propagation
+	   ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r; //original
+	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r,2)));//Original
+	   //  err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i]/ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r/norm_alref_rel_r,2)));
+	   //  err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i] / (ratio_al_rel_r[k][j][i]) ,2)+pow(err_norm_alref_rel_r / norm_alref_rel_r,2))) * ratio_al_rel_r[k][j][i] / norm_alref_rel_r ; //self
+	  
 	   if(i == al_ref) err_ratio_al_rel_r[k][j][i] = 0.;
+	   if(j==11 && k==3){
+	     cout<<"Ratio: "<< ratio_al_rel_r[k][j][i]<<endl;
+	     cout<<"Error: "<< err_ratio_al_rel_r[k][j][i]<<endl<<endl;
+	   }
+
 	 }
 	 if(norm_alref_mpf_r>0){
 	   ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_alref_mpf_r;
-	   err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r,2)));
-	   //err_ratio_al_mpf_r[k][j][i] = err_ratio_al_mpf_r[k][j][i]/norm_alref_mpf_r;
-
-	   //err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i] / (ratio_al_mpf_r[k][j][i]) ,2)+pow(err_norm_alref_mpf_r / norm_alref_mpf_r,2))) * err_ratio_al_mpf_r[k][j][i] / norm_alref_mpf_r;
-	   //ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_alref_mpf_r;
+	   err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r,2))); //Original
+	   //  err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i]/ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r/norm_alref_mpf_r,2)));
+	   //  err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i] / (ratio_al_mpf_r[k][j][i]) ,2)+pow(err_norm_alref_mpf_r / norm_alref_mpf_r,2))) * err_ratio_al_mpf_r[k][j][i] / norm_alref_mpf_r;
+	  
 	   if(i == al_ref) err_ratio_al_mpf_r[k][j][i] = 0.;
-	 }
-	 if(i == 5){
-	 cout<<"Ratio al Rel:   "<<ratio_al_rel_r[k][j][i]<<endl;
-	 cout<<"Ratio al MPF:   "<<ratio_al_mpf_r[k][j][i]<<endl<<endl;
 	 }
        }
      }
@@ -401,7 +381,6 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      for(int k=0; k<n_pt-1; k++){
        // if(j!=16 || k!=6)continue;
        if(pt_bins[k]<95) continue;
-
        graph_rel_r[k][j] = new TGraphErrors(n_alpha,xbin_tgraph,ratio_al_rel_r[k][j],zero,err_ratio_al_rel_r[k][j]);
        graph_rel_r[k][j] = (TGraphErrors*)CleanEmptyPoints(graph_rel_r[k][j]);
 
@@ -485,18 +464,22 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 
      }
 
-     //pol1[j] = new TF1("pol1","pol1",0.09,0.36);
+     // pol1[j] = new TF1("pol1","pol1",0.09,0.38);
      pol1[j] = new TF1("pol1","pol1",0.14,0.36);
      //     pol1[j] = new TF1("pol1","pol1",0.09,0.42);
  
-     pol1[j]->SetParameters(0,0);
+     pol1[j]->SetParameters(1.5,-0.5);
      if(j == 13){
-       pol1[j]->SetParameters(0.985,0.05);
+       pol1[j]->SetParameters(0.985,0.05);  
      }
  
      if (multigraph_rel_empty[j]) cout << "Eta bin no. " << j << ", multigraph empty!" << endl;
      else cout << "Eta bin no. " << j << ", multigraph filled!" << endl;
-     if(!multigraph_rel_empty[j]) pTgraph_rel_r[j]->Fit(pol1[j],"R");
+     if(!multigraph_rel_empty[j]){
+       cout<<"Set Parameters and Fit!"<<endl;
+       pol1[j]->SetParameters(1.5,-0.5);
+       pTgraph_rel_r[j]->Fit(pol1[j],"RM");
+     }
      else {
        pol1[j]->SetParameters(-1,-1);
        pol1[j]->SetParError(0,1);

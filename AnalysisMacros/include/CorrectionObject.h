@@ -17,7 +17,7 @@ using namespace std;
   public:
 
     // Constructors, destructor
-    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection,const TString & input_path, const TString & weight_path, const bool & closuretest = false);
+    CorrectionObject(const TString & runnr, const TString & generator, const TString & collection,const TString & input_path, const TString & weight_path, const bool & closuretest = false,const bool & trigger_fwd = false,const bool & trigger_central = false);
     CorrectionObject(const CorrectionObject &) = default;
     CorrectionObject & operator = (const CorrectionObject &) = default;
     ~CorrectionObject() = default;
@@ -31,6 +31,8 @@ using namespace std;
     inline TString generator(){ return _generator;}
     inline TString jettag(){ return _jettag;}
     inline bool closuretest(){return _closuretest;}
+    inline bool trigger_fwd(){return _trigger_fwd;}
+    inline bool trigger_central(){return _trigger_central;}
     inline TString MCPath(){return _MCpath;}
     inline TString DATAPath(){return _DATApath;}
     inline TString OutPath(){return _outpath;}
@@ -42,6 +44,8 @@ using namespace std;
     inline const TString generator() const{return _generator;}
     inline const TString jettag() const{return _jettag;}
     inline const bool closuretest() const {return _closuretest;}
+    inline const bool trigger_fwd() const {return _trigger_fwd;}
+    inline const bool trigger_central() const {return _trigger_central;}
     inline const TString MCPath() const {return _MCpath;}
     inline const TString DATAPath() const {return _DATApath;}
     inline const TString OutPath() const {return _outpath;}
@@ -53,6 +57,8 @@ using namespace std;
     inline void set_generator(TString x){_generator = x;}
     inline void set_jettag(TString x){_jettag = x;}
     inline void set_closuretest(bool x){_closuretest = x;}
+    inline void set_trigger_fwd(bool x){_trigger_fwd = x;}
+    inline void set_trigger_central(bool x){_trigger_central = x;}
     inline void set_MCPath(TString x){_MCpath = x; _MCFile->Close(); _MCFile = new TFile(_MCpath,"READ");}
     inline void set_DATAPath(TString x){_DATApath = x; _DATAFile->Close(); _DATAFile = new TFile(_DATApath,"READ");}
     inline void set_outpath(TString x){_outpath = x;}
@@ -62,16 +68,20 @@ using namespace std;
     void ControlPlots();
     void kFSR();
     void kFSR_CorrectFormulae();
+    void kFSR_CorrectFormulae_eta();
     void Pt_Extrapolation(bool mpfMethod = true);
     void Pt_Extrapolation_Alternative(bool mpfMethod = true);
     void Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMethod = true);
+    void Pt_Extrapolation_Alternative_CorrectFormulae_eta(bool mpfMethod = true);
     void L2ResOutput();
+    void L2ResOutput_eta();
     void L2ResAllRuns();
     void L2ResOverlay(bool is_MPF);
     void InputForGlobalFit();
     void InputForGlobalFit_eta_0_13();
     void FinalControlPlots();
     void FinalControlPlots_CorrectFormulae();
+    void FinalControlPlots_CorrectFormulae_eta();
     void CalculateMCWeights();
     void CalculateMCWeights_TriggerThresholds(bool CentralTriggers);
     void FullCycle_CorrectFormulae();
@@ -91,7 +101,8 @@ using namespace std;
     TFile*  _DATAFile;
     TString _weightpath;
     bool    _closuretest;
- 
+    bool    _trigger_fwd;
+    bool    _trigger_central;
    
 
   }; // end of class CorrectionObject

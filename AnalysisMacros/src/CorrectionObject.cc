@@ -4,8 +4,8 @@
 #include "../include/CorrectionObject.h"
 
 
-CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const TString & input_path, const TString & weight_path, const bool & closuretest) :
-  _runnr(runnr), _collection(collection), _generator(generator),_input_path(input_path),_weight_path(weight_path), _closuretest(closuretest)
+CorrectionObject::CorrectionObject(const TString & runnr, const TString & generator, const TString & collection, const TString & input_path, const TString & weight_path, const bool & closuretest,const bool & trigger_fwd,const bool & trigger_central):
+  _runnr(runnr), _collection(collection), _generator(generator),_input_path(input_path),_weight_path(weight_path), _closuretest(closuretest), _trigger_fwd(trigger_fwd), _trigger_central(trigger_central)
     {
       TString s_tmp = _collection;
       s_tmp.ReplaceAll("CHS", "PFchs");
@@ -28,10 +28,12 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       }
 
       if(_generator == "pythia"){
-	//_MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Fwd.root";
 
+	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Flat.root";}
+	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Fwd.root";}
+	else if(_trigger_central && trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";}
+	else throw runtime_error("In Correction Object: No valid Trigger-Flag (main.C) was set.");
 
-	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Fwd.root";
 	_generator_tag = "pythia8";

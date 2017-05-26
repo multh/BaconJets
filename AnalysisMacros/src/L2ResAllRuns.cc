@@ -42,7 +42,7 @@ void CorrectionObject::L2ResAllRuns(){
   TH1D* res_logpt_mpf_kfsrfit;
   for(int j=0;j<4;j++){
     TString runnr=runnr_v[j];
-    TString path = CorrectionObject::_outpath + "../Run" + runnr + "/" + "Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root";
+    TString path =CorrectionObject::_input_path+"/Run" + runnr + "/" + "Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root";
     f_Res_mpf = new TFile(path,"READ");   
     res_logpt_mpf_kfsrfit = (TH1D*)f_Res_mpf->Get("res_logpt_mpf");
     res_logpt_mpf_kfsrfit->SetMarkerStyle(1);
@@ -57,7 +57,7 @@ void CorrectionObject::L2ResAllRuns(){
   line->Draw("SAME");
   leg1.Draw();
 
-  TString save_as = CorrectionObject::_outpath + "../plots/L2Res_MPF_LOGLIN_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_nominal_ALL_runs_BCD_EFearly_FlateG_H.pdf";
+  TString save_as = CorrectionObject::_input_path+"/L2Res_MPF_LOGLIN_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_nominal_ALL_runs_BCD_EFearly_FlateG_H.pdf";
   cout << "save-as = " << save_as << endl;
   c2->SaveAs(save_as); 
 

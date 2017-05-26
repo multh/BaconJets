@@ -31,9 +31,11 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TH1D *hdata_asymmetry[n_pt-1][n_eta-1]; // A for data
   TH1D *hdata_B[n_pt-1][n_eta-1];         // B for data
   TH1D *hdata_METoverJetsPt[n_pt-1][n_eta-1];         // MET/sum_jets_pt for data
+  TH1D *hdata_METoverSqrtJetsPt[n_pt-1][n_eta-1];       //MET/Sqrt(sum_jets_pt)
   TH1D *hmc_asymmetry[n_pt-1][n_eta-1];   // A for MC
   TH1D *hmc_B[n_pt-1][n_eta-1];           // B for MC
   TH1D *hmc_METoverJetsPt[n_pt-1][n_eta-1];         // MET/sum_jets_pt for MC
+  TH1D *hmc_METoverSqrtJetsPt[n_pt-1][n_eta-1];       //MET/Sqrt(sum_jets_pt)
   TH1D* hmc_pt_ave[n_eta-1];              // pt_ave for MC
   TH1D* hdata_pt_ave[n_eta-1];            // pt_ave for data
 
@@ -45,6 +47,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TString name4 = "hist_mc_B_";
   TString name5 = "hist_data_METoverJetsPt_";
   TString name6 = "hist_mc_METoverJetsPt_";
+  TString name7 = "hist_data_METoverSqrtJetsPt_";
+  TString name8 = "hist_mc_METoverSqrtJetsPt_";
+
   for(int j=0; j<n_eta-1; j++){
       TString eta_name = "eta_"+eta_range2[j]+"_"+eta_range2[j+1];
     for(int k=0; k<n_pt-1; k++){
@@ -57,13 +62,19 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hdata_B[k][j] = new TH1D(name,"",nResponseBins, -1.2, 1.2);
       name = name5 + eta_name + "_" + pt_name;
       hdata_METoverJetsPt[k][j] = new TH1D(name,"",60,0,1.2);
-      // hdata_METoverJetsPt[k][j]->Print();
+    
       name = name3 + eta_name + "_" + pt_name;
       hmc_asymmetry[k][j] = new TH1D(name,"",nResponseBins, -1.2, 1.2);
       name = name4 + eta_name + "_" + pt_name;
       hmc_B[k][j] = new TH1D(name,"",nResponseBins, -1.2, 1.2);
       name = name6 + eta_name + "_" + pt_name;
       hmc_METoverJetsPt[k][j] = new TH1D(name,"",50,0,1.2);
+
+      name = name7 + eta_name + "_" + pt_name;
+      hdata_METoverSqrtJetsPt[k][j] = new TH1D(name,"",50,0,5);
+      name = name8 + eta_name + "_" + pt_name;
+      hmc_METoverSqrtJetsPt[k][j] = new TH1D(name,"",50,0,5);
+
       //      hmc_METoverJetsPt[k][j]->Print();
       /*
       TString name = name1 + eta_name + "_" + pt_name; 
@@ -126,6 +137,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	  hdata_asymmetry[k][j]->Fill(*asymmetry_data,*weight_data);
 	  hdata_B[k][j]->Fill(*B_data,*weight_data);
 	  hdata_METoverJetsPt[k][j]->Fill((*MET_data)/(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data),*weight_data);
+	  hdata_METoverSqrtJetsPt[k][j]->Fill((*MET_data)/(sqrt(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data)),*weight_data);
 	}
       }
     }
@@ -162,7 +174,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	  hmc_asymmetry[k][j]->Fill(*asymmetry_mc,*weight_mc);
 	  hmc_B[k][j]->Fill(*B_mc,*weight_mc);
 	  hmc_METoverJetsPt[k][j]->Fill((*MET_mc)/(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc),*weight_mc);
-	  //	  hmc_METoverJetsPt[k][j]->Print();
+	  hmc_METoverSqrtJetsPt[k][j]->Fill((*MET_mc)/(sqrt(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc)),*weight_mc);
+
 	}
       }
     }
@@ -240,9 +253,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
   TFile* test_out_mc_B = new TFile(CorrectionObject::_outpath+"plots/control/B_1d_mc.root","RECREATE");
   for(int j=0; j<n_eta-1; j++){
-    for(int k=0; k<n_pt-1; k++){
+    for(int k=0; k<n_pt-1; k++){     ///k=0 n_pt-1 
       hmc_B[k][j]->Write();
       hmc_METoverJetsPt[k][j]->Write();
+      hmc_METoverSqrtJetsPt[k][j]->Write();
     }
   }
   test_out_mc_B->Close();
@@ -253,6 +267,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     for(int k=0; k<n_pt-1; k++){
       hdata_B[k][j]->Write();
       hdata_METoverJetsPt[k][j]->Write();
+      hdata_METoverSqrtJetsPt[k][j]->Write();
     }
   }
   test_out_data_B->Close();
@@ -515,7 +530,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c1,"c1",h,4,10,kSquare,"MC");
     TLegend leg1 = tdrLeg(0.62,0.46,0.85,0.81);
     TH1D* htemp_mpf_mc;
-    for(int j=0; j<n_pt-1; j++){
+    for(int j=0; j<n_pt-1; j++){   ///j=0 j<pt_n-1
     //    for(int j=0; j<5; j++){ //TEST
     //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
