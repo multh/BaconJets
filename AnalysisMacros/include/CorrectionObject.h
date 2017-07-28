@@ -76,6 +76,7 @@ using namespace std;
     void L2ResOutput();
     void L2ResOutput_eta();
     void L2ResAllRuns();
+    void L2Res_JEC();
     void L2ResOverlay(bool is_MPF);
     void InputForGlobalFit();
     void InputForGlobalFit_eta_0_13();
@@ -85,6 +86,7 @@ using namespace std;
     void CalculateMCWeights();
     void CalculateMCWeights_TriggerThresholds(bool CentralTriggers);
     void FullCycle_CorrectFormulae();
+    void FullCycle_CorrectFormulae_eta();
 
   private:
     TString _runnr;
@@ -94,7 +96,7 @@ using namespace std;
     TString _weight_path;
     TString _jettag;
     TString _lumitag;
-    TString _MCpath, _MCpath_ForWeights_FLAT, _MCpath_ForWeights_FWD, _DATApath, _DATApath_ForWeights, _DATApath_ForWeights_FLAT, _DATApath_ForWeights_FWD;
+    TString _MCpath, _MCpath_ForWeights, _MCpath_ForWeights_FLAT, _MCpath_ForWeights_FWD, _DATApath, _DATApath_ForWeights, _DATApath_ForWeights_FLAT, _DATApath_ForWeights_FWD;
     TString _outpath;
     TString _weightpath_FLAT, _weightpath_FWD;
     TFile*  _MCFile;
