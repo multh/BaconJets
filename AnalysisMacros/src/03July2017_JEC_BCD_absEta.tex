@@ -1,0 +1,3611 @@
+\documentclass[t,compress]{beamer}
+\mode<presentation>{
+%\usetheme{CambridgeUS}
+\usetheme{Madrid}
+\usecolortheme{beaver}
+
+
+}
+\usepackage{graphicx} % Allows including images
+\usepackage[percent]{overpic}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{upgreek}
+\usepackage{adjustbox}
+\usepackage{setspace}
+
+\usepackage{amsmath,amssymb}
+\usepackage{color}
+
+\usepackage{xcolor}
+\usepackage{pict2e}
+
+
+\title[L2 residual corrections]{L2 residual corrections derived on di-jet events}
+\author[Jens Multhaup]{Anastasia Karavdina, Arne Reimers, \underline{Jens Multhaup}}
+\institute[UHH]{University of Hamburg}
+
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+ \titlepage
+\end{frame}
+
+ \begin{frame}
+  \frametitle{Input}
+  \begin{itemize}
+   \item Data
+   \begin{itemize}
+   \begin{tiny}
+    \item /JetHT/Run2016B-03Feb2017/MINIAOD (reMINIAOD)
+    \item /JetHT/Run2016C-03Feb2017/MINIAOD (reMINIAOD)
+    \item /JetHT/Run2016D-03Feb2017/MINIAOD (reMINIAOD)
+   % \item /JetHT/Run2016E-03Feb2017/MINIAOD (reMINIAOD)
+   % \item /JetHT/Run2016F-03Feb2017/MINIAOD (reMINIAOD)
+   % \item /JetHT/Run2016G-03Feb2017/MINIAOD (reMINIAOD)
+   % \item /JetHT/Run2016H-03Feb2017/MINIAOD (reMINIAOD)
+   % \item /JetHT/Run2016*-03Feb2017/MINIAOD (reMINIAOD)
+    \end{tiny}
+  \end{itemize}
+   MC samples:
+   %\item $p_T$-binned QCD samples:
+    \begin{itemize}
+    \begin{tiny}
+   % \item /QCD Pt-15to7000 TuneCUETP8M1 FlatP6 13TeV pythia8/RunIISummer16MiniAODv2-PUMoriond17 80X mcRun2 asymptotic 2016 TrancheIV v6-v1/MINIAODSIM
+   % \item /QCD Pt-15to6500 FwdEnriched TuneCUETP8M1 13TeV pythia8/RunIISummer16MiniAODv2-PUMoriond17 80X mcRun2 asymptotic 2016 TrancheIV v6-v1/MINIAODSIM
+     \item QCD Pt* TuneCUETP8M1 13TeV pythia8/RunIISummer16MiniAODv2-PUMoriond17 80X mcRun2 asymptotic 2016 TrancheIV v6*/MINIAODSIM/
+    \end{tiny}
+    \end{itemize}
+  \item JEC: Summer16 03Feb2017 V3 Data
+  \end{itemize}
+
+More details:
+\begin{itemize}
+\item reMINIAOD data set (\textcolor{red}{Residuals})
+\item Veto leptons (Muon/Electron: tight-ID)
+\item MET/$\Sigma jet_{p_T}$ \textcolor{red}{NOT} applied 
+\item (PU pt-hat)/pt-hat$<$1 cut
+\item Eta-Phi cleaning (Mikko)
+\item New trigger setup
+\item changes in $p_T$ extrapolation
+ \end{itemize}
+ \end{frame}
+ 
+ 
+\begin{frame}
+  \frametitle{Trigger Setup}
+\begin{itemize}
+\vspace{1cm}
+\item Added upper thresholds
+\item Separate Central and FWD triggers at $\eta = 2.853$
+\item except for: DiPFJetAve 40 and DiPFJetAve 60 (also used in FWD region)
+\item Dijet triggers and thresholds listed in \href{https://docs.google.com/spreadsheets/d/1LXIO3vw8RuMwBFgYUDtLmAghhFvWjs3gALRKlJxzWus/}{[1]}
+ \end{itemize}
+ \end{frame}
+  
+  
+\begin{frame}
+  \frametitle{Changes in $p_T$ extrapolation}
+\begin{itemize}
+\vspace{1cm}
+\item extended $p_T$-range:  $[55; 1000]$
+\item Special treatment for $|\eta|>3.8$: Use same slope as in $3.4 < |\eta| < 3.8$  
+\item New  method for L2Res txt-files. Use MPF for $|\eta| < 2.5$, else $p_T$-balance
+\item New hybrid txt-file: Use constant fit for $2.6 < |\eta| < 3.1$, else log-lin fit
+ \end{itemize}
+ \end{frame}
+  
+\begin{frame}
+\frametitle{Run BCD: L2Res Corrections}
+\vspace{-0.4cm}
+\begin{columns}
+ \begin{column}{0.5\textwidth}
+ \vspace{-0.4cm}
+ Before kFSR applied:
+  \begin{figure}
+ \adjincludegraphics[width=0.7\textwidth,valign=t]{Bilder/BCD/Ratio_AK4PFchs_pythia8.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{0.5\textwidth}
+With kFSR
+\vspace{-0.4cm}
+\begin{figure}
+ \adjincludegraphics[width=0.7\textwidth]{Bilder/BCD/L2Res_kFSRfit_AK4PFchs_pythia8.pdf}
+\end{figure}
+\vspace{-1cm}
+\begin{figure}
+ \adjincludegraphics[width=.7\textwidth]{Bilder/BCD/kFSR_AK4PFchs_pythia8.pdf}
+\end{figure}
+ \end{column}
+ \end{columns}
+ \end{frame}
+
+
+
+\begin{frame}
+\frametitle{$p_T$ dependence}
+\begin{columns}
+ \begin{column}{0.5\textwidth}
+ MPF:
+  \begin{figure}
+ \adjincludegraphics[width=1\textwidth,valign=t]{Bilder/BCD/L2Res_logpt_MPF_kFSRfit_AK4PFchs_pythia8.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{0.5\textwidth}
+$p_T$-balance:
+ \begin{figure}
+ \adjincludegraphics[width=1\textwidth]{Bilder/BCD/L2Res_logpt_DiJet_kFSRfit_AK4PFchs_pythia8.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{prev/new iteration comparison}
+\vspace{1cm}
+\begin{columns}
+ \begin{column}{0.5\textwidth}
+ prev. iteration
+ \begin{itemize}
+ \item MC: QCD flat samples (central and FWD enriched)
+ \item MC re-weighting: No eta dependency
+ \item Trigger: No upper threshold and no eta restriction  
+ \item $MET/\sigma jet_{p_T} <0.2$
+ \item No Eta-Phi Cleaning
+\end{itemize}
+ 
+ \end{column}
+\begin{column}{0.5\textwidth}
+new iteration
+\begin{itemize}
+ \item MC: QCD $p_T$-binned samples
+ \item MC re-weighting: 2D re-weighting ($p_T^{ave} vs. \eta$)
+ \item Trigger: Included upper thresholds and eta restriction
+ \item No $MET/\sigma jet_{p_T}$-Cut
+ \item Eta-Phi Cleaning applied (Mikko)
+\end{itemize}
+
+ \end{column}
+ \end{columns}
+
+ 
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Run BCD: L2Res Difference}
+\vspace{-0.4cm}
+\begin{columns}
+ \begin{column}{0.5\textwidth}
+ \vspace{-0.4cm}
+ MPF:
+  \begin{figure}
+ \adjincludegraphics[width=0.9\textwidth,valign=t]{Bilder/BCD/L2Res_logpt_MPF_kFSRfit_diffAK4PFchs_pythia8.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{0.5\textwidth}
+$p_T$-balance
+\vspace{-0.4cm}
+\begin{figure}
+ \adjincludegraphics[width=0.9\textwidth,valign=t]{Bilder/BCD/L2Res_logpt_DiJet_kFSRfit_diffAK4PFchs_pythia8.pdf}
+\end{figure}
+ \end{column}
+ \end{columns}
+ \end{frame}
+  
+  \begin{frame}
+\vspace{1cm}
+\begin{center}
+\begin{tabular}{|c|c|}
+ $\eta$ bin  & excluded $p_T$-bin \\ \hline \hline
+ 2.8 - 2.9 & 365 - 453 \\
+           & 453 - 566 \\
+ 2.9 - 3.1 & 453 - 566 \\
+ 3.1 - 3.4 & 365 - 453 \\
+ 3.4 - 3.8 & 230 - 299 \\
+\end{tabular}
+\end{center}
+\end{frame}
+  
+
+\title{Run BCD \newline \ control plots}
+\author{}
+\institute{}
+\date{}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Response with MPF}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_00_0261.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_0783_1044.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_0261_0522.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_1044_1305.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_0522_0783.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_1305_1479.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Response with MPF}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_1479_1653.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_2172_2322.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_1653_193.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_2322_25.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_193_2172.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_25_2650.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Response with MPF}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_2650_2853.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_3139_3489.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_2853_2964.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_3489_3839.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_2964_3139.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/MPF_Response_pythia8_eta_3839_5191.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{kFSR MPF-balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_00_0261.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_0783_1044.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_0261_0522.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_1044_1305.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_0522_0783.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_1305_1479.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{kFSR MPF-balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_1479_1653.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_2172_2322.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_1653_193.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_2322_25.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_193_2172.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_25_2650.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{kFSR MPF-balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_2650_2853.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_3139_3489.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_2853_2964.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_3489_3839.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_2964_3139.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_MPF_pythia8_eta_3839_5191.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Response with $p_T$-Balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_00_0261.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_0783_1044.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_0261_0522.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_1044_1305.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_0522_0783.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_1305_1479.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Response with $p_T$-Balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_1479_1653.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_2172_2322.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_1653_193.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_2322_25.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_193_2172.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_25_2650.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Response with $p_T$-Balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_2650_2853.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_3139_3489.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_2853_2964.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_3489_3839.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_2964_3139.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/Rel_Response_pythia8_eta_3839_5191.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{kFSR Pt-balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_00_0261.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_0783_1044.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_0261_0522.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_1044_1305.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_0522_0783.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_1305_1479.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{kFSR Pt-balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_1479_1653.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_2172_2322.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_1653_193.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_2322_25.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_193_2172.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_25_2650.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{kFSR Pt-balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_2650_2853.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_3139_3489.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_2853_2964.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_3489_3839.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_2964_3139.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/kFSR_Pt_pythia8_eta_3839_5191.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}
+ \frametitle{$\chi^2$ distributions}
+ \begin{columns}[t]
+\begin{column}{.5\textwidth}
+$p_T$-balance const\newline
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_chi2ndf_const_pythia8.pdf} \newline
+MPF const\newline
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_chi2ndf_const_pythia8.pdf}\newline
+ \end{column}
+\begin{column}{.5\textwidth}
+$p_T$-balance loglin \newline
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_chi2ndf_loglin_pythia8.pdf} \newline
+MPF loglin\newline
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_chi2ndf_loglin_pythia8.pdf}\newline
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{$p_T$ extrapolation with MPF}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_00_0261.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_0783_1044.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_0261_0522.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_1044_1305.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_0522_0783.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_1305_1479.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{$p_T$ extrapolation with MPF}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_1479_1653.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_2172_2322.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_1653_193.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_2322_25.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_193_2172.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_25_2650.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{$p_T$ extrapolation with MPF}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_2650_2853.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_3139_3489.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_2853_2964.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_3489_3839.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_2964_3139.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_MPF_pythia8_pT_3839_5191.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{$p_T$ extrapolation with $p_T$-Balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_00_0261.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_0783_1044.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_0261_0522.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_1044_1305.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_0522_0783.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_1305_1479.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{$p_T$ extrapolation with $p_T$-Balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_1479_1653.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_2172_2322.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_1653_193.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_2322_25.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_193_2172.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_25_2650.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{$p_T$ extrapolation with $p_T$-Balance}
+\begin{columns}[t]
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_2650_2853.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_3139_3489.pdf}
+ \end{column}
+ \begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_2853_2964.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_3489_3839.pdf}
+ \end{column} 
+\begin{column}{.33\textwidth}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_2964_3139.pdf}
+\adjincludegraphics[width=0.9\linewidth,valign=t]{Bilder/BCD/pTextrapolation_Pt_pythia8_pT_3839_5191.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $0<\eta<0.261$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0<\eta<0.261$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0<\eta<0.261$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0<\eta<0.261$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $0.261<\eta<0.522$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.261<\eta<0.522$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.261<\eta<0.522$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.261<\eta<0.522$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $0.522<\eta<0.783$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.522<\eta<0.783$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.522<\eta<0.783$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.522<\eta<0.783$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $0.783<\eta<1.044$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.783<\eta<1.044$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.783<\eta<1.044$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $0.783<\eta<1.044$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $1.044<\eta<1.305$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.044<\eta<1.305$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.044<\eta<1.305$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.044<\eta<1.305$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $1.305<\eta<1.479$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.305<\eta<1.479$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.305<\eta<1.479$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.305<\eta<1.479$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $1.479<\eta<1.653$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.479<\eta<1.653$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.479<\eta<1.653$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.479<\eta<1.653$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $1.653<\eta<1.93$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.653<\eta<1.93$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.653<\eta<1.93$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.653<\eta<1.93$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{B-Symmetry in $1.93<\eta<2.172$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.93<\eta<2.172$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.93<\eta<2.172$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $1.93<\eta<2.172$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $2.172<\eta<2.322$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.172<\eta<2.322$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.172<\eta<2.322$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.172<\eta<2.322$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $2.322<\eta<2.5$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.322<\eta<2.5$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.322<\eta<2.5$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.322<\eta<2.5$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $2.5<\eta<2.65$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.5<\eta<2.650$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.5<\eta<2.650$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.5<\eta<2.650$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $2.65<\eta<2.853$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.650<\eta<2.853$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.650<\eta<2.853$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.650<\eta<2.853$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $2.853<\eta<2.964$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.853<\eta<2.964$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.853<\eta<2.964$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.853<\eta<2.964$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $2.964<\eta<3.139$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.964<\eta<3.139$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.964<\eta<3.139$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $2.964<\eta<3.139$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $3.139<\eta<3.489$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.139<\eta<3.489$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.139<\eta<3.489$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.139<\eta<3.489$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $3.489<\eta<3.839$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.489<\eta<3.839$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.489<\eta<3.839$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.489<\eta<3.839$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{B-Symmetry in $3.839<\eta<5.191$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_MC_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_B_DATA_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_MC_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_B_DATA_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/B_NormDistribution_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.839<\eta<5.191$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+ \adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_phi_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_photonEF_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.839<\eta<5.191$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chHadEF_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.5\textwidth}
+  \vspace{-0.9cm}
+  \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_chEmEF_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Energy Fractions in $3.839<\eta<5.191$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutHadEF_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+\begin{column}{.5\textwidth}
+\vspace{-0.9cm}
+ \begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.9cm}
+\begin{figure}
+\adjincludegraphics[width=0.65\linewidth,valign=t]{Bilder/BCD/probejet_neutEmEF_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $0<\eta<0.261$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_00_0261_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_00_0261.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_00_0261.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $0.261<\eta<0.522$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_0261_0522_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_0261_0522.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_0261_0522.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $0.522<\eta<0.783$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_0522_0783_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_0522_0783.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_0522_0783.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $0.783<\eta<1.044$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_0783_1044_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_0783_1044.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_0783_1044.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $1.044<\eta<1.305$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_1044_1305_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1044_1305.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1044_1305.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $1.305<\eta<1.479$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_1305_1479_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1305_1479.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1305_1479.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $1.479<\eta<1.653$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_1479_1653_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1479_1653.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1479_1653.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $1.653<\eta<1.93$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_1653_193_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_1653_193.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_1653_193.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $1.93<\eta<2.172$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_193_2172_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_193_2172.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_193_2172.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $2.172<\eta<2.322$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_2172_2322_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2172_2322.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2172_2322.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $2.322<\eta<2.5$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_2322_25_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2322_25.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2322_25.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $2.5<\eta<2.65$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_25_2650_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_25_2650.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_25_2650.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $2.65<\eta<2.853$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_2650_2853_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2650_2853.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2650_2853.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $2.853<\eta<2.964$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_2853_2964_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2853_2964.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2853_2964.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $2.964<\eta<3.139$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_2964_3139_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_2964_3139.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_2964_3139.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $3.139<\eta<3.489$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_3139_3489_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_3139_3489.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_3139_3489.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $3.489<\eta<3.839$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_3489_3839_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_3489_3839.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_3489_3839.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{A-Symmetry in $3.839<\eta<5.191$}
+Top: MC, Bottom: Data
+\begin{columns}[t]
+\begin{column}{.25\textwidth}
+\begin{figure}
+ \adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_MC_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/TH2_A_DATA_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+ \end{column}
+\begin{column}{.25\textwidth}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_MC_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/Profile_A_DATA_pythia8_eta_3839_5191_a030.pdf}
+\end{figure}
+\end{column}
+ \begin{column}{.25\textwidth}
+ \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/A_NormDistribution_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+  \begin{column}{.25\textwidth}
+  \begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_MC_pythia8_eta_3839_5191.pdf}
+\end{figure}
+\vspace{-0.5cm}
+\begin{figure}
+\adjincludegraphics[width=1\linewidth,valign=t]{Bilder/BCD/METoverPt_DATA_pythia8_eta_3839_5191.pdf}
+\end{figure}
+ \end{column} 
+\end{columns}
+\end{frame}
+
+\end{document}
