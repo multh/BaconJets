@@ -35,11 +35,11 @@
 
 using namespace std;
 
-void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMethod){
+void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(bool mpfMethod){
   cout << "--------------- Starting Pt_Extrapolation() ---------------" << endl << endl;
   TStyle* m_gStyle = new TStyle();
   m_gStyle->SetOptFit(000);
-
+ 
   // fill the histos for pt average in bins of eta
   TH1D* ptave_data[n_eta-1];
   int countPt = 0;
@@ -47,9 +47,9 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   for(int i=0; i<n_eta-1; i++){
     TString selection = "alpha<";
     selection+=alpha_cut;
-    selection+=" && fabs(probejet_eta)<";
+    selection+=" && probejet_eta<";
     selection+=eta_range[i+1];
-    selection+=" && fabs(probejet_eta)>=";
+    selection+=" && probejet_eta>=";
     selection+=eta_range[i];
     TString var1 = "pt_ave";
     ptave_data[i] = (TH1D*)GetHist(CorrectionObject::_DATAFile, selection, var1, 300,0,3000)->Clone();
@@ -58,8 +58,6 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     ptave_data[i]->SetName(namecur);
     countPt++;
   }
-
-
 
 
   //Set up histos for ratios of responses
@@ -102,8 +100,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     hmc_asymmetry[j] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
     name = name4 + eta_name;
     hmc_B[j] = new TH2D(name,"",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
-     
-    for(int k=0; k<n_pt-1; k++){
+ 
+   for(int k=0; k<n_pt-1; k++){
       TString pt_name = "pt_"+pt_range[k]+"_"+pt_range[k+1];
       name = name5 + eta_name + "_" + pt_name; 
       hdata_ptave[k][j] = new TH1D(name,"",3000,0,3000); //only used for GetMean and GetStdDev in the pT extrapolations
@@ -134,7 +132,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   while (myReader_DATA.Next()) {
     if(*alpha_data>alpha_cut) continue;
     for(int j=0; j<n_eta-1; j++){
-      if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
+      if(*probejet_eta_data>eta_bins[j+1] || *probejet_eta_data<eta_bins[j]) continue;
       else{
 	hdata_asymmetry[j]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
 	hdata_B[j]->Fill(*pt_ave_data,*B_data,*weight_data);
@@ -160,11 +158,10 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   TTreeReaderValue<Float_t> asymmetry_mc(myReader_MC, "asymmetry");
   TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
   TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
-
   while (myReader_MC.Next()) {
     if(*alpha_mc>alpha_cut) continue;
     for(int j=0; j<n_eta-1; j++){
-      if(fabs(*probejet_eta_mc)>eta_bins[j+1] || fabs(*probejet_eta_mc)<eta_bins[j]) continue;
+      if(*probejet_eta_mc>eta_bins[j+1] || *probejet_eta_mc<eta_bins[j]) continue;
       else{
 	hmc_asymmetry[j]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
 	hmc_B[j]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
@@ -194,39 +191,36 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     pr_mc_asymmetry[j]   = (TProfile*)hmc_asymmetry[j]->ProfileX();
     pr_mc_B[j]           = (TProfile*)hmc_B[j]->ProfileX();
   }
-   
-
 
 
   //calculate response from <A> and <B> in bins of pt,eta,alpha
   //gaussian error propagation from errors on <A> and <B>
   for(int k=0; k<n_pt-1; k++){
     for(int j=0; j<n_eta-1; j++){
-
       //responses for data, MC separately. Only for bins with >= 100 entries
       double mpf_mc = (1+pr_mc_B[j]->GetBinContent(k+1))/(1-pr_mc_B[j]->GetBinContent(k+1));
-
+      //if(pr_mc_B[j]->GetBinEntries(k+1) < 100) mpf_mc = 0;
       if(!enough_entries[j][k] || pr_mc_B[j]->GetBinContent(k+1)==0) mpf_mc = 0;
       double mpf_data = (1+pr_data_B[j]->GetBinContent(k+1))/(1-pr_data_B[j]->GetBinContent(k+1));
-     
+    
       if(!enough_entries[j][k] || pr_data_B[j]->GetBinContent(k+1)==0) mpf_data = 0;
       double rel_mc = (1+pr_mc_asymmetry[j]->GetBinContent(k+1))/(1-pr_mc_asymmetry[j]->GetBinContent(k+1));
-    
+     
       if(!enough_entries[j][k] || pr_mc_asymmetry[j]->GetBinContent(k+1)==0) rel_mc = 0;
       double rel_data = (1+pr_data_asymmetry[j]->GetBinContent(k+1))/(1-pr_data_asymmetry[j]->GetBinContent(k+1));
-  
+     
       if(!enough_entries[j][k] || pr_data_asymmetry[j]->GetBinContent(k+1)==0) rel_data = 0;
       double err_mpf_mc = 2/(pow((1-pr_mc_B[j]->GetBinContent(k+1)),2)) * pr_mc_B[j]->GetBinError(k+1);
-  
+    
       if(!enough_entries[j][k] || pr_mc_B[j]->GetBinContent(k+1)==0) err_mpf_mc = 0;
       double err_mpf_data = 2/(pow((1-pr_data_B[j]->GetBinContent(k+1)),2)) * pr_data_B[j]->GetBinError(k+1);
-
+    
       if(!enough_entries[j][k] || pr_data_B[j]->GetBinContent(k+1)==0) err_mpf_data = 0;
       double err_rel_mc = 2/(pow((1-pr_mc_asymmetry[j]->GetBinContent(k+1)),2)) * pr_mc_asymmetry[j]->GetBinError(k+1);
- 
+      
       if(!enough_entries[j][k] || pr_mc_asymmetry[j]->GetBinContent(k+1)==0) err_rel_mc = 0;
       double err_rel_data = 2/(pow((1-pr_data_asymmetry[j]->GetBinContent(k+1)),2)) * pr_data_asymmetry[j]->GetBinError(k+1);
- 
+   
       if(!enough_entries[j][k] || pr_data_asymmetry[j]->GetBinContent(k+1)==0) err_rel_data = 0;
 
       //ratio of responses, again gaussian error propagation
@@ -266,10 +260,10 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
   double zero[n_eta-1][n_pt-1];
   for(int i=0;i<n_pt-1;i++){
     for(int j=0; j<n_eta-1; j++){
-   
+      // xbin_tgraph[i]=(pt_bins[j]+pt_bins[j+1])/2;
+      // zero[i]=(pt_bins[j+1]-pt_bins[j])/2 ;
       xbin_tgraph[j][i] = hdata_ptave[i][j]->GetMean();
       zero[j][i] = hdata_ptave[i][j]->GetStdDev();
-
       // cout << "x before: " << (pt_bins[i]+pt_bins[i+1])/2 << " +- " << (pt_bins[i+1]-pt_bins[i])/2 << endl;
       // cout << "x now:    " << xbin_tgraph[j][i] << " +- " << zero[j][i] << endl << endl;
     }
@@ -294,32 +288,52 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
   //Mikko's request: delete super-high data point in 2.8-2.9 bin (j==13) above ~400 GeV pT (point no 6 & 7 [c++])
 // <<<<<<< HEAD
-
-   if(graph1_mpf[13]->GetN() == 9){
-     graph1_mpf[13]->RemovePoint(8);
-     graph1_mpf[13]->RemovePoint(7);
+   if(graph1_mpf[4]->GetN() == 9){
+      graph1_mpf[4]->RemovePoint(8);
+      graph1_mpf[4]->RemovePoint(7);
+     }
+   else if(graph1_mpf[4]->GetN() == 8){
+     graph1_mpf[4]->RemovePoint(7);
+     }
+   
+   if(graph1_mpf[3]->GetN() == 9){
+     graph1_mpf[3]->RemovePoint(8);
     }
-    else if(graph1_mpf[13]->GetN() == 8){
-     graph1_mpf[13]->RemovePoint(7);
-    }
-    if(graph1_mpf[14]->GetN() == 9){
-       graph1_mpf[14]->RemovePoint(8);
-    }
-
- if(graph1_mpf[15]->GetN() == 8){
-    graph1_mpf[15]->RemovePoint(7);
+   if(graph1_mpf[2]->GetN() == 8){
+    graph1_mpf[2]->RemovePoint(7);
     }
  
- if(graph1_mpf[16]->GetN() == 6){
-    graph1_mpf[16]->RemovePoint(5);
+   if(graph1_mpf[2]->GetN() == 6){
+    graph1_mpf[2]->RemovePoint(5);
+   }
+
+
+   if(graph1_mpf[31]->GetN() == 9){
+      graph1_mpf[31]->RemovePoint(8);
+      graph1_mpf[31]->RemovePoint(7);
+     }
+   else if(graph1_mpf[31]->GetN() == 8){
+     graph1_mpf[31]->RemovePoint(7);
+     }
+   
+   if(graph1_mpf[32]->GetN() == 9){
+     graph1_mpf[32]->RemovePoint(8);
+    }
+   if(graph1_mpf[33]->GetN() == 8){
+    graph1_mpf[33]->RemovePoint(7);
+    }
+ 
+   if(graph1_mpf[34]->GetN() == 6){
+    graph1_mpf[34]->RemovePoint(5);
+   }
+
+
+  for(int k=0; k<n_pt-1; k++){
+    double x = 0;
+    double val = 0;
+    graph1_mpf[13]->GetPoint(k,x,val);
+    // cout << "AFTER: In eta bin no 13: ratio of responses in pT bin no " << k << " at " << x << " : " << val << endl; 
   }
-
-
-// =======
-
-  // graph1_mpf[13]->RemovePoint(8);
-  // graph1_mpf[13]->RemovePoint(7);
-  // if(CorrectionObject::_runnr == "H")  graph1_mpf[13]->RemovePoint(7);
 
 
   // create horizontal line for plotting ("ideal value")
@@ -348,18 +362,184 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
 
   /* +++++++++++++++++++++++ Plots +++++++++++++++++++ */
-  if(mpfMethod){
-  TFile* pT_extrapolation_mpf_out = new TFile(CorrectionObject::_outpath+"plots/pT_extrapolation_mpf.root","RECREATE");}
-  else{   TFile* pT_extrapolation_pt_out = new TFile(CorrectionObject::_outpath+"plots/pT_extrapolation_pt.root","RECREATE");}
-
   TCanvas* asd[n_eta-1];
   TString plotname[n_eta-1];
   double Vcov[3][n_eta-1];//covariance matrix for log lin fit results
-  TH1D* h_chi2_loglin = new TH1D("h_chi2_loglin", "Chi2/ndf for each eta bin;|#eta|;#chi^{2}/ndf", n_eta-1, eta_bins);
-  TH1D* h_chi2_const =  new TH1D("h_chi2_const", "Chi2/ndf for each eta bin;|#eta|;#chi^{2}/ndf", n_eta-1, eta_bins);
+  TH1D* h_chi2_loglin = new TH1D("h_chi2_loglin", "Chi2/ndf for each eta bin; #eta ;#chi^{2}/ndf", n_eta-1, eta_bins);
+  TH1D* h_chi2_const =  new TH1D("h_chi2_const", "Chi2/ndf for each eta bin; #eta ;#chi^{2}/ndf", n_eta-1, eta_bins);
  
-  for (int j=0; j<n_eta-1; j++){
+  for (int j=n_eta-19; j>0; --j){
     if(mpfMethod){
+      cout<<"integer j: "<<j<<endl;
+      cout<<"Eta down : "<<eta_range[j-1]<<endl;
+      cout<<"Eta up:    "<<eta_range[j]<<endl<<endl;
+      
+      plotname[j-1]="mpf_ptextra_"+CorrectionObject::_generator_tag+"_eta_"+eta_range[j-1]+"_"+eta_range[j];
+    }
+    else{
+      plotname[j-1]="dijet_ptextra_"+CorrectionObject::_generator_tag+"_eta_"+eta_range[j-1]+"_"+eta_range[j];
+    }
+    asd[j-1] = new TCanvas(plotname[j-1], plotname[j-1], 800,700);
+    m_gStyle->SetOptTitle(0);
+    gPad->SetLogx();
+    graph1_mpf[j-1]->SetMarkerColor(kBlue);
+    graph1_mpf[j-1]->SetMarkerStyle(20);
+    graph1_mpf[j-1]->SetLineColor(kBlue);
+
+  //Log Linear/Constant fit for pT extrapolation
+    f1[j-1] = new TF1(plotname[j-1]+"f1","[0]+[1]*TMath::Log(x)", 50 , pt_bins[n_pt-1]+10);
+    f1[j-1]->SetParameters(1,0);
+    f2[j-1] = new TF1(plotname[j-1]+"f2","pol0", 50 , pt_bins[n_pt-1]+10);
+    f2[j-1]->SetLineColor(kBlue);
+    f2[j-1]->SetLineStyle(3);
+
+    //Do the fit!
+    if(graph_filled[j-1]){
+      TFitResultPtr fitloglin;
+    if(j==1){
+      cout<<"Fixed slope parameter: "<< f1[j]->GetParameter(1.) <<endl;
+      double slope = f1[j]->GetParameter(1.);
+      f1[j-1]->FixParameter(1,slope); //fixing slope for last eta bin (Vidyo Meeting 07.07.2017)
+    }
+      fitloglin =  graph1_mpf[j-1]->Fit(plotname[j-1]+"f1","SM","",55,1200);
+      TMatrixDSym cov = fitloglin->GetCovarianceMatrix();
+      Vcov[0][j-1] = cov(0,0);
+      Vcov[1][j-1] = cov(1,1);     
+      Vcov[2][j-1] = cov(0,1);
+    }
+    else{
+      f1[j-1]->SetParameters(0.0001,0.0001);
+      f1[j-1]->SetParError(0,0.0001);
+      f1[j-1]->SetParError(1,0.0001);
+      Vcov[0][j-1] = 0.0001;
+      Vcov[1][j-1] = 0.0001;     
+      Vcov[2][j-1] = 0.0001;
+    }
+    
+    if(graph_filled[j-1]){
+      graph1_mpf[j-1]->Fit(plotname[j-1]+"f2","SM + SAME","",55,1200);
+    }
+    else{
+      f2[j-1]->SetParameter(0,0.0001);
+      f2[j-1]->SetParError(0,0.0001);
+    }
+   
+
+    graph1_mpf[j-1]->Draw("AP");
+    if(graph_filled[j-1]){
+      graph1_mpf[j-1]->GetXaxis()->SetTitle("#bar{p}_{T} [GeV]");
+      graph1_mpf[j-1]->GetXaxis()->SetTitleSize(0.05);
+      graph1_mpf[j-1]->GetXaxis()->SetTitleOffset(0.80);
+      graph1_mpf[j-1]->GetXaxis()->SetLimits(30,pt_bins[n_pt-1]+100);
+      graph1_mpf[j-1]->GetYaxis()->SetRangeUser(0.85,1.25);
+    }
+ 
+    line->SetLineStyle(2);
+    line->Draw("SAME");
+
+    //Store the p0 parameter from const fit
+    if (fp2!=NULL) {
+      // getting the p0 parameter from the constant fit
+      Float_t value = f2[j-1]->GetParameter(0);
+      fprintf(fp2, "%f\n",value);
+    }
+    if (l2resfile!=NULL) {
+      fprintf(l2resfile, "%f\n", eta_bins[j]);
+    }
+
+
+    //Cosmetics
+    asd[j-1]->Modified(); 
+    asd[j-1]->Update();
+    
+    TPaveStats *st = ((TPaveStats*)(graph1_mpf[j-1]->GetListOfFunctions()->FindObject("stats")));
+    if (st) {
+      st->SetTextColor(kRed);
+      st->SetX1NDC(0.69); st->SetX2NDC(0.99);
+      st->SetY1NDC(0.65); st->SetY2NDC(0.8);
+    }
+    st = ((TPaveStats*)(graph1_mpf[j-1]->GetListOfFunctions()->FindObject("stats")));
+    if (st) {
+      st->SetTextColor(graph1_mpf[j-1]->GetLineColor());
+      st->SetX1NDC(0.69); st->SetX2NDC(0.99);
+      st->SetY1NDC(0.85); st->SetY2NDC(0.95);
+    }
+    asd[j-1]->Modified(); 
+    asd[j-1]->Update();
+
+
+    //Set up legend, prepare canvas layout
+    TLegend *leg1;
+    leg1 = new TLegend(0.12,0.68,0.35,0.88,"","brNDC");//x+0.1
+    leg1->SetBorderSize(0);
+    leg1->SetTextSize(0.038);
+    leg1->SetFillColor(10);
+    leg1->SetLineColor(1);
+    leg1->SetTextFont(42);
+    if(mpfMethod){
+      leg1->SetHeader("MPF #bar{p}_{T} extrapolation, "+eta_range[j-1]+"#leq #eta <"+eta_range[j]);
+    }
+    else{
+      leg1->SetHeader("p_{T} balance #bar{p}_{T} extrapolation, "+eta_range[j-1]+"#leq #eta <"+eta_range[j]);
+    }
+
+
+    TString alVal;
+    alVal.Form("%0.2f\n",alpha_cut);
+    TString altitle = "{#alpha<"+alVal+"}";
+    TString axistitle = "(R^{MC}/R^{data})_";
+    axistitle +=altitle;
+    leg1->AddEntry(graph1_mpf[j-1], axistitle,"P");
+    leg1->AddEntry(f1[j-1], "loglinear fit","L");
+    leg1->AddEntry(f2[j-1], "constant fit","L");
+    leg1->Draw();
+    
+    TLatex *tex = new TLatex();
+    tex->SetNDC();
+    tex->SetTextSize(0.045); 
+    tex->DrawLatex(0.58,0.91,CorrectionObject::_lumitag+"(13TeV)"); 
+
+    TLatex *tex2 = new TLatex();
+    if(graph_filled[j-1]){    
+      TString chi2_loglin = "loglinear fit #chi^{2}/n.d.f = ";
+      chi2_loglin += trunc(f1[j-1]->GetChisquare());
+      chi2_loglin +="/";
+      chi2_loglin +=trunc(f1[j-1]->GetNDF());
+      TString chi2_const = "constant fit #chi^{2}/n.d.f = ";
+      chi2_const+=trunc(f2[j-1]->GetChisquare());
+      chi2_const+="/";
+      chi2_const+=trunc(f2[j-1]->GetNDF());
+
+      tex2->SetNDC();
+      tex2->SetTextSize(0.035); 
+      tex2->DrawLatex(0.51,0.73,chi2_loglin);
+      tex2->DrawLatex(0.51,0.69,chi2_const);
+
+      double chi2ndf_loglin = f1[j-1]->GetChisquare() / f1[j-1]->GetNDF();
+      double chi2ndf_const =  f2[j-1]->GetChisquare() / f2[j-1]->GetNDF();
+      h_chi2_loglin->SetBinContent(j-1,chi2ndf_loglin); //to make sure to fill the right eta-bin...
+      h_chi2_const->SetBinContent(j-1,chi2ndf_const);   //to make sure to fill the right eta-bin...
+    }
+
+    h_chi2_loglin->GetYaxis()->SetRangeUser(0,20);
+    h_chi2_const->GetYaxis()->SetRangeUser(0,20);
+    //Store plots
+    if(mpfMethod){
+      asd[j-1]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j-1]+"_"+eta_range2[j]+".pdf");
+    }
+    else{
+      asd[j-1]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_Pt_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j-1]+"_"+eta_range2[j]+".pdf");
+    }
+    delete tex2;
+    delete tex;
+    delete leg1;
+  }
+
+  for (int j=18; j<n_eta-1; j++){
+    if(mpfMethod){
+     cout<<"integer j: "<<j<<endl;
+      cout<<"Eta down : "<<eta_range[j]<<endl;
+      cout<<"Eta up:    "<<eta_range[j+1]<<endl<<endl;
       plotname[j]="mpf_ptextra_"+CorrectionObject::_generator_tag+"_eta_"+eta_range[j]+"_"+eta_range[j+1];
     }
     else{
@@ -372,23 +552,22 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     graph1_mpf[j]->SetMarkerStyle(20);
     graph1_mpf[j]->SetLineColor(kBlue);
 
-
-    //Log Linear/Constant fit for pT extrapolation
+  //Log Linear/Constant fit for pT extrapolation
     f1[j] = new TF1(plotname[j]+"f1","[0]+[1]*TMath::Log(x)", 50 , pt_bins[n_pt-1]+10);
     f1[j]->SetParameters(1,0);
-
     f2[j] = new TF1(plotname[j]+"f2","pol0", 50 , pt_bins[n_pt-1]+10);
     f2[j]->SetLineColor(kBlue);
     f2[j]->SetLineStyle(3);
-   
+
+ 
     //Do the fit!
     if(graph_filled[j]){
-    TFitResultPtr fitloglin;
-     if(j==17){
+   TFitResultPtr fitloglin;
+    if(j==35){
       cout<<"Fixed slope parameter: "<< f1[j-1]->GetParameter(1.) <<endl;
       double slope = f1[j-1]->GetParameter(1.);
       f1[j]->FixParameter(1,slope); //fixing slope for last eta bin (Vidyo Meeting 07.07.2017)
-      }
+    }
       fitloglin =  graph1_mpf[j]->Fit(plotname[j]+"f1","SM","",55,1200);
       TMatrixDSym cov = fitloglin->GetCovarianceMatrix();
       Vcov[0][j] = cov(0,0);
@@ -405,12 +584,14 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     }
     
     if(graph_filled[j]){
-      graph1_mpf[j]->Fit(plotname[j]+"f2","SM + SAME","",55,1200); }
+      graph1_mpf[j]->Fit(plotname[j]+"f2","SM + SAME","",55,1200);
+    }
     else{
       f2[j]->SetParameter(0,0.0001);
       f2[j]->SetParError(0,0.0001);
     }
    
+
     graph1_mpf[j]->Draw("AP");
     if(graph_filled[j]){
       graph1_mpf[j]->GetXaxis()->SetTitle("#bar{p}_{T} [GeV]");
@@ -463,10 +644,10 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     leg1->SetLineColor(1);
     leg1->SetTextFont(42);
     if(mpfMethod){
-      leg1->SetHeader("MPF #bar{p}_{T} extrapolation, "+eta_range[j]+"#leq|#eta|<"+eta_range[j+1]);
+      leg1->SetHeader("MPF #bar{p}_{T} extrapolation, "+eta_range[j]+"#leq #eta <"+eta_range[j+1]);
     }
     else{
-      leg1->SetHeader("p_{T} balance #bar{p}_{T} extrapolation, "+eta_range[j]+"#leq|#eta|<"+eta_range[j+1]);
+      leg1->SetHeader("p_{T} balance #bar{p}_{T} extrapolation, "+eta_range[j]+"#leq #eta <"+eta_range[j+1]);
     }
 
 
@@ -509,23 +690,19 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
     h_chi2_loglin->GetYaxis()->SetRangeUser(0,20);
     h_chi2_const->GetYaxis()->SetRangeUser(0,20);
- 
-
-   //Store plots
-   if(mpfMethod){
-      graph1_mpf[j]->Write("pTextrapolation_MPF_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]);
+    //Store plots
+    if(mpfMethod){
       asd[j]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
     else{
-      graph1_mpf[j]->Write("pTextrapolation_Pt_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]);
       asd[j]->Print(CorrectionObject::_outpath+"plots/pTextrapolation_Pt_"+CorrectionObject::_generator_tag+"_pT_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
     }
     delete tex2;
     delete tex;
     delete leg1;
- 
   }
-  
+
+
   TCanvas* c_chi2_loglin = new TCanvas();
   h_chi2_loglin->Draw("HIST");
   if(mpfMethod)c_chi2_loglin->SaveAs(CorrectionObject::_outpath+"plots/pTextrapolation_MPF_chi2ndf_loglin_"+CorrectionObject::_generator_tag+".pdf");
@@ -559,52 +736,50 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	hist_kfsr_mpf = (TH1D*)kfsr_mpf->Get("kfsr_mpf");
     }
     else{
-    kfsr_mpf = new TFile(CorrectionObject::_outpath+"Histo_KFSR_MPF_"+CorrectionObject::_generator_tag+"_L1.root","READ");
-    hist_kfsr_mpf = (TH1D*)kfsr_mpf->Get("kfsr_mpf");
+      kfsr_mpf = new TFile(CorrectionObject::_outpath+"Histo_KFSR_MPF_"+CorrectionObject::_generator_tag+"_L1.root","READ");
+      TH1D* hist_kfsr_mpf = (TH1D*)kfsr_mpf->Get("kfsr_mpf");
 
-    //fit the kFSR values
-    TF1 *kfsr_fit_mpf = new TF1("kfsr_fit_mpf","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.);   //Range: 0,5. by default
+      //fit the kFSR values
+      TF1 *kfsr_fit_mpf = new TF1("kfsr_fit_mpf","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",-5,5.);   //Range: 0,5. by default
 
-    bool fit_fullrange = false;
-    bool fit_285       = false;
- 
-    //VERY fragile fit, carefully set initial values
-    if(CorrectionObject::_generator == "pythia"){
+      bool fit_fullrange = false;
+   
+      //VERY fragile fit, carefully set initial values
+      if(CorrectionObject::_generator == "pythia"){
 
-      if(CorrectionObject::_collection == "AK4CHS"){
-	if(CorrectionObject::_runnr == "BCDEFGH"){
-	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
-	  else kfsr_fit_mpf->SetParameters(0.9,2,40); //CLOSURETEST
-	  fit_fullrange = true;
-	}
+	//Set parameters to help the fit converge!
+	if(CorrectionObject::_collection == "AK4CHS"){
 	/*
 	if(CorrectionObject::_runnr == "BCD"){
-	  //	  kfsr_fit_mpf->SetParameters(1,100,500);
-	  kfsr_fit_mpf->SetParameters(1,3,-70);      
-	  fit_fullrange = false;
-	  fit_285       = true;
+	  kfsr_fit_mpf->SetParameters(1,100,300);      
+	  fit_fullrange = true;
 	}
 	else if(CorrectionObject::_runnr == "EFearly"){
-	  if(CorrectionObject::_closuretest){
-	    kfsr_fit_mpf->SetParameters(-0.6,100,300);
-	    fit_fullrange = true;} //CLOSURETEST
-	  else kfsr_fit_mpf->SetParameters(0.9,2,34); //RES
+	  if(CorrectionObject::_closuretest){ kfsr_fit_mpf->SetParameters(-0.6,100,300);
+	  fit_fullrange = true;}
+	  else{ kfsr_fit_mpf->SetParameters(0.9,4.5,68);//RES
+	    fit_fullrange = true;
+	  }
 	}
 	else if(CorrectionObject::_runnr == "FlateG"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,100,300); //RES
-	  else{ kfsr_fit_mpf->SetParameters(0.7,40,160);
+	else{ kfsr_fit_mpf->SetParameters(0.7,40,160);
 	    fit_fullrange = true;
 	  }
 	}
 	else if(CorrectionObject::_runnr == "H"){
-	  cout<<"HELLO ANYBODY?"<<endl;
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,100,300); //RES
 	  else kfsr_fit_mpf->SetParameters(1.,150,250); //CLOSURETEST
 	  fit_fullrange = true;
 	}
-	*/
+	else  */
+	if(CorrectionObject::_runnr == "BCDEFGH"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(0.9,2,40); //RES
+	  else kfsr_fit_mpf->SetParameters(0.9,2,40); //CLOSURETEST
+	  fit_fullrange = true;
 	}
-      }    
+      }
+    }  
     else throw runtime_error("PTextrapolation, MPF kFSR-fit: Invalid generator specified.");
 
     //Finally perform the fit!
@@ -612,13 +787,13 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     kfsr_fit_mpf->SetLineColor(kRed+1);
     std::cout<<"!!! kFSR MPF fit !!!"<<std::endl;
 
-    if(!fit_fullrange && !fit_285) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,3.14);
+    if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",-3.14,3.14);
     //   if(!fit_fullrange) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,2.4);
-    else if(!fit_fullrange && fit_285) hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,2.85);
-    else hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,5.19);
+    else hist_kfsr_mpf->Fit("kfsr_fit_mpf","SR","",0,5.);
+    
 
     //Create a histogram to hold the confidence intervals                                                                                        
-    hist_kfsr_fit_mpf = (TH1D*)hist_kfsr_mpf->Clone();
+    TH1D *hist_kfsr_fit_mpf = (TH1D*)hist_kfsr_mpf->Clone();
     (TVirtualFitter::GetFitter())->GetConfidenceIntervals(hist_kfsr_fit_mpf);
     //Now the "hist_kfsr_fit" histogram has the fitted function values as the
     //bin contents and the confidence intervals as bin errors
@@ -629,6 +804,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     hist_kfsr_fit_mpf->SetTitle("kfsr fit for mpf");
     }
 
+    //kFSR normalization with fit values 
     double flat[n_eta-1];
     double loglin[n_eta-1];
     for (int j=0; j<n_eta-1; j++){
@@ -636,7 +812,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       loglin[j] = hist_kfsr_fit_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
     double flat_norm=0, loglin_norm=0;
-    for (int j=0; j<n_etabarr; j++){
+    for (int j=18; j<23; j++){
       flat_norm += flat[j];
       loglin_norm += loglin[j];
     }
@@ -645,16 +821,17 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     for (int j=0; j<n_eta-1; j++){
       flat[j] = flat[j]/flat_norm;
       loglin[j] = loglin[j]/loglin_norm;
-    }
+     }
 
-   double flat_var[n_eta-1];
+    //kFSR normalization hist values
+    double flat_var[n_eta-1];
     double loglin_var[n_eta-1];
     for (int j=0; j<n_eta-1; j++){
       flat_var[j] = hist_kfsr_mpf->GetBinContent(j+1)*f2[j]->GetParameter(0);
       loglin_var[j] = hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
-    double flat_norm_var=0, loglin_norm_var=0;
-    for (int j=0; j<n_etabarr; j++){
+    double flat_norm_var = 0, loglin_norm_var = 0;
+    for (int j=18; j<23; j++){
       flat_norm_var += flat_var[j];
       loglin_norm_var += loglin_var[j];
     }
@@ -669,22 +846,21 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     //Histograms to hold the output
     TH1D* Residual_logpt_MPF = new TH1D("res_logpt_mpf","res_logpt_mpf", n_eta-1,eta_bins);
     TH1D* Residual_const_MPF = new TH1D("res_const_mpf","res_const_mpf", n_eta-1,eta_bins);
-    TH1D* ptave_const_MPF    = new TH1D("ptave_const_mpf","ptave_const_mpf", n_eta-1,eta_bins);
-    TH1D* ptave_logpt_MPF    = new TH1D("ptave_logpt_mpf","ptave_logpt_mpf", n_eta-1,eta_bins);
+    TH1D* ptave_const_MPF = new TH1D("ptave_const_mpf","ptave_const_mpf", n_eta-1,eta_bins);
+    TH1D* ptave_logpt_MPF = new TH1D("ptave_logpt_mpf","ptave_logpt_mpf", n_eta-1,eta_bins);
 
     TH1D* Residual_logpt_MPF_val = new TH1D("res_logpt_mpf_val","res_logpt_mpf_val", n_eta-1,eta_bins);
     TH1D* Residual_const_MPF_val = new TH1D("res_const_mpf_val","res_const_mpf_val", n_eta-1,eta_bins);
-    
-    
+
+
     ofstream output, output_loglin, uncerts, uncerts_loglin, output_hybrid, uncerts_hybrid;
     output.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
     output_loglin.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
     uncerts.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
     uncerts_loglin.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
-    output_hybrid.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+   output_hybrid.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
     uncerts_hybrid.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_MPF_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
-
 
     output  << "{ 1 JetEta 1 JetPt [2]*([3]*([4]+[5]*TMath::Log(max([0],min([1],x))))*1./([6]+[7]*100./3.*(TMath::Max(0.,1.03091-0.051154*pow(x,-0.154227))-TMath::Max(0.,1.03091-0.051154*TMath::Power(208.,-0.154227)))+[8]*((-2.36997+0.413917*TMath::Log(x))/x-(-2.36997+0.413917*TMath::Log(208))/208))) Correction L2Relative}" << endl;
     output_loglin  << "{ 1 JetEta 1 JetPt [2]*([3]*([4]+[5]*TMath::Log(max([0],min([1],x))))*1./([6]+[7]*100./3.*(TMath::Max(0.,1.03091-0.051154*pow(x,-0.154227))-TMath::Max(0.,1.03091-0.051154*TMath::Power(208.,-0.154227)))+[8]*((-2.36997+0.413917*TMath::Log(x))/x-(-2.36997+0.413917*TMath::Log(208))/208))) Correction L2Relative}" << endl;
@@ -692,84 +868,44 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     //uncerts_loglin << "{ 1 JetEta 1 JetPt [0] kFSR_err cov(0,0) cov(1,1) cov(0,1) }" << endl;
     uncerts_loglin << "{ 1 JetEta 1 JetPt sqrt(fabs([0]*[0]+[1]+[2]*log(x)*log(x)+2*[3]*log(x))) Correction L2Relative}" << endl;
 
-    output_hybrid  << "{ 1 JetEta 1 JetPt [2]*([3]*([4]+[5]*TMath::Log(max([0],min([1],x))))*1./([6]+[7]*100./3.*(TMath::Max(0.,1.03091-0.051154*pow(x,-0.154227))-TMath::Max(0.,1.03091-0.051154*TMath::Power(208.,-0.154227)))+[8]*((-2.36997+0.413917*TMath::Log(x))/x-(-2.36997+0.413917*TMath::Log(208))/208))) Correction L2Relative}" << endl;
+ output_hybrid  << "{ 1 JetEta 1 JetPt [2]*([3]*([4]+[5]*TMath::Log(max([0],min([1],x))))*1./([6]+[7]*100./3.*(TMath::Max(0.,1.03091-0.051154*pow(x,-0.154227))-TMath::Max(0.,1.03091-0.051154*TMath::Power(208.,-0.154227)))+[8]*((-2.36997+0.413917*TMath::Log(x))/x-(-2.36997+0.413917*TMath::Log(208))/208))) Correction L2Relative}" << endl;
     uncerts_hybrid << "{ 1 JetEta 1 JetPt Hybrid Method: Use const fit for 2.65 < |eta| < 3.1, else Log-lin}" << endl;
 
-    //!!!Check if fit or hist values are used!!!
+
+
     for (int j=n_eta-1; j>0; --j){
-      output << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+      output << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_fit_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
       
-      output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
+      output_loglin << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_fit_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
 
-      uncerts << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" << eta_range[j-1] << "  3    55    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_mpf->GetBinError(j-1) / flat_norm 
+      uncerts << fixed << std::setprecision(6) << "  " << eta_range[j] << "  " << eta_range[j-1] << "  3    55    " 
+	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_fit_mpf->GetBinError(j-1) / flat_norm 
 	      <<" "<< f2[j-1]->GetParError(0) << endl;
 
-      uncerts_loglin << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" 
+      uncerts_loglin << fixed << std::setprecision(6) << "  " << eta_range[j] << "  " 
 		     << eta_range[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << hist_kfsr_mpf->GetBinError(j-1) / loglin_norm  
+		     << " " << hist_kfsr_fit_mpf->GetBinError(j-1) / loglin_norm  
 		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      
-      if(j>12 && j<16){
-	output_hybrid << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
 
-	uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" << eta_range[j-1] << "  3    55    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_mpf->GetBinError(j-1) / flat_norm 
+      if((j>3 && j<7)||(j>30 && j<34)){
+	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_fit_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+
+	uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j-1] << "  3    55    " 
+	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_fit_mpf->GetBinError(j-1) / flat_norm 
 	      <<" "<< f2[j-1]->GetParError(0) << endl;
       }
       else{
-	output_hybrid <<  fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
+	output_hybrid <<  fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_fit_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
 
-        uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" 
+        uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " 
 		     << eta_range[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << hist_kfsr_mpf->GetBinError(j-1) / loglin_norm  
+		     << " " << hist_kfsr_fit_mpf->GetBinError(j-1) / loglin_norm  
 		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
       }
-    }
-
-
-    for (int j=0; j<n_eta-1; j++){
-      output << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   55   " 
-	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_mpf->GetBinContent(j+1) 
-	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0"  << endl;
-
-      output_loglin << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   30   " 
-		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " 
-		    << hist_kfsr_mpf->GetBinContent(j+1) << "   " << f1[j]->GetParameter(0) 
-		    << " " << f1[j]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-      uncerts << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  3    55    " 
-	      << ptave_data[j]->FindLastBinAbove(100.)*10 
-	      <<" "<< hist_kfsr_mpf->GetBinError(j)/flat_norm<< " " << f2[j]->GetParameter(0) <<endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  6    30    " 
-		     << ptave_data[j]->FindLastBinAbove(100.)*10 << " " 
-		     << hist_kfsr_mpf->GetBinError(j)/loglin_norm<< " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
-
-      if(j>11 && j<15){
-	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   55   " 
-	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_mpf->GetBinContent(j+1) 
-	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0"  << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  3    55    " 
-	      << ptave_data[j]->FindLastBinAbove(100.)*10 
-	      <<" "<< hist_kfsr_mpf->GetBinError(j)/flat_norm<< " " << f2[j]->GetParameter(0) <<endl;
-      }
-      else{
-	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   30   " 
-		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " 
-		    << hist_kfsr_mpf->GetBinContent(j+1) << "   " << f1[j]->GetParameter(0) 
-		    << " " << f1[j]->GetParameter(1) << "   1 0.0000 0.0"<< endl; 
-
-        uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  6    30    " 
-		     << ptave_data[j]->FindLastBinAbove(100.)*10 << " " 
-		     << hist_kfsr_mpf->GetBinError(j)/loglin_norm<< " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
-      }
-
 
     }
 
-    //pT-dependence plots, setting bin contents and errors
+     //pT-dependence plots, setting bin contents and errors
     for(int k=0; k<5; k++){
       for (int j=0; j<n_eta-1; j++){
 	double pave_value_corr = 0;
@@ -784,7 +920,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	if(k==3) pave_value_corr = 240;
 	if(k==4) pave_value_corr = 480;
 	
-	//**************************************  Test reject high pT bins without data ***************************
+	//************************************** Reject high pT bins without data ***************************
 	 
 	double ptave_value = 0;
 	if(graph_filled[j]) { ptave_value = ptave_data[j]->FindLastBinAbove(100.)*10;
@@ -802,11 +938,10 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	}
 	
 	//************************************************************************************************************ 
-  
-	
-                                
+
+
+                                              
 	//Residual_logpt_MPF->SetBinContent(j+1,hist_kfsr_fit_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0) +f1[j]->GetParameter(1)*TMath::Log(pave_value_corr)))
-	//in above formula, no normalization has been applied!
 	Residual_logpt_MPF->SetBinContent(j+1,reject*hist_kfsr_fit_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)
 										     +f1[j]->GetParameter(1)*TMath::Log(pave_value_corr))/loglin_norm);
 	Residual_logpt_MPF->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(pave_value_corr),2)*pow(hist_kfsr_fit_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_fit_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(pave_value_corr),2)+2*Vcov[2][j]*TMath::Log(pave_value_corr)))/loglin_norm);
@@ -822,9 +957,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	ptave_const_MPF->SetBinContent(j+1,f2[j]->GetParameter(0));
 	ptave_const_MPF->SetBinError(j+1,f2[j]->GetParError(0));
 
-
-
-	//******************************************************  USE kFSR Values/ NO FIT VALUES ************************************************************************************************
+	//******************************************************  TEST: USE kFSR Values/ NO FIT VALUES ************************************************************************************************
 	Residual_logpt_MPF_val->SetBinContent(j+1,reject*hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)
 										     +f1[j]->GetParameter(1)*TMath::Log(pave_value_corr))/loglin_norm_var);
 	Residual_logpt_MPF_val->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(pave_value_corr),2)*pow(hist_kfsr_mpf->GetBinError(j+1),2)   + pow(hist_kfsr_mpf->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(pave_value_corr),2)+2*Vcov[2][j]*TMath::Log(pave_value_corr)))/loglin_norm_var);
@@ -853,7 +986,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
       hist_kfsr_mpf->Write();
       hist_kfsr_fit_mpf->Write();                                                                                                                
-      //kfsr_fit_mpf->Write();
+      // kfsr_fit_mpf->Write();
       ptave_const_MPF->Write();                                                                                                                    
       ptave_logpt_MPF->Write();
       
@@ -861,6 +994,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       Residual_const_MPF->Write();
       Residual_logpt_MPF_val->Write();
       Residual_const_MPF_val->Write();
+      
       outputfile->Write();
       outputfile->Close();
 
@@ -921,34 +1055,35 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     hist_kfsr_dijet = (TH1D*)kfsr_dijet->Get("kfsr_dijet");
     
     //kFSR fit function
-    TF1 *kfsr_fit_dijet = new TF1("kfsr_fit_dijet","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.); //Range: 0,5. by default
+    TF1 *kfsr_fit_dijet = new TF1("kfsr_fit_dijet","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",-5,5.); //Range: 0,5. by default
     
-    //Be carefull with fit range!
     bool fit_fullrange = false;
     bool fit_285 = false;
-  
-    //Very fragile fit! tune the initial values for the fit
+   
+ //Very fragile fit! tune the initial values for the fit
+    
     ///Set Parameter for kFSR Fit (pT-Balance)
     if(CorrectionObject::_generator == "pythia"){
-       if(CorrectionObject::_collection == "AK4CHS"){ 
+      //Initial values for pythia
+      if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
-	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,360,100); //RES
-	  else kfsr_fit_dijet->SetParameters(1,500,150); //CLOSURETEST
-	  //fit_fullrange = true;
-	  fit_285 = true;
+	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(6,700,-100); //RES
+	  else kfsr_fit_dijet->SetParameters(-2,500,150); //CLOSURETEST
+	  fit_fullrange = true;
 	}
 	/*
-	//RunBCD
-	if(CorrectionObject::_runnr == "BCD"){ 
+       	//RunBCD
+	else if(CorrectionObject::_runnr == "BCD"){ 
 	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,500,150.); //Closure Test
 	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(6, 700, -100.); //reweighted MC, RES
 	
 	fit_fullrange = false;
         fit_285 = true;
 	}
+	
 	else if(CorrectionObject::_runnr == "EFearly"){
 	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-6,2000,300); //CLOSURETEST
-	  if(!CorrectionObject::_closuretest)kfsr_fit_dijet->SetParameters(1,500,-100); //RES
+	  if(!CorrectionObject::_closuretest)kfsr_fit_dijet->SetParameters(1,500,-100); //reweighted MC, RES
 	  
 	fit_fullrange = false;
         fit_285 = true;
@@ -956,34 +1091,34 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 
 	else if(CorrectionObject::_runnr == "FlateG"){
 	  if(CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-5,2000,300); //CLOSURETEST
-	  if(!CorrectionObject::_closuretest)  kfsr_fit_dijet->SetParameters(1,3000,300.); //RES
+	  if(!CorrectionObject::_closuretest)  kfsr_fit_dijet->SetParameters(-6.7,1800,230.); //RES
 	  
 	fit_fullrange = false;
 	fit_285 = true; 	
 	}
 	else if(CorrectionObject::_runnr == "H"){
 	  if(CorrectionObject::_closuretest)   kfsr_fit_dijet->SetParameters(-9,5000,500); //CLOSURETEST
-	  if(!CorrectionObject::_closuretest)  kfsr_fit_dijet->SetParameters(-4,1000,200); //RES
+	  if(!CorrectionObject::_closuretest)  kfsr_fit_dijet->SetParameters(-4,1000,200); //reweighted MC, RES
 	  
 	fit_fullrange = false;
 	fit_285 = false;
-	  
-	}
+       	}
+	*/
 	else kfsr_fit_dijet->SetParameters(0,0,200.); 
       }
-	*/
-      }
     }
-    else throw runtime_error("PTextrapolation: Invalid generator specified.");
+   else throw runtime_error("PTextrapolation: Invalid generator specified.");
 
     //Finally perform the fit 
     kfsr_fit_dijet->SetLineColor(kBlue+1);
     std::cout<<"------ !!! kFSR pT-balance fit !!! ------"<<std::endl;
-    if(fit_fullrange) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,5.);
-    else if(!fit_285) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.65);
-    else              hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.85);
- 
-    //Create a histogram to hold the confidence intervals  
+    if(fit_fullrange) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",-5,5.);
+    else if(!fit_285) hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",-2.65,2.65);
+    else              hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",-2.85,2.85);
+    //    else hist_kfsr_dijet->Fit("kfsr_fit_dijet","SR","",0,2.4);
+
+
+    //Create a histogram to hold the confidence intervals                                                                                        
     hist_kfsr_fit_dijet = (TH1D*)hist_kfsr_dijet->Clone();
     (TVirtualFitter::GetFitter())->GetConfidenceIntervals(hist_kfsr_fit_dijet);
     //Now the "hist_kfsr_fit" histogram has the fitted function values as the
@@ -995,15 +1130,22 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     hist_kfsr_fit_dijet->SetTitle("kfsr fit for dijet");
     }
 
+
     double flat[n_eta-1];
     double loglin[n_eta-1];
     for (int j=0; j<n_eta-1; j++){
       flat[j] = hist_kfsr_fit_dijet->GetBinContent(j+1)*f2[j]->GetParameter(0);
       loglin[j] = hist_kfsr_fit_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
-
+   
+    double flat_var[n_eta-1];
+    double loglin_var[n_eta-1];
+    for (int j=0; j<n_eta-1; j++){
+      flat_var[j] = hist_kfsr_dijet->GetBinContent(j+1)*f2[j]->GetParameter(0);
+      loglin_var[j] = hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
+    }
     double flat_norm = 0, loglin_norm = 0;
-    for (int j=0; j<n_etabarr; j++){
+    for (int j=18; j<23; j++){
       flat_norm += flat[j];
       loglin_norm += loglin[j];
     }
@@ -1014,15 +1156,8 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       loglin[j] = loglin[j]/loglin_norm;
     }
 
-   double flat_var[n_eta-1];
-    double loglin_var[n_eta-1];
-    for (int j=0; j<n_eta-1; j++){
-      flat_var[j] = hist_kfsr_dijet->GetBinContent(j+1)*f2[j]->GetParameter(0);
-      loglin_var[j] = hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
-    }
-
     double flat_norm_var = 0, loglin_norm_var = 0;
-    for (int j=0; j<n_etabarr; j++){
+    for (int j=18; j<23; j++){
       flat_norm_var += flat_var[j];
       loglin_norm_var += loglin_var[j];
     }
@@ -1033,23 +1168,24 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
       loglin_var[j] = loglin_var[j]/loglin_norm_var;
     }
 
- 
     //Histograms holding the output
     TH1D* Residual_logpt_DiJet = new TH1D("res_logpt_dijet","res_logpt_dijet", n_eta-1,eta_bins);
     TH1D* Residual_const_DiJet = new TH1D("res_const_dijet","res_const_dijet", n_eta-1,eta_bins);
-    TH1D* ptave_const_DiJet    = new TH1D("ptave_const_dijet","ptave_const_dijet", n_eta-1,eta_bins);
-    TH1D* ptave_logpt_DiJet    = new TH1D("ptave_logpt_dijet","ptave_logpt_dijet", n_eta-1,eta_bins);
+
+    TH1D* ptave_const_DiJet = new TH1D("ptave_const_dijet","ptave_const_dijet", n_eta-1,eta_bins);
+    TH1D* ptave_logpt_DiJet = new TH1D("ptave_logpt_dijet","ptave_logpt_dijet", n_eta-1,eta_bins);
 
     TH1D* Residual_logpt_DiJet_val = new TH1D("res_logpt_dijet_val","res_logpt_dijet_val", n_eta-1,eta_bins);
     TH1D* Residual_const_DiJet_val = new TH1D("res_const_dijet_val","res_const_dijet_val", n_eta-1,eta_bins);
 
-    ofstream output, output_loglin, uncerts, uncerts_loglin, output_hybrid, uncerts_hybrid ;
+    ofstream output, output_loglin, uncerts, uncerts_loglin, output_hybrid, uncerts_hybrid;
     output.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
     output_loglin.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
     uncerts.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
     uncerts_loglin.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
-    output_hybrid.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+
+   output_hybrid.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
     uncerts_hybrid.open(CorrectionObject::_outpath+"output/Summer16_03Feb2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
 
@@ -1059,81 +1195,42 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     //uncerts_loglin << "{ 1 JetEta 1 JetPt [0] kFSR_err cov(0,0) cov(1,1) cov(0,1) }" << endl;
     uncerts_loglin << "{ 1 JetEta 1 JetPt sqrt(fabs([0]*[0]+[1]+[2]*log(x)*log(x)+2*[3]*log(x))) Correction L2Relative}" << endl;
 
+
     output_hybrid  << "{ 1 JetEta 1 JetPt [2]*([3]*([4]+[5]*TMath::Log(max([0],min([1],x))))*1./([6]+[7]*100./3.*(TMath::Max(0.,1.03091-0.051154*pow(x,-0.154227))-TMath::Max(0.,1.03091-0.051154*TMath::Power(208.,-0.154227)))+[8]*((-2.36997+0.413917*TMath::Log(x))/x-(-2.36997+0.413917*TMath::Log(208))/208))) Correction L2Relative}" << endl;
     uncerts_hybrid << "{ 1 JetEta 1 JetPt Hybrid Method: Use const fit for 2.65 < |eta| < 3.1, else Log-lin}" << endl;
 
     for (int j=n_eta-1; j>0; --j){
-      output << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-      
-      output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
+      output << fixed << std::setprecision(6)  << eta_range[j]<< "   "<< eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_fit_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+  
+      output_loglin << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_fit_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) <<  "   1 0.0000 0.0" << endl;
+ 
+      uncerts << fixed << std::setprecision(6) << "  " << eta_range[j] << "  " << eta_range[j-1] << "  3    55    "
+	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_fit_dijet->GetBinError(j-1) / flat_norm
+	      <<" "<< f2[j-1]->GetParError(0) << endl; 
+      uncerts_loglin << fixed << std::setprecision(6) << " " << eta_range[j] << "  "
+		     << eta_range[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10
+		     << " " << hist_kfsr_fit_dijet->GetBinError(j-1) / loglin_norm<< " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl;  
+  
+    if((j>3 && j<7)||(j>30 && j<34)){
+	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_fit_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
 
-      uncerts << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" << eta_range[j-1] << "  3    55    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_dijet->GetBinError(j-1) / flat_norm 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" 
-		     << eta_range[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << hist_kfsr_dijet->GetBinError(j-1) / loglin_norm  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      
-      if(j>12 && j<16){
-	output_hybrid << fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   55   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" << eta_range[j-1] << "  3    55    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_dijet->GetBinError(j-1) / flat_norm 
+	uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j-1] << "  3    55    " 
+	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << hist_kfsr_fit_dijet->GetBinError(j-1) / flat_norm 
 	      <<" "<< f2[j-1]->GetParError(0) << endl;
       }
       else{
-	output_hybrid <<  fixed << std::setprecision(6)  << "  -" << eta_range[j]<< " -" << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
+	output_hybrid <<  fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " << hist_kfsr_fit_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
 
-        uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range[j] << " -" 
+        uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " 
 		     << eta_range[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << hist_kfsr_dijet->GetBinError(j-1) / loglin_norm  
+		     << " " << hist_kfsr_fit_dijet->GetBinError(j-1) / loglin_norm  
 		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
       }
+
+ 
     }
 
-
-    for (int j=0; j<n_eta-1; j++){
-      output << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   55   " 
-	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_dijet->GetBinContent(j+1) 
-	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0"  << endl;
-
-      output_loglin << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   30   " 
-		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " 
-		    << hist_kfsr_dijet->GetBinContent(j+1) << "   " << f1[j]->GetParameter(0) 
-		    << " " << f1[j]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-      uncerts << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  3    55    " 
-	      << ptave_data[j]->FindLastBinAbove(100.)*10 
-	      <<" "<< hist_kfsr_dijet->GetBinError(j)/flat_norm<< " " << f2[j]->GetParameter(0) <<endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  6    30    " 
-		     << ptave_data[j]->FindLastBinAbove(100.)*10 << " " 
-		     << hist_kfsr_dijet->GetBinError(j)/loglin_norm<< " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
-
-      if(j>11 && j<15){
-	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   55   " 
-	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/flat_norm << " " << hist_kfsr_dijet->GetBinContent(j+1) 
-	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  3    55    " 
-	      << ptave_data[j]->FindLastBinAbove(100.)*10 
-	      <<" "<< hist_kfsr_dijet->GetBinError(j)/flat_norm<< " " << f2[j]->GetParameter(0) <<endl;
-      }
-      else{
-	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range[j]<< "  " << eta_range[j+1] << "   11   10 6500   30   " 
-		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/loglin_norm << " " 
-		    << hist_kfsr_dijet->GetBinContent(j+1) << "   " << f1[j]->GetParameter(0) 
-		    << " " << f1[j]->GetParameter(1) << "   1 0.0000 0.0" << endl; 
-
-        uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range[j] << "  " << eta_range[j+1] << "  6    30    " 
-		     << ptave_data[j]->FindLastBinAbove(100.)*10 << " " 
-		     << hist_kfsr_dijet->GetBinError(j)/loglin_norm<< " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
-      }
-    }
-
-
+ 
 
     for(int k=0; k<5; k++){  
       for (int j=0; j<n_eta-1; j++){
@@ -1145,12 +1242,16 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	}
 	
 	if(k==1) pave_corr = 120;
+	
 	if(k==2) pave_corr = 60;
+	
 	if(k==3) pave_corr = 240;
+
 	if(k==4) pave_corr = 480;
 	
 	
-	//**************************************  reject high pT bins without data ***************************
+	//**************************************  Test reject high pT bins without data ***************************
+	 
 	double ptave_value = 0;
 	if(graph_filled[j]) { ptave_value = ptave_data[j]->FindLastBinAbove(100.)*10;
 	if(k==1 && ptave_value > 120) reject = 1;
@@ -1168,7 +1269,6 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	
 	//************************************************************************************************************ 
 
-
 	Residual_logpt_DiJet->SetBinContent(j+1,reject*hist_kfsr_fit_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)
 											 +f1[j]->GetParameter(1)*TMath::Log(pave_corr))/loglin_norm);
 	Residual_logpt_DiJet->SetBinError(j+1, sqrt(pow(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(pave_corr),2)*pow(hist_kfsr_fit_dijet->GetBinError(j+1),2)+ pow(hist_kfsr_fit_dijet->GetBinContent(j+1),2)*(Vcov[0][j]+Vcov[1][j]*pow(TMath::Log(pave_corr),2)+2*Vcov[2][j]*TMath::Log(pave_corr)))/loglin_norm);
@@ -1181,7 +1281,6 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	ptave_const_DiJet->SetBinContent(j+1,f2[j]->GetParameter(0));
 	ptave_const_DiJet->SetBinError(j+1,f2[j]->GetParError(0));
 
-
 	//*********************************************************************** TEST: kFSR VALUES/ NO FIT USED
 	Residual_logpt_DiJet_val->SetBinContent(j+1,reject*hist_kfsr_dijet->GetBinContent(j+1)*(f1[j]->GetParameter(0)
 											 +f1[j]->GetParameter(1)*TMath::Log(pave_corr))/loglin_norm_var);
@@ -1190,6 +1289,13 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
 	Residual_const_DiJet_val->SetBinContent(j+1,reject*hist_kfsr_dijet->GetBinContent(j+1)*f2[j]->GetParameter(0)/flat_norm_var);
 	Residual_const_DiJet_val->SetBinError(j+1, sqrt( pow(f2[j]->GetParameter(0)*hist_kfsr_dijet->GetBinError(j+1),2)+pow(hist_kfsr_dijet->GetBinContent(j+1)*f2[j]->GetParError(0),2)  )/flat_norm_var);
 	//*************************************************************************************************************************************************
+
+	/*
+	cout << "res log pt balance:" << Residual_logpt_DiJet->GetBinContent(j+1) << " +- " << Residual_logpt_DiJet->GetBinError(j+1) << endl;
+	cout << "res const pt balance:" << Residual_const_DiJet->GetBinContent(j+1) << " +- " << Residual_const_DiJet->GetBinError(j+1) << endl;
+	cout << "RATIO log pt balance:" << ptave_logpt_DiJet->GetBinContent(j+1) << " +- " << ptave_logpt_DiJet->GetBinError(j+1) << endl;
+	cout << "RATIO const pt balance:" << ptave_const_DiJet->GetBinContent(j+1) << " +- " << ptave_const_DiJet->GetBinError(j+1) << endl;
+	*/
       }
 
 
@@ -1209,14 +1315,15 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     
       hist_kfsr_dijet->Write();
       hist_kfsr_fit_dijet->Write();
-      //kfsr_fit_dijet->Write();
+      // kfsr_fit_dijet->Write();
       ptave_const_DiJet->Write();
       ptave_logpt_DiJet->Write();
-                  
+            
       Residual_logpt_DiJet->Write();
       Residual_const_DiJet->Write();
       Residual_logpt_DiJet_val->Write();
       Residual_const_DiJet_val->Write();
+
       outputfile->Write();
       outputfile->Close();
 
@@ -1258,7 +1365,7 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae(bool mpfMeth
     delete Residual_logpt_DiJet;
     delete hist_kfsr_fit_dijet;
     delete hist_kfsr_dijet;
-    // delete kfsr_fit_dijet;
+    //  delete kfsr_fit_dijet;
     delete kfsr_dijet;
   } //end of (if(mpfMethod...else))
 

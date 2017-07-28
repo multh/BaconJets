@@ -5,7 +5,9 @@
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
 
-
+#include <TFile.h>
+#include <TH1D.h>
+#include <TH2D.h>
 //#include "UHH2/BaconTrans/baconheaders/TEventInfo.hh"
 
 namespace uhh2bacon {
@@ -31,6 +33,12 @@ class Selection {
     uhh2::Event::Handle<float> tt_alpha;
     uhh2::Event::Handle<float> tt_rel_r; uhh2::Event::Handle<float> tt_mpf_r; uhh2::Event::Handle<float> tt_asymmetry; uhh2::Event::Handle<int> tt_nPU;
 
+    TString Cut_Dir;
+    TString dataset_version;
+
+    TFile* cut_map;
+    TH2D* h_map;
+
     public:
     Selection(uhh2::Context & ctx);
     ~Selection();
@@ -46,6 +54,8 @@ class Selection {
     //  bool FullSelection();
     //Cut events with pthat in PU higher than pthat
     bool PUpthat(uhh2::Event& evt);
+    bool EtaPhi(uhh2::Event& evt);
+    bool EtaPhiCleaning(uhh2::Event& evt);
 };
 
 }

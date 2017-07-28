@@ -343,19 +343,6 @@ void CorrectionObject::ControlPlots(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   //delete everything
 
   for(int i=0; i<n_pt; i++) delete linePt[i];

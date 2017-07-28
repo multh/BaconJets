@@ -38,19 +38,16 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
     f_data = new TFile(CorrectionObject::_DATApath_ForWeights_FWD,"READ");
 
   }
-  double eta_min,eta_max;
-  int n_pt_bins;
+
+   int n_pt_bins;
+
   if(CentralTriggers){
     n_pt_bins = 10;
-    eta_min = 0;
-    eta_max = 2.853;
   }
   else{
     n_pt_bins = 7;
-    eta_min = 2.853;
-    eta_max = 5.3;
- 
   }
+
   double bins[n_pt_bins];
 
   if(CentralTriggers){
@@ -90,7 +87,7 @@ void CorrectionObject::CalculateMCWeights_TriggerThresholds(bool CentralTriggers
   TTreeReaderValue<Float_t> weight_data(myReader_data, "weight");
   TTreeReaderValue<Float_t> alpha_data(myReader_data, "alpha");
   while (myReader_data.Next()){
-    if(*alpha_data >= 0.3 || *pt_ave_data < bins[0] || *probejet_eta_data < eta_min || *probejet_eta_data > eta_max) continue;
+    if(*alpha_data >= 0.3 || *pt_ave_data < bins[0]) continue;//|| *probejet_eta_data < eta_min || *probejet_eta_data > eta_max
     h_pt_ave_binned_data->Fill(*pt_ave_data, *weight_data);
     h_pt_ave_data->Fill(*pt_ave_data, *weight_data);
   }

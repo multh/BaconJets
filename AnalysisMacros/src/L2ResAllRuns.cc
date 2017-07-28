@@ -31,24 +31,25 @@ void CorrectionObject::L2ResAllRuns(){
   h->GetYaxis()->SetTitleSize(0.05);
   tdrCanvas(c1,"c1",h,4,10,true,CorrectionObject::_lumitag);
 
-  TLegend leg1 = tdrLeg(0.17,0.19,0.35,0.4);
+  TLegend leg1 = tdrLeg(0.40,0.19,0.65,0.4);
 
-  TLine *line = new TLine(0.,1,5.191,1);              
+  TLine *line = new TLine(0,1,5.191,1);              
                             
-  TString runnr_v[4]={"BCD","EFearly","FlateG","H"};
+  TString runnr_v[5]={"BCD","EFearly","FlateG","H", "BCDEFGH"};
   TCanvas* c2 = new TCanvas;
   tdrCanvas(c2,"c2",h,4,10,true,"All Runs");
   TFile* f_Res_mpf;
   TH1D* res_logpt_mpf_kfsrfit;
-  for(int j=0;j<4;j++){
+  for(int j=0;j<5;j++){
     TString runnr=runnr_v[j];
-    TString path =CorrectionObject::_input_path+"/Run" + runnr + "/" + "Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root";
+    TString path =CorrectionObject::_input_path+"abs_eta/Run" + runnr + "/" + "Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root";
     f_Res_mpf = new TFile(path,"READ");   
     res_logpt_mpf_kfsrfit = (TH1D*)f_Res_mpf->Get("res_logpt_mpf");
     res_logpt_mpf_kfsrfit->SetMarkerStyle(1);
     res_logpt_mpf_kfsrfit->SetLineWidth(2);
     res_logpt_mpf_kfsrfit->SetLineColor(1+j); 
     if(j == 2) res_logpt_mpf_kfsrfit->SetLineColor(kGreen-2); 
+    if(j == 4) res_logpt_mpf_kfsrfit->SetLineColor(kCyan-3); 
     leg1.AddEntry(res_logpt_mpf_kfsrfit,runnr,"L");
     res_logpt_mpf_kfsrfit->Draw("E SAME");  
 

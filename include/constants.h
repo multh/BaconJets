@@ -25,14 +25,14 @@ static std::vector<double>   eta_range_mikko  = {0, 0.783, 1.305, 1.93, 2.5, 2.9
 static std::vector<double>   pt_range   = {56, 78, 100, 168, 232, 300, 366, 453, 562};
 
 // static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
-// static std::vector<double>   pt_range   = {57, 80, 100, 166, 231, 290, 365, 478, 556};
+// static std::vector<double>   pt_range   = {57, 80, 101, 170, 231, 290, 365, 478, 556};
 
 static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
 
 /** \brief Dijet event selection **/
 // barrel region (|eta| < 1.3)
 constexpr static float s_eta_barr = 1.3;
-// two back-to-back leading jets (delta_phi(j1,j2) = min(|phi1 - phi2|, 2PI - |phi2 - phi1|) > 2.7)
+// two back-to-back leading jets (delta_phi(j1,j2) = min(|phi1 - phi2|, 2PI - |phi2 - phi1|) > 2.9)
 constexpr static float s_delta_phi = 2.7;
 // cut on the asymmetry for events with two jets  |(j2->pt - j1->pt /(j2->pt + j1->pt)| < 0.70
 constexpr static float s_asymm = 0.7; 
@@ -86,6 +86,7 @@ constexpr static float s_Pt_Ave300HF_cut  = 426;
  constexpr static float s_Pt_Ave260_cut  = 299;
  constexpr static float s_Pt_Ave320_cut  = 365;
  constexpr static float s_Pt_Ave400_cut  = 453;
+// constexpr static float s_Pt_Ave450_cut  = 494;
  constexpr static float s_Pt_Ave500_cut  = 566;
 
 // 2016
@@ -111,7 +112,9 @@ constexpr static float s_lumi_cent_200 = 139.732;
 constexpr static float s_lumi_cent_260 = 521.863;
 constexpr static float s_lumi_cent_320 = 2965.774;
 constexpr static float s_lumi_cent_400 = 9021.331;
+//constexpr static float s_lumi_cent_450 = 29280.311;
 constexpr static float s_lumi_cent_500 = 29280.311;
+
 constexpr static float s_lumi_HF_60 = 19.605;
 constexpr static float s_lumi_HF_80 = 28.773;
 constexpr static float s_lumi_HF_100 = 98.341;

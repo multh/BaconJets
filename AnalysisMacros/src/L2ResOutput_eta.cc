@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void CorrectionObject::L2ResOutput(){
+void CorrectionObject::L2ResOutput_eta(){
   cout << "--------------- Starting L2ResOutput() ---------------" << endl << endl;
 
 
@@ -50,8 +50,8 @@ void CorrectionObject::L2ResOutput(){
   TH1D* res_const_dijet_kfsrfit = (TH1D*)f_Res_dijet->Get("res_const_dijet");
   TH1D* res_logpt_mpf_kfsrfit = (TH1D*)f_Res_mpf->Get("res_logpt_mpf");
   TH1D* res_logpt_dijet_kfsrfit = (TH1D*)f_Res_dijet->Get("res_logpt_dijet");
-
-  //************************* get L2Res hists for MPF and pt balance WITHOUT FIT VALUES****************************
+  
+ //************************* get L2Res hists for MPF and pt balance WITHOUT FIT VALUES****************************
   TH1D* res_const_mpf_kfsrfit_val = (TH1D*)f_Res_mpf->Get("res_const_mpf_val");
   TH1D* res_const_dijet_kfsrfit_val = (TH1D*)f_Res_dijet->Get("res_const_dijet_val");
   TH1D* res_logpt_mpf_kfsrfit_val = (TH1D*)f_Res_mpf->Get("res_logpt_mpf_val");
@@ -64,21 +64,56 @@ void CorrectionObject::L2ResOutput(){
   TH1D* res_logpt_mpf_kfsrfit_old = (TH1D*)f_Res_mpf_old->Get("res_logpt_mpf");
   TH1D* res_logpt_dijet_kfsrfit_old = (TH1D*)f_Res_dijet_old->Get("res_logpt_dijet");
 
-  TH1D* res_mpf_pT_diff = (TH1D*) res_logpt_mpf_kfsrfit->Clone("res_mpf_pT_diff");
-  res_mpf_pT_diff->Add(res_logpt_dijet_kfsrfit,-1);
+   TH1D* res_mpf_pT_diff = (TH1D*) res_logpt_mpf_kfsrfit->Clone("res_mpf_pT_diff");
+  res_mpf_pT_diff->Add(res_logpt_dijet_kfsrfit,-1); 
 
+  TH1D* res_const_mpf_kfsrfit_ext=new TH1D("res_const_mpf_kfsrfit_ext","res_const_mpf_kfsrfit_ext",n_eta-1,eta_bins);
+
+  for(int i=1; i<19; i++){
+    res_const_mpf_kfsrfit_ext->SetBinContent(19-i,res_const_mpf_kfsrfit_old->GetBinContent(i));
+    res_const_mpf_kfsrfit_ext->SetBinContent(i+18,res_const_mpf_kfsrfit_old->GetBinContent(i));
+    res_const_mpf_kfsrfit_ext->SetBinError(19-i,res_const_mpf_kfsrfit_old->GetBinError(i));
+    res_const_mpf_kfsrfit_ext->SetBinError(i+18,res_const_mpf_kfsrfit_old->GetBinError(i));
+  }
+
+ TH1D* res_const_dijet_kfsrfit_ext=new TH1D("res_const_dijet_kfsrfit_ext","res_const_dijet_kfsrfit_ext",n_eta-1,eta_bins);
+
+  for(int i=1; i<19; i++){
+    res_const_dijet_kfsrfit_ext->SetBinContent(19-i,res_const_dijet_kfsrfit_old->GetBinContent(i));
+    res_const_dijet_kfsrfit_ext->SetBinContent(i+18,res_const_dijet_kfsrfit_old->GetBinContent(i));
+    res_const_dijet_kfsrfit_ext->SetBinError(19-i,res_const_dijet_kfsrfit_old->GetBinError(i));
+    res_const_dijet_kfsrfit_ext->SetBinError(i+18,res_const_dijet_kfsrfit_old->GetBinError(i));
+  }
+
+ TH1D* res_logpt_mpf_kfsrfit_ext=new TH1D("res_logpt_mpf_kfsrfit_ext","res_logpt_mpf_kfsrfit_ext",n_eta-1,eta_bins);
+
+  for(int i=1; i<19; i++){
+    res_logpt_mpf_kfsrfit_ext->SetBinContent(19-i,res_logpt_mpf_kfsrfit_old->GetBinContent(i));
+    res_logpt_mpf_kfsrfit_ext->SetBinContent(i+18,res_logpt_mpf_kfsrfit_old->GetBinContent(i));
+    res_logpt_mpf_kfsrfit_ext->SetBinError(19-i,res_logpt_mpf_kfsrfit_old->GetBinError(i));
+    res_logpt_mpf_kfsrfit_ext->SetBinError(i+18,res_logpt_mpf_kfsrfit_old->GetBinError(i));
+  }
  
-  TH1D* res_const_mpf_diff = (TH1D*) res_const_mpf_kfsrfit->Clone("res_const_mpf_diff");
-  res_const_mpf_diff->Add(res_const_mpf_kfsrfit_old,-1);
+ TH1D* res_logpt_dijet_kfsrfit_ext=new TH1D("res_logpt_dijet_kfsrfit_ext","res_logpt_dijet_kfsrfit_ext",n_eta-1,eta_bins);
 
-  TH1D* res_const_dijet_diff = (TH1D*) res_const_dijet_kfsrfit->Clone("res_const_dijet_diff");
-  res_const_dijet_diff->Add(res_const_dijet_kfsrfit_old,-1);
+  for(int i=1; i<19; i++){
+    res_logpt_dijet_kfsrfit_ext->SetBinContent(19-i,res_logpt_dijet_kfsrfit_old->GetBinContent(i));
+    res_logpt_dijet_kfsrfit_ext->SetBinContent(i+18,res_logpt_dijet_kfsrfit_old->GetBinContent(i));
+    res_logpt_dijet_kfsrfit_ext->SetBinError(19-i,res_logpt_dijet_kfsrfit_old->GetBinError(i));
+    res_logpt_dijet_kfsrfit_ext->SetBinError(i+18,res_logpt_dijet_kfsrfit_old->GetBinError(i));
+  }
 
-  TH1D* res_logpt_mpf_diff = (TH1D*) res_logpt_mpf_kfsrfit->Clone("res_logpt_mpf_diff");
-  res_logpt_mpf_diff->Add(res_logpt_mpf_kfsrfit_old,-1);
+  TH1D* res_const_mpf_diff = (TH1D*) res_const_mpf_kfsrfit_ext->Clone("res_const_mpf_diff");
+  res_const_mpf_diff->Add(res_const_mpf_kfsrfit,-1);
 
-  TH1D* res_logpt_dijet_diff = (TH1D*) res_logpt_dijet_kfsrfit->Clone("res_logpt_dijet_diff");
-  res_logpt_dijet_diff->Add(res_logpt_dijet_kfsrfit_old,-1);
+  TH1D* res_const_dijet_diff = (TH1D*) res_const_dijet_kfsrfit_ext->Clone("res_const_dijet_diff");
+  res_const_dijet_diff->Add(res_const_dijet_kfsrfit,-1);
+
+  TH1D* res_logpt_mpf_diff = (TH1D*) res_logpt_mpf_kfsrfit_ext->Clone("res_logpt_mpf_diff");
+  res_logpt_mpf_diff->Add(res_logpt_mpf_kfsrfit,-1);
+
+  TH1D* res_logpt_dijet_diff = (TH1D*) res_logpt_dijet_kfsrfit_ext->Clone("res_logpt_dijet_diff");
+  res_logpt_dijet_diff->Add(res_logpt_dijet_kfsrfit,-1);
   
 
 
@@ -86,8 +121,8 @@ void CorrectionObject::L2ResOutput(){
   TCanvas* c1 = new TCanvas();
 
   // create horizontal line for plotting ("ideal value")
-  TLine *line = new TLine(0,1,5.191,1);
-  TLine *line2 = new TLine(0,0,5.191,0);
+  TLine *line = new TLine(-5.191,1,5.191,1);
+  TLine *line2 = new TLine(-5.191,0,5.191,0);
   res_const_mpf_kfsrfit->SetLineWidth(2);
   res_const_mpf_kfsrfit->SetLineColor(kRed+1);
   res_const_dijet_kfsrfit->SetLineWidth(2);
@@ -130,7 +165,7 @@ void CorrectionObject::L2ResOutput(){
   
   bool kSquare = true;
   // Draw results
-  TH1D *h = new TH1D("h",";|#eta|;Relative correction",41,0,5.191);
+  TH1D *h = new TH1D("h",";#eta;Relative correction",81,-5.191,5.191);
   h->SetMaximum(1.2);
   h->SetMinimum(0.8);
   //h->GetXaxis()->SetTitleSize(0.05);
@@ -148,7 +183,7 @@ void CorrectionObject::L2ResOutput(){
   tex_bars->SetNDC();
   tex_bars->SetTextSize(0.039);
 
-  TLegend leg1 = tdrLeg(0.20,0.19,0.43,0.40);
+  TLegend leg1 = tdrLeg(0.40,0.19,0.63,0.40);
   leg1.AddEntry(pt_depend_const_mpf, "MPF Flat","L");
   leg1.AddEntry(pt_depend_const_dijet, "Pt Flat","L");
   leg1.AddEntry(pt_depend_logpt_mpf, "MPF Loglin","L");
@@ -194,7 +229,7 @@ void CorrectionObject::L2ResOutput(){
   kfsr_dijet->Draw("E1 SAME");
   line->Draw("SAME");
 
-  TLegend leg2 = tdrLeg(0.20,0.19,0.43,0.30);
+  TLegend leg2 = tdrLeg(0.40,0.19,0.63,0.30);
   leg2 . AddEntry(kfsr_mpf, "MPF","L");
   leg2 . AddEntry(kfsr_dijet, "Pt","L");
   leg2.Draw();
@@ -248,16 +283,16 @@ void CorrectionObject::L2ResOutput(){
 
   TH1D* res_mpf_pT_diff_var[4];
 
+  TH1D* res_logpt_mpf_kfsrfit_ext_var[4];
+  TH1D* res_logpt_dijet_kfsrfit_ext_var[4];
+
   TH1D* res_logpt_mpf_diff_var[4];
   TH1D* res_logpt_dijet_diff_var[4];
 
+  TFile* f_Res_mpf_pT_var;
+
   TFile* f_Res_mpf_var;
   TFile* f_Res_dijet_var;
-
-  TFile* f_Res_mpf_diff_var;
-  TFile* f_Res_dijet_diff_var;
-
-  TFile* f_Res_mpf_pT_var;
 
   TFile* f_Res_mpf_old_var;
   TFile* f_Res_dijet_old_var;
@@ -269,32 +304,43 @@ void CorrectionObject::L2ResOutput(){
     if(i==3) var="doubleup";
 
     f_Res_mpf_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
-    f_Res_dijet_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
+    f_Res_dijet_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ"); 
 
     f_Res_mpf_pT_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
 
-    f_Res_mpf_diff_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
-    f_Res_dijet_diff_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ"); 
-
-
     f_Res_mpf_old_var   = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
     f_Res_dijet_old_var = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
-
 
     res_logpt_mpf_kfsrfit_var[i] = (TH1D*)f_Res_mpf_var->Get("res_logpt_mpf");
     res_logpt_dijet_kfsrfit_var[i] = (TH1D*)f_Res_dijet_var->Get("res_logpt_dijet");
 
     res_logpt_mpf_kfsrfit_old_var[i] = (TH1D*)f_Res_mpf_old_var->Get("res_logpt_mpf");
     res_logpt_dijet_kfsrfit_old_var[i] = (TH1D*)f_Res_dijet_old_var->Get("res_logpt_dijet");
-    
+
     res_mpf_pT_diff_var[i] =  (TH1D*)f_Res_mpf_pT_var->Get("res_logpt_mpf");
     res_mpf_pT_diff_var[i] ->Add(res_logpt_dijet_kfsrfit_var[i],-1);
+
+    res_logpt_mpf_kfsrfit_ext_var[i]=new TH1D("res_logpt_mpf_kfsrfit_ext_var","res_logpt_mpf_kfsrfit_ext_var",n_eta-1,eta_bins);
+    res_logpt_dijet_kfsrfit_ext_var[i]=new TH1D("res_logpt_dijet_kfsrfit_ext_var","res_logpt_dijet_kfsrfit_ext_var",n_eta-1,eta_bins);
     
-    res_logpt_mpf_diff_var[i] = (TH1D*)f_Res_mpf_diff_var->Get("res_logpt_mpf");
-    res_logpt_mpf_diff_var[i] -> Add(res_logpt_mpf_kfsrfit_old_var[i],-1);
+  for(int j=1; j<19; j++){
+    res_logpt_mpf_kfsrfit_ext_var[i]->SetBinContent(19-j,res_logpt_mpf_kfsrfit_old_var[i]->GetBinContent(j));
+    res_logpt_mpf_kfsrfit_ext_var[i]->SetBinContent(j+18,res_logpt_mpf_kfsrfit_old_var[i]->GetBinContent(j));
+    res_logpt_mpf_kfsrfit_ext_var[i]->SetBinError(19-j,res_logpt_mpf_kfsrfit_old_var[i]->GetBinError(j));
+    res_logpt_mpf_kfsrfit_ext_var[i]->SetBinError(j+18,res_logpt_mpf_kfsrfit_old_var[i]->GetBinError(j));
+
+    res_logpt_dijet_kfsrfit_ext_var[i]->SetBinContent(19-j,res_logpt_dijet_kfsrfit_old_var[i]->GetBinContent(j));
+    res_logpt_dijet_kfsrfit_ext_var[i]->SetBinContent(j+18,res_logpt_dijet_kfsrfit_old_var[i]->GetBinContent(j));
+    res_logpt_dijet_kfsrfit_ext_var[i]->SetBinError(19-j,res_logpt_dijet_kfsrfit_old_var[i]->GetBinError(j));
+    res_logpt_dijet_kfsrfit_ext_var[i]->SetBinError(j+18,res_logpt_dijet_kfsrfit_old_var[i]->GetBinError(j));
+
+  }
+
+    res_logpt_mpf_diff_var[i] = res_logpt_mpf_kfsrfit_ext_var[i];
+    res_logpt_mpf_diff_var[i] -> Add(res_logpt_mpf_kfsrfit_var[i],-1);
     
-    res_logpt_dijet_diff_var[i] = (TH1D*)f_Res_dijet_diff_var->Get("res_logpt_dijet");
-    res_logpt_dijet_diff_var[i] -> Add(res_logpt_dijet_kfsrfit_old_var[i],-1);
+    res_logpt_dijet_diff_var[i] = res_logpt_dijet_kfsrfit_ext_var[i];
+    res_logpt_dijet_diff_var[i] -> Add(res_logpt_dijet_kfsrfit_var[i],-1);
     
   }
 
@@ -309,7 +355,7 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_mpf_kfsrfit_var[i]->Draw("E1 SAME"); 
   }
 
-  TLegend leg3 = tdrLeg(0.20,0.19,0.43,0.42); 
+  TLegend leg3 = tdrLeg(0.40,0.19,0.63,0.42); 
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -331,7 +377,7 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_dijet_kfsrfit_var[i]->Draw("E1 SAME");  
 
   }
-  TLegend leg5 = tdrLeg(0.20,0.19,0.43,0.42); 
+  TLegend leg5 = tdrLeg(0.40,0.19,0.63,0.42); 
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -343,10 +389,10 @@ void CorrectionObject::L2ResOutput(){
   
 
 
-  
+
  TCanvas *c6 = new TCanvas();
   tdrCanvas(c6,"L2res_logpt_MPF_kFSRfit_ptDepend_diff",h,4,10,kSquare,CorrectionObject::_lumitag);
-  h->GetYaxis()->SetTitle("new - prev. iteration");
+  h->GetYaxis()->SetTitle("prev. - new iteration");
   h->GetYaxis()->SetRangeUser(-0.3,0.3);
    res_logpt_mpf_diff->SetLineColor(kBlack);
   res_logpt_mpf_diff->Draw("E1 SAME");
@@ -357,7 +403,7 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_mpf_diff_var[i]->Draw("E1 SAME"); 
   }
 
-  TLegend leg4 = tdrLeg(0.20,0.19,0.43,0.42); 
+  TLegend leg4 = tdrLeg(0.40,0.19,0.63,0.42); 
   leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
   leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
   leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -368,10 +414,10 @@ void CorrectionObject::L2ResOutput(){
   tex->DrawLatex(0.45,0.87,JetDescrib);      
   c6->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_kFSRfit_diff"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
   
-  
+
   TCanvas *c8 = new TCanvas();
   tdrCanvas(c8,"L2res_logpt_DiJet_kFSRfit_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
-  h->GetYaxis()->SetTitle("new - prev. iteration");
+  h->GetYaxis()->SetTitle("prev. - new iteration");
   h->GetYaxis()->SetRangeUser(-0.3,0.3);
   res_logpt_dijet_diff->SetLineColor(kBlack);
   res_logpt_dijet_diff->Draw("E1 SAME");
@@ -382,7 +428,7 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_dijet_diff_var[i]->Draw("E1 SAME");  
 
   }
-  TLegend leg6 = tdrLeg(0.20,0.19,0.43,0.42); 
+  TLegend leg6 = tdrLeg(0.40,0.19,0.63,0.42); 
   leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
   leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
   leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -393,7 +439,7 @@ void CorrectionObject::L2ResOutput(){
   tex->DrawLatex(0.45,0.87,JetDescrib);                    
   c8->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_DiJet_kFSRfit_diff"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
   
-  TCanvas *c9 = new TCanvas();
+ TCanvas *c9 = new TCanvas();
   tdrCanvas(c9,"L2res_logpt_MPF_DiJet_kFSRfit_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
   h->GetYaxis()->SetTitle("MPF - pT-bal");
   h->GetYaxis()->SetRangeUser(-0.12,0.12);
@@ -407,11 +453,11 @@ void CorrectionObject::L2ResOutput(){
 
   }
   TLegend leg7 = tdrLeg(0.20,0.19,0.43,0.42); 
-  leg7 . AddEntry(res_mpf_pT_diff_var[1] , "60 GeV","LP");  
-  leg7 . AddEntry(res_mpf_pT_diff_var[0] , "120 GeV","LP");
-  leg7 . AddEntry(res_mpf_pT_diff_var[2] , "240 GeV","LP"); 
-  leg7 . AddEntry(res_mpf_pT_diff_var[3] , "480 GeV","LP");
-  leg7 . AddEntry(res_mpf_pT_diff, "Nominal","LP");
+  leg7 . AddEntry(   res_mpf_pT_diff_var[1] , "60 GeV","LP");  
+  leg7 . AddEntry(   res_mpf_pT_diff_var[0] , "120 GeV","LP");
+  leg7 . AddEntry(   res_mpf_pT_diff_var[2] , "240 GeV","LP"); 
+  leg7 . AddEntry(   res_mpf_pT_diff_var[3] , "480 GeV","LP");
+  leg7 . AddEntry( res_mpf_pT_diff, "Nominal","LP");
   leg7.Draw();
   line2->Draw("SAME");
   tex->DrawLatex(0.45,0.87,JetDescrib);                    
@@ -433,17 +479,13 @@ void CorrectionObject::L2ResOutput(){
   delete c3;
   delete c2;
   delete c1;
-
- 
+  
   for(int i=0; i<4; i++){
-    delete res_logpt_mpf_kfsrfit_old_var[i];
-    delete res_logpt_dijet_kfsrfit_old_var[i];
     delete res_logpt_mpf_kfsrfit_var[i];
     delete res_logpt_dijet_kfsrfit_var[i];
-    //delete res_logpt_mpf_diff_var[i];
-    //delete res_logpt_dijet_diff_var[i];
-   }
-
+    delete res_logpt_mpf_diff_var[i];
+    delete res_logpt_dijet_diff_var[i];
+  }
 
   delete f_Res_dijet_var;
   delete f_Res_mpf_var;
@@ -458,7 +500,7 @@ void CorrectionObject::L2ResOutput(){
   delete h;
   delete line;
   delete line2;
- 
+
 
   delete res_logpt_dijet_kfsrfit;
   delete res_logpt_mpf_kfsrfit;

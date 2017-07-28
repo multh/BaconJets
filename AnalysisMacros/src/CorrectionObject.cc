@@ -13,31 +13,44 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       _jettag = s_tmp;
       TString inputPath;
 
-      if(!_closuretest){  
-	 inputPath       = _input_path;
-	_weightpath_FLAT = _weight_path+ "/CENTRAL/";
-	_weightpath_FWD  = _weight_path+ "/FWD/";
-	_outpath =   inputPath + "Run" + _runnr + "/";
-      }
-      else{
-	inputPath  = _input_path;
-	_weightpath_FLAT = _weight_path+"/CENTRAL/";
-	_weightpath_FWD  = _weight_path+"/FWD/";
-	_outpath    = inputPath + "Run" + _runnr + "/";
-	cout<< "Enter Closure Test Process: "<<endl<<endl; 
-      }
-
+      //Declare path for input, weights, output
+     inputPath  = _input_path+"/";
+     _weightpath_FLAT = _weight_path+"/CENTRAL/";
+     _weightpath_FWD  = _weight_path+"/FWD/";
+     _weightpath      = _weight_path;
+     _outpath    = inputPath +"Run" + _runnr + "/";
+          
+     
+     //For QCD pT binned samples 
       if(_generator == "pythia"){
-
-	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Flat.root";}
-	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Fwd.root";}
-	else if(_trigger_central && trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";}
+	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_AK4CHS_Flat.root";}
+	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_AK4CHS_Fwd.root";}
+       	//else if(_trigger_central && _trigger_fwd) {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +".root";}
+       	else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +"_Run" + _runnr  +".root";}
 	else throw runtime_error("In Correction Object: No valid Trigger-Flag (main.C) was set.");
-
-	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat.root";
-	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Fwd.root";
+	
+	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + "_Flat.root";
+	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + "_Fwd.root";
+	_MCpath_ForWeights  = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + ".root";
 	_generator_tag = "pythia8";
       }
+     
+      //For flat MC samples:
+      /*
+      if(_generator == "pythia"){
+	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Flat.root";}
+	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Fwd.root";}
+	//else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  +".root";}
+	else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";}
+	else throw runtime_error("In Correction Object: No valid Trigger-Flag (main.C) was set.");
+	
+	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat.root";
+	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Fwd.root";
+	_MCpath_ForWeights  = _weight_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + ".root";
+	_generator_tag = "pythia8";
+      }
+      */
+
       else if(_generator == "herwig"){
 	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_"+ _collection  +".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + "_Flat.root";
@@ -51,10 +64,13 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
 	_generator_tag = "madgraphMLM";
       }
 
+      //DATA 
       _DATApath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
-
+      _DATApath_ForWeights = _weight_path + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
+      
+      //Check if files are in place:
       cout << "Opening MC file:   " << _MCpath << endl;
       cout << "Opening DATA file: " << _DATApath << endl << endl;
       _MCFile = new TFile(_MCpath,"READ");
@@ -78,7 +94,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       else if(_runnr == "Flate") _lumitag = "RunFlate  0.4 fb^{-1}";
       else if(_runnr == "FlateG") _lumitag = "RunFlateG  8.0 fb^{-1}";
       else if(_runnr == "FlateGH") _lumitag = "RunFlateGH  X.X fb^{-1}";
-      else if(_runnr == "H") _lumitag = "RunH  X.X fb^{-1}";
+      else if(_runnr == "H") _lumitag = "RunH  8.5 fb^{-1}";
       else if(_runnr == "BCDEFearly") _lumitag = "RunBCDEFearly  19.7 fb^{-1}";
       else if(_runnr == "BCDEFGH") _lumitag = "RunBCDEFGH  36.8 fb^{-1}";
       else throw runtime_error("In constructor: Invalid RunNr. specified.");
@@ -92,3 +108,14 @@ void CorrectionObject::FullCycle_CorrectFormulae(){
   CorrectionObject::L2ResOutput();
   CorrectionObject::FinalControlPlots_CorrectFormulae();
 }
+
+//Full cycle to calculate L2Res with extended eta range. negative Values
+void CorrectionObject::FullCycle_CorrectFormulae_eta(){
+  CorrectionObject::ControlPlots();
+  CorrectionObject::kFSR_CorrectFormulae_eta();
+  CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(true);
+  CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(false);
+  CorrectionObject::L2ResOutput_eta();
+  CorrectionObject::FinalControlPlots_CorrectFormulae_eta();
+}
+

@@ -21,7 +21,7 @@
 
 using namespace std;
 
-void CorrectionObject::FinalControlPlots_CorrectFormulae(){
+void CorrectionObject::FinalControlPlots_CorrectFormulae_eta(){
   cout << "--------------- Starting FinalControlPlots_CorrectFormulae() ---------------" << endl << endl;
   gStyle->SetOptStat(0);
 
@@ -48,8 +48,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TH1D *hmc_B[n_pt-1][n_eta-1];           // B for MC
   TH1D *hmc_METoverJetsPt[n_pt-1][n_eta-1];         // MET/sum_jets_pt for MC
   TH1D *hmc_METoverSqrtJetsPt[n_pt-1][n_eta-1];       //MET/Sqrt(sum_jets_pt)
-  TH1F* hmc_pt_ave[n_eta-1];              // pt_ave for MC
-  TH1F* hdata_pt_ave[n_eta-1];            // pt_ave for data
+  TH1D* hmc_pt_ave[n_eta-1];              // pt_ave for MC
+  TH1D* hdata_pt_ave[n_eta-1];            // pt_ave for data
 
   TH1D *hmc_probejet_neutEmEF[n_pt-1][n_eta-1]; //neutral EM energy fraction
   TH1D *hmc_probejet_neutHadEF[n_pt-1][n_eta-1]; //neutral hadron energy fraction
@@ -89,7 +89,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TString name22 = "hist_mc_probejet_phi_";
   TString name23 = "hist_mc_MET_";
   TString name24 = "hist_data_MET_";
- 
+
+
   for(int j=0; j<n_eta-1; j++){
       TString eta_name = "eta_"+eta_range2[j]+"_"+eta_range2[j+1];
     for(int k=0; k<n_pt-1; k++){
@@ -115,41 +116,63 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       name = name8 + eta_name + "_" + pt_name;
       hmc_METoverSqrtJetsPt[k][j] = new TH1D(name,"",50,0,5);
 
-      name = name9  + eta_name + "_" + pt_name;
-      hdata_probejet_neutEmEF [k][j] = new TH1D(name,"",60,0,1.5);
+     name = name9  + eta_name + "_" + pt_name;
+      hdata_probejet_neutEmEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name10  + eta_name + "_" + pt_name;
-      hmc_probejet_neutEmEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hmc_probejet_neutEmEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name11 + eta_name + "_" + pt_name;
 
-      hdata_probejet_neutHadEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hdata_probejet_neutHadEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name12  + eta_name + "_" + pt_name;
-      hmc_probejet_neutHadEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hmc_probejet_neutHadEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name13 + eta_name + "_" + pt_name;
 
-      hdata_probejet_chEmEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hdata_probejet_chEmEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name14  + eta_name + "_" + pt_name;
-      hmc_probejet_chEmEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hmc_probejet_chEmEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name15  + eta_name + "_" + pt_name;
 
-      hdata_probejet_chHadEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hdata_probejet_chHadEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name16  + eta_name + "_" + pt_name;
-      hmc_probejet_chHadEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hmc_probejet_chHadEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name17  + eta_name + "_" + pt_name;
 
-      hdata_probejet_photonEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hdata_probejet_photonEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name18  + eta_name + "_" + pt_name;
-      hmc_probejet_photonEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hmc_probejet_photonEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name19  + eta_name + "_" + pt_name;
 
-      hdata_probejet_muonEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hdata_probejet_muonEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name20  + eta_name + "_" + pt_name;
-      hmc_probejet_muonEF [k][j] = new TH1D(name,"",60,0,1.5);
+      hmc_probejet_muonEF [k][j] = new TH1D(name,"",150,0,1.5);
       name = name21  + eta_name + "_" + pt_name;
 
-      hdata_probejet_phi [k][j] = new TH1D(name,"",60,-3.14,3.14);
+      hdata_probejet_phi [k][j] = new TH1D(name,"",150,-3.14,3.14);
       name = name22  + eta_name + "_" + pt_name;
-      hmc_probejet_phi [k][j] = new TH1D(name,"",60,-3.14,3.14);
+      hmc_probejet_phi [k][j] = new TH1D(name,"",150,-3.14,3.14);
 
+
+
+      //      hmc_METoverJetsPt[k][j]->Print();
+      /*
+      TString name = name1 + eta_name + "_" + pt_name; 
+      hdata_asymmetry[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
+      name = name2 + eta_name + "_" + pt_name;
+      hdata_B[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
+      name = name3 + eta_name + "_" + pt_name;
+      hmc_asymmetry[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
+      name = name4 + eta_name + "_" + pt_name;
+      hmc_B[k][j] = new TH1D(name,"",nResponseBins, 0, 2.5);
+      
+      TString name = name1 + eta_name + "_" + pt_name; 
+      hdata_asymmetry[k][j] = new TH1D(name,"",nResponseBins, -2.5, 0);
+      name = name2 + eta_name + "_" + pt_name;
+      hdata_B[k][j] = new TH1D(name,"",nResponseBins, -2.5, 0);
+      name = name3 + eta_name + "_" + pt_name;
+      hmc_asymmetry[k][j] = new TH1D(name,"",nResponseBins, -2.5, 0);
+      name = name4 + eta_name + "_" + pt_name;
+      hmc_B[k][j] = new TH1D(name,"",nResponseBins, -2.5, 0);
+      */
       count++;
     }
 
@@ -168,8 +191,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
     //define pt_ave[eta] histos
     TString name_pt_ave = "hist_pt_ave_";
-    hmc_pt_ave[j] = new TH1F(name_pt_ave+"MC_"+eta_name,"",1000,0,5000);
-    hdata_pt_ave[j] = new TH1F(name_pt_ave+"data_"+eta_name,"",1000,0,5000);
+    hmc_pt_ave[j] = new TH1D(name_pt_ave+"MC_"+eta_name,"",1000,0,5000);
+    hdata_pt_ave[j] = new TH1D(name_pt_ave+"data_"+eta_name,"",1000,0,5000);
+
   }
 
 
@@ -186,8 +210,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TTreeReaderValue<Float_t> MET_data(myReader_DATA, "MET");
   TTreeReaderValue<Float_t> sum_jets_pt_data(myReader_DATA, "sum_jets_pt");
   TTreeReaderValue<Float_t> jet3_pt_data(myReader_DATA, "jet3_pt");
-
-  /*
+   
   TTreeReaderValue<Float_t> probejet_neutEmEF_data(myReader_DATA, "probejet_neutEmEF");
   TTreeReaderValue<Float_t> probejet_neutHadEF_data(myReader_DATA, "probejet_neutHadEF");
   TTreeReaderValue<Float_t> probejet_chEmEF_data(myReader_DATA, "probejet_chEmEF");
@@ -195,13 +218,13 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TTreeReaderValue<Float_t> probejet_photonEF_data(myReader_DATA, "probejet_photonEF");
   TTreeReaderValue<Float_t> probejet_muonEF_data(myReader_DATA, "probejet_muonEF");
   TTreeReaderValue<Float_t> probejet_phi_data(myReader_DATA, "probejet_phi");
-  */
-   
+
+
   while (myReader_DATA.Next()) {
     if(*alpha_data>alpha_cut) continue;
     //fill histos in bins of eta
     for(int i=0; i<n_eta-1; i++){
-      if(fabs(*probejet_eta_data)<eta_bins[i+1] && fabs(*probejet_eta_data)>=eta_bins[i]){
+      if(*probejet_eta_data<eta_bins[i+1] && *probejet_eta_data>=eta_bins[i]){
 	hdata_pt_ave[i]->Fill(*pt_ave_data,*weight_data);
 	hdata_MET[i]->Fill(*MET_data, *weight_data);
 	hdata_alpha[i]->Fill(*alpha_data, *weight_data);
@@ -213,13 +236,13 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     for(int k=0; k<n_pt-1; k++){
       if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
       for(int j=0; j<n_eta-1; j++){
-	if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
+	if(*probejet_eta_data>eta_bins[j+1] || *probejet_eta_data<eta_bins[j]) continue;
 	else{
 	  hdata_asymmetry[k][j]->Fill(*asymmetry_data,*weight_data);
 	  hdata_B[k][j]->Fill(*B_data,*weight_data);
 	  hdata_METoverJetsPt[k][j]->Fill((*MET_data)/(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data),*weight_data);
 	  hdata_METoverSqrtJetsPt[k][j]->Fill((*MET_data)/(sqrt(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data)),*weight_data);
-	  /*
+
 	  hdata_probejet_neutEmEF[k][j]->Fill(*probejet_neutEmEF_data,*weight_data);
 	  hdata_probejet_neutHadEF[k][j]->Fill(*probejet_neutHadEF_data,*weight_data);
 	  hdata_probejet_chEmEF[k][j]->Fill(*probejet_chEmEF_data,*weight_data);
@@ -227,7 +250,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	  hdata_probejet_photonEF[k][j]->Fill(*probejet_photonEF_data,*weight_data);
 	  hdata_probejet_muonEF[k][j]->Fill(*probejet_muonEF_data,*weight_data);
 	  hdata_probejet_phi[k][j]->Fill(*probejet_phi_data,*weight_data);
-	  */
 	}
       }
     }
@@ -248,7 +270,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TTreeReaderValue<Float_t> sum_jets_pt_mc(myReader_MC, "sum_jets_pt");
   TTreeReaderValue<Float_t> jet3_pt_mc(myReader_MC, "jet3_pt");
 
-  
   TTreeReaderValue<Float_t> probejet_neutEmEF_mc(myReader_MC, "probejet_neutEmEF");
   TTreeReaderValue<Float_t> probejet_neutHadEF_mc(myReader_MC, "probejet_neutHadEF");
   TTreeReaderValue<Float_t> probejet_chEmEF_mc(myReader_MC, "probejet_chEmEF");
@@ -256,15 +277,14 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TTreeReaderValue<Float_t> probejet_photonEF_mc(myReader_MC, "probejet_photonEF");
   TTreeReaderValue<Float_t> probejet_muonEF_mc(myReader_MC, "probejet_muonEF");
   TTreeReaderValue<Float_t> probejet_phi_mc(myReader_MC, "probejet_phi");
-  
 
   while (myReader_MC.Next()) {
     if(*alpha_mc>alpha_cut) continue;
     //fill histos in bins of eta
     for(int i=0; i<n_eta-1; i++){
-      if(fabs(*probejet_eta_mc)<eta_bins[i+1] && fabs(*probejet_eta_mc)>=eta_bins[i]){
-	hmc_alpha[i]->Fill(*alpha_mc,*weight_mc);
+      if(*probejet_eta_mc<eta_bins[i+1] && *probejet_eta_mc>=eta_bins[i]){
 	hmc_pt_ave[i]->Fill(*pt_ave_mc,*weight_mc);
+	hmc_alpha[i]->Fill(*alpha_mc,*weight_mc);
 	hmc_MET[i]->Fill(*MET_mc, *weight_mc);
 	hmc_jet3_pt[i]->Fill(*jet3_pt_mc, *weight_mc);
       }
@@ -274,13 +294,13 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     for(int k=0; k<n_pt-1; k++){
       if(*pt_ave_mc<pt_bins[k] || *pt_ave_mc>pt_bins[k+1]) continue;
       for(int j=0; j<n_eta-1; j++){
-	if(fabs(*probejet_eta_mc)>eta_bins[j+1] || fabs(*probejet_eta_mc)<eta_bins[j]) continue;
+	if(*probejet_eta_mc>eta_bins[j+1] || *probejet_eta_mc<eta_bins[j]) continue;
 	else{
 	  hmc_asymmetry[k][j]->Fill(*asymmetry_mc,*weight_mc);
 	  hmc_B[k][j]->Fill(*B_mc,*weight_mc);
 	  hmc_METoverJetsPt[k][j]->Fill((*MET_mc)/(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc),*weight_mc);
 	  hmc_METoverSqrtJetsPt[k][j]->Fill((*MET_mc)/(sqrt(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc)),*weight_mc);
-	  
+
 	  hmc_probejet_neutEmEF[k][j]->Fill(*probejet_neutEmEF_mc,*weight_mc);
 	  hmc_probejet_neutHadEF[k][j]->Fill(*probejet_neutHadEF_mc,*weight_mc);
 	  hmc_probejet_chEmEF[k][j]->Fill(*probejet_chEmEF_mc,*weight_mc);
@@ -288,12 +308,13 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	  hmc_probejet_photonEF[k][j]->Fill(*probejet_photonEF_mc,*weight_mc);
 	  hmc_probejet_muonEF[k][j]->Fill(*probejet_muonEF_mc,*weight_mc);
 	  hmc_probejet_phi[k][j]->Fill(*probejet_phi_mc,*weight_mc);
-	  
+
 	}
       }
     }
   }
   
+
 
 
 
@@ -369,7 +390,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hmc_B[k][j]->Write();
       hmc_METoverJetsPt[k][j]->Write();
       hmc_METoverSqrtJetsPt[k][j]->Write();
-      
+
       hmc_probejet_neutEmEF[k][j]->Write();
       hmc_probejet_neutHadEF[k][j]->Write();
       hmc_probejet_chEmEF[k][j]->Write();
@@ -377,7 +398,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hmc_probejet_photonEF[k][j]->Write();
       hmc_probejet_muonEF[k][j]->Write();
       hmc_probejet_phi[k][j]->Write();
-      
     }
   }
   test_out_mc_B->Close();
@@ -389,7 +409,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hdata_B[k][j]->Write();
       hdata_METoverJetsPt[k][j]->Write();
       hdata_METoverSqrtJetsPt[k][j]->Write();
-      
+
       hdata_probejet_neutEmEF[k][j]->Write();
       hdata_probejet_neutHadEF[k][j]->Write();
       hdata_probejet_chEmEF[k][j]->Write();
@@ -397,7 +417,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hdata_probejet_photonEF[k][j]->Write();
       hdata_probejet_muonEF[k][j]->Write();
       hdata_probejet_phi[k][j]->Write();
-      
     }
   }
   test_out_data_B->Close();
@@ -549,9 +568,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TString alVal;
     alVal.Form("%0.2f\n",alpha_cut);
     TString altitle = "{#alpha<"+alVal+"}";
-    TString axistitle_mc = "R^{MC}_";
     TString axistitle_data = "R^{DATA}_";
- 
+     TString axistitle_mc = "R^{MC}_";
+
     axistitle_mc   += altitle;
     axistitle_data += altitle;
 
@@ -575,12 +594,12 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend *leg_mpf;
     leg_mpf = new TLegend(0.35,0.72,0.51,0.92,"","brNDC");//x+0.1
     leg_mpf->SetBorderSize(0);
-    leg_mpf->SetTextSize(0.036);
+    leg_mpf->SetTextSize(0.038);
     leg_mpf->SetFillColor(10);
     leg_mpf->SetFillStyle(0);
     leg_mpf->SetLineColor(1);
     leg_mpf->SetTextFont(42);
-    leg_mpf->SetHeader("MPF response, "+eta_range[i]+"#leq|#eta|<"+eta_range[i+1]+", #alpha<"+s_alpha_cut);
+    leg_mpf->SetHeader("MPF response, "+eta_range[i]+"#leq #eta <"+eta_range[i+1]+", #alpha<"+s_alpha_cut);
     leg_mpf->AddEntry(graph_mpf_mc, axistitle_mc,"P");
     leg_mpf->AddEntry(graph_mpf_data, axistitle_data,"P");
     leg_mpf->Draw();
@@ -604,12 +623,12 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend *leg_rel;
     leg_rel = new TLegend(0.35,0.72,0.51,0.92,"","brNDC");//x+0.1
     leg_rel->SetBorderSize(0);
-    leg_rel->SetTextSize(0.036);
+    leg_rel->SetTextSize(0.038);
     leg_rel->SetFillColor(10);
     leg_rel->SetFillStyle(0);
     leg_rel->SetLineColor(1);
     leg_rel->SetTextFont(42);
-    leg_rel->SetHeader("p_{T}-balance response, "+eta_range[i]+"#leq|#eta|<"+eta_range[i+1]); 
+    leg_rel->SetHeader("p_{T}-balance response, "+eta_range[i]+"#leq #eta <"+eta_range[i+1]); 
     leg_rel->AddEntry(graph_rel_mc, axistitle_mc,"P");
     leg_rel->AddEntry(graph_rel_data, axistitle_data,"P");
     leg_rel->Draw();
@@ -632,7 +651,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
 
 
-  //********************************************************************  Plot all Control Hists ********************************************************************************
+
 
   //Plot 1d response distributions in a particular eta-bin for different pt-bins onto a single canvas
 
@@ -647,7 +666,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLatex *tex = new TLatex();
     tex->SetNDC();
     tex->SetTextSize(0.045); 
-    TString text = eta_range[i] + " < |#eta| < " + eta_range[i+1];
+    TString text = eta_range[i] + " < #eta < " + eta_range[i+1];
 
     TLatex *tex_lumi = new TLatex();
     tex_lumi->SetNDC();
@@ -691,11 +710,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c2,"c2",h,4,10,kSquare,CorrectionObject::_lumitag);
     TLegend leg2 = tdrLeg(0.17,0.6,0.85,0.79);
     leg2.SetNColumns(2);
-
     TH1D* htemp_mpf_data;
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-   
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_mpf_data = "hist_data_B_"+eta_name+"_"+pt_name;
@@ -706,8 +724,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       h->GetYaxis()->SetTitle("Normalized entries");
       h->GetYaxis()->SetTitleOffset(1.5);
       h->GetXaxis()->SetLimits(-1.2,1.2);
-      h->SetMinimum(0.001);
       h->SetMaximum(3);
+      h->SetMinimum(0.001);
       if(j<9) htemp_mpf_data->SetLineColor(j+1);
       else    htemp_mpf_data->SetLineColor(j+31);
       htemp_mpf_data->SetLineWidth(3);
@@ -716,14 +734,13 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg2.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
-    //tex_lumi->DrawLatex(0.50,0.91,CorrectionObject::_lumitag+"(13TeV)");
+    tex->DrawLatex(0.52,0.85,"Data, " + text);
+ 
     c2->SaveAs(CorrectionObject::_outpath+"plots/control/B_NormDistribution_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
-
 
     TCanvas* c3 = new TCanvas();
     tdrCanvas(c3,"c3",h,4,10,kSquare,"MC");
-    TLegend leg3 = tdrLeg(0.17,0.6,0.85,0.79);
+    TLegend leg3 = tdrLeg(0.17,0.6,0.85,0.81);
     leg3.SetNColumns(2);
     TH1D* htemp_rel_mc;
     gPad->SetLogy();
@@ -739,8 +756,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       h->GetYaxis()->SetTitle("Normalized entries");
       h->GetYaxis()->SetTitleOffset(1.5);
       h->GetXaxis()->SetLimits(-1.2,1.2);
-      h->SetMinimum(0.001);
       h->SetMaximum(3);
+      h->SetMinimum(0.001);
       if(j<9) htemp_rel_mc->SetLineColor(j+1);
       else    htemp_rel_mc->SetLineColor(j+31);
       htemp_rel_mc->SetLineWidth(3);
@@ -749,19 +766,17 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg3.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     //tex_lumi->DrawLatex(0.6,0.91,"MC");
     c3->SaveAs(CorrectionObject::_outpath+"plots/control/A_NormDistribution_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
-
-
 
     TCanvas* c4 = new TCanvas();
     tdrCanvas(c4,"c4",h,4,10,kSquare,CorrectionObject::_lumitag);
     TLegend leg4 = tdrLeg(0.17,0.6,0.85,0.79);
     leg4.SetNColumns(2);
     TH1D* htemp_rel_data;
+    gPad->SetLogy();
 
-   gPad->SetLogy();
     for(int j=0; j<n_pt-1; j++){
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
@@ -781,13 +796,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       if(n_ev>100) htemp_rel_data->Draw("HIST SAME");
       leg4.AddEntry(htemp_rel_data, legname);
     }
-
     leg4.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"Data, " + text);
     //tex_lumi->DrawLatex(0.50,0.91,CorrectionObject::_lumitag+"(13TeV)");
     c4->SaveAs(CorrectionObject::_outpath+"plots/control/A_NormDistribution_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");    
-
-
 
     ///MET over sum pt
     TCanvas* c5 = new TCanvas();
@@ -795,12 +807,13 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend leg5 = tdrLeg(0.22,0.6,0.88,0.79);
     leg5.SetNColumns(2);
     TH1D* htemp_met_mc;
+
     for(int j=0; j<n_pt-1; j++){
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_met_mc = "hist_mc_METoverJetsPt_"+eta_name+"_"+pt_name;
       htemp_met_mc = (TH1D*)f_mpf_mc->Get(name_met_mc);
-    
+      //      htemp_met_mc->Print();
       int n_ev =  htemp_met_mc->GetEntries();
       if(htemp_met_mc->Integral() > 0)htemp_met_mc->Scale(1/htemp_met_mc->Integral());
       h->GetXaxis()->SetTitle("MET/#sum p_{T}");
@@ -810,6 +823,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       h->GetXaxis()->SetLimits(0,1.2);
       //      h->GetYaxis()->SetLimits(0,0.8);
       h->SetMaximum(0.3);
+
       if(j<9) htemp_met_mc->SetLineColor(j+1);
       else    htemp_met_mc->SetLineColor(j+31);
       htemp_met_mc->SetLineWidth(3);
@@ -818,19 +832,18 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg5.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     //tex_lumi->DrawLatex(0.6,0.91,"MC");
+
+
     c5->SaveAs(CorrectionObject::_outpath+"plots/control/METoverPt_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
- 
-
-
-   TCanvas* c6 = new TCanvas();
+    TCanvas* c6 = new TCanvas();
     tdrCanvas(c6,"c6",h,4,10,kSquare,CorrectionObject::_lumitag);
     TLegend leg6 = tdrLeg(0.22,0.6,0.88,0.79);
     leg6.SetNColumns(2);
     TH1D* htemp_met_data;
+
     for(int j=0; j<n_pt-1; j++){
-   
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_met_data = "hist_data_METoverJetsPt_"+eta_name+"_"+pt_name;
@@ -850,25 +863,24 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       leg6.AddEntry(htemp_met_data, legname);
     }
     leg6.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"Data, " + text);
     //tex_lumi->DrawLatex(0.50,0.91,CorrectionObject::_lumitag+"(13TeV)");
     c6->SaveAs(CorrectionObject::_outpath+"plots/control/METoverPt_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");    
 
     ///END MET over sum pt
 
-
-
-//************************* Different energy fractions **************************************************************************************
-    
+//******************************************* Different energy fractions *************************************************************
+  
     TCanvas* c7 = new TCanvas();
     tdrCanvas(c7,"c7",hEF,4,10,kSquare,"MC");
     TLegend leg7 = tdrLeg(0.17,0.6,0.85,0.81);
     leg7.SetNColumns(2);
     TH1D* htemp_probejet_neutEmEF_mc;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-  
+    //    for(int j=0; j<5; j++){ //TEST
+    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_neutEmEF_mc = "hist_mc_probejet_neutEmEF_"+eta_name+"_"+pt_name;
@@ -879,12 +891,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetXaxis()->SetTitle("probejet neutralEmEF");
       hEF->GetYaxis()->SetTitle("Norm. Entries");
       hEF->GetYaxis()->SetTitleOffset(1.5);
-      // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
-      //      h->GetYaxis()->SetLimits(0,0.8);
-      //      hEF->SetMaximum(0.8);
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
+ 
       if(j<9) htemp_probejet_neutEmEF_mc->SetLineColor(j+1);
       else    htemp_probejet_neutEmEF_mc->SetLineColor(j+31);
       htemp_probejet_neutEmEF_mc->SetLineWidth(3);
@@ -893,22 +903,17 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg7.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c7->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_neutEmEF_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
-
-
 
     TCanvas* c8 = new TCanvas();
     tdrCanvas(c8,"c8",hEF,4,10,kSquare,"DATA");
-    //    TLegend leg8 = tdrLeg(0.62,0.46,0.85,0.81);
     TLegend leg8 = tdrLeg(0.17,0.6,0.85,0.81);
     leg8.SetNColumns(2);
     TH1D* htemp_probejet_neutEmEF_data;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_neutEmEF_data = "hist_data_probejet_neutEmEF_"+eta_name+"_"+pt_name;
@@ -921,16 +926,18 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetYaxis()->SetTitleOffset(1.5);
       // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
+
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
       if(j<9) htemp_probejet_neutEmEF_data->SetLineColor(j+1);
-      else    htemp_probejet_neutEmEF_data->SetLineColor(j+31);      htemp_probejet_neutEmEF_data->SetLineWidth(3);
+      else    htemp_probejet_neutEmEF_data->SetLineColor(j+31);
+      htemp_probejet_neutEmEF_data->SetLineWidth(3);
       if(n_ev>100) htemp_probejet_neutEmEF_data->Draw("HIST SAME");
       leg8.AddEntry(htemp_probejet_neutEmEF_data, legname);
     }
 
     leg8.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c8->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_neutEmEF_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
 
@@ -939,11 +946,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend leg9 = tdrLeg(0.17,0.6,0.85,0.81);
     leg9.SetNColumns(2);
     TH1D* htemp_probejet_neutHadEF_mc;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_neutHadEF_mc = "hist_mc_probejet_neutHadEF_"+eta_name+"_"+pt_name;
@@ -955,11 +960,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetYaxis()->SetTitle("Norm. Entries");
       hEF->GetYaxis()->SetTitleOffset(1.5);
       // h->SetMaximum(0.3);
-      hEF->GetXaxis()->SetLimits(0,1.5);
-      //      hEF->GetYaxis()->SetLimits(0,0.1);
+      hEF->GetXaxis()->SetLimits(0,1.1);
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
-      //      hEF->SetMaximum(0.8);
+
       if(j<9) htemp_probejet_neutHadEF_mc->SetLineColor(j+1);
       else    htemp_probejet_neutHadEF_mc->SetLineColor(j+31);
       htemp_probejet_neutHadEF_mc->SetLineWidth(3);
@@ -968,21 +972,17 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg9.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c9->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_neutHadEF_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
-
-
 
     TCanvas* c10 = new TCanvas();
     tdrCanvas(c10,"c10",hEF,4,10,kSquare,"DATA");
     TLegend leg10 = tdrLeg(0.17,0.6,0.85,0.81);
     leg10.SetNColumns(2);
     TH1D* htemp_probejet_neutHadEF_data;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_neutHadEF_data = "hist_data_probejet_neutHadEF_"+eta_name+"_"+pt_name;
@@ -994,11 +994,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetYaxis()->SetTitle("Norm. Entries");
       hEF->GetYaxis()->SetTitleOffset(1.5);
       // h->SetMaximum(0.3);
-      hEF->GetXaxis()->SetLimits(0,1.5);
-      //      hEF->GetYaxis()->SetLimits(0,0.1);
+      hEF->GetXaxis()->SetLimits(0,1.1);
+       //hEF->SetMaximum(0.4);
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
-      //hEF->SetMaximum(0.8);
       if(j<9) htemp_probejet_neutHadEF_data->SetLineColor(j+1);
       else    htemp_probejet_neutHadEF_data->SetLineColor(j+31);
       htemp_probejet_neutHadEF_data->SetLineWidth(3);
@@ -1007,7 +1006,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg10.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c10->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_neutHadEF_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
 
@@ -1016,10 +1015,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     tdrCanvas(c11,"c11",hEF,4,10,kSquare,"MC");
     TLegend leg11 = tdrLeg(0.17,0.6,0.85,0.81);
     leg11.SetNColumns(2);
-
     TH1D* htemp_probejet_chEmEF_mc;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
     //    for(int j=0; j<5; j++){ //TEST
     //    for(int j=5; j<n_pt-1; j++){//TEST
@@ -1033,9 +1031,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetXaxis()->SetTitle("probejet chEmEF");
       hEF->GetYaxis()->SetTitle("Norm. Entries");
       hEF->GetYaxis()->SetTitleOffset(1.5);
-      // h->SetMaximum(0.3);
+      
       hEF->GetXaxis()->SetLimits(0,1.5);
-      //  hEF->GetYaxis()->SetLimits(0,0.1);
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
       if(j<9) htemp_probejet_chEmEF_mc->SetLineColor(j+1);
@@ -1046,20 +1043,17 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg11.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c11->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_chEmEF_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
     TCanvas* c12 = new TCanvas();
     tdrCanvas(c12,"c12",hEF,4,10,kSquare,"DATA");
     TLegend leg12 = tdrLeg(0.17,0.6,0.85,0.81);
     leg12.SetNColumns(2);
-
     TH1D* htemp_probejet_chEmEF_data;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_chEmEF_data = "hist_data_probejet_chEmEF_"+eta_name+"_"+pt_name;
@@ -1070,11 +1064,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetXaxis()->SetTitle("probejet chEmEF");
       hEF->GetYaxis()->SetTitle("Norm. Entries");
       hEF->GetYaxis()->SetTitleOffset(1.5);
-      // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
-      //      hEF->GetYaxis()->SetLimits(0,0.1);
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
+ 
       if(j<9) htemp_probejet_chEmEF_data->SetLineColor(j+1);
       else    htemp_probejet_chEmEF_data->SetLineColor(j+31);
       htemp_probejet_chEmEF_data->SetLineWidth(3);
@@ -1083,7 +1076,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg12.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c12->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_chEmEF_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
 
@@ -1092,8 +1085,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend leg13 = tdrLeg(0.17,0.6,0.85,0.81);
     leg13.SetNColumns(2);
     TH1D* htemp_probejet_chHadEF_mc;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
     //    for(int j=0; j<5; j++){ //TEST
     //    for(int j=5; j<n_pt-1; j++){//TEST
@@ -1107,11 +1100,10 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetXaxis()->SetTitle("probejet chHadEF");
       hEF->GetYaxis()->SetTitle("Norm. Entries");
       hEF->GetYaxis()->SetTitleOffset(1.5);
-      // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
-      //      hEF->GetYaxis()->SetLimits(0,0.1);
       hEF->SetMaximum(3);
       hEF->SetMinimum(0.001);
+
       if(j<9) htemp_probejet_chHadEF_mc->SetLineColor(j+1);
       else    htemp_probejet_chHadEF_mc->SetLineColor(j+31);
       htemp_probejet_chHadEF_mc->SetLineWidth(3);
@@ -1120,7 +1112,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg13.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c13->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_chHadEF_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
     TCanvas* c14 = new TCanvas();
@@ -1128,11 +1120,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend leg14 = tdrLeg(0.17,0.6,0.85,0.81);
     leg14.SetNColumns(2);
     TH1D* htemp_probejet_chHadEF_data;
-
     gPad->SetLogy();
+
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_chHadEF_data = "hist_data_probejet_chHadEF_"+eta_name+"_"+pt_name;
@@ -1145,9 +1135,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       hEF->GetYaxis()->SetTitleOffset(1.5);
       // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
-      //      hEF->GetYaxis()->SetLimits(0,0.1);
-      hEF->SetMaximum(2);
-     hEF->SetMinimum(0.001);
+      hEF->SetMaximum(3);
+      hEF->SetMinimum(0.001);
+
       if(j<9) htemp_probejet_chHadEF_data->SetLineColor(j+1);
       else    htemp_probejet_chHadEF_data->SetLineColor(j+31);
       htemp_probejet_chHadEF_data->SetLineWidth(3);
@@ -1156,7 +1146,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg14.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c14->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_chHadEF_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
 
@@ -1190,7 +1180,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg15.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c15->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_photonEF_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
     TCanvas* c16 = new TCanvas();
@@ -1223,7 +1213,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg16.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c16->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_photonEF_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
 
@@ -1247,7 +1237,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
       //      hEF->GetYaxis()->SetLimits(0,0.1);
-      hEF->SetMaximum(0.1);
+      hEF->SetMaximum(0.4);
       //      hEF->SetMaximum(0.8);
       if(j<9) htemp_probejet_muonEF_mc->SetLineColor(j+1);
       else    htemp_probejet_muonEF_mc->SetLineColor(j+31);
@@ -1257,7 +1247,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg17.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c17->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_muonEF_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
     TCanvas* c18 = new TCanvas();
@@ -1265,8 +1255,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend leg18 = tdrLeg(0.45,0.46,0.70,0.81);
     TH1D* htemp_probejet_muonEF_data;
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_muonEF_data = "hist_data_probejet_muonEF_"+eta_name+"_"+pt_name;
@@ -1280,7 +1268,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       // h->SetMaximum(0.3);
       hEF->GetXaxis()->SetLimits(0,1.5);
       //hEF->GetYaxis()->SetLimits(0,0.1);
-      hEF->SetMaximum(0.1);
+      hEF->SetMaximum(0.4);
       if(j<9) htemp_probejet_muonEF_data->SetLineColor(j+1);
       else    htemp_probejet_muonEF_data->SetLineColor(j+31);
       htemp_probejet_muonEF_data->SetLineWidth(3);
@@ -1289,7 +1277,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg18.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c18->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_muonEF_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
 
@@ -1298,8 +1286,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend leg19 = tdrLeg(0.45,0.46,0.70,0.81);
     TH1D* htemp_probejet_phi_mc;
     for(int j=0; j<n_pt-1; j++){
-    //    for(int j=0; j<5; j++){ //TEST
-    //    for(int j=5; j<n_pt-1; j++){//TEST
       TString pt_name = "pt_"+pt_range[j]+"_"+pt_range[j+1];
       TString legname = "p_{T} #in [" + pt_range[j] + "," + pt_range[j+1] + "]";
       TString name_probejet_phi_mc = "hist_mc_probejet_phi_"+eta_name+"_"+pt_name;
@@ -1324,7 +1310,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg19.Draw();
-    tex->DrawLatex(0.47,0.85,"MC, " + text);
+    tex->DrawLatex(0.52,0.85,"MC, " + text);
     c19->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_phi_MC_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
     TCanvas* c20 = new TCanvas();
@@ -1358,11 +1344,12 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     }
 
     leg20.Draw();
-    tex->DrawLatex(0.47,0.85,"Data, " + text);
+    tex->DrawLatex(0.52,0.85,"DATA, " + text);
     c20->SaveAs(CorrectionObject::_outpath+"plots/control/probejet_phi_DATA_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
-    
+
     //END Different energy fractions
+
 
 
     delete tex;
@@ -1387,7 +1374,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   for(int i=0; i<n_eta-1; i++){
     TCanvas* c1 = new TCanvas();
     tdrCanvas(c1,"c1",h,4,10,kSquare,CorrectionObject::_lumitag);
-  
     TLegend leg1 = tdrLeg(0.62,0.66,0.85,0.81);
     h->GetXaxis()->SetTitle("p_{T}^{ave} [GeV]");
     h->GetXaxis()->SetLimits(0,2000);
@@ -1395,9 +1381,8 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     h->GetYaxis()->SetTitleOffset(1.5);
     double maximum = std::max(hdata_pt_ave[i]->GetMaximum(), hmc_pt_ave[i]->GetMaximum());
     h->GetYaxis()->SetRangeUser(0,1.2*maximum);
-    hdata_pt_ave[i]->SetMarkerColor(kBlack);
-    hdata_pt_ave[i]->SetMarkerStyle(20);
-    hdata_pt_ave[i]->Draw("SAME P");
+    hdata_pt_ave[i]->SetLineColor(kBlack);
+    hdata_pt_ave[i]->Draw("SAME");
     hmc_pt_ave[i]->SetLineColor(kBlue);
     hmc_pt_ave[i]->Draw("HIST SAME");
     leg1.AddEntry(hdata_pt_ave[i], "DATA");
@@ -1407,7 +1392,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLatex *tex = new TLatex();
     tex->SetNDC();
     tex->SetTextSize(0.045); 
-    TString text = eta_range[i] + " < |#eta| < " + eta_range[i+1];
+    TString text = eta_range[i] + " < #eta < " + eta_range[i+1];
     tex->DrawLatex(0.52,0.85, text);
 
     c1->SaveAs(CorrectionObject::_outpath+"plots/control/Pt_ave_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");    
@@ -1415,6 +1400,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
     delete tex;
     delete c1;
+
 
 
  TCanvas* c2 = new TCanvas();
@@ -1438,7 +1424,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLatex *tex1 = new TLatex();
     tex1->SetNDC();
     tex1->SetTextSize(0.045); 
-    TString text1 = eta_range[i] + " < |#eta| < " + eta_range[i+1];
+    TString text1 = eta_range[i] + " < #eta < " + eta_range[i+1];
     tex1->DrawLatex(0.52,0.85, text1);
 
     c2->SaveAs(CorrectionObject::_outpath+"plots/control/MET_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");    
@@ -1470,7 +1456,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLatex *tex2 = new TLatex();
     tex2->SetNDC();
     tex2->SetTextSize(0.045); 
-    TString text2 = eta_range[i] + " < |#eta| < " + eta_range[i+1];
+    TString text2 = eta_range[i] + " < #eta < " + eta_range[i+1];
     tex2->DrawLatex(0.52,0.85, text1);
 
     c3->SaveAs(CorrectionObject::_outpath+"plots/control/alpha_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");    
@@ -1495,13 +1481,13 @@ TCanvas* c4 = new TCanvas();
     hmc_jet3_pt[i]->SetLineColor(kBlue);
     hmc_jet3_pt[i]->Draw("HIST SAME");
     leg4.AddEntry(hdata_jet3_pt[i], "DATA");
-    leg4.AddEntry(hmc_jet3_pt[i], "MC");
+    leg4.AddEntry(hmc_jet3_pt[i], "MC","l");
     leg4.Draw();
 
     TLatex *tex4 = new TLatex();
     tex4->SetNDC();
     tex4->SetTextSize(0.045); 
-    TString text4 = eta_range[i] + " < |#eta| < " + eta_range[i+1];
+    TString text4 = eta_range[i] + " < #eta < " + eta_range[i+1];
     tex4->DrawLatex(0.52,0.85, text1);
 
     c4->SaveAs(CorrectionObject::_outpath+"plots/control/jet3_pt_" + CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");    
@@ -1512,8 +1498,6 @@ TCanvas* c4 = new TCanvas();
     
 
   }
-
-
 
   delete c_0;
   delete h;
