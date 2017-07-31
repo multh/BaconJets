@@ -464,7 +464,29 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      delete tex_rel;
        }
      }
-  
+
+
+ TCanvas* Pt_dep_rel[n_eta-1];
+ TString name_rel[n_eta-1];
+ TH1D* h_kFSR_pt_rel[n_eta-1];
+ for(int i=0; i<n_eta-1; i++){
+   name_rel[i]="dijet_kfsr_pt_dep_"+eta_range[i]+"_"+eta_range[i+1];
+   h_kFSR_pt_rel[i] = new TH1D(name_rel[i],"kFSR pt dependence", n_pt-1, pt_bins);
+   Pt_dep_rel[i] = new TCanvas(name_rel[i], name_rel[i], 800,700);
+   for(int j=0; j<n_pt-1;j++){
+     h_kFSR_pt_rel[i]->SetBinContent(j+1, pol_rel[i][j]->GetParameter(0));
+     h_kFSR_pt_rel[i]->SetBinError(j+1, pol_rel[i][j]->GetParError(0));
+   }
+   h_kFSR_pt_rel[i]->GetYaxis()->SetRangeUser(0.92,1.08);
+   h_kFSR_pt_rel[i]->GetYaxis()->SetTitle("kFSR");
+   h_kFSR_pt_rel[i]->GetXaxis()->SetTitle("p_{T}");
+   h_kFSR_pt_rel[i]->Draw("E");
+   Pt_dep_rel[i]->Print(CorrectionObject::_outpath+"plots/kFSR_Pt_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+".pdf");
+ }
+
+
+
+
 
   TCanvas* c1 = new TCanvas();
   m_gStyle->SetOptStat(0);
@@ -540,12 +562,33 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        chi2ndf_kFSR_mpf = pol_mpf[i][j]->GetChisquare() / pol_mpf[i][j]->GetNDF();
       }
       h_chi2_kFSR_mpf->SetBinContent(i+1, j+1,chi2ndf_kFSR_mpf);
-     MPF[i][j]->Print(CorrectionObject::_outpath+"plots/kFSR_MPF_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1]+".pdf");
+      MPF[i][j]->Print(CorrectionObject::_outpath+"plots/kFSR_MPF_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1]+".pdf");
 
      delete tex2_mpf;
      delete tex_mpf;
      }
    }
+
+
+ TCanvas* Pt_dep_mpf[n_eta-1];
+ TString name_mpf[n_eta-1];
+ TH1D* h_kFSR_pt_mpf[n_eta-1]; 
+ for(int i=0; i<n_eta-1; i++){
+   name_mpf[i]="MPF_kfsr_pt_dep_"+eta_range[i]+"_"+eta_range[i+1];
+   h_kFSR_pt_mpf[i]  = new TH1D(name_mpf[i],"kFSR pt dependence", n_pt-1, pt_bins);
+   Pt_dep_mpf[i] = new TCanvas(name_mpf[i], name_mpf[i], 800,700);
+   for(int j=0; j<n_pt-1;j++){
+     h_kFSR_pt_mpf[i]->SetBinContent(j+1, pol_mpf[i][j]->GetParameter(0));
+     h_kFSR_pt_mpf[i]->SetBinError(j+1, pol_rel[i][j]->GetParError(0));
+   }
+   h_kFSR_pt_mpf[i]->SetMarkerSize(1.5);
+   h_kFSR_pt_mpf[i]->GetYaxis()->SetRangeUser(0.92,1.08);
+   h_kFSR_pt_mpf[i]->GetYaxis()->SetTitle("kFSR");
+   h_kFSR_pt_mpf[i]->GetXaxis()->SetTitle("p_{T}");
+   h_kFSR_pt_mpf[i]->Draw("");
+   Pt_dep_mpf[i]->Print(CorrectionObject::_outpath+"plots/kFSR_MPF_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+".pdf");
+ }
+
 
   TCanvas* c2 = new TCanvas();
     m_gStyle->SetOptTitle(0);
