@@ -87,6 +87,7 @@ using namespace std;
     void CalculateMCWeights_TriggerThresholds(bool CentralTriggers);
     void FullCycle_CorrectFormulae();
     void FullCycle_CorrectFormulae_eta();
+    void MatchingPlots();
 
   private:
     TString _runnr;

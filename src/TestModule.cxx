@@ -133,7 +133,7 @@ using namespace uhh2;
     Event::Handle<int> tt_lumibin;
     Event::Handle<int> tt_Nmuon; Event::Handle<float> tt_muon_pt;
     Event::Handle<int> tt_Nele; Event::Handle<float> tt_ele_pt;
-
+    Event::Handle<float> tt_dR_jet3_barreljet;  Event::Handle<float> tt_dR_jet3_probejet;
     Event::Handle<int> tt_trigger40;
     Event::Handle<int> tt_trigger60;
     Event::Handle<int> tt_trigger80;
@@ -738,7 +738,8 @@ using namespace uhh2;
     tt_trigger220_HF = ctx.declare_event_output<int>("trigger220_HF");
     tt_trigger300_HF = ctx.declare_event_output<int>("trigger300_HF");
 
-
+    tt_dR_jet3_barreljet = ctx.declare_event_output<float>("dR_jet3_barreljet");
+    tt_dR_jet3_probejet = ctx.declare_event_output<float>("dR_jet3_probejet");
 
     h_runnr_input.reset(new JECRunnumberHists(ctx,"Runnr_input"));
     h_input.reset(new JECCrossCheckHists(ctx,"CrossCheck_input"));
@@ -859,6 +860,15 @@ using namespace uhh2;
 	name_weights += "MC_ReWeights_CENTRAL_RunH.root";
 	else
 	  name_weights += "MC_ReWeights_RunH.root";
+      }
+      else if(isMC && dataset_version.Contains("RunBCDEFGH")){
+	if(dataset_version.Contains("_Fwd"))
+	  name_weights += "MC_ReWeights_FWD_RunBCDEFGH.root";
+	else if(dataset_version.Contains("_Flat"))
+	name_weights += "MC_ReWeights_CENTRAL_RunBCDEFGH.root";
+	else
+	  name_weights += "MC_ReWeights_RunBCDEFGH.root";
+
       }
       f_weights.reset(new TFile(name_weights,"READ"));
     }
@@ -1226,6 +1236,13 @@ if(debug){
 	jet_barrel = jet2;
       }
     }
+
+    double dR_jet3_barreljet = -1;
+    double dR_jet3_probejet = -1;
+    if(event.jets->size()>2){
+      dR_jet3_barreljet = deltaR(event.jets->at(2), *jet_barrel);
+      dR_jet3_probejet = deltaR(event.jets->at(2), *jet_probe);
+    }
 //##########################################################################################################
 
     //read or calculated values for dijet events
@@ -1576,7 +1593,11 @@ if(debug){
     event.set(tt_jet_n,jet_n);
     event.set(tt_rho,event.rho);    
     event.set(tt_partonFlavor,flavor);
- 
+   
+    event.set(tt_dR_jet3_barreljet,dR_jet3_barreljet);
+    event.set(tt_dR_jet3_probejet,dR_jet3_probejet);
+
+
     //  event.set(tt_had_n_Efrac,had_n_Efrac);
     //  event.set(tt_had_ch_Efrac,had_ch_Efrac);
     //  event.set(tt_mu_Efrac,mu_Efrac);    
