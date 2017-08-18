@@ -30,6 +30,7 @@ int main(){
   bool    trigger_fwd     = true;     //Use for Weight Calc
   bool    trigger_central = true;     //Use for Weight Calc
   TString collection    = "AK4CHS";
+  //  TString collection    = "AK4PUPPI";
 
   //   TString input_path   = "/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_NewTriggerSetup/";
   //   TString weight_path  = "/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_NewTriggerSetup_ForWeights/";
@@ -39,9 +40,15 @@ int main(){
 
   //  TString input_path   = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_ReWeighted/";
   //  TString input_path   = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_ReWeighted_MC/";
-  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_ForWeights/"; 
+  //  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_ForWeights/"; 
   TString weight_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_ForWeights/"; 
 
+  //  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_NotWeighted_CHS/"; //AK4CHS
+  //  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_NotWeighted_CHS_Zpv/"; //AK4CHS
+  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_NotWeighted_CHS_Zpv_PUreweight/"; //AK4CHS
+  //  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_NotWeighted_CHS_Zpv_PUreweight_jet3above25GeV/"; //AK4CHS
+
+  //  TString input_path  = "/nfs/dust/cms/user/karavdia/JEC_Summer16_V8_NotWeighted_PUPPI_L1L2L3/";  //AK4PUPPI
 
   //eine Klasse: enthaelt Info ueber runnr, Generator, collection, Strings zu MC/DATA-files, memberfunctions: controlPlots, kFSR etc.
     vector<CorrectionObject> Objects;
@@ -70,36 +77,36 @@ int main(){
       }
 
 
-      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
-      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae();
-// // //       //  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae_eta();  //extended eta range to negative Values 
+//       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
+//       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae();
+//       // // // // // //       //  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae_eta();  //extended eta range to negative Values 
 
-      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(true);   //MPF method
-      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(false);  //pT bal method
-// // //       //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae_eta(true); //extended eta range to negative Values 
-// // //       //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae_eta(false); //extended eta range to negative Values 
+//       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(true);   //MPF method
+//       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(false);  //pT bal method
+// // // //       //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae_eta(true); //extended eta range to negative Values 
+// // // //       //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae_eta(false); //extended eta range to negative Values 
 
-      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput();
-// //       // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput_eta();
-// //    // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit(); //Mikkos Macro 
-// //    // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_eta_0_13(); //Mikkos Macro
+//       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput();
+// // // //       // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput_eta();
+// // // //    // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit(); //Mikkos Macro 
+// // // //    // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_eta_0_13(); //Mikkos Macro
 
 //       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots_CorrectFormulae();
-//      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].MatchingPlots();
-
-// //    // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots_CorrectFormulae_eta(); //extended eta range to negative Values
+//       for(unsigned int i=0; i<Objects.size(); i++) Objects[i].MatchingPlots();
+      for(unsigned int i=0; i<Objects.size(); i++) Objects[i].GenResponsePlots();
+// // //    // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots_CorrectFormulae_eta(); //extended eta range to negative Values
  
-// // // //Run all macros to calculate L2Res corrections 
-// // //       // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
-// // //       // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae_eta();  //For Closure Test
+// // // // //Run all macros to calculate L2Res corrections 
+// // // //       // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae();
+// // // //       // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FullCycle_CorrectFormulae_eta();  //For Closure Test
  
-// // // //Macros to compare different Runs 
-// // //    // Objects[0].L2ResAllRuns();
-// // //    // Objects[0].L2ResOverlay(true);
-// // //    // Objects[0].L2ResOverlay(false);
+// // // // //Macros to compare different Runs 
+// // // //    // Objects[0].L2ResAllRuns();
+// // // //    // Objects[0].L2ResOverlay(true);
+// // // //    // Objects[0].L2ResOverlay(false);
 
-// // // //Compare up/nominal/down Variations of JER
-// // //    // Objects[0].L2Res_JEC();
+// // // // //Compare up/nominal/down Variations of JER
+// // // //    // Objects[0].L2Res_JEC();
 
   cout << endl << "Closing MC and DATA files." << endl;
   for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CloseFiles();

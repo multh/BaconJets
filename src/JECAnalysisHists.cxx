@@ -73,6 +73,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
 
 
 
+
     tt_gen_pthat  = ctx.get_handle<float>("gen_pthat");
     tt_gen_weight = ctx.get_handle<float>("gen_weight");
     tt_jet1_pt = ctx.get_handle<float>("jet1_pt");
@@ -97,6 +98,7 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     tt_mpf_r = ctx.get_handle<float>("mpf_r");
     tt_asymmetry = ctx.get_handle<float>("asymmetry");
     tt_nPU = ctx.get_handle<int>("nPU");
+
 
 }
 

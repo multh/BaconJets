@@ -101,12 +101,14 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 
   while (myReader_DATA.Next()) {
     for(int j=0; j<n_eta-1; j++){
+      //      cout<<"probejet_eta_data = "<<*probejet_eta_data<<endl;
       if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
       for(int i=0; i<n_alpha; i++){
 	if(*alpha_data>alpha_bins[i]) continue;
 	else{
  	  hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
 	  hdata_B[j][i]->Fill(*pt_ave_data,*B_data,*weight_data);
+	  //cout<<"alpha = "<<*alpha_data<<" probejet_eta_data = "<<*probejet_eta_data<<" pt_ave_data = "<<*pt_ave_data<<" B_data = "<<*B_data<<" Entries = "<<hdata_B[j][i]->GetEntries()<<endl;
 	  for(int k=0; k<n_pt-1; k++){                                                
 	      if((*pt_ave_data < pt_bins[k]) || (*pt_ave_data >= pt_bins[k+1])) continue;
 	       n_entries_data[j][i][k]++;
@@ -137,6 +139,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	 else{
 	   hmc_asymmetry[j][i]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
 	   hmc_B[j][i]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
+	   //	  cout<<"B_mc = "<<*B_mc<<endl;
 	   for(int k=0; k<n_pt-1; k++){                                                          ///int k=0; k<n_pt-1; k++
 	     if((*pt_ave_mc < pt_bins[k]) || (*pt_ave_mc >= pt_bins[k+1])) continue;              //pt_bins[k]    pt_bins[k+1]
 	       n_entries_mc[j][i][k]++;
@@ -281,28 +284,28 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        double err_norm_alref_mpf_r = err_ratio_al_mpf_r[k][j][al_ref];
        for(int i=0; i<n_alpha; i++){
 
-	 if(norm_alref_rel_r>0){ //WHAT IS HAPPENING HERE? NO PROPER ERROR PROPAGATION !?! Ask other group that does kFSR-Extrapolation about error propagation
-	   ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r; //original
-	   //	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r,2)));//Original
-	   //  err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i]/ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r/norm_alref_rel_r,2)));
-	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i] / (ratio_al_rel_r[k][j][i]) ,2)+pow(err_norm_alref_rel_r / norm_alref_rel_r,2))) * ratio_al_rel_r[k][j][i] / norm_alref_rel_r ; //gaussian error propagation
+   	 if(norm_alref_rel_r>0){ //WHAT IS HAPPENING HERE? NO PROPER ERROR PROPAGATION !?! Ask other group that does kFSR-Extrapolation about error propagation
+   	   ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r; //original
+   	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r,2)));//Original
+   	   //  err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i]/ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r/norm_alref_rel_r,2)));
+   	   //	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i] / (ratio_al_rel_r[k][j][i]) ,2)+pow(err_norm_alref_rel_r / norm_alref_rel_r,2))) * ratio_al_rel_r[k][j][i] / norm_alref_rel_r ; //gaussian error propagation
 	  
-	   // if(i == al_ref) err_ratio_al_rel_r[k][j][i] = 0.; //TEST
+   	   //  if(i == al_ref) err_ratio_al_rel_r[k][j][i] = 0.; //TEST
 
 
-	 }
-	 if(norm_alref_mpf_r>0){
-	   ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_alref_mpf_r;
-	   //err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r,2))); //Original
-	   //  err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i]/ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r/norm_alref_mpf_r,2)));
-	   err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i] / (ratio_al_mpf_r[k][j][i]) ,2)+pow(err_norm_alref_mpf_r / norm_alref_mpf_r,2))) * err_ratio_al_mpf_r[k][j][i] / norm_alref_mpf_r; //gaussian error propagation
+   	 }
+   	 if(norm_alref_mpf_r>0){
+   	   ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_alref_mpf_r;
+   	   err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r,2))); //Original
+   	   //  err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i]/ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r/norm_alref_mpf_r,2)));
+   	   // err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i] / (ratio_al_mpf_r[k][j][i]) ,2)+pow(err_norm_alref_mpf_r / norm_alref_mpf_r,2))) * err_ratio_al_mpf_r[k][j][i] / norm_alref_mpf_r; //gaussian error propagation
 	  
-	   // if(i == al_ref) err_ratio_al_mpf_r[k][j][i] = 0.; //TEST
-	 }
+   	   // if(i == al_ref) err_ratio_al_mpf_r[k][j][i] = 0.; //TEST
+   	 }
        }
      }
    }
-  
+   
 
    // Build the Multigraphs containing the ratio of responses (MC/DATA) as a function of alpha
    TGraphErrors *graph_rel_r[n_pt-1][n_eta-1];  //set of points vs alpha
@@ -331,7 +334,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 
    bool multigraph_rel_empty[n_eta-1];
    bool multigraph_mpf_empty[n_eta-1];
-
+  
    for(int j=0; j<n_eta-1; j++){
      multigraph_rel_empty[j] = true;
      multigraph_mpf_empty[j] = true;
@@ -404,7 +407,9 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	Rel[i][j] = new TCanvas(plotname_rel[i][j], plotname_rel[i][j], 800,700);
 	m_gStyle->SetOptTitle(0);
 
-       pol_rel[i][j] = new TF1("pol_rel","pol1",0.14,0.36);
+	pol_rel[i][j] = new TF1("pol_rel","pol1",0.14,0.36);
+	//       pol_rel[i][j] = new TF1("pol_rel","pol1",0.09,0.26);
+	//       pol_rel[i][j] = new TF1("pol_rel","pol1",0.09,0.21);
        if(pt_bins[j]<73) continue;
        graph_rel_r[j][i] = new TGraphErrors(n_alpha,xbin_tgraph,ratio_al_rel_r[j][i],zero,err_ratio_al_rel_r[j][i]);
        graph_rel_r[j][i] = (TGraphErrors*)CleanEmptyPoints(graph_rel_r[j][i]);
@@ -511,7 +516,9 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	MPF[i][j] = new TCanvas(plotname2[i][j], plotname2[i][j], 800,700);
 	m_gStyle->SetOptTitle(0);
 
-       pol_mpf[i][j] = new TF1("pol_mpf","pol1",0.14,0.36);
+	pol_mpf[i][j] = new TF1("pol_mpf","pol1",0.14,0.36);
+	//	pol_mpf[i][j] = new TF1("pol_mpf","pol1",0.09,0.26);//TEST
+	//	pol_mpf[i][j] = new TF1("pol_mpf","pol1",0.09,0.21);//TEST
        if(pt_bins[j]<73) continue;
        graph_mpf_r[j][i] = new TGraphErrors(n_alpha,xbin_tgraph,ratio_al_mpf_r[j][i],zero,err_ratio_al_mpf_r[j][i]);
        graph_mpf_r[j][i] = (TGraphErrors*)CleanEmptyPoints(graph_mpf_r[j][i]);

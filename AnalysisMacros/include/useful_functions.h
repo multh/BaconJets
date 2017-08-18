@@ -13,6 +13,9 @@ std::pair<double,double> Rmc_to_Rdata(std::pair<double,double> mc, std::pair<dou
 
 std::pair<double,double> GetValueAndError(TH1D *hin);
 
+double ErrorPropagation_AoverB(std::pair<double,double> Ap, std::pair<double,double> Bp);
+double ErrorPropagation_AB(std::pair<double,double> Ap, std::pair<double,double> Bp);
+
 TGraphErrors* CleanEmptyPoints(TGraphErrors* input);
 
 TH1D* GetHist(TFile *rootfile, TString selection, TString varName, int nbins, double low, double up);
