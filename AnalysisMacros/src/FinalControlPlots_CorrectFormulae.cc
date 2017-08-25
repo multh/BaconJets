@@ -713,7 +713,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       h->GetYaxis()->SetTitleOffset(1.5);
       h->GetXaxis()->SetLimits(-1.2,1.2);
       h->SetMinimum(0.001);
-      h->SetMaximum(0.3);
+      h->SetMaximum(0.25);
       if(j<9) htemp_mpf_data->SetLineColor(j+1);
       else    htemp_mpf_data->SetLineColor(j+31);
       htemp_mpf_data->SetLineWidth(3);
@@ -794,7 +794,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
       h->GetYaxis()->SetTitleOffset(1.5);
       h->GetXaxis()->SetLimits(-1.2,1.2);
       h->SetMinimum(0.001);
-      h->SetMaximum(0.3);
+      h->SetMaximum(0.25);
       if(j<9) htemp_rel_data->SetLineColor(j+1);
       else    htemp_rel_data->SetLineColor(j+31);
       htemp_rel_data->SetLineWidth(3);

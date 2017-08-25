@@ -138,7 +138,7 @@ protected:
   Event::Handle<float> tt_Zpv_all;//Z of all PV
   Event::Handle<int> tt_nGoodvertices;
   //  Event::Handle<int> tt_partonFlavor; //only MC
-  Event::Handle<int> tt_flavorBarreljet, tt_flavorProbejet, tt_flavorLeadingjet, tt_flavorSubleadingjet; //only MC
+  Event::Handle<int> tt_flavorBarreljet, tt_flavorProbejet, tt_flavorLeadingjet, tt_flavorSubleadingjet, tt_flavor3rdjet; //only MC
   Event::Handle<float> tt_responseBarreljet, tt_responseProbejet; //only MC
   Event::Handle<float> tt_response_leadingjet;
   Event::Handle<float> tt_had_n_Efrac, tt_had_ch_Efrac, tt_mu_Efrac, tt_ph_Efrac;
@@ -809,6 +809,7 @@ TestModule::TestModule(uhh2::Context & ctx) :
     tt_Zpv_all = ctx.declare_event_output<float>("Zpv_all");
     //    tt_partonFlavor = ctx.declare_event_output<int>("partonFlavor");
     tt_flavorBarreljet = ctx.declare_event_output<int>("flavorBarreljet");
+    tt_flavor3rdjet = ctx.declare_event_output<int>("flavor3rdjet");
     tt_responseBarreljet = ctx.declare_event_output<float>("responseBarreljet_genp");
     tt_flavorProbejet = ctx.declare_event_output<int>("flavorProbejet");
     tt_responseProbejet = ctx.declare_event_output<float>("responseProbejet_genp");
@@ -931,8 +932,8 @@ TestModule::TestModule(uhh2::Context & ctx) :
     Jet_printer.reset(new JetPrinter("Jet-Printer", 0));
     GenParticles_printer.reset(new GenParticlesPrinter(ctx));
 
-    //    debug =false;
-    debug =true;
+    debug =false;
+    //    debug =true;
     n_evt = 0;
     TString name_weights = ctx.get("MC_Weights_Path");
     apply_weights = (ctx.get("Apply_Weights") == "true" && isMC);
@@ -1276,8 +1277,8 @@ if(debug){
    }
 
 
-    //Apply JER to all jet collections
-    if(jetER_smearer.get()) jetER_smearer->process(event);
+    // //Apply JER to all jet collections
+// if(jetER_smearer.get()) jetER_smearer->process(event); //TEST JER SFs effect
     sort_by_pt<Jet>(*event.jets);
 
 if(debug){   
@@ -1888,12 +1889,13 @@ if(debug){
   
     
     if(isMC){    
-      double flavor_barreljet = 0;
+      int flavor_barreljet = 0;
+      int flavor_3rdjet = 0;
       double response_barreljet = 0;
-      double flavor_probejet = 0;
+      int flavor_probejet = 0;
       double response_probejet = 0;
-      double flavor_leadingjet = 0;
-      double flavor_subleadingjet = 0;
+      int flavor_leadingjet = 0;
+      int flavor_subleadingjet = 0;
       const unsigned int genjets_n = event.genjets->size();
       int idx_jet_matching_genjet[genjets_n];
       double probejet_ptgen = -1; 
@@ -2018,6 +2020,17 @@ if(debug){
       else flavor_subleadingjet = -1;
       if(debug) cout << "subleadingjet is jet no. " << 1 << ", alpha = " << event.get(tt_alpha) << ", flavor of subleadingjet = " << flavor_subleadingjet << endl;
 
+      //same for 3rd jet
+      //-1: unmatched, 0: alpha too large, >0: flavor of matching genparticle 
+      if(jet_n>2){
+      if(idx_matched_jets[2] != -1) flavor_3rdjet = fabs(event.genparticles->at(idx_matched_jets[2]).flavor());
+      else flavor_3rdjet = -1;
+      if(debug) cout << "3rd is jet no. " << 2 << ", alpha = " << event.get(tt_alpha) << ", flavor of the 3rd jet = " << flavor_3rdjet << endl;
+      }
+      else{
+	flavor_3rdjet = -1;  
+      }
+      event.set(tt_flavor3rdjet,flavor_3rdjet);   
       event.set(tt_flavorBarreljet,flavor_barreljet);   
       event.set(tt_responseBarreljet,response_barreljet);
       event.set(tt_barreljet_ptgen,barreljet_ptgen); 
@@ -2080,6 +2093,7 @@ if(debug){
     } //isMC
 
     else{
+      event.set(tt_flavor3rdjet,-1);   
       event.set(tt_flavorBarreljet,-1);   
       event.set(tt_responseBarreljet,-1);   
       event.set(tt_flavorProbejet,-1);  

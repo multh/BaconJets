@@ -67,7 +67,7 @@ TGraphErrors* CleanEmptyPoints(TGraphErrors* input){
   vector<double> Xnew,Ynew,Xerrornew,Yerrornew;
   for(int i=0;i<input->GetN();i++){
     //cout << "Yval[" << i << "] = " << Yval[i] <<" +/- "<<YvalError[i]<< endl;
-    if(YvalError[i]<1e-6 || Yval[i]==0 ) continue;
+    if(YvalError[i]<1e-4 || Yval[i]==0 ) continue;
     //    if(Yval[i]==0 ) continue;
        count++;
       Xnew.push_back(Xval[i]);       
@@ -95,8 +95,7 @@ TGraphErrors* CleanEmptyPoints(TGraphErrors* input){
 double ErrorPropagation_AB(pair<double,double> Ap, pair<double,double> Bp){//f= AB, returns error on f assuming gaussian propagation of the errors and no correlation
   double A = Ap.first; double sig_A = Ap.second;
   double B = Bp.first; double sig_B = Bp.second;
-  double sig_f = TMath::Hypot(A*sig_A,B*sig_B);//sqrt((a*sig_A)^2 + (b*sig_b)^2)
-  cout<<"A = "<<A<<" sig_A = "<<sig_A<<" B = "<<B<<" sig_B = "<<sig_B<<endl;
+  double sig_f = A*B*TMath::Hypot(sig_A/A,sig_B/B);
   return sig_f;
 }
 
@@ -104,7 +103,8 @@ double ErrorPropagation_AB(pair<double,double> Ap, pair<double,double> Bp){//f= 
 double ErrorPropagation_AoverB(pair<double,double> Ap, pair<double,double> Bp){//f= A/B, returns error on f assuming gaussian propagation of the errors and no correlation
   double A = Ap.first; double sig_A = Ap.second;
   double B = Bp.first; double sig_B = Bp.second;
-  double sig_f = A*B*TMath::Hypot(sig_A/A,sig_B/B);//sqrt((a*sig_A)^2 + (b*sig_b)^2)
+  double sig_f = A*TMath::Hypot(sig_A/A,sig_B/B)/B;
+  //  cout<<"A = "<<A<<" sig_A = "<<sig_A<<" B = "<<B<<" sig_B = "<<sig_B<<" sig_f = "<<sig_f<<endl;
   return sig_f;
 }
 
