@@ -156,6 +156,7 @@
      </InputData>
 -->
 <!-- DATA -->
+ 
 <InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunB_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunB_AK4CHS;
        <InputTree Name="AnalysisTree"/>
@@ -201,6 +202,7 @@
        <InputTree Name="AnalysisTree"/>
        <OutputTree Name="AnalysisTree"/>
   </InputData> 
+
     <UserConfig>
       <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>
       <Item Name="GenParticleCollection"   Value="GenParticles"/>

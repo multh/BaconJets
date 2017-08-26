@@ -135,6 +135,8 @@ protected:
   Event::Handle<int> tt_genptcl_n;//number of partons with pt>0
   Event::Handle<float> tt_rho;//event energy density
   Event::Handle<float> tt_Zpv;//Z of primary PV
+  Event::Handle<float> tt_Xpv;//X of primary PV
+  Event::Handle<float> tt_Ypv;//Y of primary PV
   Event::Handle<float> tt_Zpv_all;//Z of all PV
   Event::Handle<int> tt_nGoodvertices;
   //  Event::Handle<int> tt_partonFlavor; //only MC
@@ -806,6 +808,8 @@ TestModule::TestModule(uhh2::Context & ctx) :
 
     tt_rho = ctx.declare_event_output<float>("rho");
     tt_Zpv = ctx.declare_event_output<float>("Zpv");
+    tt_Xpv = ctx.declare_event_output<float>("Xpv");
+    tt_Ypv = ctx.declare_event_output<float>("Ypv");
     tt_Zpv_all = ctx.declare_event_output<float>("Zpv_all");
     //    tt_partonFlavor = ctx.declare_event_output<int>("partonFlavor");
     tt_flavorBarreljet = ctx.declare_event_output<int>("flavorBarreljet");
@@ -1278,8 +1282,8 @@ if(debug){
 
 
     // //Apply JER to all jet collections
-// if(jetER_smearer.get()) jetER_smearer->process(event); //TEST JER SFs effect
-    sort_by_pt<Jet>(*event.jets);
+ if(jetER_smearer.get()) jetER_smearer->process(event); //TEST JER SFs effect
+ sort_by_pt<Jet>(*event.jets);
 
 if(debug){   
   cout<<"After JER, before MET"<<endl;
@@ -1729,6 +1733,8 @@ if(debug){
     event.set(tt_jet_n,jet_n);
     event.set(tt_rho,event.rho);    
     event.set(tt_Zpv, (event.pvs->at(0)).z());
+    event.set(tt_Ypv, (event.pvs->at(0)).y());   
+    event.set(tt_Xpv, (event.pvs->at(0)).x());
     for(unsigned int ipv=0;ipv<event.pvs->size();ipv++)
       event.set(tt_Zpv_all, (event.pvs->at(ipv)).z());
 
@@ -1889,6 +1895,11 @@ if(debug){
   
     
     if(isMC){    
+      double dr_cut = 0;
+      if(jetLabel == "AK4CHS" || jetLabel == "AK4PUPPI") dr_cut = 0.2;
+      else if (jetLabel == "AK8CHS" || jetLabel == "AK8PUPPI")dr_cut = 0.4;
+      else throw runtime_error("TestModule.cxx: Invalid jet-label specified.");
+
       int flavor_barreljet = 0;
       int flavor_3rdjet = 0;
       double response_barreljet = 0;
@@ -1908,8 +1919,10 @@ if(debug){
       int idx_genp_min = -1;
       //this array contains one idx for each jet in the event. If -1: unmatched, else: idx of the closest genpart with dR<=0.2
       int idx_matched_jets[jet_n];
+      int idx_matched_RecoGenjets[jet_n]; //for each reco store macthed gen jet id
       for(int i=0; i<jet_n; i++){
 	idx_matched_jets[i] = -1;
+	idx_matched_RecoGenjets[i] = -1;
       }
 
       //matching gen- and reco-jets
@@ -1920,10 +1933,11 @@ if(debug){
 	  if(debug) cout << "dR between GenJet " << i << " and RecoJet " << j << ": " << dR << endl;
 	  if(dR<dR_min){
 	    dR_min = dR; 
-	    if(dR_min<0.1) idx_matching_jet = j;
+	    if(dR_min<dr_cut) idx_matching_jet = j;
 	  }
 	}
 	idx_jet_matching_genjet[i] = idx_matching_jet;
+	idx_matched_RecoGenjets[idx_matching_jet] = i;
 	if(debug) cout << "the jet matching the genjet no. " << i << " is jet no. " << idx_matching_jet << endl;
       }
       /////////////////////
@@ -1970,14 +1984,16 @@ if(debug){
       if(fabs(jet1->pt() - jet_barrel->pt()) < 0.001) idx_barreljet = 0;
       else if (fabs(jet2->pt() - jet_barrel->pt()) < 0.001) idx_barreljet = 1;
       else throw runtime_error("first two jets are not the barrel jets, how could this happen?");
-    
+      if(debug) cout<<"idx_barreljet = "<<idx_barreljet<<endl;
       //obtain flavor of the barreljet
       //-1: unmatched, 0: alpha too large, >0: flavor of matching genparticle 
       if(idx_matched_jets[idx_barreljet] != -1){	
+	if(debug) cout<<"idx_matched_jets[idx_barreljet]="<<idx_matched_jets[idx_barreljet]<<endl;
 	flavor_barreljet = fabs(event.genparticles->at(idx_matched_jets[idx_barreljet]).flavor());
+	if(debug) cout<<"flavor barrel jet ="<<flavor_barreljet<<endl;
 	response_barreljet = jet_barrel->pt() / event.genparticles->at(idx_matched_jets[idx_barreljet]).pt();
         barreljet_ptptcl = event.genparticles->at(idx_matched_jets[idx_barreljet]).pt(); 
-        barreljet_ptgen = event.genjets->at(idx_barreljet).pt(); 
+        barreljet_ptgen = event.genjets->at(idx_matched_RecoGenjets[idx_barreljet]).pt(); 
       }
       else{
 	flavor_barreljet = -1;
@@ -1996,7 +2012,7 @@ if(debug){
 	flavor_probejet = fabs(event.genparticles->at(idx_matched_jets[idx_probejet]).flavor());
 	response_probejet = jet_probe->pt() / event.genparticles->at(idx_matched_jets[idx_probejet]).pt();
 	probejet_ptptcl = event.genparticles->at(idx_matched_jets[idx_probejet]).pt();
-	probejet_ptgen = event.genjets->at(idx_probejet).pt();
+	probejet_ptgen = event.genjets->at(idx_matched_RecoGenjets[idx_probejet]).pt();
       }
       else{ 
 	flavor_probejet = -1;
@@ -2040,7 +2056,8 @@ if(debug){
       event.set(tt_flavorLeadingjet,flavor_leadingjet);  
       event.set(tt_flavorSubleadingjet,flavor_subleadingjet);
       event.set(tt_probejet_ptgen,probejet_ptgen);   
-      event.set(tt_probejet_ptptcl,probejet_ptptcl);   
+      event.set(tt_probejet_ptptcl,probejet_ptptcl); 
+      if(barreljet_ptgen<0 || probejet_ptgen<0) return false;// TEST store only matched events   
       if (debug) cout << "probejet_ptgen = "<<probejet_ptgen<<" barreljet_ptgen = "<<barreljet_ptgen<< " probejet_ptptcl = "<<probejet_ptptcl<<" barreljet_ptptcl = "<<barreljet_ptptcl<<endl;
       //response of leading jet
       //find corresponding genjet

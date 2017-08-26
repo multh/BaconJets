@@ -7,11 +7,14 @@ using namespace std;
 
 
 const int nResponseBins = 100;// 100
+//const int nResponseBins = 1000;// 100
 const int n_etabarr=5; // needed for the normalization to 1 in the barrel
 
 //Alpha: 
 const double alpha_cut = 0.3;
 const TString s_alpha_cut = "0.3";
+/* const double alpha_cut = 1e6; */
+/* const TString s_alpha_cut = "#infty"; */
 
 /* const double alpha_cut = 0.35; */
 /* const TString s_alpha_cut = "0.35"; */
@@ -27,9 +30,12 @@ const TString alpha_range[n_alpha] = {"a005", "a010", "a015", "a020", "a025", "a
 const double alpha_bins[n_alpha] = {0.050, 0.100, 0.150, 0.200, 0.250, 0.300, 0.350,  0.400, 0.450};
 
 //Pt bins:
-const int n_pt = 12;
+const int n_pt = 16;
+const TString pt_range[n_pt]= {"10","20","30","40","51", "73", "95", "129", "163", "230", "299", "365", "453", "566", "1000", "2000"};
+const double pt_bins[n_pt]       = {10,20, 30, 40, 51, 73, 95, 129, 163, 230, 299, 365, 453, 566, 1000, 2000};
+/*const int n_pt = 12;
 const TString pt_range[n_pt]= {"51", "73", "95", "129", "163", "230", "299", "365", "453", "566", "1000", "2000"};
-const double pt_bins[n_pt]       = {51, 73, 95, 129, 163, 230, 299, 365, 453, 566, 1000, 2000};
+const double pt_bins[n_pt]       = {51, 73, 95, 129, 163, 230, 299, 365, 453, 566, 1000, 2000};*/
 
 
 //Eta bins:

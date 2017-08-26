@@ -35,6 +35,7 @@ void CorrectionObject::GenResponsePlots(){
   // TH1D *hmc_response_tagtagjet[n_pt-1][n_eta-1];// <pT,tag,RECO>/<pT,tag,gen> for tag&probe jet matched to GEN jets
 
   TH1D *hmc_A[n_pt-1][n_eta-1];   // Assymetry_RECO tag&probe jet matched to GEN jets
+  TH1D *hmc_B[n_pt-1][n_eta-1];   // MPF Assymetry_RECO tag&probe jet matched to GEN jets
   TH1D *hmc_A_GEN[n_pt-1][n_eta-1];   // Assymetry_GEN tag&probe jet matched to GEN jets
   TH1D *hmc_A_PARTON[n_pt-1][n_eta-1];   // Assymetry_PARTON tag&probe jet matched to GEN jets
 
@@ -62,7 +63,7 @@ void CorrectionObject::GenResponsePlots(){
   TString name10 = "hist_mc_genresponse_tagtag_";
   TString name5 = "hist_mc_genresponse_probetag_parton_";
   TString name2 = "hist_mc_genresponse_probetag_reco_";*/
-
+  TString name10 = "hist_mc_B_";
   TString name11 = "hist_mc_A_";
   TString name12 = "hist_mc_A_GEN_";
   TString name13 = "hist_mc_A_PARTON_";
@@ -103,7 +104,8 @@ void CorrectionObject::GenResponsePlots(){
       hmc_response_probetagparton[k][j] = new TH1D(name,"",nResponseBins, -10.0, 10.0);
       name = name2 + eta_name + "_" + pt_name;
       hmc_response_probetagreco[k][j] = new TH1D(name,"",nResponseBins, -10.0, 10.0);*/
-
+      name = name10 + eta_name + "_" + pt_name;
+      hmc_B[k][j] = new TH1D(name,"",nResponseBins, -2.0, 2.0);
       name = name11 + eta_name + "_" + pt_name;
       hmc_A[k][j] = new TH1D(name,"",nResponseBins, -2.0, 2.0);
       name = name12 + eta_name + "_" + pt_name;
@@ -171,6 +173,7 @@ void CorrectionObject::GenResponsePlots(){
   TTreeReaderValue<Float_t> barreljet_pt_mc(myReader_MC, "barreljet_pt");
   TTreeReaderValue<Float_t> alpha_mc(myReader_MC, "alpha");
   TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
+  TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
 
   TTreeReaderValue<Float_t> probejet_ptgen_mc(myReader_MC, "probejet_ptgen");
   TTreeReaderValue<Float_t> barreljet_ptgen_mc(myReader_MC, "barreljet_ptgen");
@@ -187,8 +190,8 @@ void CorrectionObject::GenResponsePlots(){
 
   int icount=0;
 
-  TString pt_binning_var_str = "#bar{p}^{RECO}_{T} [GeV]";//bin in pt_ave, RECO
-  TString pt_binning_var_name = "__pT_ave_RECO__";//bin in pt_ave, RECO
+  // TString pt_binning_var_str = "#bar{p}^{RECO}_{T} [GeV]";//bin in pt_ave, RECO
+  // TString pt_binning_var_name = "__pT_ave_RECO__";//bin in pt_ave, RECO
 
   // TString pt_binning_var_str = "p^{tag,GEN}_{T} [GeV]";//bin in pt_tag, GEN
   // TString pt_binning_var_name = "__pT_tag_GEN__";//bin in pt_tag, GEN
@@ -196,16 +199,16 @@ void CorrectionObject::GenResponsePlots(){
   // TString pt_binning_var_str = "p^{probe,GEN}_{T} [GeV]";//bin in pt_probe, GEN
   // TString pt_binning_var_name = "__pT_probe_GEN__";//bin in pt_probe, GEN
 
-  // TString pt_binning_var_str = "#bar{p}^{GEN}_{T} [GeV]";//bin in pt_ave, GEN
-  // TString pt_binning_var_name = "__pT_ave_GEN__";//bin in pt_ave, GEN
+  TString pt_binning_var_str = "#bar{p}^{GEN}_{T} [GeV]";//bin in pt_ave, GEN
+  TString pt_binning_var_name = "__pT_ave_GEN__";//bin in pt_ave, GEN
 
 
   while (myReader_MC.Next()) {
   //  while (myReader_MC.Next() && icount<1e6) {
-        double pt_binning_var = *pt_ave_mc;//bin in pt_ave, RECO
+    //    double pt_binning_var = *pt_ave_mc;//bin in pt_ave, RECO
     //    double pt_binning_var = *barreljet_ptgen_mc;//bin in pt_tag, GEN
     //    double pt_binning_var = *probejet_ptgen_mc;//bin in pt_probe, GEN
-    //    double pt_binning_var = 0.5*(*barreljet_ptgen_mc+*probejet_ptgen_mc);//bin in pt_ave, GEN
+    double pt_binning_var = 0.5*(*barreljet_ptgen_mc+*probejet_ptgen_mc);//bin in pt_ave, GEN
     if(*alpha_mc>alpha_cut) continue;
     //fill histos in bins of pt and eta
     for(int k=0; k<n_pt-1; k++){
@@ -228,8 +231,8 @@ void CorrectionObject::GenResponsePlots(){
 	    }
 	    if(*flavorTagjet_mc==21 && *flavorProbejet_mc>0 && *flavorProbejet_mc<6 ){
 	      hmc_GQevents[k][j]->Fill(1,*weight_mc);
-	      flavorLabel = "GQ";
-	      flavor_sel=true;//GQ
+	      // flavorLabel = "GQ";
+	      // flavor_sel=true;//GQ
 	    }
 	    if(*flavorTagjet_mc==21 && *flavorProbejet_mc==21){
 	      hmc_GGevents[k][j]->Fill(1,*weight_mc);
@@ -238,8 +241,8 @@ void CorrectionObject::GenResponsePlots(){
 	    }
 	    if(*flavorTagjet_mc>0 && *flavorTagjet_mc<6 && *flavorProbejet_mc==21){
 	      hmc_QGevents[k][j]->Fill(1,*weight_mc);
-	      // flavorLabel = "QG";
-	      // flavor_sel=true;//QG
+	      flavorLabel = "QG";
+	      flavor_sel=true;//QG
 	    }
 
 	    if(!flavor_sel) continue;
@@ -300,6 +303,7 @@ void CorrectionObject::GenResponsePlots(){
 	  hmc_response_tagtagjet[k][j]->Fill(tagtagresponse,*weight_mc);*/
 	  double assymetry = ((*probejet_pt_mc)-(*barreljet_pt_mc))/((*probejet_pt_mc)+(*barreljet_pt_mc));
 	  hmc_A[k][j]->Fill(assymetry,*weight_mc);
+	  hmc_B[k][j]->Fill(*B_mc,*weight_mc);
 
 	  double assymetry_GEN = ((*probejet_ptgen_mc)-(*barreljet_ptgen_mc))/((*probejet_ptgen_mc)+(*barreljet_ptgen_mc));
 	  hmc_A_GEN[k][j]->Fill(assymetry_GEN,*weight_mc);
@@ -389,6 +393,7 @@ void CorrectionObject::GenResponsePlots(){
       hmc_taggenjetpt[k][j]->Write();
       hmc_tagpartonjetpt[k][j]->Write();
       hmc_A[k][j]->Write();
+      hmc_B[k][j]->Write();
       hmc_A_GEN[k][j]->Write();
       hmc_A_PARTON[k][j]->Write();
       hmc_QQevents[k][j]->Write();
@@ -422,6 +427,8 @@ void CorrectionObject::GenResponsePlots(){
 
   double val_rel_A_mc[n_eta-1][n_pt-1]; //value at pt,eta
   double err_rel_A_mc[n_eta-1][n_pt-1]; //error of ratio at pt,eta
+  double val_rel_B_mc[n_eta-1][n_pt-1]; //value at pt,eta
+  double err_rel_B_mc[n_eta-1][n_pt-1]; //error of ratio at pt,eta
 
   double val_probejet_pt[n_eta-1][n_pt-1]; //value at pt,eta
   double err_probejet_pt[n_eta-1][n_pt-1]; //value at pt,eta
@@ -498,6 +505,13 @@ void CorrectionObject::GenResponsePlots(){
       res_mc_rel_r.second = 2/(pow((1-A_mc.first),2)) * A_mc.second;
       val_rel_A_mc[i][j] = res_mc_rel_r.first;
       err_rel_A_mc[i][j] = res_mc_rel_r.second;
+
+      pair <double,double> B_mc = GetValueAndError(hmc_B[j][i]);
+      pair<double,double> res_mc_mpf_r;
+      res_mc_mpf_r.first = (1+B_mc.first)/(1-B_mc.first);
+      res_mc_mpf_r.second = 2/(pow((1-B_mc.first),2)) * B_mc.second;
+      val_rel_B_mc[i][j] = res_mc_mpf_r.first;
+      err_rel_B_mc[i][j] = res_mc_mpf_r.second;
 
       pair <double,double> A_GEN_mc = GetValueAndError(hmc_A_GEN[j][i]);
       pair<double,double> res_mc_rel_r_GEN;
@@ -669,6 +683,15 @@ void CorrectionObject::GenResponsePlots(){
     graph_rel_A_mc->SetLineColor(kOrange+7);
     TString axistitle_A_mc = "(1+<A_{RECO}>)/(1-<A_{RECO}>)";
 
+    TGraphErrors *graph_rel_B_mc   = new TGraphErrors(n_pt-1, xbin_tgraph, val_rel_B_mc[i], zero, err_rel_B_mc[i]);
+    graph_rel_B_mc   = (TGraphErrors*)CleanEmptyPoints(graph_rel_B_mc);
+    graph_rel_B_mc->SetTitle("");
+    graph_rel_B_mc->SetMarkerColor(kGray+2);
+    graph_rel_B_mc->SetMarkerStyle(21);
+    graph_rel_B_mc->SetMarkerSize(1.2);
+    graph_rel_B_mc->SetLineColor(kGray+2);
+    TString axistitle_B_mc = "(1+<B_{RECO}>)/(1-<B_{RECO}>)";
+
     TGraphErrors *graph_probeRECO_probeGEN   = new TGraphErrors(n_pt-1, xbin_tgraph, val_probeRECO_probeGEN[i], zero, err_probeRECO_probeGEN[i]);
     graph_probeRECO_probeGEN   = (TGraphErrors*)CleanEmptyPoints(graph_probeRECO_probeGEN);
     //    cout<<"graph_probeRECO_probeGEN"<<endl;
@@ -713,6 +736,7 @@ void CorrectionObject::GenResponsePlots(){
     h->GetXaxis()->SetLimits(30,pt_bins[n_pt-1]+100);
     h->GetYaxis()->SetRangeUser(0.70,1.30);
     graph_rel_A_mc->Draw("P SAME");
+    graph_rel_B_mc->Draw("P SAME");
     graph_probeRECO_probeGEN->Draw("P SAME");
     graph_tagRECO_tagGEN->Draw("P SAME");
     graph_probeRECO_tagRECO->Draw("P SAME");
@@ -728,6 +752,7 @@ void CorrectionObject::GenResponsePlots(){
     leg_rel->SetTextFont(42);
     leg_rel->SetHeader("R^{MC}_"+altitle+", "+eta_range[i]+"#leq|#eta|<"+eta_range[i+1]+" "+flavorLabel); 
     leg_rel->AddEntry(graph_rel_A_mc, axistitle_A_mc,"P");
+    leg_rel->AddEntry(graph_rel_B_mc, axistitle_B_mc,"P");
     leg_rel->AddEntry(graph_probeRECO_probeGEN, axistitle_mc_probeprobe,"P");
     leg_rel->AddEntry(graph_tagRECO_tagGEN, axistitle_mc_tagtag,"P");
     leg_rel->AddEntry(graph_probeRECO_tagRECO, axistitle_mc_probetagRECO,"P");
@@ -735,6 +760,7 @@ void CorrectionObject::GenResponsePlots(){
     c_rel->SaveAs(CorrectionObject::_outpath+"plots/control/GenResponse_RatioOfAverages_RECOvsGEN_"+pt_binning_var_name+ CorrectionObject::_generator_tag + "_eta_" + eta_range2[i] + "_" + eta_range2[i+1] + ".pdf");
 
     delete graph_rel_A_mc;
+    delete graph_rel_B_mc;
     delete graph_probeRECO_probeGEN;
     delete graph_tagRECO_tagGEN;
     delete graph_probeRECO_tagRECO;
