@@ -26,7 +26,6 @@ using namespace std;
 
 
 void CorrectionObject::InputForGlobalFit_eta_0_13(){
-  const int min_number_events = 20;//required number of events in response histogram
   TStyle* m_gStyle = new TStyle();
   m_gStyle->SetOptFit(0);
 
@@ -51,11 +50,19 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
   TH1D *hdata_mpf_r[n_pt-1][n_eta_common_2-1][n_alpha_common];//MPF responce for data
   TH1D *hmc_rel_r[n_pt-1][n_eta_common_2-1][n_alpha_common];// pT-balance responce for MC
   TH1D *hmc_mpf_r[n_pt-1][n_eta_common_2-1][n_alpha_common];//MPF responce for MC
+
+  TH1D *hdata_num[n_alpha_common][n_eta_common_2-1];
+  TH1D *hmc_num[n_alpha_common][n_eta_common_2-1];
+
   int count = 0;
+  int count2= 0;
+
   TString name1 = "hist_data_rel_r_";
   TString name2 = "hist_data_mpf_r_";
   TString name3 = "hist_mc_rel_r_";
   TString name4 = "hist_mc_mpf_r_";
+  TString name5 = "hist_data_num";
+  TString name6 = "hist_mc_num";
 
   //Initialize with 0 values
   for(int i=0; i<n_alpha_common; i++){
@@ -83,8 +90,12 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
 	name = name4; name+=count;
 	hmc_mpf_r[k][j][i] = new TH1D(name,"",100, 0, 2.5);
 	count++;
-
       }
+      	TString name10 = name5; name10+=count2;
+	hdata_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
+	name10 = name6; name10+=count2;
+	hmc_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
+	count2++;
     }
   }
 
@@ -164,6 +175,13 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
 	pair<double,double> ratio_res_pTbal = Rmc_to_Rdata(res_mc_rel_r,res_data_rel_r);
 	ratio_al_pTbal[i][j][k] = ratio_res_pTbal.first;
 	err_ratio_al_pTbal[i][j][k] = ratio_res_pTbal.second;
+
+	//	if(hmc_mpf_r[k][j][i]->GetEntries()>100){
+	hmc_num[i][j]->SetBinContent(k+1, hmc_mpf_r[k][j][i]->GetEntries());
+	//	}
+      //	if(hdata_mpf_r[k][j][i]->GetEntries()>100){
+	hdata_num[i][j]->SetBinContent(k+1, hdata_mpf_r[k][j][i]->GetEntries());
+	//	}
       }
     }
   }
@@ -206,6 +224,9 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       mpf_ratio[i][j] = CleanEmptyPoints(mpf_ratio[i][j]);
       rrel_ratio[i][j] = CleanEmptyPoints(rrel_ratio[i][j]);
 
+      hmc_num[i][j]->SetName("mc_RawNEvents_"+alpha_range_common[i]);
+      hdata_num[i][j]->SetName("data_RawNEvents_"+alpha_range_common[i]);
+
       mpf_data[i][j]->SetName("mpfchs_dijet_"+alpha_range_common[i]);
       mpf_mc[i][j]->SetName("mpfchs_dijet_"+alpha_range_common[i]);
       rrel_data[i][j]->SetName("ptchs_dijet_"+alpha_range_common[i]);
@@ -216,16 +237,18 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
     }
 
   //Save results in root file
-  TFile* outputfile = new TFile(CorrectionObject::_outpath+"output/JEC_L2_Dijet_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+"_eta_0_13.root","RECREATE");
+  TFile* outputfile = new TFile(CorrectionObject::_outpath+"output/JEC_L2_Dijet_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".root","UPDATE");
   outputfile->Print();
 
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
-      if(i==0){
-	outputfile->mkdir("ratio/"+eta_output_2[j]);
-	outputfile->mkdir("data/"+eta_output_2[j]);
-	outputfile->mkdir("mc/"+eta_output_2[j]);
+
+        if(i==0){
+	  outputfile->mkdir("ratio/"+eta_output_2[j]);
+	  outputfile->mkdir("data/"+eta_output_2[j]);
+	  outputfile->mkdir("mc/"+eta_output_2[j]);
       }
+
       outputfile->cd("ratio/"+eta_output_2[j]);
       mpf_ratio[i][j]->Write();
       rrel_ratio[i][j]->Write();
@@ -233,10 +256,12 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       outputfile->cd("data/"+eta_output_2[j]);
       mpf_data[i][j]->Write();
       rrel_data[i][j]->Write();
+      hdata_num[i][j]->Write();
       
       outputfile->cd("mc/"+eta_output_2[j]);
       mpf_mc[i][j]->Write();
       rrel_mc[i][j]->Write();
+      hmc_num[i][j]->Write();
     }
  }
 

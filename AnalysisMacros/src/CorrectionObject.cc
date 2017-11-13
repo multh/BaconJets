@@ -22,6 +22,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
           
      
      //For QCD pT binned samples 
+     
       if(_generator == "pythia"){
 	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_AK4CHS_Flat.root";}
 	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_AK4CHS_Fwd.root";}
@@ -31,10 +32,12 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
 	
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + "_Fwd.root";
-	_MCpath_ForWeights  = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + ".root";
+	_MCpath_ForWeights  = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +"_Run" + _runnr +".root";
 	_generator_tag = "pythia8";
       }
      
+     
+
       //For flat MC samples:
       /*
       if(_generator == "pythia"){
@@ -70,15 +73,25 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       _DATApath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights = _weight_path + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       
+      
       //Check if files are in place:
       cout << "Opening MC file:   " << _MCpath << endl;
       cout << "Opening DATA file: " << _DATApath << endl << endl;
+
+      /*
+     if(!  CorrectionObject::make_path(std::string(_outpath.Data()))){
+      	cout << "No new Directory was created" << endl;
+      }
+      cout << endl;
+      */
+
       _MCFile = new TFile(_MCpath,"READ");
       _DATAFile = new TFile(_DATApath,"READ");
-
+      
+      /*
       if(_MCFile->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _MCpath+" does not exist!");
       if(_DATAFile->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _DATApath+" does not exist!");
-
+      */
 
       //lumitags
       if(_runnr == "BCD")    _lumitag      = "RunBCD  12.9 fb^{-1}";

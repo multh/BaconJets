@@ -26,9 +26,9 @@ using namespace std;
 
 
 void CorrectionObject::InputForGlobalFit(){
-  const int min_number_events = 20;//required number of events in response histogram
   TStyle* m_gStyle = new TStyle();
   m_gStyle->SetOptFit(0);
+  m_gStyle->SetOptStat(0);
 
   cout << "hello, it's mikkos macro" << endl;
   //calculate ratio in MC to DATA responses
@@ -51,16 +51,25 @@ void CorrectionObject::InputForGlobalFit(){
   TH1D *hdata_mpf_r[n_pt-1][n_eta_common-1][n_alpha_common];//MPF responce for data
   TH1D *hmc_rel_r[n_pt-1][n_eta_common-1][n_alpha_common];// pT-balance responce for MC
   TH1D *hmc_mpf_r[n_pt-1][n_eta_common-1][n_alpha_common];//MPF responce for MC
+
+  TH1D *hdata_num[n_alpha_common][n_eta_common-1];
+  TH1D *hmc_num[n_alpha_common][n_eta_common-1];
+
   int count = 0;
+  int count2= 0;
+ 
   TString name1 = "hist_data_rel_r_";
   TString name2 = "hist_data_mpf_r_";
   TString name3 = "hist_mc_rel_r_";
   TString name4 = "hist_mc_mpf_r_";
+  TString name5 = "hist_data_num";
+  TString name6 = "hist_mc_num";
 
   //Initialize with 0 values
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common-1; j++){
       for(int k=0; k<n_pt-1; k++){
+
 	ratio_al_mpf[i][j][k] = 0;
 	err_ratio_al_mpf[i][j][k] = 0;
 	ratio_al_pTbal[i][j][k] = 0;
@@ -83,8 +92,12 @@ void CorrectionObject::InputForGlobalFit(){
 	name = name4; name+=count;
 	hmc_mpf_r[k][j][i] = new TH1D(name,"",100, 0, 2.5);
 	count++;
-
       }
+      	TString name10 = name5; name10+=count2;
+	hdata_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
+	name10 = name6; name10+=count2;
+	hmc_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
+	count2++;
     }
   }
 
@@ -108,7 +121,7 @@ void CorrectionObject::InputForGlobalFit(){
 	       else{
 		 hdata_rel_r[k][j][i]->Fill(*rel_r_data,*weight_data);
 		 hdata_mpf_r[k][j][i]->Fill(*mpf_r_data,*weight_data);
-	       }
+	      }
 	   }
 	 }
      }
@@ -138,18 +151,18 @@ void CorrectionObject::InputForGlobalFit(){
    }
 
 
-
-
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common-1; j++){
       for(int k=0; k<n_pt-1; k++){
 	pair<double,double> res_mc_rel_r,res_data_rel_r;
 	pair<double,double> res_mc_mpf_r,res_data_mpf_r;
-	res_mc_rel_r = GetValueAndError(hmc_rel_r[k][j][i]);
-	res_data_rel_r = GetValueAndError(hdata_rel_r[k][j][i]);
-	res_mc_mpf_r = GetValueAndError(hmc_mpf_r[k][j][i]);
-	res_data_mpf_r = GetValueAndError(hdata_mpf_r[k][j][i]);
 
+	res_mc_rel_r = GetValueAndError(hmc_rel_r[k][j][i]);
+	res_mc_mpf_r = GetValueAndError(hmc_mpf_r[k][j][i]);
+
+	res_data_rel_r = GetValueAndError(hdata_rel_r[k][j][i]);
+	res_data_mpf_r = GetValueAndError(hdata_mpf_r[k][j][i]);
+	
 	mc_al_mpf[i][j][k] = res_mc_mpf_r.first;
 	err_mc_al_mpf[i][j][k] = res_mc_mpf_r.second;
 	mc_al_pTbal[i][j][k] = res_mc_rel_r.first;
@@ -164,7 +177,16 @@ void CorrectionObject::InputForGlobalFit(){
 	pair<double,double> ratio_res_pTbal = Rmc_to_Rdata(res_mc_rel_r,res_data_rel_r);
 	ratio_al_pTbal[i][j][k] = ratio_res_pTbal.first;
 	err_ratio_al_pTbal[i][j][k] = ratio_res_pTbal.second;
+
+	//	if(hmc_mpf_r[k][j][i]->GetEntries()>100){
+	hmc_num[i][j]->SetBinContent(k+1, hmc_mpf_r[k][j][i]->GetEntries());
+	//	}
+      //	if(hdata_mpf_r[k][j][i]->GetEntries()>100){
+	hdata_num[i][j]->SetBinContent(k+1, hdata_mpf_r[k][j][i]->GetEntries());
+	//	}
       }
+  
+
     }
   }
 
@@ -192,7 +214,6 @@ void CorrectionObject::InputForGlobalFit(){
       rrel_mc[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,mc_al_pTbal[i][j],res_zero,err_mc_al_pTbal[i][j]);
       mpf_ratio[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,ratio_al_mpf[i][j],res_zero,err_ratio_al_mpf[i][j]);
       rrel_ratio[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,ratio_al_pTbal[i][j],res_zero,err_ratio_al_pTbal[i][j]);
-
     }
   }
 
@@ -205,6 +226,9 @@ void CorrectionObject::InputForGlobalFit(){
       rrel_mc[i][j] = CleanEmptyPoints(rrel_mc[i][j]);
       mpf_ratio[i][j] = CleanEmptyPoints(mpf_ratio[i][j]);
       rrel_ratio[i][j] = CleanEmptyPoints(rrel_ratio[i][j]);
+
+      hmc_num[i][j]->SetName("mc_RawNEvents_"+alpha_range_common[i]);
+      hdata_num[i][j]->SetName("data_RawNEvents_"+alpha_range_common[i]);
 
       mpf_data[i][j]->SetName("mpfchs_dijet_"+alpha_range_common[i]);
       mpf_mc[i][j]->SetName("mpfchs_dijet_"+alpha_range_common[i]);
@@ -233,10 +257,12 @@ void CorrectionObject::InputForGlobalFit(){
       outputfile->cd("data/"+eta_output[j]);
       mpf_data[i][j]->Write();
       rrel_data[i][j]->Write();
-      
+      hdata_num[i][j]->Write();
+       
       outputfile->cd("mc/"+eta_output[j]);
       mpf_mc[i][j]->Write();
       rrel_mc[i][j]->Write();
+      hmc_num[i][j]->Write();
     }
  }
 

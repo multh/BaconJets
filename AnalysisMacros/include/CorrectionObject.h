@@ -89,6 +89,10 @@ using namespace std;
     void FullCycle_CorrectFormulae_eta();
     void MatchingPlots();
     void GenResponsePlots();
+    void Monitoring();
+    void Derive_Thresholds_alternativeWay(bool pt_check = false);
+    void Derive_Thresholds_SingleMuonCrossCheck(TString siMu_dirName_);
+
 
   private:
     TString _runnr;

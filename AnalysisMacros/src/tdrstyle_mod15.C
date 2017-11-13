@@ -238,8 +238,8 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX , TString lumi_13TeV)
   //if( iPosX == 0  ) relPosX = pad->GetLeftMargin();
   int align_ = 10*alignX_ + alignY_;
 
-  float H = pad->GetWh();
-  float W = pad->GetWw();
+  //  float H = pad->GetWh();
+  // float W = pad->GetWw();
   float l = pad->GetLeftMargin();
   float t = pad->GetTopMargin();
   float r = pad->GetRightMargin();
@@ -341,12 +341,12 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX , TString lumi_13TeV)
     {
       if( drawLogo )
 	{
-	  posX_ =   l + 0.045*(1-l-r)*W/H;
-	  posY_ = 1-t - 0.045*(1-t-b);
-	  float xl_0 = posX_;
-	  float yl_0 = posY_ - 0.15;
-	  float xl_1 = posX_ + 0.15*H/W;
-	  float yl_1 = posY_;
+	  //posX_ =   l + 0.045*(1-l-r)*W/H;
+	  //posY_ = 1-t - 0.045*(1-t-b);
+	  // float xl_0 = posX_;
+	  //float yl_0 = posY_ - 0.15;
+	  //float xl_1 = posX_ + 0.15*H/W;
+	  //float yl_1 = posY_;
 	  //TASImage* CMS_logo = new TASImage("CMS-BW-label.png");
 	  //TPad* pad_logo = new TPad("logo","logo", xl_0, yl_0, xl_1, yl_1 );
 	  //pad_logo->Draw();
@@ -402,7 +402,7 @@ void tdrCanvas(TCanvas *&canv_in, const char* canvName, TH1D *&h,
 
   setTDRStyle();
 
-  //writeExtraText = true;       // if extra text
+  // writeExtraText = true;       // if extra text
   //extraText  = "Preliminary";  // default extra text is "Preliminary"
   //lumi_8TeV  = "19.5 fb^{-1}"; // default is "19.7 fb^{-1}"
   //lumi_7TeV  = "5.0 fb^{-1}";  // default is "5.1 fb^{-1}"
