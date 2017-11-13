@@ -19,3 +19,4 @@ double ErrorPropagation_AB(std::pair<double,double> Ap, std::pair<double,double>
 TGraphErrors* CleanEmptyPoints(TGraphErrors* input);
 
 TH1D* GetHist(TFile *rootfile, TString selection, TString varName, int nbins, double low, double up);
+Double_t SmoothFit(Double_t *v, Double_t *par);

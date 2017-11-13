@@ -16,14 +16,13 @@ using namespace std;
 
 void CorrectionObject::L2ResOutput(){
   cout << "--------------- Starting L2ResOutput() ---------------" << endl << endl;
-
-
+   cout<<"Before files"<<endl;
   TFile* f_Res_mpf = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
   TFile* f_Res_dijet = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
 
-  TFile* f_Res_mpf_old   = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
-  TFile* f_Res_dijet_old = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
-
+  TFile* f_Res_mpf_old   = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_NewSF/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
+  TFile* f_Res_dijet_old = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_NewSF/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
+   cout<<"After files"<<endl;
   TString JetDescrib;                                                                                                                            
   if (CorrectionObject::_collection=="AK4CHS") JetDescrib = "Anti-k_{t} R = 0.4, PF+CHS";
   if (CorrectionObject::_collection=="AK4Puppi") JetDescrib = "Anti-k_{t} R = 0.4, PF+PUPPI";
@@ -80,8 +79,7 @@ void CorrectionObject::L2ResOutput(){
   TH1D* res_logpt_dijet_diff = (TH1D*) res_logpt_dijet_kfsrfit->Clone("res_logpt_dijet_diff");
   res_logpt_dijet_diff->Add(res_logpt_dijet_kfsrfit_old,-1);
   
-
-
+ 
   //default Canvas
   TCanvas* c1 = new TCanvas();
 
@@ -111,7 +109,7 @@ void CorrectionObject::L2ResOutput(){
   res_logpt_dijet_kfsrfit_val->SetLineWidth(2);
   res_logpt_dijet_kfsrfit_val->SetLineColor(kBlue+1);
   //*********************************************************************************
-
+ 
   pt_depend_const_mpf->SetLineWidth(2);
   pt_depend_const_mpf->SetLineColor(kRed+1);
   pt_depend_const_dijet->SetLineWidth(2);
@@ -122,6 +120,7 @@ void CorrectionObject::L2ResOutput(){
   pt_depend_logpt_mpf->SetLineColor(kRed+1);
   pt_depend_logpt_dijet->SetLineWidth(2);
   pt_depend_logpt_dijet->SetLineColor(kBlue+1);
+  
 
   kfsr_mpf->SetLineWidth(2);
   kfsr_mpf->SetLineColor(kRed+1);
@@ -154,8 +153,9 @@ void CorrectionObject::L2ResOutput(){
   leg1.AddEntry(pt_depend_logpt_mpf, "MPF Loglin","L");
   leg1.AddEntry(pt_depend_logpt_dijet, "Pt Loglin","L"); 
   
-  TCanvas* c2 = new TCanvas();
-  tdrCanvas(c2,"c2",h,4,10,kSquare,CorrectionObject::_lumitag);
+
+   TCanvas* c2 = new TCanvas();
+   tdrCanvas(c2,"c2",h,4,10,kSquare,CorrectionObject::_lumitag);
   
   TString alVal;
   alVal.Form("%0.2f\n",alpha_cut);
@@ -164,7 +164,7 @@ void CorrectionObject::L2ResOutput(){
   axistitle +=altitle;
   h->GetYaxis()->SetTitle(axistitle);
   h->GetYaxis()->SetRangeUser(0.81,1.15); 
-
+  
   pt_depend_const_mpf->SetMarkerStyle(1);
   pt_depend_const_dijet->SetMarkerStyle(1);
   pt_depend_logpt_mpf->SetMarkerStyle(1);
@@ -178,11 +178,12 @@ void CorrectionObject::L2ResOutput(){
   leg1.Draw();
   tex->DrawLatex(0.45,0.87,JetDescrib);
   c2->SaveAs(CorrectionObject::_outpath+"plots/Ratio_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
-
+  
   
   TCanvas *c3 = new TCanvas();
   tdrCanvas(c3,"c3",h,4,10,kSquare,CorrectionObject::_lumitag);
   h->GetYaxis()->SetTitle("k_{FSR}");
+  h->GetYaxis()->SetTitleSize(0.045);
   h->GetYaxis()->SetRangeUser(0.81,1.15);
   kfsr_dijet_fit->SetMarkerStyle(1);
   kfsr_mpf_fit->SetMarkerStyle(1);
@@ -205,6 +206,8 @@ void CorrectionObject::L2ResOutput(){
   TCanvas *c4 = new TCanvas();
   tdrCanvas(c4,"L2res_kFSRfit",h,4,10,kSquare,CorrectionObject::_lumitag);
   h->GetYaxis()->SetTitle("Relative correction");
+  h->GetYaxis()->SetTitleSize(0.045);
+  h->GetXaxis()->SetTitleSize(0.045);
   h->GetYaxis()->SetRangeUser(0.8,1.2);
   res_const_mpf_kfsrfit->SetMarkerStyle(1);
   res_const_dijet_kfsrfit->SetMarkerStyle(1);
@@ -222,6 +225,8 @@ void CorrectionObject::L2ResOutput(){
  TCanvas *c10 = new TCanvas();
   tdrCanvas(c10,"L2res_kFSRfit",h,4,10,kSquare,CorrectionObject::_lumitag);
   h->GetYaxis()->SetTitle("Relative correction");
+  h->GetYaxis()->SetTitleSize(0.045);
+  h->GetXaxis()->SetTitleSize(0.045);
   h->GetYaxis()->SetRangeUser(0.8,1.2);
   res_const_mpf_kfsrfit_val->SetMarkerStyle(1);
   res_const_dijet_kfsrfit_val->SetMarkerStyle(1);
@@ -268,6 +273,8 @@ void CorrectionObject::L2ResOutput(){
     if(i==2) var="up";
     if(i==3) var="doubleup";
 
+    cout<<"Before files"<<endl;
+
     f_Res_mpf_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
     f_Res_dijet_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
 
@@ -277,9 +284,9 @@ void CorrectionObject::L2ResOutput(){
     f_Res_dijet_diff_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ"); 
 
 
-    f_Res_mpf_old_var   = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
-    f_Res_dijet_old_var = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
-
+    f_Res_mpf_old_var   = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_NewSF/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
+    f_Res_dijet_old_var = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_NewSF/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
+   cout<<"After files"<<endl;
 
     res_logpt_mpf_kfsrfit_var[i] = (TH1D*)f_Res_mpf_var->Get("res_logpt_mpf");
     res_logpt_dijet_kfsrfit_var[i] = (TH1D*)f_Res_dijet_var->Get("res_logpt_dijet");
@@ -418,7 +425,7 @@ void CorrectionObject::L2ResOutput(){
   c9->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_DiJet_kFSRfit"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
   
 
-
+ 
 
   cout << " ------------------- Finished L2Res(). Going to delete everything. ------------------------ " << endl;
 
@@ -474,5 +481,5 @@ void CorrectionObject::L2ResOutput(){
   delete pt_depend_const_mpf;
   delete f_Res_dijet;
   delete f_Res_mpf;
-
+  
 }

@@ -1,6 +1,7 @@
 #include "../include/CorrectionObject.h"
 #include "../include/parameters.h"
 #include "../include/useful_functions.h"
+#include "../include/kFSR_Fit.h"
 
 #include <TStyle.h>
 #include <TH1.h>
@@ -32,9 +33,10 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 // get ratio for MC to DATA responses
   double ratio_al_rel_r[n_pt-1][n_eta-1][n_alpha]; //ratio at pt,eta,alpha bins
   double err_ratio_al_rel_r[n_pt-1][n_eta-1][n_alpha]; //error of ratio at pt,eta,alpha bins
+
   double ratio_al_mpf_r[n_pt-1][n_eta-1][n_alpha]; //ratio at pt,eta,alpha bins
   double err_ratio_al_mpf_r[n_pt-1][n_eta-1][n_alpha]; //error of ratio at pt,eta,alpha bins
-
+ 
   TProfile *pr_data_asymmetry[n_eta-1][n_alpha];// pT-balance response for data  
   TProfile *pr_data_B[n_eta-1][n_alpha];//MPF response for data
   TProfile *pr_mc_asymmetry[n_eta-1][n_alpha];// pT-balanse responce for MC  
@@ -64,13 +66,13 @@ void CorrectionObject::kFSR_CorrectFormulae(){
       }
       
       TString name = name1; name+=count;
-      hdata_asymmetry[j][i] = new TH2D(name,"A in DATA; p_{T}^{ave} [GeV]; A",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hdata_asymmetry[j][i] = new TH2D(name,"A in DATA; #bar{p}_{T} [GeV]; A",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       name = name2;name+=count;
-      hdata_B[j][i]         = new TH2D(name,"B in DATA;p_{T}^{ave} [GeV];B",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hdata_B[j][i]         = new TH2D(name,"B in DATA; #bar{p}_{T} [GeV];B",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       name = name3; name+=count;
-      hmc_asymmetry[j][i]   = new TH2D(name,"A in MC;p_{T}^{ave} [GeV];A",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hmc_asymmetry[j][i]   = new TH2D(name,"A in MC; #bar{p}_{T} [GeV];A",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
       name = name4; name+=count;
-      hmc_B[j][i]           = new TH2D(name,"B in MC;p_{T}^{ave} [GeV];B",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
+      hmc_B[j][i]           = new TH2D(name,"B in MC; #bar{p}_{T} [GeV];B",n_pt-1,pt_bins,nResponseBins, -1.2, 1.2);
           
       count++;
     }
@@ -100,21 +102,19 @@ void CorrectionObject::kFSR_CorrectFormulae(){
   cout << "starting to loop over DATA events." << endl;
 
   while (myReader_DATA.Next()) {
-    for(int j=0; j<n_eta-1; j++){
-      //      cout<<"probejet_eta_data = "<<*probejet_eta_data<<endl;
+     for(int j=0; j<n_eta-1; j++){
       if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
       for(int i=0; i<n_alpha; i++){
 	if(*alpha_data>alpha_bins[i]) continue;
 	else{
  	  hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
 	  hdata_B[j][i]->Fill(*pt_ave_data,*B_data,*weight_data);
-	  //cout<<"alpha = "<<*alpha_data<<" probejet_eta_data = "<<*probejet_eta_data<<" pt_ave_data = "<<*pt_ave_data<<" B_data = "<<*B_data<<" Entries = "<<hdata_B[j][i]->GetEntries()<<endl;
 	  for(int k=0; k<n_pt-1; k++){                                                
 	      if((*pt_ave_data < pt_bins[k]) || (*pt_ave_data >= pt_bins[k+1])) continue;
 	       n_entries_data[j][i][k]++;
 	    }
 	  idx++;
-	  if(idx%1000000==0) cout << "looping over data-TTree: Idx = " << idx << endl;
+	  //	  if(idx%1000000==0) cout << "looping over data-TTree: Idx = " << idx << endl;
 	}
       }
     }
@@ -145,7 +145,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	       n_entries_mc[j][i][k]++;
 	    }
 	   idx++;
-	   if(idx%1000000==0) cout << "looping over MC-TTree: Idx = " << idx << endl;
+	   // if(idx%1000000==0) cout << "looping over MC-TTree: Idx = " << idx << endl;
 	 }
        }
      }
@@ -166,20 +166,32 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      for(int i=0; i<n_alpha; i++){
        //print TH2D histos
        TCanvas* c_dummy1 = new TCanvas();
+       hdata_asymmetry[j][i]->GetYaxis()->SetTitleSize(0.048);
+       hdata_asymmetry[j][i]->GetYaxis()->SetTitleOffset(0.6);
+       hdata_asymmetry[j][i]->GetXaxis()->SetTitleSize(0.048);
        hdata_asymmetry[j][i]->Draw("COLZ");
-       // c_dummy1->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy1->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy1;
        TCanvas* c_dummy2 = new TCanvas();
+       hmc_asymmetry[j][i]->GetYaxis()->SetTitleSize(0.048);
+       hmc_asymmetry[j][i]->GetYaxis()->SetTitleOffset(0.6);
+       hmc_asymmetry[j][i]->GetXaxis()->SetTitleSize(0.05);
        hmc_asymmetry[j][i]->Draw("COLZ");
-       //c_dummy2->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy2->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy2;
        TCanvas* c_dummy3 = new TCanvas();
+       hdata_B[j][i]->GetYaxis()->SetTitleSize(0.048);
+       hdata_B[j][i]->GetYaxis()->SetTitleOffset(0.6);
+       hdata_B[j][i]->GetXaxis()->SetTitleSize(0.048);
        hdata_B[j][i]->Draw("COLZ");
-       //c_dummy3->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy3->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy3;
        TCanvas* c_dummy4 = new TCanvas();
+       hmc_B[j][i]->GetYaxis()->SetTitleSize(0.048);
+       hmc_B[j][i]->GetYaxis()->SetTitleOffset(0.6);
+       hmc_B[j][i]->GetXaxis()->SetTitleSize(0.048);
        hmc_B[j][i]->Draw("COLZ");
-       //c_dummy4->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy4->SaveAs(CorrectionObject::_outpath+"plots/control/TH2_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy4;
 
        //build profiles
@@ -187,7 +199,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pr_data_B[j][i]         = (TProfile*)hdata_B[j][i]->ProfileX();
        pr_mc_asymmetry[j][i]   = (TProfile*)hmc_asymmetry[j][i]->ProfileX();
        pr_mc_B[j][i]           = (TProfile*)hmc_B[j][i]->ProfileX();
-
+   
        //print profiles
        TCanvas* c_dummy5 = new TCanvas();
        pr_data_asymmetry[j][i]->Draw();
@@ -196,7 +208,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pr_data_asymmetry[j][i]->SetLineWidth(2);
        pr_data_asymmetry[j][i]->SetMinimum(-0.3);
        pr_data_asymmetry[j][i]->SetMaximum(0.3);
-       //c_dummy5->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy5->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy5;
 
        TCanvas* c_dummy6 = new TCanvas();
@@ -206,7 +218,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pr_mc_asymmetry[j][i]->SetLineWidth(2);
        pr_mc_asymmetry[j][i]->SetMinimum(-0.3);
        pr_mc_asymmetry[j][i]->SetMaximum(0.3);
-       //c_dummy6->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy6->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_A_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy6;
 
        TCanvas* c_dummy7 = new TCanvas();
@@ -216,7 +228,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pr_data_B[j][i]->SetLineWidth(2);
        pr_data_B[j][i]->SetMinimum(-0.3);
        pr_data_B[j][i]->SetMaximum(0.3);
-       //c_dummy7->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy7->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_DATA_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy7;
 
        TCanvas* c_dummy8 = new TCanvas();
@@ -226,7 +238,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pr_mc_B[j][i]->SetLineWidth(2);
        pr_mc_B[j][i]->SetMinimum(-0.3);
        pr_mc_B[j][i]->SetMaximum(0.3);
-       //c_dummy8->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
+       c_dummy8->SaveAs(CorrectionObject::_outpath+"plots/control/Profile_B_MC_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+"_"+alpha_range[i]+".pdf");
        delete c_dummy8;
      }
    }
@@ -249,6 +261,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	 double rel_data = (1+pr_data_asymmetry[j][i]->GetBinContent(k+1))/(1-pr_data_asymmetry[j][i]->GetBinContent(k+1));
 
 	 if(!enough_entries[i][j][k]) rel_data = 0;
+
 	 double err_mpf_mc = 2/(pow((1-pr_mc_B[j][i]->GetBinContent(k+1)),2)) * pr_mc_B[j][i]->GetBinError(k+1);
 	 double err_mpf_data = 2/(pow((1-pr_data_B[j][i]->GetBinContent(k+1)),2)) * pr_data_B[j][i]->GetBinError(k+1);
 	 double err_rel_mc = 2/(pow((1-pr_mc_asymmetry[j][i]->GetBinContent(k+1)),2)) * pr_mc_asymmetry[j][i]->GetBinError(k+1);
@@ -264,16 +277,18 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        }
      }
    }
- 
+   
    //Normalization of hists to value at alpha = alpha_cut
  
   //1) find bin with alpha = alpha_cut: bin no. al_ref
-   int al_ref=0;
-   for(int i=0; i<n_alpha; i++){
-     if(fabs(alpha_bins[i]-alpha_cut)<1e-4) 
-       al_ref=i;
-   }
+ 
+     int al_ref =0;
 
+     for(int i=0; i<n_alpha; i++){
+       if(fabs(alpha_bins[i]-alpha_cut)<1e-4) 
+	 al_ref=i;
+     }
+    
    //2) Normalize values and errors of responses to value at alpha = alpha_cut
    
    for(int j=0; j<n_eta-1; j++){
@@ -283,25 +298,16 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        double norm_alref_mpf_r = ratio_al_mpf_r[k][j][al_ref];
        double err_norm_alref_mpf_r = err_ratio_al_mpf_r[k][j][al_ref];
        for(int i=0; i<n_alpha; i++){
-
+   
    	 if(norm_alref_rel_r>0){ //WHAT IS HAPPENING HERE? NO PROPER ERROR PROPAGATION !?! Ask other group that does kFSR-Extrapolation about error propagation
-   	   ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r; //original
-   	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r,2)));//Original
-   	   //  err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i]/ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r/norm_alref_rel_r,2)));
-   	   //	   err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i] / (ratio_al_rel_r[k][j][i]) ,2)+pow(err_norm_alref_rel_r / norm_alref_rel_r,2))) * ratio_al_rel_r[k][j][i] / norm_alref_rel_r ; //gaussian error propagation
-	  
-   	   //  if(i == al_ref) err_ratio_al_rel_r[k][j][i] = 0.; //TEST
-
-
-   	 }
-   	 if(norm_alref_mpf_r>0){
+	     ratio_al_rel_r[k][j][i] =   ratio_al_rel_r[k][j][i]/norm_alref_rel_r; //original
+	     err_ratio_al_rel_r[k][j][i] = sqrt(abs(pow(err_ratio_al_rel_r[k][j][i],2)-pow(err_norm_alref_rel_r,2)));//Original
+	 }
+   	 
+	 if(norm_alref_mpf_r>0){
    	   ratio_al_mpf_r[k][j][i] =   ratio_al_mpf_r[k][j][i]/norm_alref_mpf_r;
-   	   err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r,2))); //Original
-   	   //  err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i]/ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r/norm_alref_mpf_r,2)));
-   	   // err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i] / (ratio_al_mpf_r[k][j][i]) ,2)+pow(err_norm_alref_mpf_r / norm_alref_mpf_r,2))) * err_ratio_al_mpf_r[k][j][i] / norm_alref_mpf_r; //gaussian error propagation
-	  
-   	   // if(i == al_ref) err_ratio_al_mpf_r[k][j][i] = 0.; //TEST
-   	 }
+	   err_ratio_al_mpf_r[k][j][i] = sqrt(abs(pow(err_ratio_al_mpf_r[k][j][i],2)-pow(err_norm_alref_mpf_r,2))); //Original
+	 }
        }
      }
    }
@@ -316,9 +322,9 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 
    //Define legend
    TLegend *leg1;
-   leg1 = new TLegend(0.17,0.68,0.65,0.89,"","brNDC");//x+0.1
+   leg1 = new TLegend(0.28,0.68,0.85,0.89,"","brNDC");//x+0.1
    leg1->SetBorderSize(0);
-   leg1->SetTextSize(0.03);
+   leg1->SetTextSize(0.038);
    leg1->SetFillColor(10);
    leg1->SetLineColor(1);
    leg1->SetTextFont(42);
@@ -365,7 +371,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 
        TString pTbin_label = "";
        pTbin_label+=pt_bins[k];
-       pTbin_label+=" < p_T < ";
+       pTbin_label+=" < p_{T} < ";
        pTbin_label+=pt_bins[k+1];
        if(j==0) leg1->AddEntry(graph_rel_r[k][j],pTbin_label,"epl");
       
@@ -388,12 +394,11 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      }
    }
 
-  //************************************* Test 2D plot kFSR  *************************************
-
-
+  // ************************************* Test 2D plot kFSR  *************************************
+   
    //Create horizontal line for plotting ("ideal value")
    TLine *line = new TLine(alpha_bins[0],1,alpha_bins[n_alpha-1]+0.01,1);
-
+   
    TH2D* h_kFSR_pt_eta_rel = new TH2D("kFSR_pt_eta_rel","kFSR;|#eta|;p_{T}^{ave}", n_eta-1, eta_bins, n_pt-1, pt_bins);
    TH2D* h_chi2_kFSR_rel = new TH2D("chi2_kFSR_rel","#chi^{2} kFSR;|#eta|;p_{T}^{ave}", n_eta-1, eta_bins, n_pt-1, pt_bins);
    TCanvas* Rel[n_eta-1][n_pt-1];
@@ -429,6 +434,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        if(graph_rel_r[j][i]->GetN()>0) {
 
        pol_rel[i][j]->SetParameters(1.5,-0.5);
+
        graph_rel_r[j][i]->Fit(pol_rel[i][j],"RM");
        }
        else {
@@ -436,7 +442,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pol_rel[i][j]->SetParError(0,1);
        pol_rel[i][j]->SetParError(1,1);
      }
-  
+ 
       line->SetLineStyle(2);
        line ->Draw("SAME");
 
@@ -464,7 +470,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
       }
       h_chi2_kFSR_rel->SetBinContent(i+1, j+1,chi2ndf_kFSR_rel);
 
-     Rel[i][j]->Print(CorrectionObject::_outpath+"plots/kFSR_Pt_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1]+".pdf");
+      //   Rel[i][j]->Print(CorrectionObject::_outpath+"plots/kFSR_Pt_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1]+".pdf");
      delete tex2_rel;
      delete tex_rel;
        }
@@ -502,7 +508,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
   m_gStyle->SetOptStat(0);
   h_chi2_kFSR_rel->Draw("COLZ");
   c3->Print(CorrectionObject::_outpath+"plots/Chi2_kFSR_pT_"+CorrectionObject::_generator_tag+"_2DPlot.pdf");
-  //*****************************************************************************************************
+  // *****************************************************************************************************
   
    TH2D* h_kFSR_pt_eta_mpf = new TH2D("kFSR_pt_eta_mpf","kFSR;|#eta|;p_{T}^{ave}", n_eta-1, eta_bins, n_pt-1, pt_bins);
    TH2D* h_chi2_kFSR_mpf = new TH2D("chi2_kFSR_rel","#chi^{2} kFSR;|#eta|;p_{T}^{ave}", n_eta-1, eta_bins, n_pt-1, pt_bins);
@@ -547,7 +553,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      }
 
     TLatex *tex_mpf = new TLatex();
-     tex_mpf->SetNDC();
+    tex_mpf->SetNDC();
      tex_mpf->SetTextSize(0.045); 
      tex_mpf->DrawLatex(0.64,0.91,CorrectionObject::_lumitag);
 
@@ -569,14 +575,14 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        chi2ndf_kFSR_mpf = pol_mpf[i][j]->GetChisquare() / pol_mpf[i][j]->GetNDF();
       }
       h_chi2_kFSR_mpf->SetBinContent(i+1, j+1,chi2ndf_kFSR_mpf);
-      MPF[i][j]->Print(CorrectionObject::_outpath+"plots/kFSR_MPF_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1]+".pdf");
+      //   MPF[i][j]->Print(CorrectionObject::_outpath+"plots/kFSR_MPF_eta_"+eta_range2[i]+"_"+eta_range2[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1]+".pdf");
 
      delete tex2_mpf;
      delete tex_mpf;
      }
    }
 
-
+   
  TCanvas* Pt_dep_mpf[n_eta-1];
  TString name_mpf[n_eta-1];
  TH1D* h_kFSR_pt_mpf[n_eta-1]; 
@@ -606,11 +612,12 @@ void CorrectionObject::kFSR_CorrectFormulae(){
   m_gStyle->SetOptStat(0);
   h_chi2_kFSR_mpf->Draw("COLZ");
   c4->Print(CorrectionObject::_outpath+"plots/Chi2_kFSR_MPF_"+CorrectionObject::_generator_tag+"_2DPlot.pdf");
- //**********************************************************************************************
+    
+ // **********************************************************************************************
 
    /* +++++++++++++++++ PLOTS ++++++++++++++++++ */
    //Do the well-known, colorful kFSR linear fit plots
-  
+    
    //First set up the output files   
    //Create output .dat file, including the kFSR extrapolation (alpha->0)
    FILE *fp_rel_r, *fp_mpf_r; 
@@ -632,7 +639,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
    TF1 *pol1[n_eta-1];
    for (int j=0; j<n_eta-1; j++){ 
      plotname[j]="dijet_kfsr_diffPt_eta_"+eta_range[j]+"_"+eta_range[j+1];
-     a[j] = new TCanvas(plotname[j], plotname[j], 800,700);
+     a[j] = new TCanvas(plotname[j], plotname[j], 850,700);
      m_gStyle->SetOptTitle(0);
      pTgraph_rel_r[j]->Draw("AP");
 
@@ -640,7 +647,10 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pTgraph_rel_r[j]->GetYaxis()->SetRangeUser(0.92,1.08);
        pTgraph_rel_r[j]->GetXaxis()->SetRangeUser(0,alpha_bins[n_alpha-1]+0.01);
        pTgraph_rel_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})");
+       pTgraph_rel_r[j]->GetYaxis()->SetTitleSize(0.045);
+       pTgraph_rel_r[j]->GetYaxis()->SetTitleOffset(1.);
        pTgraph_rel_r[j]->GetXaxis()->SetTitle("cut on #alpha");
+       pTgraph_rel_r[j]->GetXaxis()->SetTitleSize(0.045);
 
      }
 
@@ -684,7 +694,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      TLatex *tex = new TLatex();
      tex->SetNDC();
      tex->SetTextSize(0.045); 
-     tex->DrawLatex(0.64,0.91,CorrectionObject::_lumitag);
+     tex->DrawLatex(0.5,0.91,CorrectionObject::_lumitag);
 
      TString chi2_loglin = "#chi^{2}/n.d.f = ";
      TLatex *tex2 = new TLatex();
@@ -699,7 +709,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        tex2->SetTextSize(0.035); 
        tex2->DrawLatex(0.64,0.35,chi2_loglin);
      }
-     cout << "Printing kFSR plots to " << CorrectionObject::_outpath+"plots/kFSR_Pt_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf" << endl;
+     cout << "Printing kFSR plots to " << CorrectionObject::_outpath+"plots/kFSR_Pt_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+".pdf" << endl;
      a[j]->Print(CorrectionObject::_outpath+"plots/kFSR_Pt_"+CorrectionObject::_generator_tag+"_eta_"+eta_range2[j]+"_"+eta_range2[j+1]+".pdf");
 
 
@@ -709,7 +719,8 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      delete tex;
    }
    
-   
+      
+
    cout << endl << endl << "finished all fits for rel" << endl  << endl;
    fclose(fp_rel_r);
    cout << "closed some file, now opening output file" << endl;
@@ -726,7 +737,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
    cout << "closing output file" << endl;
    outputfile_rel_r->Close();
    cout << "closed output file" << endl;
-
+   
 
 
    // And now MPF results
@@ -735,7 +746,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
    TString plotname1[n_eta-1];
     for (int j=0; j<n_eta-1; j++){
      plotname1[j]="mpf_kfsr_diffPt_eta_"+eta_range[j]+"_"+eta_range[j+1];
-     b[j] = new TCanvas(plotname1[j], plotname1[j], 800,700);
+     b[j] = new TCanvas(plotname1[j], plotname1[j], 850,700);
      m_gStyle->SetOptTitle(0);
 
      pTgraph_mpf_r[j]->Draw("AP");
@@ -743,7 +754,10 @@ void CorrectionObject::kFSR_CorrectFormulae(){
        pTgraph_mpf_r[j]->GetYaxis()->SetRangeUser(0.92,1.08);
        pTgraph_mpf_r[j]->GetXaxis()->SetRangeUser(0,alpha_bins[n_alpha-1]+0.01);
        pTgraph_mpf_r[j]->GetYaxis()->SetTitle("(R_{MC}/R_{DATA})");
+       pTgraph_mpf_r[j]->GetYaxis()->SetTitleSize(0.045);
+       pTgraph_mpf_r[j]->GetYaxis()->SetTitleOffset(1.);
        pTgraph_mpf_r[j]->GetXaxis()->SetTitle("cut on #alpha");
+       pTgraph_mpf_r[j]->GetXaxis()->SetTitleSize(0.045);
      }
 
      pol1[j] = new TF1("pol1","pol1",0.14,0.36);  //TEST AK4
@@ -778,7 +792,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
      TLatex *tex = new TLatex();
      tex->SetNDC();
      tex->SetTextSize(0.045); 
-     tex->DrawLatex(0.64,0.91,CorrectionObject::_lumitag);
+     tex->DrawLatex(0.5,0.91,CorrectionObject::_lumitag);
 
      TString chi2_loglin = "#chi^{2}/n.d.f = ";
      TLatex *tex2 = new TLatex();
@@ -814,11 +828,11 @@ void CorrectionObject::kFSR_CorrectFormulae(){
    outputfile_mpf_r->Write();
    outputfile_mpf_r->Close();
 
-
-
+   //  }
+   
 
    cout << "+++++++++++++++++ Finished kFSR() +++++++++++++++++++" << endl;
-
+   
    //delete everything
    
    for (int j=0; j<n_eta-1; j++){ //n_eta-1
@@ -865,5 +879,7 @@ void CorrectionObject::kFSR_CorrectFormulae(){
 	       
    
    delete  m_gStyle;    
+   
    cout << "++++++++++++ Deleted everything in kFSR(), exiting ++++++++++++++" << endl;
+   
 }
