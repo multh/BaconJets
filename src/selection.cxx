@@ -145,6 +145,22 @@ bool Selection::DiJetAdvanced(uhh2::Event& evt)
     }
     return true;
 }
+  bool Selection::ThirdJetSelection(uhh2::Event& evt)
+  {
+    assert(event);
+
+    const int njets = event->jets->size();
+    if(njets < 2) return false;
+    
+    if(njets > 2) {
+      Jet* jet3 = &event->jets->at(2);
+      // cout<<"jet 3 eta: "<<fabs(jet3->eta())<<"  < 1.3 (Barrel)"<<endl;
+      if(fabs(jet3->eta()) > 1.3) return false;
+    }
+    
+    return true;
+  }
+
 
   int Selection::goodPVertex()
   {
@@ -223,38 +239,50 @@ bool Selection::DiJetAdvanced(uhh2::Event& evt)
     return false;
   }
 
-  bool Selection::EtaPhi(uhh2::Event& evt)
+  bool Selection::EtaPhi_HCAL(uhh2::Event& evt)
   {
     assert(event);
     
-    double EtaPhi_regions[9][4]={{-2.650, -2.500, -1.35, -1.05},
-				 {-2.964, -2.650, -1.10, -0.80},
-				 {-2.964, -2.650, -0.25, 0.1},
-				 {-2.964, -2.650, -3.14159, -2.8},
-				 {-2.964, -2.650, 2.14, 2.37},
-				 {-2.964, -2.650, 2.9, 3.14159},
-				 {2.650, 2.964, -2., -1.6},
-				 {2.650, 2.964, -0.97, -0.65},
-				 {2.650, 3.139, 0, 0.25}};
+    double EtaPhi_B[4]={-2.25, -1.93, 2.2, 2.5};
+    double EtaPhi_C[4]={-3.489, -3.139, 2.237, 2.475};
+    double EtaPhi_D[4]={-3.60, -3.139, 2.237, 2.475};
+    
+    const int njets = event->jets->size();
 
-    double probejet_eta = event->get(tt_probejet_eta);
-    double probejet_phi = event->get(tt_probejet_phi);
+    //Needed if only some jets should be checked 
+    /*
+    int njet_cut = 3;
+    if(njets<4) njet_cut = njets;
+    */
+    //
 
-    for(int i=0; i<9; i++){
-//      cout<<"EtaPi Region: "<<EtaPhi_regions[i][0]<<"  "<<EtaPhi_regions[i][1]<<"  "<<EtaPhi_regions[i][2]<<"  "<<EtaPhi_regions[i][3]<<endl;
-//      cout<<"probejet_eta: "<<probejet_eta<<endl;
-//      cout<<"probejet_phi: "<<probejet_phi<<endl;
-
-      if(probejet_eta > EtaPhi_regions[i][0] && probejet_eta < EtaPhi_regions[i][1] && probejet_phi > EtaPhi_regions[i][2] && probejet_phi < EtaPhi_regions[i][3]){
-//	cout<<"Event rejected!"<<endl<<endl;
-	return false;
+    for(int i=0; i < njets; i++){
+      
+      Jet* jet = &event->jets->at(i);// loop over all/some jets in event
+      
+      double jet_eta = jet->eta();
+      double jet_phi = jet->phi();
+      
+      if(event->run < s_runB){
+        if(jet_eta > EtaPhi_B[0] && jet_eta < EtaPhi_B[1] && jet_phi > EtaPhi_B[2] && jet_phi < EtaPhi_B[3]){
+	  return false;
+	}
       }
-     }
-   
+      else if(event->run > s_runB && event->run < s_runC){
+	if(jet_eta > EtaPhi_C[0] && jet_eta < EtaPhi_C[1] && jet_phi > EtaPhi_C[2] && jet_phi < EtaPhi_C[3]){
+	  return false;
+	}
+      }
+      else if(event->run > s_runC && event->run < s_runD+1){
+	if(jet_eta > EtaPhi_D[0] && jet_eta < EtaPhi_D[1] && jet_phi > EtaPhi_D[2] && jet_phi < EtaPhi_D[3]){
+	  return false;
+	}
+      }
+    }
     return true;
   }
-
-
+  
+  
 
   bool Selection::EtaPhiCleaning(uhh2::Event& evt)
   {
