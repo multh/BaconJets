@@ -327,8 +327,8 @@ void trigger_study_data_run2_L1_data_corr()
   const int nResponseBins = 100;// 100
 
   const int triggerVal[trg_nr] = {40, 60, 80, 140, 200, 260, 320, 400, 500};
-  const int triggerThres[trg_nr+1] = {51, 73, 95, 163, 230, 299, 365, 453, 566, 1000};
-  const int triggerThres_HF[trg_HF+1] = {100, 126, 152, 250, 319, 433,1000};
+  const int triggerThres[trg_nr+1] = {51, 74, 96, 165, 232, 300, 366, 456, 569, 1000};
+  const int triggerThres_HF[trg_HF+1] = {72, 95, 118, 188, 257, 354,1000};
   
   const int triggerVal_HF[trg_HF] = {60, 80, 100, 160, 220, 300};
 
@@ -377,7 +377,7 @@ void trigger_study_data_run2_L1_data_corr()
     TFile* _DATAFile = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_Reweighted_chsMET_PhiCleaning/uhh2.AnalysisModuleRunner.DATA.DATA_RunH_AK4CHS.root","READ");
  */
  
-     TFile* _DATAFile = new TFile("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/TriggerThresholds_JetHT/uhh2.AnalysisModuleRunner.DATA.DATA_RunBCDEFGH_AK4CHS.root","READ");
+     TFile* _DATAFile = new TFile("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/uhh2.AnalysisModuleRunner.DATA.DATA_RunBCDEFGH_AK4CHS.root","READ");
  
   //Get relevant information from DATA, loop over DATA events
   TTreeReader myReader_DATA("AnalysisTree", _DATAFile);
@@ -518,7 +518,7 @@ void trigger_study_data_run2_L1_data_corr()
       leg1 -> AddEntry(hdata_pt_ave_yield[i],trigger_name[i],"p");
     }
     leg1->Draw("SAME");
-    c3->Print("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_NoReweighted_CHS_NewSF_Monitoring/Trigger/Trigger_yield.pdf");
+    c3->Print("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/Trigger/Trigger_yield.pdf");
 
 
     TLegend *leg2 = new TLegend(0.5,0.48,0.8,0.8);
@@ -535,20 +535,20 @@ void trigger_study_data_run2_L1_data_corr()
 	hdata_pt_ave_HF_yield[i]->GetYaxis()->SetTitleOffset(1.1);
 	hdata_pt_ave_HF_yield[i]->GetXaxis()->SetTitle("p_{T}^{ave} [GeV]");
 	hdata_pt_ave_HF_yield[i]->GetXaxis()->SetTitleOffset(1.1);
-	hdata_pt_ave_HF_yield[i]->SetMaximum(120000);
+	hdata_pt_ave_HF_yield[i]->SetMaximum(800000);
       }
       hdata_pt_ave_HF_yield[i]->SetMarkerStyle(20);
       hdata_pt_ave_HF_yield[i]->SetMarkerColor(kBlue+i*3);
       hdata_pt_ave_HF_yield[i]->Draw("P SAME");
 
-      TLine * line = new TLine(triggerThres_HF[i], 0,triggerThres_HF[i], 120000);
+      TLine * line = new TLine(triggerThres_HF[i], 0,triggerThres_HF[i], 800000);
       line->SetLineStyle(2);
       line->Draw("SAME");
 
       leg2 -> AddEntry(hdata_pt_ave_HF_yield[i],trigger_name_HF[i],"p");
     }
     leg2->Draw("SAME");
-    c4->Print("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_NoReweighted_CHS_NewSF_Monitoring/Trigger/Trigger_HF_yield.pdf");
+    c4->Print("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/Trigger_HF_yield.pdf");
     
     TLegend *leg3 = new TLegend(0.6,0.15,0.8,0.45);
     leg3 -> SetBorderSize(0);
@@ -578,7 +578,7 @@ void trigger_study_data_run2_L1_data_corr()
       leg3 -> AddEntry(hdata_pt_ave_evt[i],trigger_name[i],"p");
     }
     leg3->Draw("SAME");
-    c5->Print("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_NoReweighted_CHS_NewSF_Monitoring/Trigger/Trigger_Events.pdf");
+    c5->Print("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/Trigger/Trigger_Events.pdf");
 
 
     TLegend *leg4 = new TLegend(0.5,0.5,0.8,0.8);
@@ -640,7 +640,7 @@ void trigger_study_data_run2_L1_data_corr()
       line1 = new TLine(2.853, 0, 2.8, 1500000);
       line1->SetLineStyle(2);
       line1->Draw("SAME");
-    c7->Print("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_NoReweighted_CHS_NewSF_Monitoring/Trigger/Trigger_eta.pdf");
+    c7->Print("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/Trigger/Trigger_eta.pdf");
 
 
     TCanvas* c8 = new TCanvas("trig_eta_HF","",0,0,800,600);
@@ -669,6 +669,6 @@ void trigger_study_data_run2_L1_data_corr()
       line1 = new TLine(2.853, 0, 2.8, 1500000);
       line1->SetLineStyle(2);
       line1->Draw("SAME");
-      c8->Print("/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/MC_NoReweighted_CHS_NewSF_Monitoring/Trigger/Trigger_HF_eta.pdf");
+      c8->Print("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/Trigger/Trigger_HF_eta.pdf");
 
 }

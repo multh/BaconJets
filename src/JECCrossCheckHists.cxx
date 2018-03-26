@@ -37,6 +37,7 @@ JECCrossCheckHists::JECCrossCheckHists(Context & ctx, const string & dirname): H
     for(int i=0; i<n_eta; i++) eta_bins[i] = eta_range[i];
     book<TH1F>("eta_binned","|#eta| all jets; |#eta|",n_eta-1, eta_bins);
     book<TH1F>("phi","#phi all jets; #phi",50,-M_PI,M_PI);
+
     book<TH1F>("MET","MET all jets; MET",400,0,400);
 
     book<TH1F>("nPu","Number of PU events",60,0,60);

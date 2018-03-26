@@ -56,6 +56,7 @@ LumiHists::LumiHists(uhh2::Context & ctx,
     
 
 
+    trigger_fwd     = (ctx.get("Trigger_FWD") == "true");
 
     string lumifile = ctx.get("lumi_file");
     std::unique_ptr<TFile> file(TFile::Open(lumifile.c_str(), "read"));
@@ -114,11 +115,22 @@ LumiHists::LumiHists(uhh2::Context & ctx,
 
   TString name1 = "hist_data_A_";
   TString name2 = "hist_data_B_";
-  for(int i=0;i<18;i++){
-    for(int j=0;j<11;j++){
-     TString name = name1; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1];
+
+  bool eta_cut_bool;
+  TString pt_range_j;
+  TString pt_range_j1;
+
+  for(int i=0;i<n_eta-1;i++){
+    eta_cut_bool = fabs(eta_bins[i])>2.853;
+    if(!trigger_fwd) eta_cut_bool=false;
+
+    for(int j=0;j<(eta_cut_bool ? n_pt_HF-1 : n_pt-1 ) ; j++){
+      pt_range_j  = (eta_cut_bool ? pt_range_HF[j] : pt_range[j]);
+      pt_range_j1 = (eta_cut_bool ? pt_range_HF[j+1] : pt_range[j+1]);
+
+     TString name = name1; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range_j+"_"+pt_range_j1;
      hAsymLumi[i][j] = book<TH2D>(name, "Asymmetry per Lumi", nbins,0,(int(total_lumi / lumi_per_bin) + 1)*lumi_per_bin,100,-1.2,1.2);
-     name = name2; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range[j]+"_"+pt_range[j+1];
+     name = name2; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range_j+"_"+pt_range_j1;
      hBsymLumi[i][j] = book<TH2D>(name, "Bsymmetry per Lumi", nbins,0,(int(total_lumi / lumi_per_bin) + 1)*lumi_per_bin,100,-1.2,1.2);
   }
   }
@@ -189,12 +201,20 @@ void LumiHists::fill(const uhh2::Event & ev){
     float mpf_r = 1 + (met.Px()*pt.Px() + met.Py()*pt.Py())/(pt.Px()*pt.Px() + pt.Py()*pt.Py());
     float B = (met.Px()*pt.Px() + met.Py()*pt.Py())/((probejet_pt + barreljet_pt) * sqrt(pt.Px()*pt.Px() + pt.Py()*pt.Py())); //vec_MET*vec_ptbarr/(2ptave*ptbarr)
 
-  
-    for(int j=0; j<18; j++){
+    bool eta_cut_bool;
+    double pt_bin_i;
+    double pt_bin_i1;
+
+    for(int j=0; j<n_eta-1; j++){
       if(alpha>0.3) continue;
-       if(fabs(probejet_eta)>eta_bins[j+1] || fabs(probejet_eta)<eta_bins[j]) continue;
-       for(int i=0; i<11; i++){
-	 if(pt_ave>pt_bins[i+1] || pt_ave<pt_bins[i]) continue;
+       if(probejet_eta > eta_bins[j+1] || probejet_eta < eta_bins[j]) continue;
+
+       eta_cut_bool = fabs(eta_bins[j])>2.8;
+       if(!trigger_fwd) eta_cut_bool=false;
+       for(int i=0; i< (eta_cut_bool ? n_pt_HF-1 : n_pt-1) ; i++){
+	 pt_bin_i  = (eta_cut_bool ? pt_bin_HF[i] : pt_bins[i]);
+	 pt_bin_i1 = (eta_cut_bool ? pt_bin_HF[i+1] : pt_bins[i+1]);
+	 if(pt_ave>pt_bin_i1 || pt_ave<pt_bin_i) continue;
     hAsymLumi[j][i]->Fill(ibin*lumi_per_bin,asymmetry,ev.weight);
     hBsymLumi[j][i]->Fill(ibin*lumi_per_bin, B, ev.weight);
     }

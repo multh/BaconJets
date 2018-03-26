@@ -112,7 +112,8 @@ void setTDRStyle() {
   gStyle->SetMarkerStyle(20);
   
 //For the fit/function:
-  gStyle->SetOptFit(1);
+  gStyle->SetOptFit(0);
+  //gStyle->SetOptFit(1);
   gStyle->SetFitFormat("5.4g");
   gStyle->SetFuncColor(2);
   gStyle->SetFuncStyle(1);
@@ -495,7 +496,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
 
   // Set bottom pad relative height and relative margin
   float F_ref = 1./3.;
-  float M_ref = 0.03;
+  float M_ref = 0;
 
   // Set reference margins
   float T_ref = 0.07;
@@ -510,7 +511,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
   float Hdw = H - Hup;
 
   // references for T, B, L, R
-  float Tup = T_ref * H_ref / Hup;
+  float Tup = -0.9*T_ref * H_ref / Hup;
   float Tdw = M_ref * H_ref / Hdw;
   float Bup = 0.01;
   float Bdw = B_ref * H_ref / Hdw;
@@ -547,6 +548,8 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
   hup->SetTickLength(hup->GetTickLength("Y") * Hup / H_ref, "Y");
   hup->SetTickLength(hup->GetTickLength("X") * H_ref / Hup, "X");
 
+hup->GetXaxis()->Delete();
+
   hup->Draw("AXIS");
 
   // writing the lumi information and the CMS "logo"
@@ -556,7 +559,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
   gPad->SetPad(0, 0, 1, Hdw / H);
   gPad->SetLeftMargin( L );
   gPad->SetRightMargin( R );
-  gPad->SetTopMargin( Tdw );
+  gPad->SetTopMargin( -2 );
   gPad->SetBottomMargin( Bdw );
 
   assert(hdw);
@@ -565,6 +568,7 @@ TCanvas* tdrDiCanvas(const char* canvName, TH1D *hup, TH1D *hdw,
 
   // Scale text sizes and margins to match normal size
   hdw->GetYaxis()->SetTitleOffset(1.25 * Hdw / H_ref);
+  hdw->GetYaxis()->CenterTitle();
   hdw->GetXaxis()->SetTitleOffset(1.0);
   hdw->SetTitleSize(hdw->GetTitleSize("Y") * H_ref / Hdw, "Y");
   hdw->SetLabelSize(hdw->GetLabelSize("Y") * H_ref / Hdw, "Y");

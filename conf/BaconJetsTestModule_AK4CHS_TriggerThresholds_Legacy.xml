@@ -7,15 +7,15 @@
 
 <!ENTITY CACHEABLE           "False">
 
-<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/"> 
+<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/"> 
 <!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016ReReco/ClosureTest/Summer16_03Feb2017_V9/AK4CHS/MC_NoReweighted_CHS_NewSF_NewMCTruth/">  -->
 
 
 <!ENTITY b_closuretest       "false">
-<!ENTITY jec_version         "Summer16_07Aug2017_V6">
+<!ENTITY jec_version         "Summer16_07Aug2017_V3">
 <!ENTITY APPLY_WEIGHTS       "false">
 <!-- <!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V2/AK4CHS/MC_NoReweighted_NewMCVersion/"> -->  <!-- Change Weight-Path: CENTRAL/FWD -->
-<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/"> <!-- Change Weight-Path: CENTRAL/FWD -->
+<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_TriggerThresholds/"> <!-- Change Weight-Path: CENTRAL/FWD -->
 <!ENTITY Cut_PATH            "/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/EtaPhiCut/">
 
 <!ENTITY APPLY_METoverPTcut  "false">  <!--Apply MET Cut-->
@@ -26,8 +26,10 @@
 <!ENTITY TRIGGER_CENTRAL     "true">  <!--Trigger Flag -->
 <!ENTITY TRIGGER_FWD         "true">  <!--Trigger Flag -->
 
+<!--
 <!ENTITY QCDPt15to7000_Flat_FlatPU_pythia8_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_Pt_15to7000_Flat_genMET_allGEN_reclusterAK4_FlatPU_Pythia8.xml">
 <!ENTITY QCDPt15to7000_Flat_PU_pythia8_AK4CHS     SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_Pt_15to7000_Flat_genMET_allGEN_reclusterAK4_PU_Pythia8.xml">
+-->
 
 <!ENTITY QCDPt50to80_pythia8_AK4CHS           SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_EGReg/MC_QCD_Pt_50to80_EGReg_chsMET.xml">
 <!ENTITY QCDPt80to120_pythia8_AK4CHS          SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_EGReg/MC_QCD_Pt_80to120_EGReg_chsMET.xml">
@@ -58,11 +60,6 @@
 <!ENTITY DATA_RunG_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_EGReg/DATA_JetHT_Run2016G_03Feb_EGReg_chsMET.xml">
 <!ENTITY DATA_RunH_AK4CHS SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_EGReg/DATA_JetHT_Run2016H_03Feb_EGReg_chsMET.xml">
 -->
-<!--
-<!ENTITY DATA_RunB_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_FNAL/DATA_JetHT_RunB_2016_HCALfixV3.xml">
-<!ENTITY DATA_RunD_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_FNAL/DATA_JetHT_RunD_2016_HCALfixV3.xml">
-<!ENTITY DATA_RunG_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3_FNAL/DATA_JetHT_RunG_2016_HCALfixV3.xml">
--->
 
 <!ENTITY DATA_RunB_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016B_07Aug.xml">
 <!ENTITY DATA_RunC_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016C_07Aug.xml">
@@ -71,13 +68,12 @@
 <!ENTITY DATA_RunF_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016F_07Aug.xml">
 <!ENTITY DATA_RunG_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016G_07Aug.xml">
 <!ENTITY DATA_RunH_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016H_07Aug.xml">
-
 ]>
 
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="40" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_Residuals_V6"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_V3_TriggerThresholds"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -104,6 +100,7 @@
      </InputData>
 -->
 
+<!--
  <InputData Lumi="0.518" NEventsMax="&NEVT;" Type="MC" Version="QCDPt50to80_pythia8_AK4CHS_RunBCD" Cacheable="&CACHEABLE;">
           &QCDPt50to80_pythia8_AK4CHS;
           <InputTree Name="AnalysisTree"/>
@@ -169,9 +166,10 @@
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
-
+-->
 
 <!-- DATA -->
+
 <InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunB_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunB_AK4CHS_Legacy;
        <InputTree Name="AnalysisTree"/>
@@ -214,6 +212,7 @@
        <OutputTree Name="AnalysisTree"/>
   </InputData>
 
+
   <InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="DATA_RunH_AK4CHS" Cacheable="&CACHEABLE;">
        &DATA_RunH_AK4CHS_Legacy;
        <InputTree Name="AnalysisTree"/>
@@ -226,7 +225,7 @@
       <Item Name="GenParticleCollection"   Value="GenParticles"/>
       <Item Name="ElectronCollection"      Value="slimmedElectronsUSER"/>
       <Item Name="MuonCollection"          Value="slimmedMuonsUSER"/>
-      <!-- <Item Name="TauCollection"           Value="slimmedTaus"/> -->
+      <Item Name="TauCollection"           Value="slimmedTaus"/>
       <!-- AK4CHS -->
       <Item Name="JetCollection"           Value="slimmedJets"/>
       <Item Name="JetLabel"                Value="AK4CHS"/> 
@@ -240,7 +239,7 @@
       <!--         <Item Name="JetCollection"           Value="patJetsAK8PFPUPPI"/>
 		   <Item Name="JetLabel"                Value="AK8PUPPI"/> -->
       <Item Name="GenJetCollection"        Value="slimmedGenJets"/>
-      <!-- <Item Name="METName"                 Value="slimmedMETs"/> -->
+      <!--          <Item Name="METName"                 Value="slimmedMETs"/>-->
       <Item Name="METName"                 Value="slMETsCHS"/> 
       <!--          <Item Name="METName"                 Value="slimmedMETsPuppi"/> -->
 
@@ -312,7 +311,7 @@
        <!--     <Item Name="userEventFormat" Value="true" /> -->
 	  <!-- <Item Name="userEventFormat" Value="false" /> -->
             <!-- the class name of the AnalysisModule subclasses to run: -->
-            <Item Name="AnalysisModule" Value="TestModule" /> 
+            <Item Name="AnalysisModule" Value="AnalysisModule_DeriveThresholds" /> 
 	<!--    <Item Name="MCreweight" Value="false" /> -->  
 
         </UserConfig>

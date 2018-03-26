@@ -25,52 +25,47 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   cout << "--------------- Starting FinalControlPlots_CorrectFormulae() ---------------" << endl << endl;
   gStyle->SetOptStat(0);
   
-  double abs_asymmetry_cut=0.;
-  bool plot_full_A =false;
-  int lumi_bin=-1;
-  
   int n_pt_ = max(n_pt,n_pt_HF);
   bool eta_cut_bool;
   int n_pt_cutted;
   
-  //  if(plot_full_A) CorrectionObject::make_path(CorrectionObject::_outpath+"plots/control/fullAsym/");
 
   //Table with number of events in each pT- and eta-bin
   
   //Set up histos for ratios of responses
-  TH1D *hdata_asymmetry[n_pt_-1][n_eta-1]; // A for data
-  TH1D *hdata_B[n_pt_-1][n_eta-1];         // B for data
-  TH1D *hdata_METoverJetsPt[n_pt_-1][n_eta-1];         // MET/sum_jets_pt for data
-  TH1D *hdata_METoverSqrtJetsPt[n_pt_-1][n_eta-1];       //MET/Sqrt(sum_jets_pt)
+  TH1D *hdata_asymmetry[n_pt_-1][n_eta_control-1]; // A for data
+  TH1D *hdata_B[n_pt_-1][n_eta_control-1];         // B for data
+  TH1D *hdata_METoverJetsPt[n_pt_-1][n_eta_control-1];         // MET/sum_jets_pt for data
+  TH1D *hdata_METoverSqrtJetsPt[n_pt_-1][n_eta_control-1];       //MET/Sqrt(sum_jets_pt)
 
-  TH1D *hdata_probejet_neutEmEF[n_pt_-1][n_eta-1]; //neutral EM energy fraction
-  TH1D *hdata_probejet_neutHadEF[n_pt_-1][n_eta-1]; //neutral hadron energy fraction
-  TH1D *hdata_probejet_chEmEF[n_pt_-1][n_eta-1]; //charged EM energy fraction
-  TH1D *hdata_probejet_chHadEF[n_pt_-1][n_eta-1]; //charged hadron energy fraction
-  TH1D *hdata_probejet_photonEF[n_pt_-1][n_eta-1]; //photon energy fraction
-  TH1D *hdata_probejet_muonEF[n_pt_-1][n_eta-1]; //muon hadron energy fraction
-  TH1D *hdata_probejet_phi[n_pt_-1][n_eta-1]; //phi
-  TH1D *hdata_MET[n_eta-1];//MET
-  TH1D *hdata_alpha[n_eta-1];//alpha
-  TH1D *hdata_jet3_pt[n_eta-1];//jet3_pt
+  TH1D *hdata_probejet_neutEmEF[n_pt_-1][n_eta_control-1]; //neutral EM energy fraction
+  TH1D *hdata_probejet_neutHadEF[n_pt_-1][n_eta_control-1]; //neutral hadron energy fraction
+  TH1D *hdata_probejet_chEmEF[n_pt_-1][n_eta_control-1]; //charged EM energy fraction
+  TH1D *hdata_probejet_chHadEF[n_pt_-1][n_eta_control-1]; //charged hadron energy fraction
+  TH1D *hdata_probejet_photonEF[n_pt_-1][n_eta_control-1]; //photon energy fraction
+  TH1D *hdata_probejet_muonEF[n_pt_-1][n_eta_control-1]; //muon hadron energy fraction
+  TH1D *hdata_probejet_phi[n_pt_-1][n_eta_control-1]; //phi
+  TH1D *hdata_MET[n_eta_control-1];//MET
+  TH1D *hdata_alpha[n_eta_control-1];//alpha
+  TH1D *hdata_jet3_pt[n_eta_control-1];//jet3_pt
 
-  TH1D *hmc_asymmetry[n_pt_-1][n_eta-1];   // A for MC
-  TH1D *hmc_B[n_pt_-1][n_eta-1];           // B for MC
-  TH1D *hmc_METoverJetsPt[n_pt_-1][n_eta-1];         // MET/sum_jets_pt for MC
-  TH1D *hmc_METoverSqrtJetsPt[n_pt_-1][n_eta-1];       //MET/Sqrt(sum_jets_pt)
-  TH1F* hmc_pt_ave[n_eta-1];              // pt_ave for MC
-  TH1F* hdata_pt_ave[n_eta-1];            // pt_ave for data
+  TH1D *hmc_asymmetry[n_pt_-1][n_eta_control-1];   // A for MC
+  TH1D *hmc_B[n_pt_-1][n_eta_control-1];           // B for MC
+  TH1D *hmc_METoverJetsPt[n_pt_-1][n_eta_control-1];         // MET/sum_jets_pt for MC
+  TH1D *hmc_METoverSqrtJetsPt[n_pt_-1][n_eta_control-1];       //MET/Sqrt(sum_jets_pt)
+  TH1F* hmc_pt_ave[n_eta_control-1];              // pt_ave for MC
+  TH1F* hdata_pt_ave[n_eta_control-1];            // pt_ave for data
 
-  TH1D *hmc_probejet_neutEmEF[n_pt_-1][n_eta-1]; //neutral EM energy fraction
-  TH1D *hmc_probejet_neutHadEF[n_pt_-1][n_eta-1]; //neutral hadron energy fraction
-  TH1D *hmc_probejet_chEmEF[n_pt_-1][n_eta-1]; //charged EM energy fraction
-  TH1D *hmc_probejet_chHadEF[n_pt_-1][n_eta-1]; //charged hadron energy fraction
-  TH1D *hmc_probejet_photonEF[n_pt_-1][n_eta-1]; //photon energy fraction
-  TH1D *hmc_probejet_muonEF[n_pt_-1][n_eta-1]; //muon hadron energy fraction
-  TH1D *hmc_probejet_phi[n_pt_-1][n_eta-1]; //phi
-  TH1D *hmc_MET[n_eta-1];//MET
-  TH1D *hmc_alpha[n_eta-1];//alpha
-  TH1D *hmc_jet3_pt[n_eta-1];//jet3_pt
+  TH1D *hmc_probejet_neutEmEF[n_pt_-1][n_eta_control-1]; //neutral EM energy fraction
+  TH1D *hmc_probejet_neutHadEF[n_pt_-1][n_eta_control-1]; //neutral hadron energy fraction
+  TH1D *hmc_probejet_chEmEF[n_pt_-1][n_eta_control-1]; //charged EM energy fraction
+  TH1D *hmc_probejet_chHadEF[n_pt_-1][n_eta_control-1]; //charged hadron energy fraction
+  TH1D *hmc_probejet_photonEF[n_pt_-1][n_eta_control-1]; //photon energy fraction
+  TH1D *hmc_probejet_muonEF[n_pt_-1][n_eta_control-1]; //muon hadron energy fraction
+  TH1D *hmc_probejet_phi[n_pt_-1][n_eta_control-1]; //phi
+  TH1D *hmc_MET[n_eta_control-1];//MET
+  TH1D *hmc_alpha[n_eta_control-1];//alpha
+  TH1D *hmc_jet3_pt[n_eta_control-1];//jet3_pt
 
 
   int count = 0;
@@ -101,7 +96,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TString name24 = "hist_data_MET_";
  
   for(int j=0; j<n_eta-1; j++){
-     eta_cut_bool = fabs(eta_bins[j])>eta_cut;
+     eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
       TString eta_name = "eta_"+eta_range2[j]+"_"+eta_range2[j+1];
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       TString pt_name = "pt_"+(eta_cut_bool?pt_range_HF:pt_range)[k]+"_"+(eta_cut_bool?pt_range_HF:pt_range)[k+1];
@@ -208,39 +203,27 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TTreeReaderValue<Float_t> probejet_phi_data(myReader_DATA, "probejet_phi");
   
   TTreeReaderValue<int> lumibin_data(myReader_DATA, "lumibin");
-  int idx = 0;
-  int myCount = 0;
-  int myCount_cut = 0;
+  
   while (myReader_DATA.Next()) {
-    if(*alpha_data>alpha_cut){
-      myCount_cut++;
-      continue;
-    }
-    if(abs_asymmetry_cut and abs_asymmetry_cut<fabs(*asymmetry_data)){
-      myCount_cut++;
-      continue;
-    }
-    if(lumi_bin>=0 and *lumibin_data!=lumi_bin){
-      myCount_cut++;
-      continue;
-    }
+    
+    if(*alpha_data>alpha_cut) continue;
     //fill histos in bins of eta
-    for(int i=0; i<n_eta-1; i++){
-      if(fabs(*probejet_eta_data)<eta_bins[i+1] && fabs(*probejet_eta_data)>=eta_bins[i]){
-	myCount++;
+    for(int i=0; i<n_eta_control-1; i++){
+      if(*probejet_eta_data<eta_bins_control[i+1] && *probejet_eta_data>=eta_bins_control[i]){
 	hdata_pt_ave[i]->Fill(*pt_ave_data,*weight_data);
 	hdata_MET[i]->Fill(*MET_data, *weight_data);
 	hdata_alpha[i]->Fill(*alpha_data, *weight_data);
 	hdata_jet3_pt[i]->Fill(*jet3_pt_data, *weight_data);
       }
     }
-
+    
+   
     //fill histos in bins of pt and eta
     for(int j=0; j<n_eta-1; j++){
-    eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	if(fabs(*probejet_eta_data)>eta_bins[j+1] || fabs(*probejet_eta_data)<eta_bins[j]) continue;
+	if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
 	  hdata_asymmetry[k][j]->Fill(*asymmetry_data,*weight_data);
 	  hdata_B[k][j]->Fill(*B_data,*weight_data);
 	  hdata_METoverJetsPt[k][j]->Fill((*MET_data)/(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data),*weight_data);
@@ -255,8 +238,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	  hdata_probejet_phi[k][j]->Fill(*probejet_phi_data,*weight_data);
     }
     }
-    idx++;
-    if(idx%1000000==0) cout << "looping over data-TTree: Idx = " << idx << endl;
   }
 
   //DEBUG
@@ -284,36 +265,27 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   TTreeReaderValue<Float_t> probejet_photonEF_mc(myReader_MC, "probejet_photonEF");
   TTreeReaderValue<Float_t> probejet_muonEF_mc(myReader_MC, "probejet_muonEF");
   TTreeReaderValue<Float_t> probejet_phi_mc(myReader_MC, "probejet_phi");
-  idx=0;
-  double myCount_mc = 0.;
-  double  myCount_cut_mc = 0.;
+  
+
   while (myReader_MC.Next()) {
-    if(*alpha_mc>alpha_cut) {
-      myCount_cut_mc+=*weight_mc;
-      continue;
-    }
-    if(abs_asymmetry_cut and (abs_asymmetry_cut<fabs(*asymmetry_mc))){
-      myCount_cut_mc+=*weight_mc;
-      continue;
-    }
+    if(*alpha_mc>alpha_cut) continue;
     //fill histos in bins of eta
-    
-    for(int i=0; i<n_eta-1; i++){
-      if(fabs(*probejet_eta_mc)<eta_bins[i+1] && fabs(*probejet_eta_mc)>=eta_bins[i]){
-	myCount_mc+=*weight_mc;
+    for(int i=0; i<n_eta_control-1; i++){
+      if(*probejet_eta_mc<eta_bins_control[i+1] && *probejet_eta_mc>=eta_bins_control[i]){
 	hmc_alpha[i]->Fill(*alpha_mc,*weight_mc);
 	hmc_pt_ave[i]->Fill(*pt_ave_mc,*weight_mc);
 	hmc_MET[i]->Fill(*MET_mc, *weight_mc);
 	hmc_jet3_pt[i]->Fill(*jet3_pt_mc, *weight_mc);
       }
     }
+    
 
     //fill histos in bins of pt and eta
     for(int j=0; j<n_eta-1; j++){
-      eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
 	if(*pt_ave_mc<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_mc>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	if(fabs(*probejet_eta_mc)>eta_bins[j+1] || fabs(*probejet_eta_mc)<eta_bins[j]) continue;
+	if(*probejet_eta_mc>eta_bins_control[j+1] || *probejet_eta_mc<eta_bins_control[j]) continue;
 	else{
 	  hmc_asymmetry[k][j]->Fill(*asymmetry_mc,*weight_mc);
 	  hmc_B[k][j]->Fill(*B_mc,*weight_mc);
@@ -331,8 +303,6 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	}
       }
     }
-    idx++;
-    if(idx%1000000==0) cout << "looping over MC-TTree: Idx = " << idx << endl;
   }
   
   //DEBUG
@@ -340,7 +310,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
   ofstream output;
   output.open(CorrectionObject::_outpath+"plots/control/Number_Events_Pt_Eta_bins_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+ (abs_asymmetry_cut ? "_wAsymCut":"") + (lumi_bin>=0 ? "_lumiBin" + to_string(lumi_bin)  : "")  + ".txt");
-
+    
   output << "Number of events in each bin for MC" << endl;
   output << "|Eta|:          ";
   double n_tot_MC = 0;
@@ -349,17 +319,12 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     if(i != n_eta-1) output << eta_range[i] << " -- ";
     else output << eta_range[i] << endl;
   }
-  output << "central trg pt bins:\n";
   for(int i=0; i<n_pt-1; i++){
     if(i==0) output << "pT = ["  << fixed << setprecision(0) << pt_bins[i] << "," << setprecision(0) << pt_bins[i+1] << "]  :    ";
     else if(i==1) output << "pT = ["  << fixed << setprecision(0) << pt_bins[i] << "," << setprecision(0) << pt_bins[i+1] << "] :    ";
     else output << "pT = ["  << fixed << setprecision(0) << pt_bins[i] << "," << setprecision(0) << pt_bins[i+1] << "]:    ";
 
     for(int j=0; j<n_eta-1; j++){
-      if(fabs(eta_bins[j])>eta_cut){
-	output << " ....   - ";
-	continue;
-      }
       if(j!=n_eta-2){
 	if(hmc_B[i][j]->GetEntries()/1000 < 0.01)     output << hmc_B[i][j]->GetEntries() << "      - "; //<1000
 	else if(hmc_B[i][j]->GetEntries()/1000 < 0.1) output << hmc_B[i][j]->GetEntries() << "     - "; //<1000
@@ -368,38 +333,11 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	else if(hmc_B[i][j]->GetEntries()/1000 <100)  output << hmc_B[i][j]->GetEntries() << "  - ";
 	else                                          output << hmc_B[i][j]->GetEntries() << " - ";
       }
-      else output << hmc_B[i][j]->GetEntries();
+      else output << hmc_B[i][j]->GetEntries() << endl;
       n_tot_MC+= hmc_B[i][j]->GetEntries();
     }
-    output<<endl;
 
   }
-  output << "HF trg pt bins:\n";
-  for(int i=0; i<n_pt_HF-1; i++){
-    if(i==0) output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins_HF[i+1] << "]  :    ";
-    else if(i==1) output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins_HF[i+1] << "] :    ";
-    else output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins[i+1] << "]:    ";
-
-    for(int j=0; j<n_eta-1; j++){
-      if(fabs(eta_bins[j])<eta_cut){
-	output << " ....   - ";
-	continue;
-      }
-      if(j!=n_eta-2){
-	if(hmc_B[i][j]->GetEntries()/1000 < 0.01)     output << hmc_B[i][j]->GetEntries() << "      - "; //<1000
-	else if(hmc_B[i][j]->GetEntries()/1000 < 0.1) output << hmc_B[i][j]->GetEntries() << "     - "; //<1000
-	else if(hmc_B[i][j]->GetEntries()/1000 < 1)   output << hmc_B[i][j]->GetEntries() << "    - "; //<1000
-	else if(hmc_B[i][j]->GetEntries()/1000 <10)   output << hmc_B[i][j]->GetEntries() << "   - "; //<10000
-	else if(hmc_B[i][j]->GetEntries()/1000 <100)  output << hmc_B[i][j]->GetEntries() << "  - ";
-	else                                          output << hmc_B[i][j]->GetEntries() << " - ";
-      }
-      else output << hmc_B[i][j]->GetEntries();
-      n_tot_MC+= hmc_B[i][j]->GetEntries();
-    }
-    output<<endl;
-
-  }
-
   output << endl << endl << "Total number of events in MC: " << n_tot_MC << endl;
 
   output << endl << endl << endl << endl << "Number of events in each bin for DATA" << endl;
@@ -408,14 +346,11 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     if(i != n_eta-1) output << eta_range[i] << " -- ";
     else output << eta_range[i] << endl;
   }
-  output << "central trg pt bins:\n";
   for(int i=0; i<n_pt-1; i++){
+    output << "central trg pt bins:\n";
     output << "pT = ["  << fixed << setprecision(0) << pt_bins[i] << "," << setprecision(0) << pt_bins[i+1] << "]  :    ";
     for(int j=0; j<n_eta-1; j++){
-      if(fabs(eta_bins[j])>eta_cut){
-	output << " ....   - ";
-	continue;
-      }
+      if(fabs(eta_bins_control[j])>eta_cut) continue;
       if(j!=n_eta-2){
 	if(hdata_B[i][j]->GetEntries()/1000 < 0.01)     output << hdata_B[i][j]->GetEntries() << "      - "; //<1000
 	else if(hdata_B[i][j]->GetEntries()/1000 < 0.1) output << hdata_B[i][j]->GetEntries() << "     - "; //<1000
@@ -424,20 +359,16 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	else if(hdata_B[i][j]->GetEntries()/1000 <100)  output << hdata_B[i][j]->GetEntries() << "  - ";
 	else                                                output << hdata_B[i][j]->GetEntries() << " - ";
       }
-      else output << hdata_B[i][j]->GetEntries();
+      else output << hdata_B[i][j]->GetEntries() << endl;
       n_tot_DATA += hdata_B[i][j]->GetEntries();
     }
-    output<< endl;
 
   }
-  output << "HF trg pt bins:\n";
   for(int i=0; i<n_pt_HF-1; i++){
+    output << "HF trg pt bins:\n";
     output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins_HF[i+1] << "]  :    ";
     for(int j=0; j<n_eta-1; j++){
-      if(fabs(eta_bins[j])<eta_cut){
-	output << " ....   - ";
-	continue;
-      }
+      if(fabs(eta_bins_control[j])<eta_cut) continue;
       if(j!=n_eta-2){
 	if(hdata_B[i][j]->GetEntries()/1000 < 0.01)     output << hdata_B[i][j]->GetEntries() << "      - "; //<1000
 	else if(hdata_B[i][j]->GetEntries()/1000 < 0.1) output << hdata_B[i][j]->GetEntries() << "     - "; //<1000
@@ -446,10 +377,9 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 	else if(hdata_B[i][j]->GetEntries()/1000 <100)  output << hdata_B[i][j]->GetEntries() << "  - ";
 	else                                                output << hdata_B[i][j]->GetEntries() << " - ";
       }
-      else output << hdata_B[i][j]->GetEntries();
+      else output << hdata_B[i][j]->GetEntries() << endl;
       n_tot_DATA += hdata_B[i][j]->GetEntries();
     }
-    output<< endl;
 
   }
   output << endl << endl << "Total number of events in DATA: " << n_tot_DATA << endl;
@@ -460,7 +390,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
   TFile* test_out_mc_B = new TFile(CorrectionObject::_outpath+"plots/control/B_1d_mc"+ (abs_asymmetry_cut ? "_wAsymCut":"") + (lumi_bin>=0 ? "_lumiBin" + to_string(lumi_bin)  : "")+".root","RECREATE");
   for(int j=0; j<n_eta-1; j++){
-    eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       hmc_B[k][j]->Write();
       hmc_METoverJetsPt[k][j]->Write();
@@ -480,7 +410,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
   TFile* test_out_data_B = new TFile(CorrectionObject::_outpath+"plots/control/B_1d_data"+ (abs_asymmetry_cut ? "_wAsymCut":"") + (lumi_bin>=0 ? "_lumiBin" + to_string(lumi_bin)  : "")+".root","RECREATE");
   for(int j=0; j<n_eta-1; j++){
-    eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       hdata_B[k][j]->Write();
       hdata_METoverJetsPt[k][j]->Write();
@@ -500,7 +430,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
   TFile* test_out_mc_A = new TFile(CorrectionObject::_outpath+"plots/control/A_1d_mc"+ (abs_asymmetry_cut ? "_wAsymCut":"") + (lumi_bin>=0 ? "_lumiBin" + to_string(lumi_bin)  : "")+".root","RECREATE");
   for(int j=0; j<n_eta-1; j++){
-    eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       hmc_asymmetry[k][j]->Write();
     }
@@ -510,7 +440,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
 
   TFile* test_out_data_A = new TFile(CorrectionObject::_outpath+"plots/control/A_1d_data"+ (abs_asymmetry_cut ? "_wAsymCut":"") + (lumi_bin>=0 ? "_lumiBin" + to_string(lumi_bin)  : "")+".root","RECREATE");
   for(int j=0; j<n_eta-1; j++){  
-    eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       hdata_asymmetry[k][j]->Write();
     }
@@ -529,7 +459,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   double err_mpf_data[n_eta-1][n_pt_-1]; //error of ratio at pt,eta
 
   for(int i=0; i<n_eta-1; i++){
-    eta_cut_bool = fabs(eta_bins[i])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[i])>eta_cut; 
     for(int j=0; j< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); j++){
 
       //get <A> and error on <A>
@@ -572,7 +502,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   tdrCanvas(c_0,"c_0",h,4,10,true,CorrectionObject::_lumitag);
 
   for(int i=0; i<n_eta-1; i++){
-    eta_cut_bool = fabs(eta_bins[i])>eta_cut;
+    eta_cut_bool = fabs(eta_bins_control[i])>eta_cut;
     n_pt_cutted = ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 );
     //Create and fill TGraphErrors
     double xbin_tgraph[n_pt_cutted];
@@ -658,7 +588,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend *leg_mpf;
     leg_mpf = new TLegend(0.35,0.72,0.51,0.92,"","brNDC");//x+0.1
     leg_mpf->SetBorderSize(0);
-    leg_mpf->SetTextSize(0.039);
+    leg_mpf->SetTextSize(0.036);
     leg_mpf->SetFillColor(10);
     leg_mpf->SetFillStyle(0);
     leg_mpf->SetLineColor(1);
@@ -684,7 +614,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TLegend *leg_rel;
     leg_rel = new TLegend(0.35,0.72,0.51,0.92,"","brNDC");//x+0.1
     leg_rel->SetBorderSize(0);
-    leg_rel->SetTextSize(0.039);
+    leg_rel->SetTextSize(0.036);
     leg_rel->SetFillColor(10);
     leg_rel->SetFillStyle(0);
     leg_rel->SetLineColor(1);
@@ -736,7 +666,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
     TH1D* htemp_mpf_mc;
     gPad->SetLogy();
 
-    eta_cut_bool = fabs(eta_bins[i])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[i])>eta_cut; 
     for(int j=0; j < ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); j++){
       TString pt_name = "pt_"+(eta_cut_bool?pt_range_HF:pt_range)[j]+"_"+(eta_cut_bool?pt_range_HF:pt_range)[j+1];
       TString legname = "p_{T} #in [" + (eta_cut_bool?pt_range_HF:pt_range)[j] + "," + (eta_cut_bool?pt_range_HF:pt_range)[j+1] + "]";
@@ -1577,7 +1507,7 @@ TCanvas* c4 = new TCanvas();
   delete h;
   
   for(int j=0; j<n_eta-1; j++){
-    eta_cut_bool = fabs(eta_bins[j])>eta_cut; 
+    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int i=0; i< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); i++){
       delete hdata_asymmetry[i][j];
       delete hmc_asymmetry[i][j];

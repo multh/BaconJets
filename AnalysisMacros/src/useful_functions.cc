@@ -23,7 +23,7 @@ pair<double,double> GetValueAndError(TH1D *hin){
   //  res.first = -1; res.second = -1;
   //  if(hin->GetEntries()>30){
   //  if(hin->GetEntries()>50){
-  //  if(hin->GetEntries()>100){
+  if(hin->GetEntries()>100){  
     res.first = hin->GetMean();
     // GetMeanError calculates the uncertainty on the mean value, arising due to limited statistics in the sample. We dont care for the width itself, only the uncertainty on the predicted mean is relevant.
     res.second = hin->GetMeanError();
@@ -51,9 +51,41 @@ pair<double,double> GetValueAndError(TH1D *hin){
     cout << "If using gauss  -- value: " << gaus_mean  << " +- "<< gaus_sigma << endl;
     delete f1;
     */
-    //  }
+  }
   return res;
 }
+
+//Clean points not filled due to low statistics
+TGraphErrors* BuildRatio(TGraphErrors* input, double ave, double err_ave){
+
+  double* Yval = input->GetY();
+  double* YvalError = input->GetEY();
+  double* Xval = input->GetX();
+  double* XvalError = input->GetEX();
+  int count=0;
+  vector<double> Xnew,Ynew,Xerrornew,Yerrornew;
+  for(int i=0;i<input->GetN();i++){
+    count++;
+    Xnew.push_back(Xval[i]);
+    Ynew.push_back(Yval[i]/ave);
+    Xerrornew.push_back(XvalError[i]);
+    Yerrornew.push_back(Yval[i]*TMath::Hypot(YvalError[i]/Yval[i],err_ave/ave));
+  }
+  const int NnewSize =  count;
+  double Xnew_m[NnewSize],Ynew_m[NnewSize],Xerrornew_m[NnewSize],Yerrornew_m[NnewSize]; //because silly ROOT doesn't know how to treat vectors
+  for(int i=0;i<NnewSize;i++){
+    Xnew_m[i] = Xnew[i];
+    Ynew_m[i] = Ynew[i];
+    Xerrornew_m[i] = Xerrornew[i];
+    Yerrornew_m[i] = Yerrornew[i];
+  }
+  
+  TGraphErrors* output = new TGraphErrors(count,Xnew_m,Ynew_m,Xerrornew_m,Yerrornew_m);
+  if(input->GetN()!=output->GetN()) cout<<"Number of points in input: "<<input->GetN()<<" in output: "<<output->GetN()<<endl;
+  return output;
+}
+
+
 
 
 //Clean points not filled due to low statistics
@@ -67,7 +99,7 @@ TGraphErrors* CleanEmptyPoints(TGraphErrors* input){
   vector<double> Xnew,Ynew,Xerrornew,Yerrornew;
   for(int i=0;i<input->GetN();i++){
     //cout << "Yval[" << i << "] = " << Yval[i] <<" +/- "<<YvalError[i]<< endl;
-    if(YvalError[i]<1e-4 || Yval[i]==0 ) continue;
+    if(YvalError[i]<1e-4 || Yval[i]==0) continue;
     //    if(Yval[i]==0 ) continue;
        count++;
       Xnew.push_back(Xval[i]);       

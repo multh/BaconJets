@@ -1,19 +1,9 @@
+#pragma once
+
 #ifndef  CONSTANTS_H
 #define  CONSTANTS_H
 
-//#pragma once
 
-/* #include <iostream> */
-/* #include <vector> */
-
-/* using namespace std; */
-/* namespace uhh2bacon { */
-
-/* class constants { */
-
-/* public: */
-/*   constants(){}; */
-/*   ~constants(){}; */
 
 /** \brief Binning **/
 
@@ -22,10 +12,14 @@ constexpr static int n_eta = 19;
 static std::vector<double>   eta_range  =  {0, 0.261, 0.522, 0.783, 1.044, 1.305, 1.479, 1.653, 1.93, 2.172, 2.322, 2.5, 2.65, 2.853, 2.964, 3.139, 3.489, 3.839, 5.191};
 static std::vector<double>   eta_range_mikko  = {0, 0.783, 1.305, 1.93, 2.5, 2.964, 3.2, 5.191};
 
-static std::vector<double>   pt_range   = {56, 78, 100, 168, 232, 300, 366, 453, 562};
+constexpr static int n_eta_neg = 37;
+static std::vector<double> eta_range_neg = {-5.191, -3.839, -3.489, -3.139, -2.964, -2.853, -2.65, -2.5, -2.322, -2.172, -1.93, -1.653, -1.479, -1.305, -1.044, -0.783, -0.522, -0.261, 0.000, 0.261, 0.522, 0.783, 1.044, 1.305, 1.479, 1.653, 1.930, 2.172, 2.322, 2.500, 2.650, 2.853, 2.964, 3.139, 3.489, 3.839, 5.191};
 
-// static std::vector<double>   pt_range   = {43, 80, 88, 135, 223, 290, 365, 448, 561};
-// static std::vector<double>   pt_range   = {57, 80, 101, 170, 231, 290, 365, 478, 556};
+constexpr static int n_eta_HCAL = 83;
+static std::vector<double> eta_HCAL = {-5.191, -4.889, -4.716, -4.538, -4.363, -4.191, -4.013, -3.839, -3.664, -3.489, -3.314, -3.139, -2.964, -2.853, -2.650, -2.500, -2.322, -2.172, -2.043, -1.930, -1.830, -1.740, -1.653, -1.566, -1.479, -1.392, -1.305, -1.218, -1.131, -1.044, -0.957, -0.879, -0.783, -0.696, -0.609, -0.522, -0.435, -0.348, -0.261, -0.174, -0.087, 0.00, 0.087, 0.174, 0.261, 0.348, 0.435, 0.522, 0.609, 0.696, 0.783, 0.879, 0.957, 1.044, 1.131, 1.218, 1.305, 1.392, 1.479, 1.566, 1.653, 1.740, 1.830, 1.930, 2.043, 2.172, 2.322, 2.500, 2.650, 2.853, 2.964, 3.139, 3.314, 3.489, 3.664, 3.839, 4.013, 4.191, 4.363, 4.538, 4.716, 4.889, 5.191};
+
+
+static std::vector<double>   pt_range    = {51, 74, 96, 165, 232, 300, 366, 456, 569};
 
 static std::vector<double>   alpha_range= {0., 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25};
 
@@ -41,6 +35,10 @@ constexpr static float s_asymm = 0.7;
 // relative third jet fraction pt_rel = 2*j3_pt/(j1_pt + j2_pt) < 0.2
 constexpr static float s_pt_rel = 0.4;
 
+constexpr static float s_runB = 275377;
+constexpr static float s_runC = 276284;
+constexpr static float s_runD = 276811;
+
 /** \brief good Primary Vertex reconstruction **/
 // more than four tracks
 constexpr static float s_n_PvTracks = 4;
@@ -52,50 +50,30 @@ constexpr static float s_n_Pv_xy = 2.0;
 
 /** \brief The trigger thresholds of pt_ave **/
 
-/*
-//As in AN-15-254 (RunII, 2015, 25ns)
- constexpr static float s_Pt_Ave40_cut   = 56;
- constexpr static float s_Pt_Ave60_cut   = 78;
- constexpr static float s_Pt_Ave80_cut   = 100;
- constexpr static float s_Pt_Ave140_cut  = 168;
- constexpr static float s_Pt_Ave200_cut  = 232;
- constexpr static float s_Pt_Ave260_cut  = 300;
- constexpr static float s_Pt_Ave320_cut  = 366;
- constexpr static float s_Pt_Ave400_cut  = 453;
- constexpr static float s_Pt_Ave500_cut  = 562;
-*/
 constexpr static int n_pt_bins = 9;
 
 
-/*
-/// HF thresholds Used for the 2015 DATA (AN-15-254)
-constexpr static float s_Pt_Ave60HF_cut   = 77;
-constexpr static float s_Pt_Ave80HF_cut   = 131;
-constexpr static float s_Pt_Ave100HF_cut  = 154;
-constexpr static float s_Pt_Ave160HF_cut  = 244;
-constexpr static float s_Pt_Ave220HF_cut  = 321;
-constexpr static float s_Pt_Ave300HF_cut  = 426;
-*/
-//2016
- constexpr static float s_Pt_AveMC_cut   = 51;
+//2017
+ constexpr static float s_Pt_AveMC_cut   = 25; //50
  constexpr static float s_Pt_Ave40_cut   = 51;
- constexpr static float s_Pt_Ave60_cut   = 73;
- constexpr static float s_Pt_Ave80_cut   = 95;
- constexpr static float s_Pt_Ave140_cut  = 163;
- constexpr static float s_Pt_Ave200_cut  = 230;
- constexpr static float s_Pt_Ave260_cut  = 299;
- constexpr static float s_Pt_Ave320_cut  = 365;
- constexpr static float s_Pt_Ave400_cut  = 453;
+ constexpr static float s_Pt_Ave60_cut   = 74;
+ constexpr static float s_Pt_Ave80_cut   = 96;
+ constexpr static float s_Pt_Ave140_cut  = 165;
+ constexpr static float s_Pt_Ave200_cut  = 232;
+ constexpr static float s_Pt_Ave260_cut  = 300;
+ constexpr static float s_Pt_Ave320_cut  = 366;
+ constexpr static float s_Pt_Ave400_cut  = 456;
 // constexpr static float s_Pt_Ave450_cut  = 494;
- constexpr static float s_Pt_Ave500_cut  = 566;
+ constexpr static float s_Pt_Ave500_cut  = 569;
 
-// 2016
-constexpr static float s_Pt_Ave60HF_cut   = 100;
-constexpr static float s_Pt_Ave80HF_cut   = 126;
-constexpr static float s_Pt_Ave100HF_cut  = 152;
-constexpr static float s_Pt_Ave160HF_cut  = 250;
-constexpr static float s_Pt_Ave220HF_cut  = 319;
-constexpr static float s_Pt_Ave300HF_cut  = 433;
+// 2017
+constexpr static float s_Pt_Ave60HF_cut   = 72;
+constexpr static float s_Pt_Ave80HF_cut   = 95;
+constexpr static float s_Pt_Ave100HF_cut  = 118;
+constexpr static float s_Pt_Ave160HF_cut  = 188;
+constexpr static float s_Pt_Ave220HF_cut  = 257;
+constexpr static float s_Pt_Ave300HF_cut  = 354;
+
 
 //Runnumbers for applying different corrections
 constexpr static int s_runnr_BCD     = 276811; //up to this one, including this one

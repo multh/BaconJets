@@ -26,34 +26,19 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       if(_generator == "pythia"){
 	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_AK4CHS_Flat.root";}
 	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_AK4CHS_Fwd.root";}
-       	//else if(_trigger_central && _trigger_fwd) {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +".root";}
-       	else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +"_Run" + _runnr  +".root";}
+       // else if(_trigger_central && _trigger_fwd) {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt-15to7000_Flat_FlatPU_pythia8_" + _collection  +"_Run" + _runnr  +".root";}
+        else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +"_RunBCDEFGH.root";}
+	//else if(_trigger_central && _trigger_fwd)  {_MCpath = "/nfs/dust/cms/user/karavdia/JERC/Fall17_17Nov_V4_L2Res_wMPF_CentralTriggersONLY/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000.root";}
 	else throw runtime_error("In Correction Object: No valid Trigger-Flag (main.C) was set.");
 	
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + "_Flat.root";
 	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  + "_Fwd.root";
-	_MCpath_ForWeights  = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +"_Run" + _runnr +".root";
+       	_MCpath_ForWeights  = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt50toInf_pythia8_" + _collection  +"_RunBCDEFGH.root";
+	//_MCpath_ForWeights  = "/nfs/dust/cms/user/karavdia/JERC/Fall17_17Nov_V4_L2Res_wMPF_CentralTriggersONLY/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000.root";
+	//	_MCpath_ForWeights  = _weightpath + "uhh2.AnalysisModuleRunner.MC.QCDPt-15to7000_Flat_pythia8_" + _collection  +"_Run" + _runnr  +".root";
 	_generator_tag = "pythia8";
       }
      
-     
-
-      //For flat MC samples:
-      /*
-      if(_generator == "pythia"){
-	if(_trigger_central && !_trigger_fwd)     { _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Flat.root";}
-	else if(!_trigger_central && _trigger_fwd){ _MCpath = inputPath + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_AK4CHS_Fwd.root";}
-	//else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  +".root";}
-	else if(_trigger_central && _trigger_fwd)  {_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Full_Run" + _runnr  + ".root";}
-	else throw runtime_error("In Correction Object: No valid Trigger-Flag (main.C) was set.");
-	
-	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Flat.root";
-	_MCpath_ForWeights_FWD  = _weightpath_FWD + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + "_Fwd.root";
-	_MCpath_ForWeights  = _weight_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_pythia8_" + _collection  + ".root";
-	_generator_tag = "pythia8";
-      }
-      */
-
       else if(_generator == "herwig"){
 	_MCpath = input_path + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_"+ _collection  +".root";
 	_MCpath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.MC.QCDPt15to7000_herwigpp_" + _collection  + "_Flat.root";
@@ -68,6 +53,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       }
 
       //DATA 
+      // _DATApath ="/nfs/dust/cms/user/karavdia/JERC/Fall17_17Nov_V4_L2Res_wMPF_CentralTriggersONLY/uhh2.AnalysisModuleRunner.MC.QCDPt15to7000.root";  //2017 MC
       _DATApath = input_path + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights_FLAT = _weightpath_FLAT + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
       _DATApath_ForWeights_FWD = _weightpath_FWD + "uhh2.AnalysisModuleRunner.DATA.DATA_Run" + _runnr + "_" + _collection + ".root";
@@ -77,21 +63,14 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       //Check if files are in place:
       cout << "Opening MC file:   " << _MCpath << endl;
       cout << "Opening DATA file: " << _DATApath << endl << endl;
-
-      /*
-     if(!  CorrectionObject::make_path(std::string(_outpath.Data()))){
-      	cout << "No new Directory was created" << endl;
-      }
-      cout << endl;
-      */
-
+      
       _MCFile = new TFile(_MCpath,"READ");
       _DATAFile = new TFile(_DATApath,"READ");
       
-      /*
+      
       if(_MCFile->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _MCpath+" does not exist!");
       if(_DATAFile->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _DATApath+" does not exist!");
-      */
+      
 
       //lumitags
       if(_runnr == "BCD")    _lumitag      = "RunBCD  12.9 fb^{-1}";
@@ -106,7 +85,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       else if(_runnr == "EFearly") _lumitag = "RunEFearly  6.8 fb^{-1}";
       else if(_runnr == "Flate") _lumitag = "RunFlate  0.4 fb^{-1}";
       else if(_runnr == "FlateG") _lumitag = "RunFlateG  8.0 fb^{-1}";
-      else if(_runnr == "FlateGH") _lumitag = "RunFlateGH  X.X fb^{-1}";
+      else if(_runnr == "FlateGH") _lumitag = "RunFlateGH  16.5 fb^{-1}";
       else if(_runnr == "H") _lumitag = "RunH  8.5 fb^{-1}";
       else if(_runnr == "BCDEFearly") _lumitag = "RunBCDEFearly  19.7 fb^{-1}";
       else if(_runnr == "BCDEFGH") _lumitag = "RunBCDEFGH  36.8 fb^{-1}";

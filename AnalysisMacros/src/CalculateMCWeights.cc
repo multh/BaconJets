@@ -56,7 +56,7 @@ void CorrectionObject::CalculateMCWeights(){
      if(f_data->GetSize()==-1) throw runtime_error("In CorrectionObject.cc: File or Directory " + _DATApath_ForWeights+" does not exist!");
 
   //pT and eta bins  
-  double bins[16] = {51, 73, 95, 100, 126,152, 163, 230, 250, 299, 316, 365, 433, 453, 566, 1000};
+  double bins[14] = {51, 73, 95, 118, 165, 188, 230, 257, 300, 354, 366, 456, 569, 1000};
   double bins_eta[3] = {0, 2.853, 5.2};
 
  //pT_ave-histograms for MC & DATA
@@ -71,14 +71,14 @@ void CorrectionObject::CalculateMCWeights(){
   TH1D* hfwd_pt_ave_mc = new TH1D("hfwd_pt_ave_mc", "pt_ave mc;p_{T}^{ave};entries", n_pt_bins, 0, 5000); 
   
 
-  TH2D* h_pt_ave_binned_mc = new TH2D("pt_ave_binned_mc","pt_ave binned mc;p_{T}^{ave};|#eta|", 15, bins, 2, bins_eta);
-  TH2D* h_pt_ave_binned_data = new TH2D("pt_ave_binned_data","pt_ave binned data;p_{T}^{ave};|#eta|", 15, bins,2, bins_eta);
-  TH2D* h_pt_ave_binned_yield = new TH2D("pt_ave_binned_yield","CENTRAL Triggers;p_{T}^{ave};|#eta|", 15, bins, n_eta-1, eta_bins);
-  TH2D* h_pt_ave_binned_mc_scaled = new TH2D("pt_ave_binned_mc_scaled","pt_ave binned mc scaled;p_{T}^{ave};|#eta|", 15, bins,2, bins_eta);
-  TH1D* hcentral_pt_ave_binned_mc_scaled = new TH1D("hcentral_pt_ave_binned_mc_scaled", "pt_ave mc scaled;p_{T}^{ave};entries", 15, bins);   //cross-check 1d
-  TH1D* hcentral_pt_ave_binned_data = new TH1D("hcentral_pt_ave_binned_data", "pt_ave data;p_{T}^{ave};entries", 15, bins);                  //cross-check 1d 
-  TH1D* hfwd_pt_ave_binned_mc_scaled = new TH1D("hfwd_pt_ave_binned_mc_scaled", "pt_ave mc scaled;p_{T}^{ave};entries", 15, bins);   //cross-check 1d
-  TH1D* hfwd_pt_ave_binned_data = new TH1D("hfwd_pt_ave_binned_data", "pt_ave data;p_{T}^{ave};entries", 15, bins);                  //cross-check 1d 
+  TH2D* h_pt_ave_binned_mc = new TH2D("pt_ave_binned_mc","pt_ave binned mc;p_{T}^{ave};|#eta|", 13, bins, 2, bins_eta);
+  TH2D* h_pt_ave_binned_data = new TH2D("pt_ave_binned_data","pt_ave binned data;p_{T}^{ave};|#eta|", 13, bins,2, bins_eta);
+  TH2D* h_pt_ave_binned_yield = new TH2D("pt_ave_binned_yield","CENTRAL Triggers;p_{T}^{ave};|#eta|", 13, bins, n_eta-1, eta_bins);
+  TH2D* h_pt_ave_binned_mc_scaled = new TH2D("pt_ave_binned_mc_scaled","pt_ave binned mc scaled;p_{T}^{ave};|#eta|", 13, bins,2, bins_eta);
+  TH1D* hcentral_pt_ave_binned_mc_scaled = new TH1D("hcentral_pt_ave_binned_mc_scaled", "pt_ave mc scaled;p_{T}^{ave};entries", 13, bins);   //cross-check 1d
+  TH1D* hcentral_pt_ave_binned_data = new TH1D("hcentral_pt_ave_binned_data", "pt_ave data;p_{T}^{ave};entries", 13, bins);                  //cross-check 1d 
+  TH1D* hfwd_pt_ave_binned_mc_scaled = new TH1D("hfwd_pt_ave_binned_mc_scaled", "pt_ave mc scaled;p_{T}^{ave};entries", 13, bins);   //cross-check 1d
+  TH1D* hfwd_pt_ave_binned_data = new TH1D("hfwd_pt_ave_binned_data", "pt_ave data;p_{T}^{ave};entries", 13, bins);                  //cross-check 1d 
 
   //Fill histograms
   //DATA:

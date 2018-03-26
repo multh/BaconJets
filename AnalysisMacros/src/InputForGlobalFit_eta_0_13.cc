@@ -31,7 +31,7 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
 
   cout << "hello, it's mikkos macro" << endl;
   //calculate ratio in MC to DATA responses
-
+  
   double mc_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
   double err_mc_al_mpf[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
   double mc_al_pTbal[n_alpha_common][n_eta_common_2-1][n_pt-1]; 
@@ -91,66 +91,67 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
 	hmc_mpf_r[k][j][i] = new TH1D(name,"",100, 0, 2.5);
 	count++;
       }
-      	TString name10 = name5; name10+=count2;
-	hdata_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
-	name10 = name6; name10+=count2;
-	hmc_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
-	count2++;
+   
+      TString name10 = name5; name10+=count2;
+      hdata_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
+      name10 = name6; name10+=count2;
+      hmc_num[i][j] = new TH1D(name10,"",n_pt-1,pt_bins);
+      count2++;
     }
   }
-
+  
  
  // Create the tree reader and its data containers
-   TTreeReader myReader_DATA("AnalysisTree", CorrectionObject::_DATAFile);
-   TTreeReaderValue<Float_t> pt_ave_data(myReader_DATA, "pt_ave");
-   TTreeReaderValue<Float_t> probejet_eta_data(myReader_DATA, "probejet_eta");
-   TTreeReaderValue<Float_t> alpha_data(myReader_DATA, "alpha");
-   TTreeReaderValue<Float_t> rel_r_data(myReader_DATA, "rel_r");
-   TTreeReaderValue<Float_t> mpf_r_data(myReader_DATA, "mpf_r");
-   TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
-   
-   while (myReader_DATA.Next()) {
-     for(int k=0; k<n_pt-1; k++){
-   	   if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
-	   for(int j=0; j<n_eta_common_2-1; j++){
-	     if(fabs(*probejet_eta_data)>eta_common_bins_2[j+1] || fabs(*probejet_eta_data)<eta_common_bins_2[j]) continue;
-	     for(int i=0; i<n_alpha_common; i++){
-	       if(*alpha_data>alpha_bins_common[i]) continue;
-	       else{
-		 hdata_rel_r[k][j][i]->Fill(*rel_r_data,*weight_data);
-		 hdata_mpf_r[k][j][i]->Fill(*mpf_r_data,*weight_data);
-	       }
-	   }
-	 }
-     }
-   }
-
-   TTreeReader myReader_MC("AnalysisTree", CorrectionObject::_MCFile);
-   TTreeReaderValue<Float_t> pt_ave_mc(myReader_MC, "pt_ave");
-   TTreeReaderValue<Float_t> probejet_eta_mc(myReader_MC, "probejet_eta");
-   TTreeReaderValue<Float_t> alpha_mc(myReader_MC, "alpha");
-   TTreeReaderValue<Float_t> rel_r_mc(myReader_MC, "rel_r");
-   TTreeReaderValue<Float_t> mpf_r_mc(myReader_MC, "mpf_r");
-   TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
-   while (myReader_MC.Next()) {
-     for(int k=0; k<n_pt-1; k++){
-       if(*pt_ave_mc<pt_bins[k] || *pt_ave_mc>pt_bins[k+1]) continue;
-       for(int j=0; j<n_eta_common_2-1; j++){
-   	 if(fabs(*probejet_eta_mc)>eta_common_bins_2[j+1] || fabs(*probejet_eta_mc)<eta_common_bins_2[j]) continue;
-   	 for(int i=0; i<n_alpha_common; i++){
-   	   if(*alpha_mc>alpha_bins_common[i]) continue;
-   	   else{
-   	     hmc_rel_r[k][j][i]->Fill(*rel_r_mc,*weight_mc);
-   	     hmc_mpf_r[k][j][i]->Fill(*mpf_r_mc,*weight_mc);
-   	   }
-   	 }
-       }
-     }
-   }
-
-
-
-
+  TTreeReader myReader_DATA("AnalysisTree", CorrectionObject::_DATAFile);
+  TTreeReaderValue<Float_t> pt_ave_data(myReader_DATA, "pt_ave");
+  TTreeReaderValue<Float_t> probejet_eta_data(myReader_DATA, "probejet_eta");
+  TTreeReaderValue<Float_t> alpha_data(myReader_DATA, "alpha");
+  TTreeReaderValue<Float_t> rel_r_data(myReader_DATA, "rel_r");
+  TTreeReaderValue<Float_t> mpf_r_data(myReader_DATA, "mpf_r");
+  TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
+  
+  while (myReader_DATA.Next()) {
+    for(int k=0; k<n_pt-1; k++){
+      if(*pt_ave_data<pt_bins[k] || *pt_ave_data>pt_bins[k+1]) continue;
+      for(int j=0; j<n_eta_common_2-1; j++){
+	if(fabs(*probejet_eta_data)>eta_common_bins_2[j+1] || fabs(*probejet_eta_data)<eta_common_bins_2[j]) continue;
+	for(int i=0; i<n_alpha_common; i++){
+	  if(*alpha_data>alpha_bins_common[i]) continue;
+	  else{
+	    hdata_rel_r[k][j][i]->Fill(*rel_r_data,*weight_data);
+	    hdata_mpf_r[k][j][i]->Fill(*mpf_r_data,*weight_data);
+	  }
+	}
+      }
+    }
+  }
+  
+  TTreeReader myReader_MC("AnalysisTree", CorrectionObject::_MCFile);
+  TTreeReaderValue<Float_t> pt_ave_mc(myReader_MC, "pt_ave");
+  TTreeReaderValue<Float_t> probejet_eta_mc(myReader_MC, "probejet_eta");
+  TTreeReaderValue<Float_t> alpha_mc(myReader_MC, "alpha");
+  TTreeReaderValue<Float_t> rel_r_mc(myReader_MC, "rel_r");
+  TTreeReaderValue<Float_t> mpf_r_mc(myReader_MC, "mpf_r");
+  TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
+  while (myReader_MC.Next()) {
+    for(int k=0; k<n_pt-1; k++){
+      if(*pt_ave_mc<pt_bins[k] || *pt_ave_mc>pt_bins[k+1]) continue;
+      for(int j=0; j<n_eta_common_2-1; j++){
+	if(fabs(*probejet_eta_mc)>eta_common_bins_2[j+1] || fabs(*probejet_eta_mc)<eta_common_bins_2[j]) continue;
+	for(int i=0; i<n_alpha_common; i++){
+	  if(*alpha_mc>alpha_bins_common[i]) continue;
+	  else{
+	    hmc_rel_r[k][j][i]->Fill(*rel_r_mc,*weight_mc);
+	    hmc_mpf_r[k][j][i]->Fill(*mpf_r_mc,*weight_mc);
+	  }
+	}
+      }
+    }
+  }
+  
+  
+  
+  
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
       for(int k=0; k<n_pt-1; k++){
@@ -176,12 +177,8 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
 	ratio_al_pTbal[i][j][k] = ratio_res_pTbal.first;
 	err_ratio_al_pTbal[i][j][k] = ratio_res_pTbal.second;
 
-	//	if(hmc_mpf_r[k][j][i]->GetEntries()>100){
 	hmc_num[i][j]->SetBinContent(k+1, hmc_mpf_r[k][j][i]->GetEntries());
-	//	}
-      //	if(hdata_mpf_r[k][j][i]->GetEntries()>100){
 	hdata_num[i][j]->SetBinContent(k+1, hdata_mpf_r[k][j][i]->GetEntries());
-	//	}
       }
     }
   }
@@ -194,14 +191,14 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
     res_xbin_tgraph[i]=(pt_bins[i]+pt_bins[i+1])/2;
     res_zero[i]=(pt_bins[i+1]-pt_bins[i])/2 ;
   }
-
+  
   TGraphErrors *mpf_data[n_alpha_common][n_eta_common_2-1];
   TGraphErrors *rrel_data[n_alpha_common][n_eta_common_2-1];
   TGraphErrors *mpf_mc[n_alpha_common][n_eta_common_2-1];
   TGraphErrors *rrel_mc[n_alpha_common][n_eta_common_2-1];
   TGraphErrors *mpf_ratio[n_alpha_common][n_eta_common_2-1];
   TGraphErrors *rrel_ratio[n_alpha_common][n_eta_common_2-1];
-
+  
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
       mpf_data[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,data_al_mpf[i][j],res_zero,err_data_al_mpf[i][j]);
@@ -210,10 +207,10 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       rrel_mc[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,mc_al_pTbal[i][j],res_zero,err_mc_al_pTbal[i][j]);
       mpf_ratio[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,ratio_al_mpf[i][j],res_zero,err_ratio_al_mpf[i][j]);
       rrel_ratio[i][j] = new TGraphErrors(n_pt-1,res_xbin_tgraph,ratio_al_pTbal[i][j],res_zero,err_ratio_al_pTbal[i][j]);
-
+      
     }
   }
-
+  
   // Cleaning for empty points (with low statistic)
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
@@ -233,26 +230,25 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       rrel_mc[i][j]->SetName("ptchs_dijet_"+alpha_range_common[i]);
       mpf_ratio[i][j]->SetName("mpfchs_dijet_"+alpha_range_common[i]);
       rrel_ratio[i][j]->SetName("ptchs_dijet_"+alpha_range_common[i]);
-      }
     }
-
+  }
+  
   //Save results in root file
   TFile* outputfile = new TFile(CorrectionObject::_outpath+"output/JEC_L2_Dijet_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".root","UPDATE");
   outputfile->Print();
-
+  
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
-
-        if(i==0){
-	  outputfile->mkdir("ratio/"+eta_output_2[j]);
-	  outputfile->mkdir("data/"+eta_output_2[j]);
-	  outputfile->mkdir("mc/"+eta_output_2[j]);
+      if(i==0){
+	outputfile->mkdir("ratio/"+eta_output_2[j]);
+	outputfile->mkdir("data/"+eta_output_2[j]);
+	outputfile->mkdir("mc/"+eta_output_2[j]);
       }
-
+      
       outputfile->cd("ratio/"+eta_output_2[j]);
       mpf_ratio[i][j]->Write();
       rrel_ratio[i][j]->Write();
-    
+      
       outputfile->cd("data/"+eta_output_2[j]);
       mpf_data[i][j]->Write();
       rrel_data[i][j]->Write();
@@ -263,27 +259,17 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       rrel_mc[i][j]->Write();
       hmc_num[i][j]->Write();
     }
- }
+  }
 
   cout<<"Draw result for alpha = "<<alpha_range_common[3]<<" eta = "<<eta_common_range_2[n_eta_common_2-2]<<" "<<eta_common_range_2[n_eta_common_2-1]<<endl;
   mpf_ratio[3][0]->Draw();
-
+  
   outputfile->Write();
   outputfile->Close();
-
-
-
-
-
-
-
-
-  //delete everything
-
-
-
+  
+//delete everything
   delete outputfile;
-
+  
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
       delete mpf_data[i][j];
@@ -292,13 +278,13 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       delete rrel_mc[i][j];
       delete mpf_ratio[i][j];
       delete rrel_ratio[i][j];
-
+      
     }
   }
-
-
-
-
+  
+  
+  
+  
   for(int i=0; i<n_alpha_common; i++){
     for(int j=0; j<n_eta_common_2-1; j++){
       for(int k=0; k<n_pt-1; k++){
@@ -310,8 +296,8 @@ void CorrectionObject::InputForGlobalFit_eta_0_13(){
       }
     }
   }
+  
 
-
-
+  
   delete m_gStyle;
 }

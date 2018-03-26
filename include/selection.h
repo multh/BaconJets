@@ -48,13 +48,14 @@ class Selection {
     bool PtMC(uhh2::Event& evt); //apply lowest Pt cut on MC
     bool DiJet();
     bool DiJetAdvanced(uhh2::Event& evt);
+    bool ThirdJetSelection(uhh2::Event& evt);
     int goodPVertex();
     bool triggerFired(float bin1, float bin2);
 
     //  bool FullSelection();
     //Cut events with pthat in PU higher than pthat
     bool PUpthat(uhh2::Event& evt);
-    bool EtaPhi(uhh2::Event& evt);
+    bool EtaPhi_HCAL(uhh2::Event& evt);
     bool EtaPhiCleaning(uhh2::Event& evt);
 };
 

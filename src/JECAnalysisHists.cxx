@@ -28,10 +28,19 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH1F>("pt_hat", "p_{T} hat", 150, 0, 6000);
     book<TH1F>("pt","p_{T} all jets; p_{T} (GeV)",100,0,1500);
     book<TH1F>("eta","#eta all jets; #eta",100,-5,5);
-    double eta_bins[n_eta];
-    for(int i=0; i<n_eta; i++) eta_bins[i] = eta_range[i];
-    book<TH1F>("eta_binned","|#eta| all jets; |#eta|",n_eta-1, eta_bins);
+
+    double eta_bins_abs[n_eta];
+    for(int i=0; i<n_eta; i++) eta_bins_abs[i] = eta_range[i];
+
+    double eta_bins[n_eta_neg];
+    for(int i=0; i<n_eta_neg; i++) eta_bins[i] = eta_range_neg[i];
+ 
+    double eta_range_HCAL[n_eta_HCAL];
+    for(int i=0; i<n_eta_HCAL; i++) eta_range_HCAL[i] = eta_HCAL[i]; 
+
+    book<TH1F>("eta_binned","|#eta| all jets; |#eta|",n_eta-1, eta_bins_abs);
     book<TH1F>("phi","#phi all jets; #phi",50,-M_PI,M_PI);
+
     book<TH1F>("MET","MET all jets; MET",400,0,400);
 
     book<TH1F>("nPu","Number of PU events",60,0,60);
@@ -70,9 +79,9 @@ JECAnalysisHists::JECAnalysisHists(Context & ctx, const string & dirname): Hists
     book<TH2D>("r_rel_vs_etaProbe","Relative response vs. #eta probe jet; #eta probe; R_{rel}",100,-5,5,100,0.,2.);
     book<TH2D>("pt_ave_vs_etaProbe","pt ave vs #eta probe jet; #eta probe; pT_{ave}, GeV",100,-5.2,5.2,200,0,1000);
     book<TH2D>("dPhi_vs_alpha","#Delta #Phi vs #alpha; #alpha; #Delta #Phi",150,0,3,200,-M_PI,4);
-
-
-
+    book<TH2D>("phi_vs_eta_binned","#eta vs #phi all jets; #eta; #phi",n_eta_neg-1, eta_bins,100,-M_PI,M_PI);
+    book<TH2D>("phi_vs_eta_HCAL","#eta vs #phi jets; #eta; #phi",n_eta_HCAL-1, eta_range_HCAL,200,-M_PI,M_PI);
+    book<TH2D>("phi_vs_eta","#eta vs #phi all jets; #eta; #phi",200,-5.19,5.19, 200,-M_PI,M_PI);
 
     tt_gen_pthat  = ctx.get_handle<float>("gen_pthat");
     tt_gen_weight = ctx.get_handle<float>("gen_weight");
@@ -124,7 +133,10 @@ void JECAnalysisHists::fill(const uhh2::Event & ev, const int rand){
     hist("eta")->Fill(jets->eta(), weight);
     hist("eta_binned")->Fill(jets->eta(), weight);
     hist("phi")->Fill(jets->phi(), weight);
-       
+    ((TH2D*)hist("phi_vs_eta_binned"))->Fill(jets->eta(), jets->phi(), weight);
+    ((TH2D*)hist("phi_vs_eta_HCAL"))->Fill(jets->eta(), jets->phi(), weight);
+    ((TH2D*)hist("phi_vs_eta"))->Fill(jets->eta(), jets->phi(), weight);
+
     hist("MET")->Fill(ev.met->pt(), weight);
     hist("nPu")->Fill(ev.get(tt_nPU), weight);
     hist("weight_histo")->Fill(weight, 1);

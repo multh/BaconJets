@@ -178,15 +178,9 @@ void CorrectionObject::InputForGlobalFit(){
 	ratio_al_pTbal[i][j][k] = ratio_res_pTbal.first;
 	err_ratio_al_pTbal[i][j][k] = ratio_res_pTbal.second;
 
-	//	if(hmc_mpf_r[k][j][i]->GetEntries()>100){
 	hmc_num[i][j]->SetBinContent(k+1, hmc_mpf_r[k][j][i]->GetEntries());
-	//	}
-      //	if(hdata_mpf_r[k][j][i]->GetEntries()>100){
 	hdata_num[i][j]->SetBinContent(k+1, hdata_mpf_r[k][j][i]->GetEntries());
-	//	}
       }
-  
-
     }
   }
 

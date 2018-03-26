@@ -56,9 +56,24 @@ void CorrectionObject::ControlPlots(){
   TH1F *Eta_assym_bot_MC = (TH1F*)Eta_pos_MC->Clone();
   Eta_assym_bot_MC->Add(Eta_neg_MC,+1);
   Eta_assym_top_MC->Divide(Eta_assym_bot_MC);
+  TH2D *Eta_vs_Phi      = (TH2D*)CorrectionObject::_DATAFile->Get(dirName+"/phi_vs_eta");
+  TH2D *Eta_vs_Phi_HCAL = (TH2D*)CorrectionObject::_DATAFile->Get(dirName+"/phi_vs_eta_HCAL");
 
 
   /* +++++++++++++++++++++ Plot extremely nice histograms ++++++++++++++++++++++++++++ */
+  TCanvas* z = new TCanvas();
+  z->Divide(2,1);
+  
+  z->cd(1);
+  Eta_vs_Phi_HCAL->Draw("COLZ");
+
+  z->cd(2);
+  Eta_vs_Phi->Draw("COLZ");
+
+  cout << "Printing plots to " << SavePlots + "_EtaVsPhi.pdf" << endl;
+  z->Print(SavePlots + "_EtaVsPhi.pdf");
+
+
   TCanvas* a = new TCanvas();
   a->Divide(3,2);
 
@@ -270,13 +285,99 @@ void CorrectionObject::ControlPlots(){
 
   b->Print(SavePlots + "_dijet.pdf");
 
+  TLine*  lineEta1;
+  TLine*  lineEta2;
+  TLine*  linePhi1;
+  TLine*  linePhi2;
+
+
+  if(CorrectionObject::_runnr=="B"){
+    lineEta1 = new TLine(-2.250,-3.2,-2.250,3.2);
+    lineEta1->SetLineColor(2);
+    lineEta1->SetLineStyle(2);
+    
+    lineEta2 = new TLine(-1.93,-3.2,-1.93,3.2);
+    lineEta2->SetLineColor(2);
+    lineEta2->SetLineStyle(2);
+    }
+  else if(CorrectionObject::_runnr=="C"){
+    lineEta1 = new TLine(-3.489,-3.2,-3.489,3.2);
+    lineEta1->SetLineColor(2);
+    lineEta1->SetLineStyle(2);
+    
+    lineEta2 = new TLine(-3.139,-3.2,-3.139, 3.2);
+    lineEta2->SetLineColor(2);
+    lineEta2->SetLineStyle(2);
+    }
+  else if(CorrectionObject::_runnr=="D"){
+    lineEta1 = new TLine(-3.60,-3.2,-3.60,3.2);
+    lineEta1->SetLineColor(2);
+    lineEta1->SetLineStyle(2);
+    
+    lineEta2 = new TLine(-3.139,-3.2,-3.139, 3.2);
+    lineEta2->SetLineColor(2);
+    lineEta2->SetLineStyle(2);
+    }
+  else{
+    lineEta1 = new TLine(-6, 3.2,-6,3.2);
+    lineEta1->SetLineColorAlpha(0,0);
+    lineEta1->SetLineStyle(2);
+    
+    lineEta2 = new TLine(6,-3.2,6, 3.2);
+    lineEta2->SetLineColorAlpha(0,0);
+    lineEta2->SetLineStyle(2);
+  }
+
+
+  if(CorrectionObject::_runnr=="B"){
+    linePhi1 = new TLine(-5.191,2.2,5.191,2.2);
+    linePhi1->SetLineColor(2);
+    linePhi1->SetLineStyle(2);
+    
+    linePhi2 = new TLine(-5.191,2.5,5.191,2.5);
+    linePhi2->SetLineColor(2);
+    linePhi2->SetLineStyle(2);
+    }
+  else if(CorrectionObject::_runnr=="C" || CorrectionObject::_runnr=="D" ){
+    linePhi1 = new TLine(-5.191,2.237,5.191,2.237);
+    linePhi1->SetLineColor(2);
+    linePhi1->SetLineStyle(2);
+    
+    linePhi2 = new TLine(-5.191,2.475,5.191, 2.475);
+    linePhi2->SetLineColor(2);
+    linePhi2->SetLineStyle(2);
+    }
+  else{
+    linePhi1 = new TLine(-5.191,-4,5.191,-4);
+    linePhi1->SetLineColorAlpha(kWhite,0);
+    linePhi1->SetLineStyle(2);
+    
+    linePhi2 = new TLine(-5.191,4,5.191,4);
+    linePhi2->SetLineColorAlpha(kWhite,0);
+    linePhi2->SetLineStyle(2);
+  }
 
 
   TCanvas* f = new TCanvas();
   TH2F *mpf_vs_etaProbe_DATA = (TH2F*)CorrectionObject::_DATAFile->Get(dirName+"/mpf_vs_etaProbe");
   TH2F *mpf_vs_etaProbe_MC = (TH2F*)CorrectionObject::_MCFile->Get(dirName+"/mpf_vs_etaProbe");
   TH2F *r_rel_vs_etaProbe_DATA = (TH2F*)CorrectionObject::_DATAFile->Get(dirName+"/r_rel_vs_etaProbe");
-  TH2F *r_rel_vs_etaProbe_MC = (TH2F*)CorrectionObject::_MCFile->Get(dirName+"/r_rel_vs_etaProbe");
+  TH2F *r_rel_vs_etaProbe_MC = (TH2F*)CorrectionObject::_MCFile->Get(dirName+"/r_rel_vs_etaProbe"); 
+
+  TCanvas* c = new TCanvas();  
+  //TH2D *eta_phi_binned_DATA = (TH2D*)CorrectionObject::_DATAFile->Get(dirName+"/phi_vs_eta");
+  TH2D *eta_phi_binned_DATA = (TH2D*)CorrectionObject::_DATAFile->Get(dirName+"/phi_vs_eta_HCAL");
+
+  eta_phi_binned_DATA->SetTitle("DATA all jets");
+  eta_phi_binned_DATA->Draw("COLZ");
+
+  lineEta1->Draw("SAME");
+  lineEta2->Draw("SAME");
+  linePhi1->Draw("SAME");
+  linePhi2->Draw("SAME");
+
+  c->Print(SavePlots + "_EtaVsPhi.pdf");
+
 
   f->Divide(2,2);								    
   f->cd(1);									    
