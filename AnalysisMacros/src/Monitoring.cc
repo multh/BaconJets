@@ -97,10 +97,10 @@ void CorrectionObject::Monitoring(){
     cout<<"Create Hist"<<endl;
     for(int j=0; j<n_eta_control-1; j++){
       for(int k=0; k<n_pt-1; k++){
-        hist_A[i][j][k]    = (TH2D*)f_monitoring[i]    ->Get("Monitoring_Final/hist_data_A_eta_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]);
+        hist_A[i][j][k]    = (TH2D*)f_monitoring[i]    ->Get("Monitoring_Final/hist_data_A_eta_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]);
 	pr_A[i][j][k]      = (TProfile*)hist_A[i][j][k] ->ProfileX(Form("prof_A_%i_%d_%d",i,j,k));
         
-	hist_B[i][j][k]    = (TH2D*)f_monitoring[i]    ->Get("Monitoring_Final/hist_data_B_eta_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]);
+	hist_B[i][j][k]    = (TH2D*)f_monitoring[i]    ->Get("Monitoring_Final/hist_data_B_eta_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]);
 	pr_B[i][j][k]      = (TProfile*)hist_B[i][j][k] ->ProfileX(Form("prof_B_%i_%d_%d",i,j,k));
       }
     }
@@ -158,11 +158,11 @@ void CorrectionObject::Monitoring(){
 	mpf_res[i][j][k]= new TGraphErrors(n_lumi, xbin_tgraph, res_mpf[j][k], zero, err_res_mpf[j][k]);
 	mpf_res[i][j][k]= (TGraphErrors*)CleanEmptyPoints(mpf_res[i][j][k]);
 
-	Fit_rel[i][j][k] = new TF1("Fit_Rel_"+Name_range[i]+"_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"pol0", Fit_range[i] ,Fit_range[i+1]);
-	Fit_mpf[i][j][k] = new TF1("Fit_MPF_"+Name_range[i]+"_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"pol0", Fit_range[i] ,Fit_range[i+1]);
+	Fit_rel[i][j][k] = new TF1("Fit_Rel_"+Name_range[i]+"_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"pol0", Fit_range[i] ,Fit_range[i+1]);
+	Fit_mpf[i][j][k] = new TF1("Fit_MPF_"+Name_range[i]+"_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"pol0", Fit_range[i] ,Fit_range[i+1]);
 	
-	rel_res[i][j][k] ->Fit("Fit_Rel_"+Name_range[i]+"_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"","",Fit_range[i], Fit_range[i+1]);
-	mpf_res[i][j][k] ->Fit("Fit_MPF_"+Name_range[i]+"_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"","",Fit_range[i], Fit_range[i+1]);
+	rel_res[i][j][k] ->Fit("Fit_Rel_"+Name_range[i]+"_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"","",Fit_range[i], Fit_range[i+1]);
+	mpf_res[i][j][k] ->Fit("Fit_MPF_"+Name_range[i]+"_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1],"","",Fit_range[i], Fit_range[i+1]);
 
 	rel_ratio[i][j][k] = (TGraphErrors*)BuildRatio(rel_res[i][j][k], Fit_rel[i][j][k]->GetParameter(0),Fit_rel[i][j][k]->GetParError(0));
 	mpf_ratio[i][j][k] = (TGraphErrors*)BuildRatio(mpf_res[i][j][k], Fit_mpf[i][j][k]->GetParameter(0),Fit_mpf[i][j][k]->GetParError(0));
@@ -312,7 +312,7 @@ void CorrectionObject::Monitoring(){
       }
       c3->Update();
       
-      c3->SaveAs(CorrectionObject::_input_path+"/Monitoring/Rel_res_" + CorrectionObject::_generator_tag + "_eta_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]+".pdf");
+      c3->SaveAs(CorrectionObject::_input_path+"/Monitoring/Rel_res_" + CorrectionObject::_generator_tag + "_eta_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]+".pdf");
       delete c3;
 
 
@@ -389,7 +389,7 @@ void CorrectionObject::Monitoring(){
       }
       c4->Update();
       
-      c4->SaveAs(CorrectionObject::_input_path+"/Monitoring/MPF_res_" + CorrectionObject::_generator_tag + "_eta_"+eta_range2_control[j]+"_"+eta_range2_control[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]+".pdf");
+      c4->SaveAs(CorrectionObject::_input_path+"/Monitoring/MPF_res_" + CorrectionObject::_generator_tag + "_eta_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+pt_range[k]+"_"+pt_range[k+1]+".pdf");
       delete c4;
     }
   }
