@@ -26,16 +26,21 @@ int main(){
 
 
   TString generator    = "pythia";
-  bool    closure_test    = false;
+  bool    closure_test    = true;
   bool    trigger_fwd     = true;     //Use for Weight Calc
   bool    trigger_central = true;     //Use for Weight Calc
   TString collection    = "AK4CHS";
 
-  
-  
+  /*
+  TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V5/AK4CHS/MC_NoReweighted_ThirdJet/";
+  TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V5/AK4CHS/MC_NoReweighted_ThirdJet/";
+  */
+  /*  
   TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
   TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
-  
+  */
+  TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
+  TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
   
   /*
   TString input_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V1/AK4CHS/MC_NoReweighted_NoEtaPhi_NewMCTruth/";
@@ -46,8 +51,8 @@ int main(){
   //eine Klasse: enthaelt Info ueber runnr, Generator, collection, Strings zu MC/DATA-files, memberfunctions: controlPlots, kFSR etc.
   vector<CorrectionObject> Objects;
   
-  // Objects.emplace_back(CorrectionObject("BCDEFGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  Objects.emplace_back(CorrectionObject("BCD", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  Objects.emplace_back(CorrectionObject("BCDEFGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  // Objects.emplace_back(CorrectionObject("BCD", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   // Objects.emplace_back(CorrectionObject("EFearly", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   // Objects.emplace_back(CorrectionObject("FlateG", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   ///Objects.emplace_back(CorrectionObject("H", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
@@ -64,13 +69,13 @@ int main(){
   //Weight Calcualtion for QCD pT binned and no trigger splitting 
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
   
-  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
+  // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectExtrapolation();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae("0","7");
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae("0","10");
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae("0","14");
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae("0","16");
-  // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae();
+  for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae_eta();  //extended eta range to negative Values 
   
   for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Pt_Extrapolation_Alternative_CorrectFormulae(true);   //MPF method
