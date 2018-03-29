@@ -320,6 +320,11 @@ for(int j=0; j<n_eta-1; j++){
   else if(graph1_mpf[13]->GetN() == 8){
     graph1_mpf[13]->RemovePoint(7);
   }
+  /*
+  else if(graph1_mpf[13]->GetN() == 7){
+    graph1_mpf[13]->RemovePoint(6);
+  }
+  */
   if(graph1_mpf[14]->GetN() == 9){
     graph1_mpf[14]->RemovePoint(8);
   }
@@ -1060,16 +1065,16 @@ for(int j=0; j<n_eta-1; j++){
     for(int i=0; i<2;i++){ 
       
       ofstream output, output_loglin, uncerts, uncerts_loglin, output_hybrid, uncerts_hybrid, output_hybrid_barrel, uncerts_hybrid_barrel ;
-      output.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      output_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
-      uncerts_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      output_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      uncerts_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
       
-      output_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
-      output_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
       
       output  << output_header << endl;                                               //Dijet Method: for all eta use const pT extrapolation, const function for normalization
