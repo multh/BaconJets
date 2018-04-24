@@ -628,12 +628,12 @@ for(int j=0; j<n_eta_control-1; j++){
       loglin[j] = hist_kfsr_fit_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
     double flat_norm=0, loglin_norm=0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm += flat[j];
       loglin_norm += loglin[j];
     }
-    flat_norm = flat_norm/n_etabarr;
-    loglin_norm = loglin_norm/n_etabarr;
+    flat_norm = flat_norm/(n_etabarr*2);
+    loglin_norm = loglin_norm/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat[j] = flat[j]/flat_norm;
       loglin[j] = loglin[j]/loglin_norm;
@@ -646,12 +646,12 @@ for(int j=0; j<n_eta_control-1; j++){
       loglin_var[j] = hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
     double flat_norm_var=0, loglin_norm_var=0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm_var += flat_var[j];
       loglin_norm_var += loglin_var[j];
     }
-    flat_norm_var = flat_norm_var/n_etabarr;
-    loglin_norm_var = loglin_norm_var/n_etabarr;
+    flat_norm_var = flat_norm_var/(n_etabarr*2);
+    loglin_norm_var = loglin_norm_var/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat_var[j] = flat_var[j]/flat_norm_var;
       loglin_var[j] = loglin_var[j]/loglin_norm_var;
@@ -711,57 +711,8 @@ for(int j=0; j<n_eta_control-1; j++){
       norm_loglin = loglin_norm_var;
     }
 
-    for (int j=n_eta-1; j>0; --j){
-      output << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-      
-      output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
 
-      uncerts << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      
-      
-      if(j>12 && j<16){ //2.65 < |eta| < 3.1: const pT extrapolation
-	output_hybrid << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin pT extrapolation, const normalization
-	output_hybrid <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-      
-
-      if(j<6){//|eta| < 1.3: const pT extrapolation
-	output_hybrid_barrel << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin pT extrapolation, const normalization
-	output_hybrid_barrel <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-    }
-
-
-    for (int j=0; j<n_eta-1; j++){
+    for (int j=0; j<n_eta_control-1; j++){
  
       output << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1) 
@@ -781,7 +732,7 @@ for(int j=0; j<n_eta_control-1; j++){
 		     << kfsr_FitVal_mpf->GetBinError(j)/norm_loglin << " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
 
       
-      if(j>11 && j<15){
+      if(j>2 && j<6){
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
@@ -790,6 +741,16 @@ for(int j=0; j<n_eta_control-1; j++){
 	      << ptave_data[j]->FindLastBinAbove(100.)*10 
 	      <<" "<< kfsr_FitVal_mpf->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
       }
+      else if(j>29 && j<33){
+        output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   "
+             << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1)   
+             << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+    
+        uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range_control[j] << "  " << eta_range_control[j+1] << "  3    30    "
+              << ptave_data[j]->FindLastBinAbove(100.)*10
+              <<" "<< kfsr_FitVal_mpf->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
+      }
+
       else{
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " 
@@ -802,7 +763,7 @@ for(int j=0; j<n_eta_control-1; j++){
       }
       
 
-      if(j<5){
+      if(j>12 && j<23){
 	output_hybrid_barrel << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
@@ -1015,12 +976,12 @@ for(int j=0; j<n_eta_control-1; j++){
     }
 
     double flat_norm = 0, loglin_norm = 0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm += flat[j];
       loglin_norm += loglin[j];
     }
-    flat_norm = flat_norm/n_etabarr;
-    loglin_norm = loglin_norm/n_etabarr;
+    flat_norm = flat_norm/(n_etabarr*2);
+    loglin_norm = loglin_norm/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat[j] = flat[j]/flat_norm;
       loglin[j] = loglin[j]/loglin_norm;
@@ -1034,12 +995,12 @@ for(int j=0; j<n_eta_control-1; j++){
     }
 
     double flat_norm_var = 0, loglin_norm_var = 0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm_var += flat_var[j];
       loglin_norm_var += loglin_var[j];
     }
-    flat_norm_var = flat_norm_var/n_etabarr;
-    loglin_norm_var = loglin_norm_var/n_etabarr;
+    flat_norm_var = flat_norm_var/(n_etabarr*2);
+    loglin_norm_var = loglin_norm_var/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat_var[j] = flat_var[j]/flat_norm_var;
       loglin_var[j] = loglin_var[j]/loglin_norm_var;
@@ -1060,16 +1021,16 @@ for(int j=0; j<n_eta_control-1; j++){
     for(int i=0; i<2;i++){ 
       
       ofstream output, output_loglin, uncerts, uncerts_loglin, output_hybrid, uncerts_hybrid, output_hybrid_barrel, uncerts_hybrid_barrel ;
-      output.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      output_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
-      uncerts_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      output_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      uncerts_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
       
-      output_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
-      output_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
       
       output  << output_header << endl;                                               //Dijet Method: for all eta use const pT extrapolation, const function for normalization
@@ -1103,57 +1064,7 @@ for(int j=0; j<n_eta_control-1; j++){
     }
 
 
-    for (int j=n_eta-1; j>0; --j){
-      output << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-      
-      output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-      uncerts << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      
-      
-      if(j>12 && j<16){//const fit for 2.65 < |eta| < 3.1
-	output_hybrid << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin, const function for normalization
-	output_hybrid <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-      
-
-      if(j<6){//const fit for |eta| < 1.3
-	output_hybrid_barrel << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin, const function for normalization
-	output_hybrid_barrel <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-    }
-
-
-    for (int j=0; j<n_eta-1; j++){
+    for (int j=0; j<n_eta_control-1; j++){
  
       output << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1) 
@@ -1173,7 +1084,7 @@ for(int j=0; j<n_eta_control-1; j++){
 		     << kfsr_FitVal_dijet->GetBinError(j)/norm_loglin << " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
 
       
-      if(j>11 && j<15){
+      if(j>2 && j<6){
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
@@ -1182,6 +1093,17 @@ for(int j=0; j<n_eta_control-1; j++){
 	      << ptave_data[j]->FindLastBinAbove(100.)*10 
 	      <<" "<< kfsr_FitVal_dijet->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
       }
+
+    else if(j>29 && j<33){
+        output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   "
+             << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1)
+             << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+      
+      	uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range_control[j] << "  " << eta_range_control[j+1] << "  3    30    "
+              << ptave_data[j]->FindLastBinAbove(100.)*10
+              <<" "<< kfsr_FitVal_dijet->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
+      }
+
       else{
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " 
@@ -1194,7 +1116,7 @@ for(int j=0; j<n_eta_control-1; j++){
       }
       
 
-      if(j<5){
+      if(j>12 && j<23){
 	output_hybrid_barrel << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;

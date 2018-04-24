@@ -85,8 +85,8 @@ void CorrectionObject::L2ResOutput_eta(){
   TCanvas* c1 = new TCanvas();
 
   // create horizontal line for plotting ("ideal value")
-  TLine *line = new TLine(0,1,5.191,1);
-  TLine *line2 = new TLine(0,0,5.191,0);
+  TLine *line = new TLine(-5.191,1,5.191,1);
+  TLine *line2 = new TLine(-5.191,0,5.191,0);
   res_const_mpf_kfsrfit->SetLineWidth(2);
   res_const_mpf_kfsrfit->SetLineColor(kRed+1);
   res_const_dijet_kfsrfit->SetLineWidth(2);
@@ -130,7 +130,7 @@ void CorrectionObject::L2ResOutput_eta(){
   
   bool kSquare = true;
   // Draw results
-  TH1D *h = new TH1D("h",";|#eta|;Relative correction",41,0,5.191);
+  TH1D *h = new TH1D("h",";|#eta|;Relative correction",81,-5.191,5.191);
   h->SetMaximum(1.2);
   h->SetMinimum(0.8);
   //h->GetXaxis()->SetTitleSize(0.05);

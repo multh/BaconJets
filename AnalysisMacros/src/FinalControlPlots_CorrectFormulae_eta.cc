@@ -226,7 +226,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae_eta(){
     }
     //fill histos in bins of eta
     for(int i=0; i<n_eta_control-1; i++){
-      if(fabs(*probejet_eta_data)<eta_bins_control[i+1] && fabs(*probejet_eta_data)>=eta_bins_control[i]){
+      if(*probejet_eta_data<eta_bins_control[i+1] && *probejet_eta_data>=eta_bins_control[i]){
 	myCount++;
 	hdata_pt_ave[i]->Fill(*pt_ave_data,*weight_data);
 	hdata_MET[i]->Fill(*MET_data, *weight_data);
@@ -240,7 +240,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae_eta(){
     eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
     for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
       if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	if(fabs(*probejet_eta_data)>eta_bins_control[j+1] || fabs(*probejet_eta_data)<eta_bins_control[j]) continue;
+	if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
 	  hdata_asymmetry[k][j]->Fill(*asymmetry_data,*weight_data);
 	  hdata_B[k][j]->Fill(*B_data,*weight_data);
 	  hdata_METoverJetsPt[k][j]->Fill((*MET_data)/(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data),*weight_data);
