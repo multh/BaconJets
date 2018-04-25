@@ -7,19 +7,19 @@
 
 <!ENTITY CACHEABLE           "False">
 
-<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/"> 
-<!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016ReReco/ClosureTest/Summer16_03Feb2017_V9/AK4CHS/MC_NoReweighted_CHS_NewSF_NewMCTruth/">  -->
+<!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_NewHF_Binning/"> -->
+<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_ECALCleaning/"> 
 
 
-<!ENTITY b_closuretest       "false">
-<!ENTITY jec_version         "Summer16_07Aug2017_V6">
+<!ENTITY b_closuretest       "true">
+<!ENTITY jec_version         "Summer16_07Aug2017_V7">
 <!ENTITY APPLY_WEIGHTS       "false">
 <!-- <!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V2/AK4CHS/MC_NoReweighted_NewMCVersion/"> -->  <!-- Change Weight-Path: CENTRAL/FWD -->
-<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/"> <!-- Change Weight-Path: CENTRAL/FWD -->
-<!ENTITY Cut_PATH            "/nfs/dust/cms/user/multh/JEC/2016ReReco/Residuals/Summer16_03Feb2017_V3/AK4CHS/EtaPhiCut/">
+<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_ECALCleaning/"> <!-- Change Weight-Path: CENTRAL/FWD -->
+<!ENTITY Cut_PATH            "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/EtaPhiCut_ECAL/">
 
 <!ENTITY APPLY_METoverPTcut  "false">  <!--Apply MET Cut-->
-<!ENTITY APPLY_EtaPhi_cut    "false">  <!--Apply Eta Phi cleaning during ECAL problems -->
+<!ENTITY APPLY_EtaPhi_cut    "true">  <!--Apply Eta Phi cleaning during ECAL problems -->
 <!ENTITY APPLY_EtaPhi_HCAL   "true">   <!--Apply Eta Phi cleaning during HCAL problems -->
 <!ENTITY APPLY_LUMIWEIGHTS   "false"> 
 <!ENTITY APPLY_UNFLATTENING  "false">
@@ -77,7 +77,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="40" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_Residuals_V6"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_Closure_V7"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->

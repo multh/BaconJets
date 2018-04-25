@@ -53,19 +53,62 @@ Selection::Selection(uhh2::Context & ctx) :
 
   Cut_Dir = ctx.get("Cut_dir");
   dataset_version = ctx.get("dataset_version");
+  bool isMC = (ctx.get("dataset_type") == "MC");
 
- if(dataset_version.Contains("RunH")){
-  cut_map = new TFile(Cut_Dir+"hotjets-runH.root","READ");
-  h_map = (TH2D*) cut_map->Get("h2jet");
-  h_map->SetDirectory(0);
-  cut_map->Close();
+  if(!isMC){
+    if(dataset_version.Contains("RunB")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runB.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunC")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runC.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunD")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runD.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunE")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runE.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunFe")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runEe.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunFl")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runFl.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunG")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runG.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else if(dataset_version.Contains("RunH")){
+      cut_map = new TFile(Cut_Dir+"hotjets-runH.root","READ");
+      h_map = (TH2D*) cut_map->Get("h2hotfilter");
+      h_map->SetDirectory(0);
+      cut_map->Close();
+    }
+    else{
+      throw std::runtime_error("In File selection.cxx: No cleaning map for selected Run!");
+    }
   }
- else{
-  cut_map = new TFile(Cut_Dir+"hotjets-runH.root","READ");
-  h_map = (TH2D*) cut_map->Get("h2jet");
-  h_map->SetDirectory(0);
-  cut_map->Close();
-  }
+ 
 
 
 }
@@ -299,29 +342,29 @@ bool Selection::DiJetAdvanced(uhh2::Event& evt)
     double yMin = h_map->GetYaxis()->GetXmin();
     double yWidth = h_map->GetYaxis()->GetBinWidth(1);
     double cutValue=0;
-
- const int njets = event->jets->size();
- 
- for(int i=0; i < njets; i++){
-    int idx_x = 0;
-   int idx_y = 0;
-    Jet* jet = &event->jets->at(i);// loop over all jets in event
- 
-    while(jet->eta() > xMin+xWidth + idx_x * xWidth) idx_x++;
-    while(jet->phi() > yMin+yWidth + idx_y * yWidth) idx_y++;
-
-    cutValue = h_map->GetBinContent(idx_x+1, idx_y+1);
-
-    if(cutValue > 0) break;
-        
-     
- }
-
- if(cutValue > 0) return false;
- 
+    
+    const int njets = event->jets->size();
+    
+    for(int i=0; i < njets; i++){
+      int idx_x = 0;
+      int idx_y = 0;
+      Jet* jet = &event->jets->at(i);// loop over all jets in event
+      
+      while(jet->eta() > xMin+xWidth + idx_x * xWidth) idx_x++;
+      while(jet->phi() > yMin+yWidth + idx_y * yWidth) idx_y++;
+      
+      cutValue = h_map->GetBinContent(idx_x+1, idx_y+1);
+      
+      if(cutValue > 0) break;
+      
+      
+    }
+    
+    if(cutValue > 0) return false;
+    
     return true;
   }
-
+  
 
 
 Selection::~Selection()
