@@ -598,7 +598,7 @@ for(int j=0; j<n_eta-1; j++){
       if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
-	  else kfsr_fit_mpf->SetParameters(1,2,50); //CLOSURETEST
+	  else kfsr_fit_mpf->SetParameters(1,7,50); //CLOSURETEST
 	  fit_fullrange = true;
 	}
       }

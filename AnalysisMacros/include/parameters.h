@@ -10,6 +10,10 @@ const double eta_cut = 2.8; //Central/FWD triggers
 const int nResponseBins = 100;// 100
 const int n_etabarr=5; // needed for the normalization to 1 in the barrel
 
+//Test: Energy Fractions of Jets
+const double neutEMEF_threshold = 0.025;
+const double chHadEF_threshold  = 0.025;
+
 //Alpha: 
 const double alpha_cut = 0.3;
 const TString s_alpha_cut = "0.3";

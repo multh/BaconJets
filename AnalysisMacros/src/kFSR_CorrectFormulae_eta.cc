@@ -127,6 +127,11 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
   TTreeReaderValue<Float_t> asymmetry_data(myReader_DATA, "asymmetry");
   TTreeReaderValue<Float_t> B_data(myReader_DATA, "B");   
   TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
+
+  TTreeReaderValue<Float_t> probejet_neutEmEF_data(myReader_DATA, "probejet_neutEmEF");
+  TTreeReaderValue<Float_t> probejet_chHadEF_data(myReader_DATA, "probejet_chHadEF");
+  TTreeReaderValue<Float_t> probejet_chEmEF_data(myReader_DATA, "probejet_chEmEF");
+
   int idx = 0;
   
   cout << "starting to loop over DATA events." << endl;
@@ -134,6 +139,8 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
   while (myReader_DATA.Next()) {
     for(int j=0; j<n_eta_control-1; j++){
       if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
+      if((fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chEmEF_data>chHadEF_threshold)) continue;
+
       for(int i=0; i<n_alpha; i++){
 	if(*alpha_data>alpha_bins[i]) continue;
 	hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
@@ -158,11 +165,18 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
    TTreeReaderValue<Float_t> asymmetry_mc(myReader_MC, "asymmetry");
    TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
    TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
+
+   TTreeReaderValue<Float_t> probejet_neutEmEF_mc(myReader_MC, "probejet_neutEmEF");
+   TTreeReaderValue<Float_t> probejet_chHadEF_mc(myReader_MC, "probejet_chHadEF");
+   TTreeReaderValue<Float_t> probejet_chEmEF_mc(myReader_MC, "probejet_chEmEF");
+
    idx = 0;
 
    while (myReader_MC.Next()) {
      for(int j=0; j<n_eta_control-1; j++){
        if(*probejet_eta_mc>eta_bins_control[j+1] || *probejet_eta_mc<eta_bins_control[j]) continue;
+       if((fabs(*probejet_eta_mc)>3.1 && *probejet_neutEmEF_mc>neutEMEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chHadEF_mc>chHadEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chEmEF_mc>chHadEF_threshold)) continue;
+
        for(int i=0; i<n_alpha; i++){
 	 if(*alpha_mc>alpha_bins[i]) continue;
 	 hmc_asymmetry[j][i]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);

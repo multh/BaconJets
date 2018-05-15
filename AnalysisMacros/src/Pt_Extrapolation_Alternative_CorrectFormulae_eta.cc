@@ -157,21 +157,35 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(bool mpf
   TTreeReaderValue<Float_t> asymmetry_data(myReader_DATA, "asymmetry");
   TTreeReaderValue<Float_t> B_data(myReader_DATA, "B");   
   TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
-   
+
+  TTreeReaderValue<Float_t> probejet_neutEmEF_data(myReader_DATA, "probejet_neutEmEF");
+  TTreeReaderValue<Float_t> probejet_chHadEF_data(myReader_DATA, "probejet_chHadEF");
+  TTreeReaderValue<Float_t> probejet_chEmEF_data(myReader_DATA, "probejet_chEmEF");
+
+  /*  ofstream DATA_Events_with_removal, Events_without_removal;
+  DATA_Events_with_removal.open(CorrectionObject::_outpath+"output/DATA_Events_with_removal_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+  DATA_Events_without_removal.open(CorrectionObject::_outpath+"output/DATA_Events_without_removal_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+  DATA_Events_with_removal  << "DATA Events with removal (fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold)"  << endl;  
+  DATA_Events_with_removal  << "Run : Lumi : EventID"  << endl;  
+  DATA_Events_without_removal  << "DATA Events without removal (fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold)"  << endl;  
+  DATA_Events_without_removal  << "Run : Lumi : EventID"  << endl;  
+  */
   while (myReader_DATA.Next()) {
     if(*alpha_data>alpha_cut) continue;
-    for(int j=0; j<n_eta_control-1; j++){     
+
+    for(int j=0; j<n_eta_control-1; j++){ 
+    
       if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
-      else{
-	hdata_asymmetry[j]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
-	hdata_B[j]->Fill(*pt_ave_data,*B_data,*weight_data);
-	
-	eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
-	for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
-	  if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	  hdata_ptave[k][j]->Fill(*pt_ave_data,*weight_data);
-	  n_entries_data[j][k]++;
-	}
+      if((fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chEmEF_data>chHadEF_threshold)) continue;
+      
+      hdata_asymmetry[j]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
+      hdata_B[j]->Fill(*pt_ave_data,*B_data,*weight_data);
+      
+      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
+      for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
+	if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
+	hdata_ptave[k][j]->Fill(*pt_ave_data,*weight_data);
+	n_entries_data[j][k]++;
       }
     }
   }
@@ -189,23 +203,28 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(bool mpf
   TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
   TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
 
+  TTreeReaderValue<Float_t> probejet_neutEmEF_mc(myReader_MC, "probejet_neutEmEF");
+  TTreeReaderValue<Float_t> probejet_chHadEF_mc(myReader_MC, "probejet_chHadEF");
+  TTreeReaderValue<Float_t> probejet_chEmEF_mc(myReader_MC, "probejet_chEmEF");
+
   while (myReader_MC.Next()) {
     if(*alpha_mc>alpha_cut) continue;
+
     for(int j=0; j<n_eta_control-1; j++){
       if(*probejet_eta_mc>eta_bins_control[j+1] || *probejet_eta_mc<eta_bins_control[j]) continue;
-      else{
-	hmc_asymmetry[j]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
-	hmc_B[j]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
-	eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
-	for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
-	  if(*pt_ave_mc<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_mc>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	  n_entries_mc[j][k]++;
-	}
+      if((fabs(*probejet_eta_mc)>3.1 && *probejet_neutEmEF_mc>neutEMEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chHadEF_mc>chHadEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chEmEF_mc>chHadEF_threshold)) continue;
+      
+      hmc_asymmetry[j]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
+      hmc_B[j]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
+      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
+      for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
+	if(*pt_ave_mc<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_mc>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
+	n_entries_mc[j][k]++;
       }
     }
   }
 
-  //Check number of entries in each bin
+  //check number of entries in each bin
   bool enough_entries[n_eta_control-1][n_pt_-1];
   for(int j=0; j<n_eta_control-1; j++){
     eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
@@ -572,8 +591,9 @@ for(int j=0; j<n_eta_control-1; j++){
     TFile* kfsr_mpf;
     TH1D* hist_kfsr_fit_mpf;
     TH1D* hist_kfsr_mpf;
-    if(CorrectionObject::_runnr != "BCDEFGH"){ 
-        kfsr_mpf = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+    if(CorrectionObject::_runnr != "BCDEFGH" && _runnr != "FlateGH"){ 
+      //  kfsr_mpf = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+	kfsr_mpf = new TFile(CorrectionObject::_input_path+"RunFlateGH/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ"); //TEST
 	hist_kfsr_fit_mpf = (TH1D*)kfsr_mpf->Get("hist_kfsr_fit_mpf");
 	hist_kfsr_mpf = (TH1D*)kfsr_mpf->Get("kfsr_mpf");
     }
@@ -592,6 +612,11 @@ for(int j=0; j<n_eta_control-1; j++){
 
       if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
+	  else kfsr_fit_mpf->SetParameters(1,2,50); //CLOSURETEST
+	  fit_fullrange = true;
+	}
+	else if(CorrectionObject::_runnr == "FlateGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
 	  else kfsr_fit_mpf->SetParameters(1,2,50); //CLOSURETEST
 	  fit_fullrange = true;
@@ -919,8 +944,9 @@ for(int j=0; j<n_eta_control-1; j++){
     TH1D* hist_kfsr_fit_dijet;
     TH1D* hist_kfsr_dijet;
 
-    if(CorrectionObject::_runnr != "BCDEFGH"){ //TODO same as above
-        kfsr_dijet = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+    if(CorrectionObject::_runnr != "BCDEFGH" && _runnr != "FlateGH"){ //TODO same as above
+      // kfsr_dijet = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+      kfsr_dijet = new TFile(CorrectionObject::_input_path+"RunFlateGH/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");//TEST
 	hist_kfsr_fit_dijet = (TH1D*)kfsr_dijet->Get("hist_kfsr_fit_dijet");
 	hist_kfsr_dijet = (TH1D*)kfsr_dijet->Get("kfsr_dijet");
     }
@@ -942,6 +968,12 @@ for(int j=0; j<n_eta_control-1; j++){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,360,100); //RES
 	  else kfsr_fit_dijet->SetParameters(1,500,150); //CLOSURETEST
+	  //fit_fullrange = true;
+	  fit_285 = true;
+	}
+	if(CorrectionObject::_runnr == "FlateGH"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,360,100); //RES
+	  else kfsr_fit_dijet->SetParameters(-1,140,70); //CLOSURETEST
 	  //fit_fullrange = true;
 	  fit_285 = true;
 	}

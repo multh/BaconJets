@@ -81,7 +81,7 @@ Selection::Selection(uhh2::Context & ctx) :
       cut_map->Close();
     }
     else if(dataset_version.Contains("RunFe")){
-      cut_map = new TFile(Cut_Dir+"hotjets-runEe.root","READ");
+      cut_map = new TFile(Cut_Dir+"hotjets-runFe.root","READ");
       h_map = (TH2D*) cut_map->Get("h2hotfilter");
       h_map->SetDirectory(0);
       cut_map->Close();

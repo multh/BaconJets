@@ -721,6 +721,7 @@ TestModule::TestModule(uhh2::Context & ctx) :
   
     
   //JER Smearing for corresponding JEC-Version
+  
   if(isMC){
     if(JEC_Version == "Summer16_23Sep2016_V4") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_03Feb2017)); 
     else if(JEC_Version == "Summer16_03Feb2017_V7") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_03Feb2017));// SF_13TeV_2016_default
@@ -729,9 +730,10 @@ TestModule::TestModule(uhh2::Context & ctx) :
     else if(JEC_Version == "Summer16_03Feb2017_V9") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_default));
     else if(JEC_Version == "Summer16_07Aug2017_V6") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_03Feb2017));
     else if(JEC_Version == "Summer16_07Aug2017_V5") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_03Feb2017));
-    else if(JEC_Version == "Summer16_07Aug2017_V7") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_03Feb2017));
+    else if(JEC_Version == "Summer16_07Aug2017_V7") jetER_smearer.reset(new GenericJetResolutionSmearer(ctx, "jets", "genjets", true, JERSmearing::SF_13TeV_2016_07Aug2017_v1)); //03 May 2018: Updated SF
     else throw runtime_error("In TestModule.cxx: When setting up JER smearer, invalid 'JEC_Version' was specified.");
   }
+  
   
   
   //output
