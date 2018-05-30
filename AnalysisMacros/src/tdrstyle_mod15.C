@@ -164,7 +164,7 @@ void setTDRStyle() {
 
   gStyle->SetTitleColor(1, "XYZ");
   gStyle->SetTitleFont(42, "XYZ");
-  //gStyle->SetTitleSize(0.06, "XYZ");
+  gStyle->SetTitleSize(0.1, "XYZ");
   //gStyle->SetTitleXOffset(0.9);
   //gStyle->SetTitleYOffset(1.25);
   // gStyle->SetTitleOffset(1.1, "Y"); // Another way to set the Offset
@@ -174,7 +174,7 @@ void setTDRStyle() {
   gStyle->SetLabelColor(1, "XYZ");
   gStyle->SetLabelFont(42, "XYZ");
   //gStyle->SetLabelOffset(0.007, "XYZ");
-  //gStyle->SetLabelSize(0.05, "XYZ");
+  gStyle->SetLabelSize(0.1, "XYZ");
 
 // For the axis:
 
@@ -403,7 +403,7 @@ void tdrCanvas(TCanvas *&canv_in, const char* canvName, TH1D *&h,
 
   setTDRStyle();
 
-  // writeExtraText = true;       // if extra text
+  //writeExtraText = true;       // if extra text
   //extraText  = "Preliminary";  // default extra text is "Preliminary"
   //lumi_8TeV  = "19.5 fb^{-1}"; // default is "19.7 fb^{-1}"
   //lumi_7TeV  = "5.0 fb^{-1}";  // default is "5.1 fb^{-1}"
@@ -459,7 +459,7 @@ void tdrCanvas(TCanvas *&canv_in, const char* canvName, TH1D *&h,
   //canv_in->SetTicky(0);
 
   assert(h);
-  h->GetXaxis()->SetTitleSize(0.036);
+  h->GetXaxis()->SetTitleSize(0.036); //0.036
   h->GetYaxis()->SetTitleSize(0.036);
   h->GetXaxis()->SetLabelSize(0.036);
   h->GetYaxis()->SetLabelSize(0.036);

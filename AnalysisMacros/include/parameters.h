@@ -39,8 +39,35 @@ const int triggerVal_HF[n_trigger_HF] = {60, 80, 100, 160, 220, 300};
 const int n_pt = 11;
 const TString pt_range[n_pt]= {
   "51",
-  "73",
-  "95",
+  "74",
+  "96",
+  "165",
+  "232",
+  "300",
+  "366",
+  "456",
+  "569",
+  "1000",
+  "2000"};
+
+const double pt_bins[n_pt] = {
+  51,
+  74, 
+  96,
+  165,
+  232,
+  300,
+  366,
+  456,
+  569,
+  1000,
+  2000};
+/*
+const int n_pt = 11;
+const TString pt_range[n_pt]= {
+  "51",
+  "74",
+  "96",
   "163",
   "230",
   "299",
@@ -52,8 +79,8 @@ const TString pt_range[n_pt]= {
 
 const double pt_bins[n_pt] = {
   51,
-  73, 
-  95,
+  74, 
+  96,
   163,
   230,
   299,
@@ -62,8 +89,8 @@ const double pt_bins[n_pt] = {
   566,
   1000,
   2000};
-
-const int n_pt_HF = 10;
+*/
+const int n_pt_HF = 9;
 const TString pt_range_HF[n_pt_HF]={
   "51",
   "72",
@@ -72,7 +99,6 @@ const TString pt_range_HF[n_pt_HF]={
   "188",
   "257", 
   "354",
-  "450",
   "1000",
   "2000"};
 
@@ -84,7 +110,6 @@ const double pt_bins_HF[n_pt_HF]{
   188,
   257,
   354,
-  450,
   1000,
   2000};
 

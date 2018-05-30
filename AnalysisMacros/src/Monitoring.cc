@@ -99,8 +99,20 @@ void CorrectionObject::Monitoring(){
     f_monitoring[i] = new TFile(CorrectionObject::_input_path+"/uhh2.AnalysisModuleRunner.DATA.DATA_Run"+Name_range[i]+"_AK4CHS.root");
     cout<<"Create Hist"<<endl;
     for(int j=0; j<n_eta_control-1; j++){
-      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
 
+      if(fabs(eta_bins_control[j])<fabs(eta_bins_control[j+1])){
+	eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
+	cout<<"eta bins"<<eta_bins_control[j]<<endl;
+	if(eta_bins_control[j] == 2.853){
+	cout<<"eta_range_control[j]"<<eta_range_control[j]<<endl;
+	cout<<"Bool: "<<eta_cut_bool<<endl;
+	eta_cut_bool = false;
+	}
+      }
+      else {
+	eta_cut_bool = fabs(eta_bins_control[j+1])>eta_cut;
+      }
+      
       for(int k=1; k< (eta_cut_bool ? n_pt_HF-2 : n_pt-2) ; k++){
 	cout<<"eta: "+eta_range_control[j]+" "+eta_range_control[j+1]+"   pT: "+(eta_cut_bool?pt_range_HF:pt_range)[k]+" "+(eta_cut_bool?pt_range_HF:pt_range)[k+1]<<endl;
         hist_A[i][j][k]    = (TH2D*)f_monitoring[i]    ->Get("Monitoring_Final/hist_data_A_eta_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+(eta_cut_bool?pt_range_HF:pt_range)[k]+"_"+(eta_cut_bool?pt_range_HF:pt_range)[k+1]);
@@ -141,11 +153,21 @@ void CorrectionObject::Monitoring(){
       zero[i] = 0;
     }
 
+    cout<<"After Lumi!"<<endl;
+
     for(int j=0; j<n_eta_control-1; j++){
-      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
-      for(int k=0; k < (eta_cut_bool ?  n_pt_HF-2 : n_pt-2 ) ; k++ ){
+     if(fabs(eta_bins_control[j])<fabs(eta_bins_control[j+1])){
+	eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
+      }
+      else {
+	eta_cut_bool = fabs(eta_bins_control[j+1])>eta_cut;
+      }
+
+      for(int k=1; k < (eta_cut_bool ?  n_pt_HF-2 : n_pt-2 ) ; k++ ){
 	for(int l =0; l<n_lumi; l++){
 	  
+	  cout<<"Fit_Rel_"+Name_range[i]+"_"+eta_range_control2[j]+"_"+eta_range_control2[j+1]+"_pT_"+(eta_cut_bool?pt_range_HF:pt_range)[k]+"_"+(eta_cut_bool?pt_range_HF:pt_range)[k+1]<<endl;
+
 	  res_rel[j][k][l]=0;
 	  err_res_rel[j][k][l]=0;
 	  res_mpf[j][k][l]=0;
@@ -230,7 +252,7 @@ void CorrectionObject::Monitoring(){
 
   for(int j=0; j<n_eta_control-1; j++){
     eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
-    for(int k=0; k<( eta_cut_bool ?  n_pt_HF-2 : n_pt-2 ); k++){
+    for(int k=1; k<( eta_cut_bool ?  n_pt_HF-2 : n_pt-2 ); k++){
  
       //dummy for tdrCanvas 
       TH1D *h = new TH1D("h",";dummy;",5000,0,40000);
