@@ -73,7 +73,7 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       
 
       //lumitags
-      if(_runnr == "BCD")    _lumitag      = "RunBCD  12.9 fb^{-1}";
+      if(_runnr == "BCD")    _lumitag      = "Run2016BCD  12.9 fb^{-1}";
       else if(_runnr == "G") _lumitag      = "RunG  7.6 fb^{-1}";
       else if(_runnr == "B") _lumitag      = "RunB  5.8 fb^{-1}";
       else if(_runnr == "C") _lumitag      = "RunC  2.6 fb^{-1}";
@@ -82,10 +82,10 @@ CorrectionObject::CorrectionObject(const TString & runnr, const TString & genera
       else if(_runnr == "F") _lumitag      = "RunF  3.2 fb^{-1}";
       else if(_runnr == "G") _lumitag      = "RunG  7.6 fb^{-1}";
       else if(_runnr == "Fearly") _lumitag = "RunFearly  2.7 fb^{-1}";
-      else if(_runnr == "EFearly") _lumitag = "RunEFearly  6.8 fb^{-1}";
+      else if(_runnr == "EFearly") _lumitag = "Run2016EF  6.8 fb^{-1}";
       else if(_runnr == "Flate") _lumitag = "RunFlate  0.4 fb^{-1}";
-      else if(_runnr == "FlateG") _lumitag = "RunFlateG  8.0 fb^{-1}";
-      else if(_runnr == "FlateGH") _lumitag = "RunFlateGH  16.5 fb^{-1}";
+      else if(_runnr == "FlateG") _lumitag = "RunG  8.0 fb^{-1}";
+      else if(_runnr == "FlateGH") _lumitag = "Run2016GH  16.8 fb^{-1}";
       else if(_runnr == "H") _lumitag = "RunH  8.5 fb^{-1}";
       else if(_runnr == "BCDEFearly") _lumitag = "RunBCDEFearly  19.7 fb^{-1}";
       else if(_runnr == "BCDEFGH") _lumitag = "RunBCDEFGH  36.8 fb^{-1}";

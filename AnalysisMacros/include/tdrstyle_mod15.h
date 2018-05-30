@@ -77,7 +77,7 @@ const TString cmsText = "CMS";;
 const float cmsTextFont = 61;;  // default is helvetic-bold
 
 const bool writeExtraText = true;//false;
-const TString extraText   = ""; //Simulation, Preliminary
+const TString extraText   = "Preliminary"; //Simulation, Preliminary
 const TString extraText2  = ""; // For Simulation Preliminary on two lines
 const float extraTextFont = 52;  // default is helvetica-italics
 
