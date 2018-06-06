@@ -115,6 +115,7 @@ LumiHists::LumiHists(uhh2::Context & ctx,
 
   TString name1 = "hist_data_A_";
   TString name2 = "hist_data_B_";
+  TString name3 = "hist_data_Npv_";
 
   bool eta_cut_bool;
   TString pt_range_j;
@@ -138,6 +139,9 @@ LumiHists::LumiHists(uhh2::Context & ctx,
      hAsymLumi[i][j] = book<TH2D>(name, "Asymmetry per Lumi", nbins,0,(int(total_lumi / lumi_per_bin) + 1)*lumi_per_bin,100,-1.2,1.2);
      name = name2; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range_j+"_"+pt_range_j1;
      hBsymLumi[i][j] = book<TH2D>(name, "Bsymmetry per Lumi", nbins,0,(int(total_lumi / lumi_per_bin) + 1)*lumi_per_bin,100,-1.2,1.2);
+     name = name3; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range_j+"_"+pt_range_j1;
+     hNpvLumi[i][j] = book<TH2D>(name, "Npv per Lumi", nbins,0,(int(total_lumi / lumi_per_bin) + 1)*lumi_per_bin,100,0,100);
+
   }
   }
     
@@ -228,6 +232,7 @@ void LumiHists::fill(const uhh2::Event & ev){
 	 if(pt_ave>pt_bin_i1 || pt_ave<pt_bin_i) continue;
     hAsymLumi[j][i]->Fill(ibin*lumi_per_bin,asymmetry,ev.weight);
     hBsymLumi[j][i]->Fill(ibin*lumi_per_bin, B, ev.weight);
+    hNpvLumi[j][i]->Fill(ibin*lumi_per_bin, ev.pvs->size(), ev.weight);
     }
     }
      }
