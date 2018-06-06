@@ -40,6 +40,7 @@ private:
     TH1D * hlumi;
     TH2D * hAsymLumi[37][11];
     TH2D * hBsymLumi[37][11];
+    TH2D * hNpvLumi[37][11];
     TProfile * pr_AsymLumi[37][11];
     TH1D * hinstlumi;
     TH1D * hinstlumi_ref;
