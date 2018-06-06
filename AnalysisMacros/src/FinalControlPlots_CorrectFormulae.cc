@@ -378,7 +378,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae(){
   for(int i=0; i<n_pt_HF-1; i++){
     if(i==0) output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins_HF[i+1] << "]  :    ";
     else if(i==1) output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins_HF[i+1] << "] :    ";
-    else output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins[i+1] << "]:    ";
+    else output << "pT = ["  << fixed << setprecision(0) << pt_bins_HF[i] << "," << setprecision(0) << pt_bins_HF[i+1] << "]:    ";
 
     for(int j=0; j<n_eta-1; j++){
       if(fabs(eta_bins[j])<eta_cut){

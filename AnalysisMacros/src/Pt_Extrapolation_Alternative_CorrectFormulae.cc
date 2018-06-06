@@ -320,6 +320,11 @@ for(int j=0; j<n_eta-1; j++){
   else if(graph1_mpf[13]->GetN() == 8){
     graph1_mpf[13]->RemovePoint(7);
   }
+  /*
+  else if(graph1_mpf[13]->GetN() == 7){
+    graph1_mpf[13]->RemovePoint(6);
+  }
+  */
   if(graph1_mpf[14]->GetN() == 9){
     graph1_mpf[14]->RemovePoint(8);
   }
@@ -584,7 +589,7 @@ for(int j=0; j<n_eta-1; j++){
     //fit the kFSR values
     TF1 *kfsr_fit_mpf = new TF1("kfsr_fit_mpf","[0]+([1]*TMath::CosH(x))/(1+[2]*TMath::CosH(x))",0,5.);   //Range: 0,5. by default
 
-    bool fit_fullrange = false;
+    bool fit_fullrange = true;
     bool fit_285       = false;
  
     //VERY fragile fit, carefully set initial values
@@ -592,8 +597,8 @@ for(int j=0; j<n_eta-1; j++){
 
       if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
-	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
-	  else kfsr_fit_mpf->SetParameters(1,2,50); //CLOSURETEST
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1.85,-160,180); //RES
+	  else kfsr_fit_mpf->SetParameters(2,2,50); //CLOSURETEST
 	  fit_fullrange = true;
 	}
       }

@@ -122,12 +122,18 @@ LumiHists::LumiHists(uhh2::Context & ctx,
   TString pt_range_j1;
 
   for(int i=0;i<n_eta-1;i++){
-    eta_cut_bool = fabs(eta_bins[i])>2.853;
-    if(!trigger_fwd) eta_cut_bool=false;
+      if(fabs(eta_bins[i])<fabs(eta_bins[i+1])){
+	eta_cut_bool = fabs(eta_bins[i])>2.8;
+      }
+      else {
+	eta_cut_bool = fabs(eta_bins[i+1])>2.8;
+      }
 
     for(int j=0;j<(eta_cut_bool ? n_pt_HF-1 : n_pt-1 ) ; j++){
       pt_range_j  = (eta_cut_bool ? pt_range_HF[j] : pt_range[j]);
       pt_range_j1 = (eta_cut_bool ? pt_range_HF[j+1] : pt_range[j+1]);
+
+      cout<<"eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range_j+"_"+pt_range_j1<<endl;
 
      TString name = name1; name+="eta_"+eta_range[i]+"_"+eta_range[i+1]+"_pT_"+pt_range_j+"_"+pt_range_j1;
      hAsymLumi[i][j] = book<TH2D>(name, "Asymmetry per Lumi", nbins,0,(int(total_lumi / lumi_per_bin) + 1)*lumi_per_bin,100,-1.2,1.2);
@@ -213,8 +219,13 @@ void LumiHists::fill(const uhh2::Event & ev){
       if(alpha>0.3) continue;
        if(probejet_eta > eta_bins[j+1] || probejet_eta < eta_bins[j]) continue;
 
-       eta_cut_bool = fabs(eta_bins[j])>2.8;
-       if(!trigger_fwd) eta_cut_bool=false;
+    if(fabs(eta_bins[j])<fabs(eta_bins[j+1])){
+	eta_cut_bool = fabs(eta_bins[j])>2.8;
+      }
+      else {
+	eta_cut_bool = fabs(eta_bins[j+1])>2.8;
+      }
+    
        for(int i=0; i< (eta_cut_bool ? n_pt_HF-1 : n_pt-1) ; i++){
 	 pt_bin_i  = (eta_cut_bool ? pt_bin_HF[i] : pt_bins[i]);
 	 pt_bin_i1 = (eta_cut_bool ? pt_bin_HF[i+1] : pt_bins[i+1]);

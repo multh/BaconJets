@@ -10,6 +10,10 @@ const double eta_cut = 2.8; //Central/FWD triggers
 const int nResponseBins = 100;// 100
 const int n_etabarr=5; // needed for the normalization to 1 in the barrel
 
+//Test: Energy Fractions of Jets
+const double neutEMEF_threshold = 0.025;
+const double chHadEF_threshold  = 0.025;
+
 //Alpha: 
 const double alpha_cut = 0.3;
 const TString s_alpha_cut = "0.3";
@@ -35,8 +39,35 @@ const int triggerVal_HF[n_trigger_HF] = {60, 80, 100, 160, 220, 300};
 const int n_pt = 11;
 const TString pt_range[n_pt]= {
   "51",
-  "73",
-  "95",
+  "74",
+  "96",
+  "165",
+  "232",
+  "300",
+  "366",
+  "456",
+  "569",
+  "1000",
+  "2000"};
+
+const double pt_bins[n_pt] = {
+  51,
+  74, 
+  96,
+  165,
+  232,
+  300,
+  366,
+  456,
+  569,
+  1000,
+  2000};
+/*
+const int n_pt = 11;
+const TString pt_range[n_pt]= {
+  "51",
+  "74",
+  "96",
   "163",
   "230",
   "299",
@@ -48,8 +79,8 @@ const TString pt_range[n_pt]= {
 
 const double pt_bins[n_pt] = {
   51,
-  73, 
-  95,
+  74, 
+  96,
   163,
   230,
   299,
@@ -58,7 +89,7 @@ const double pt_bins[n_pt] = {
   566,
   1000,
   2000};
-
+*/
 const int n_pt_HF = 9;
 const TString pt_range_HF[n_pt_HF]={
   "51",

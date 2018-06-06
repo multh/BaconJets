@@ -31,43 +31,45 @@ int main(){
   bool    trigger_central = true;     //Use for Weight Calc
   TString collection    = "AK4CHS";
 
+  /*
+  TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V5/AK4CHS/MC_NoReweighted_ThirdJet/";
+  TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V5/AK4CHS/MC_NoReweighted_ThirdJet/";
+  */
+//Jens:
+  TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_CorrMETTypeI/";
+  TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_CorrMETTypeI/";
   
-  // TString input_path    ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning/";
-  // TString weight_path   ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning/";
-  
- 
-  // TString input_path    ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_JERdown/";
-  // TString weight_path   ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_JERdown/";
+//Anastasia:
+ // TString input_path    ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_NpvMonitoring2/";
+  // TString weight_path   ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_NpvMonitoring2/";
 
-  // TString input_path    ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_JERup/";
-  // TString weight_path   ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_JERup/";
-
-  // TString input_path    ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
-  // TString weight_path   ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
-
-  TString input_path    ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_NpvMonitoring2/";
-  TString weight_path   ="/nfs/dust/cms/user/karavdia/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6_closure/AK4CHS/MC_NoReweighted_NewHF_Binning_NpvMonitoring2/";
 
   /*
-  TString input_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V1/AK4CHS/MC_NoReweighted_NoEtaPhi_NewMCTruth/";
-  TString weight_path  ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V1/AK4CHS/MC_NoReweighted_NoEtaPhi_NewMCTruth/";
+  TString input_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
+  TString weight_path  ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V6/AK4CHS/MC_NoReweighted_NewHF_Binning/";
   */
 
 
   //eine Klasse: enthaelt Info ueber runnr, Generator, collection, Strings zu MC/DATA-files, memberfunctions: controlPlots, kFSR etc.
   vector<CorrectionObject> Objects;
   
+
   Objects.emplace_back(CorrectionObject("BCDEFGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   //Objects.emplace_back(CorrectionObject("BCD", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   // Objects.emplace_back(CorrectionObject("EFearly", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+
   // Objects.emplace_back(CorrectionObject("FlateG", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  ///Objects.emplace_back(CorrectionObject("H", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  // Objects.emplace_back(CorrectionObject("H", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   // Objects.emplace_back(CorrectionObject("FlateGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   
-  //Objects.emplace_back(CorrectionObject("B", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  // Objects.emplace_back(CorrectionObject("C", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  // Objects.emplace_back(CorrectionObject("D", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  // Objects.emplace_back(CorrectionObject("G", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+   Objects.emplace_back(CorrectionObject("B", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  Objects.emplace_back(CorrectionObject("C", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  Objects.emplace_back(CorrectionObject("D", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+ Objects.emplace_back(CorrectionObject("E", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+ Objects.emplace_back(CorrectionObject("Fearly", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+Objects.emplace_back(CorrectionObject("Flate", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  Objects.emplace_back(CorrectionObject("G", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+Objects.emplace_back(CorrectionObject("H", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   
   
   cout << "testobject is " << Objects[0] << endl;
@@ -119,6 +121,7 @@ int main(){
   
   // // // // // // //Compare up/nominal/down Variations of JER
   // // // // // //    // Objects[0].L2Res_JEC();    Objects.size()
+
   
   cout << endl << "Closing MC and DATA files." << endl;
   for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CloseFiles();

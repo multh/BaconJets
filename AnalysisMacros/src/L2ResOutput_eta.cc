@@ -20,8 +20,11 @@ void CorrectionObject::L2ResOutput_eta(){
   TFile* f_Res_mpf = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
   TFile* f_Res_dijet = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
 
+  TFile* f_Res_mpf_old   = new TFile("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_NewTriggerThresholds/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
+  TFile* f_Res_dijet_old = new TFile("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_NewTriggerThresholds/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
    cout<<"After files"<<endl;
-  TString JetDescrib;                                                                                                                            
+
+  TString JetDescrib;                                                                    
   if (CorrectionObject::_collection=="AK4CHS") JetDescrib = "Anti-k_{t} R = 0.4, PF+CHS";
   if (CorrectionObject::_collection=="AK4Puppi") JetDescrib = "Anti-k_{t} R = 0.4, PF+PUPPI";
   if (CorrectionObject::_collection=="AK8CHS") JetDescrib = "Anti-k_{t} R = 0.8, PF+CHS";
@@ -55,11 +58,28 @@ void CorrectionObject::L2ResOutput_eta(){
   TH1D* res_logpt_dijet_kfsrfit_val = (TH1D*)f_Res_dijet->Get("res_logpt_dijet_val");
   //***************************************************************************************************************  
 
+  //get L2Res hists for MPF and pt balance
+  TH1D* res_const_mpf_kfsrfit_old = (TH1D*)f_Res_mpf_old->Get("res_const_mpf");
+  TH1D* res_const_dijet_kfsrfit_old = (TH1D*)f_Res_dijet_old->Get("res_const_dijet");
+  TH1D* res_logpt_mpf_kfsrfit_old = (TH1D*)f_Res_mpf_old->Get("res_logpt_mpf");
+  TH1D* res_logpt_dijet_kfsrfit_old = (TH1D*)f_Res_dijet_old->Get("res_logpt_dijet");
 
   TH1D* res_mpf_pT_diff = (TH1D*) res_logpt_mpf_kfsrfit->Clone("res_mpf_pT_diff");
   res_mpf_pT_diff->Add(res_logpt_dijet_kfsrfit,-1);
 
-   
+ 
+  TH1D* res_const_mpf_diff = (TH1D*) res_const_mpf_kfsrfit->Clone("res_const_mpf_diff");
+  res_const_mpf_diff->Add(res_const_mpf_kfsrfit_old,-1);
+
+  TH1D* res_const_dijet_diff = (TH1D*) res_const_dijet_kfsrfit->Clone("res_const_dijet_diff");
+  res_const_dijet_diff->Add(res_const_dijet_kfsrfit_old,-1);
+
+  TH1D* res_logpt_mpf_diff = (TH1D*) res_logpt_mpf_kfsrfit->Clone("res_logpt_mpf_diff");
+  res_logpt_mpf_diff->Add(res_logpt_mpf_kfsrfit_old,-1);
+
+  TH1D* res_logpt_dijet_diff = (TH1D*) res_logpt_dijet_kfsrfit->Clone("res_logpt_dijet_diff");
+  res_logpt_dijet_diff->Add(res_logpt_dijet_kfsrfit_old,-1);
+  
  
   //default Canvas
   TCanvas* c1 = new TCanvas();
@@ -124,15 +144,11 @@ void CorrectionObject::L2ResOutput_eta(){
   tex->SetTextSize(0.045);  
   tex->DrawLatex(0.45,0.87,JetDescrib);
 
-  TLatex *tex_method = new TLatex();
-  tex_method->SetNDC();
-  tex_method->SetTextSize(0.045);  
-
   TLatex *tex_bars = new TLatex();
   tex_bars->SetNDC();
   tex_bars->SetTextSize(0.039);
 
-  TLegend leg1 = tdrLeg(0.40,0.19,0.61,0.40);
+  TLegend leg1 = tdrLeg(0.20,0.19,0.43,0.40);
   leg1.AddEntry(pt_depend_const_mpf, "MPF Flat","L");
   leg1.AddEntry(pt_depend_const_dijet, "Pt Flat","L");
   leg1.AddEntry(pt_depend_logpt_mpf, "MPF Loglin","L");
@@ -180,7 +196,7 @@ void CorrectionObject::L2ResOutput_eta(){
   kfsr_dijet->Draw("E1 SAME");
   line->Draw("SAME");
 
-  TLegend leg2 = tdrLeg(0.40,0.19,0.61,0.30);
+  TLegend leg2 = tdrLeg(0.20,0.19,0.43,0.30);
   leg2 . AddEntry(kfsr_mpf, "MPF","L");
   leg2 . AddEntry(kfsr_dijet, "Pt","L");
   leg2.Draw();
@@ -235,14 +251,25 @@ void CorrectionObject::L2ResOutput_eta(){
 
   TH1D* res_logpt_mpf_kfsrval_var[4];
   TH1D* res_logpt_dijet_kfsrval_var[4];
+  
+  TH1D* res_logpt_mpf_kfsrfit_old_var[4];
+  TH1D* res_logpt_dijet_kfsrfit_old_var[4];
 
   TH1D* res_mpf_pT_diff_var[4];
+
+  TH1D* res_logpt_mpf_diff_var[4];
+  TH1D* res_logpt_dijet_diff_var[4];
 
   TFile* f_Res_mpf_var;
   TFile* f_Res_dijet_var;
 
+  TFile* f_Res_mpf_diff_var;
+  TFile* f_Res_dijet_diff_var;
+
   TFile* f_Res_mpf_pT_var;
 
+  TFile* f_Res_mpf_old_var;
+  TFile* f_Res_dijet_old_var;
 
   for(int i=0;i<4;i++){
     if(i==0) var="central"; 
@@ -257,16 +284,32 @@ void CorrectionObject::L2ResOutput_eta(){
 
     f_Res_mpf_pT_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
 
+    f_Res_mpf_diff_var = new TFile(CorrectionObject::_outpath+"Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ");
+    f_Res_dijet_diff_var = new TFile(CorrectionObject::_outpath+"Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+"_"+var+".root","READ"); 
+
+
+    f_Res_mpf_old_var   = new TFile("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_NewTriggerThresholds/Run"+CorrectionObject::_runnr+"/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");
+    f_Res_dijet_old_var = new TFile("/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V3/AK4CHS/MC_NoReweighted_NewTriggerThresholds/Run"+CorrectionObject::_runnr+"/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".root","READ");  
    cout<<"After files"<<endl;
 
     res_logpt_mpf_kfsrfit_var[i] = (TH1D*)f_Res_mpf_var->Get("res_logpt_mpf");
     res_logpt_dijet_kfsrfit_var[i] = (TH1D*)f_Res_dijet_var->Get("res_logpt_dijet");
-    
+
     res_logpt_mpf_kfsrval_var[i] = (TH1D*)f_Res_mpf_var->Get("res_logpt_mpf_val");
     res_logpt_dijet_kfsrval_var[i] = (TH1D*)f_Res_dijet_var->Get("res_logpt_dijet_val");
 
+    res_logpt_mpf_kfsrfit_old_var[i] = (TH1D*)f_Res_mpf_old_var->Get("res_logpt_mpf");
+    res_logpt_dijet_kfsrfit_old_var[i] = (TH1D*)f_Res_dijet_old_var->Get("res_logpt_dijet");
+    
     res_mpf_pT_diff_var[i] =  (TH1D*)f_Res_mpf_pT_var->Get("res_logpt_mpf");
     res_mpf_pT_diff_var[i] ->Add(res_logpt_dijet_kfsrfit_var[i],-1);
+    
+    res_logpt_mpf_diff_var[i] = (TH1D*)f_Res_mpf_diff_var->Get("res_logpt_mpf");
+    res_logpt_mpf_diff_var[i] -> Add(res_logpt_mpf_kfsrfit_old_var[i],-1);
+    
+    res_logpt_dijet_diff_var[i] = (TH1D*)f_Res_dijet_diff_var->Get("res_logpt_dijet");
+    res_logpt_dijet_diff_var[i] -> Add(res_logpt_dijet_kfsrfit_old_var[i],-1);
+    
   }
 
   TCanvas *c5 = new TCanvas();
@@ -280,7 +323,8 @@ void CorrectionObject::L2ResOutput_eta(){
     res_logpt_mpf_kfsrfit_var[i]->Draw("E1 SAME"); 
   }
 
-  TLegend leg3 = tdrLeg(0.40,0.19,0.61,0.42); 
+  TLegend leg3 = tdrLeg(0.20,0.15,0.43,0.42); 
+  leg3 . SetHeader("MPF, kFSR fit");
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -288,11 +332,10 @@ void CorrectionObject::L2ResOutput_eta(){
   leg3 . AddEntry(res_logpt_mpf_kfsrfit, "Nominal","LP");
   leg3.Draw(); 
   line->Draw("SAME");
-  tex->DrawLatex(0.45,0.87,JetDescrib); 
-  tex_method->DrawLatex(0.45,0.81, "MPF method");
+  tex->DrawLatex(0.45,0.87,JetDescrib);      
   c5->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_kFSRfit_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
 
-   TCanvas *c50 = new TCanvas();
+  TCanvas *c50 = new TCanvas();
   tdrCanvas(c50,"L2res_logpt_MPF_kFSRval_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
   res_logpt_mpf_kfsrfit_val->SetLineColor(kBlack);
   res_logpt_mpf_kfsrfit_val->Draw("E1 SAME");
@@ -306,7 +349,8 @@ void CorrectionObject::L2ResOutput_eta(){
   leg3.Draw(); 
   line->Draw("SAME");
   tex->DrawLatex(0.45,0.87,JetDescrib);      
-  c50->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_kFSRval_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf"); 
+  c50->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_kFSRval_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
+ 
 
 
   TCanvas *c7 = new TCanvas();
@@ -320,7 +364,8 @@ void CorrectionObject::L2ResOutput_eta(){
     res_logpt_dijet_kfsrfit_var[i]->Draw("E1 SAME");  
 
   }
-  TLegend leg5 = tdrLeg(0.40,0.19,0.61,0.42); 
+  TLegend leg5 = tdrLeg(0.20,0.15,0.43,0.42); 
+  leg5 . SetHeader("p_{T}-bal, kFSR fit");
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -328,9 +373,10 @@ void CorrectionObject::L2ResOutput_eta(){
   leg5 . AddEntry(res_logpt_dijet_kfsrfit, "Nominal","LP");
   leg5.Draw();
   line->Draw("SAME");
-  tex->DrawLatex(0.45,0.87,JetDescrib);  
-  tex_method->DrawLatex(0.45,0.81, "p_{T}-balance method");
+  tex->DrawLatex(0.45,0.87,JetDescrib);                    
   c7->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_DiJet_kFSRfit_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
+  
+
 
   TCanvas *c70 = new TCanvas();
   tdrCanvas(c70,"L2res_logpt_DiJet_kFSRval_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
@@ -343,12 +389,61 @@ void CorrectionObject::L2ResOutput_eta(){
     res_logpt_dijet_kfsrval_var[i]->Draw("E1 SAME");  
 
   }
-  leg5 . SetHeader("p_{T}-bal, kFSR val");
+  leg5 . SetHeader("p_{T}-bal, kFSR hist");
   leg5.Draw();
   line->Draw("SAME");
   tex->DrawLatex(0.45,0.87,JetDescrib);                    
   c70->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_DiJet_kFSRval_"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
 
+  
+ TCanvas *c6 = new TCanvas();
+  tdrCanvas(c6,"L2res_logpt_MPF_kFSRfit_ptDepend_diff",h,4,10,kSquare,CorrectionObject::_lumitag);
+  h->GetYaxis()->SetTitle("new - prev. iteration");
+  h->GetYaxis()->SetRangeUser(-0.3,0.3);
+   res_logpt_mpf_diff->SetLineColor(kBlack);
+  res_logpt_mpf_diff->Draw("E1 SAME");
+  for(int i=0;i<4;i++){
+    res_logpt_mpf_diff_var[i]->SetLineColor(kRed-3*i);
+    res_logpt_mpf_diff_var[i]->SetMarkerColor(kRed-3*i);
+    res_logpt_mpf_diff_var[i]->SetMarkerStyle(20+i);
+    res_logpt_mpf_diff_var[i]->Draw("E1 SAME"); 
+  }
+
+  TLegend leg4 = tdrLeg(0.20,0.19,0.43,0.42); 
+  leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
+  leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
+  leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
+  leg4 . AddEntry(res_logpt_mpf_kfsrfit_var[3] , "480 GeV","LP");
+  leg4 . AddEntry(res_logpt_mpf_kfsrfit, "Nominal","LP");
+  leg4.Draw();     
+  line2->Draw("SAME");
+  tex->DrawLatex(0.45,0.87,JetDescrib);      
+  c6->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_MPF_kFSRfit_diff"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
+  
+  
+  TCanvas *c8 = new TCanvas();
+  tdrCanvas(c8,"L2res_logpt_DiJet_kFSRfit_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
+  h->GetYaxis()->SetTitle("new - prev. iteration");
+  h->GetYaxis()->SetRangeUser(-0.3,0.3);
+  res_logpt_dijet_diff->SetLineColor(kBlack);
+  res_logpt_dijet_diff->Draw("E1 SAME");
+  for(int i=0;i<4;i++){
+    res_logpt_dijet_diff_var[i]->SetLineColor(kBlue+3*i);
+    res_logpt_dijet_diff_var[i]->SetMarkerColor(kBlue+3*i);
+    res_logpt_dijet_diff_var[i]->SetMarkerStyle(20+i);
+    res_logpt_dijet_diff_var[i]->Draw("E1 SAME");  
+
+  }
+  TLegend leg6 = tdrLeg(0.20,0.19,0.43,0.42); 
+  leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
+  leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
+  leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
+  leg6 . AddEntry(res_logpt_dijet_kfsrfit_var[3] , "480 GeV","LP");
+  leg6 . AddEntry(res_logpt_dijet_kfsrfit, "Nominal","LP");
+  leg6.Draw();
+  line2->Draw("SAME");
+  tex->DrawLatex(0.45,0.87,JetDescrib);                    
+  c8->SaveAs(CorrectionObject::_outpath+"plots/L2Res_logpt_DiJet_kFSRfit_diff"+CorrectionObject::_jettag+"_"+CorrectionObject::_generator_tag+".pdf");
   
   TCanvas *c9 = new TCanvas();
   tdrCanvas(c9,"L2res_logpt_MPF_DiJet_kFSRfit_ptDepend",h,4,10,kSquare,CorrectionObject::_lumitag);
@@ -363,7 +458,7 @@ void CorrectionObject::L2ResOutput_eta(){
     res_mpf_pT_diff_var[i]->Draw("E1 SAME");  
 
   }
-  TLegend leg7 = tdrLeg(0.40,0.19,0.61,0.42); 
+  TLegend leg7 = tdrLeg(0.20,0.19,0.43,0.42); 
   leg7 . AddEntry(res_mpf_pT_diff_var[1] , "60 GeV","LP");  
   leg7 . AddEntry(res_mpf_pT_diff_var[0] , "120 GeV","LP");
   leg7 . AddEntry(res_mpf_pT_diff_var[2] , "240 GeV","LP"); 
@@ -382,7 +477,9 @@ void CorrectionObject::L2ResOutput_eta(){
   //delete everything
   
   delete c9;
+  delete c8;
   delete c7;
+  delete c6;
   delete c5;
   delete c4;
   delete c3;
@@ -392,7 +489,10 @@ void CorrectionObject::L2ResOutput_eta(){
   delete c50;
   delete c70;
 
+ 
   for(int i=0; i<4; i++){
+    delete res_logpt_mpf_kfsrfit_old_var[i];
+    delete res_logpt_dijet_kfsrfit_old_var[i];
     delete res_logpt_mpf_kfsrfit_var[i];
     delete res_logpt_dijet_kfsrfit_var[i];
     delete res_logpt_mpf_kfsrval_var[i];
@@ -404,12 +504,13 @@ void CorrectionObject::L2ResOutput_eta(){
 
   delete f_Res_dijet_var;
   delete f_Res_mpf_var;
+  delete f_Res_mpf_old_var;
+  delete f_Res_dijet_old_var;
 
   //delete leg2;
   //delete leg1;
   delete tex_bars;
   delete tex;
-  delete tex_method;
   
   delete h;
   delete line;

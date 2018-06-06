@@ -324,7 +324,7 @@ void CorrectionObject::L2ResOutput(){
   }
 
   TLegend leg3 = tdrLeg(0.20,0.15,0.43,0.42); 
-  leg3 . SetHeader("MPF, kFSR fit");
+  leg3 . SetHeader("MPF");
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[1] , "60 GeV","LP");  
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[0] , "120 GeV","LP");
   leg3 . AddEntry(res_logpt_mpf_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -345,7 +345,7 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_mpf_kfsrval_var[i]->SetMarkerStyle(20+i);
     res_logpt_mpf_kfsrval_var[i]->Draw("E1 SAME"); 
   }
-  leg3 . SetHeader("MPF, kFSR hist");
+  leg3 . SetHeader("MPF");
   leg3.Draw(); 
   line->Draw("SAME");
   tex->DrawLatex(0.45,0.87,JetDescrib);      
@@ -365,7 +365,7 @@ void CorrectionObject::L2ResOutput(){
 
   }
   TLegend leg5 = tdrLeg(0.20,0.15,0.43,0.42); 
-  leg5 . SetHeader("p_{T}-bal, kFSR fit");
+  leg5 . SetHeader("p_{T}-bal");
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[1] , "60 GeV","LP");  
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[0] , "120 GeV","LP");
   leg5 . AddEntry(res_logpt_dijet_kfsrfit_var[2] , "240 GeV","LP"); 
@@ -389,7 +389,7 @@ void CorrectionObject::L2ResOutput(){
     res_logpt_dijet_kfsrval_var[i]->Draw("E1 SAME");  
 
   }
-  leg5 . SetHeader("p_{T}-bal, kFSR hist");
+  leg5 . SetHeader("p_{T}-bal");
   leg5.Draw();
   line->Draw("SAME");
   tex->DrawLatex(0.45,0.87,JetDescrib);                    

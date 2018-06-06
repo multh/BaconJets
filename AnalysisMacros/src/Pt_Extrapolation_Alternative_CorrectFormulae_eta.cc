@@ -157,21 +157,35 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(bool mpf
   TTreeReaderValue<Float_t> asymmetry_data(myReader_DATA, "asymmetry");
   TTreeReaderValue<Float_t> B_data(myReader_DATA, "B");   
   TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
-   
+
+  TTreeReaderValue<Float_t> probejet_neutEmEF_data(myReader_DATA, "probejet_neutEmEF");
+  TTreeReaderValue<Float_t> probejet_chHadEF_data(myReader_DATA, "probejet_chHadEF");
+  TTreeReaderValue<Float_t> probejet_chEmEF_data(myReader_DATA, "probejet_chEmEF");
+
+  /*  ofstream DATA_Events_with_removal, Events_without_removal;
+  DATA_Events_with_removal.open(CorrectionObject::_outpath+"output/DATA_Events_with_removal_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+  DATA_Events_without_removal.open(CorrectionObject::_outpath+"output/DATA_Events_without_removal_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+  DATA_Events_with_removal  << "DATA Events with removal (fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold)"  << endl;  
+  DATA_Events_with_removal  << "Run : Lumi : EventID"  << endl;  
+  DATA_Events_without_removal  << "DATA Events without removal (fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold)"  << endl;  
+  DATA_Events_without_removal  << "Run : Lumi : EventID"  << endl;  
+  */
   while (myReader_DATA.Next()) {
     if(*alpha_data>alpha_cut) continue;
-    for(int j=0; j<n_eta_control-1; j++){     
+
+    for(int j=0; j<n_eta_control-1; j++){ 
+    
       if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
-      else{
-	hdata_asymmetry[j]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
-	hdata_B[j]->Fill(*pt_ave_data,*B_data,*weight_data);
-	
-	eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
-	for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
-	  if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	  hdata_ptave[k][j]->Fill(*pt_ave_data,*weight_data);
-	  n_entries_data[j][k]++;
-	}
+      if((fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chEmEF_data>chHadEF_threshold)) continue;
+      
+      hdata_asymmetry[j]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
+      hdata_B[j]->Fill(*pt_ave_data,*B_data,*weight_data);
+      
+      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
+      for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
+	if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
+	hdata_ptave[k][j]->Fill(*pt_ave_data,*weight_data);
+	n_entries_data[j][k]++;
       }
     }
   }
@@ -189,23 +203,28 @@ void CorrectionObject::Pt_Extrapolation_Alternative_CorrectFormulae_eta(bool mpf
   TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
   TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
 
+  TTreeReaderValue<Float_t> probejet_neutEmEF_mc(myReader_MC, "probejet_neutEmEF");
+  TTreeReaderValue<Float_t> probejet_chHadEF_mc(myReader_MC, "probejet_chHadEF");
+  TTreeReaderValue<Float_t> probejet_chEmEF_mc(myReader_MC, "probejet_chEmEF");
+
   while (myReader_MC.Next()) {
     if(*alpha_mc>alpha_cut) continue;
+
     for(int j=0; j<n_eta_control-1; j++){
       if(*probejet_eta_mc>eta_bins_control[j+1] || *probejet_eta_mc<eta_bins_control[j]) continue;
-      else{
-	hmc_asymmetry[j]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
-	hmc_B[j]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
-	eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
-	for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
-	  if(*pt_ave_mc<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_mc>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	  n_entries_mc[j][k]++;
-	}
+      if((fabs(*probejet_eta_mc)>3.1 && *probejet_neutEmEF_mc>neutEMEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chHadEF_mc>chHadEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chEmEF_mc>chHadEF_threshold)) continue;
+      
+      hmc_asymmetry[j]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
+      hmc_B[j]->Fill(*pt_ave_mc,*B_mc,*weight_mc);
+      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
+      for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
+	if(*pt_ave_mc<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_mc>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
+	n_entries_mc[j][k]++;
       }
     }
   }
 
-  //Check number of entries in each bin
+  //check number of entries in each bin
   bool enough_entries[n_eta_control-1][n_pt_-1];
   for(int j=0; j<n_eta_control-1; j++){
     eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
@@ -572,8 +591,9 @@ for(int j=0; j<n_eta_control-1; j++){
     TFile* kfsr_mpf;
     TH1D* hist_kfsr_fit_mpf;
     TH1D* hist_kfsr_mpf;
-    if(CorrectionObject::_runnr != "BCDEFGH"){ 
-        kfsr_mpf = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+    if(CorrectionObject::_runnr != "BCDEFGH" && _runnr != "FlateGH"){ 
+      //  kfsr_mpf = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+	kfsr_mpf = new TFile(CorrectionObject::_input_path+"RunFlateGH/Histo_Res_MPF_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ"); //TEST
 	hist_kfsr_fit_mpf = (TH1D*)kfsr_mpf->Get("hist_kfsr_fit_mpf");
 	hist_kfsr_mpf = (TH1D*)kfsr_mpf->Get("kfsr_mpf");
     }
@@ -592,6 +612,11 @@ for(int j=0; j<n_eta_control-1; j++){
 
       if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
+	  else kfsr_fit_mpf->SetParameters(1,2,50); //CLOSURETEST
+	  fit_fullrange = true;
+	}
+	else if(CorrectionObject::_runnr == "FlateGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters(1,4,120); //RES
 	  else kfsr_fit_mpf->SetParameters(1,2,50); //CLOSURETEST
 	  fit_fullrange = true;
@@ -628,12 +653,12 @@ for(int j=0; j<n_eta_control-1; j++){
       loglin[j] = hist_kfsr_fit_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
     double flat_norm=0, loglin_norm=0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm += flat[j];
       loglin_norm += loglin[j];
     }
-    flat_norm = flat_norm/n_etabarr;
-    loglin_norm = loglin_norm/n_etabarr;
+    flat_norm = flat_norm/(n_etabarr*2);
+    loglin_norm = loglin_norm/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat[j] = flat[j]/flat_norm;
       loglin[j] = loglin[j]/loglin_norm;
@@ -646,12 +671,12 @@ for(int j=0; j<n_eta_control-1; j++){
       loglin_var[j] = hist_kfsr_mpf->GetBinContent(j+1)*(f1[j]->GetParameter(0)+f1[j]->GetParameter(1)*TMath::Log(ptave_data[j]->GetMean()) );
     }
     double flat_norm_var=0, loglin_norm_var=0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm_var += flat_var[j];
       loglin_norm_var += loglin_var[j];
     }
-    flat_norm_var = flat_norm_var/n_etabarr;
-    loglin_norm_var = loglin_norm_var/n_etabarr;
+    flat_norm_var = flat_norm_var/(n_etabarr*2);
+    loglin_norm_var = loglin_norm_var/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat_var[j] = flat_var[j]/flat_norm_var;
       loglin_var[j] = loglin_var[j]/loglin_norm_var;
@@ -711,57 +736,8 @@ for(int j=0; j<n_eta_control-1; j++){
       norm_loglin = loglin_norm_var;
     }
 
-    for (int j=n_eta-1; j>0; --j){
-      output << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-      
-      output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
 
-      uncerts << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      
-      
-      if(j>12 && j<16){ //2.65 < |eta| < 3.1: const pT extrapolation
-	output_hybrid << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin pT extrapolation, const normalization
-	output_hybrid <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-      
-
-      if(j<6){//|eta| < 1.3: const pT extrapolation
-	output_hybrid_barrel << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin pT extrapolation, const normalization
-	output_hybrid_barrel <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_mpf->GetBinError(j-1) / norm_flat  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-    }
-
-
-    for (int j=0; j<n_eta-1; j++){
+    for (int j=0; j<n_eta_control-1; j++){
  
       output << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1) 
@@ -781,7 +757,7 @@ for(int j=0; j<n_eta_control-1; j++){
 		     << kfsr_FitVal_mpf->GetBinError(j)/norm_loglin << " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
 
       
-      if(j>11 && j<15){
+      if(j>2 && j<6){
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
@@ -790,6 +766,16 @@ for(int j=0; j<n_eta_control-1; j++){
 	      << ptave_data[j]->FindLastBinAbove(100.)*10 
 	      <<" "<< kfsr_FitVal_mpf->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
       }
+      else if(j>29 && j<33){
+        output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   "
+             << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1)   
+             << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+    
+        uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range_control[j] << "  " << eta_range_control[j+1] << "  3    30    "
+              << ptave_data[j]->FindLastBinAbove(100.)*10
+              <<" "<< kfsr_FitVal_mpf->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
+      }
+
       else{
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " 
@@ -802,7 +788,7 @@ for(int j=0; j<n_eta_control-1; j++){
       }
       
 
-      if(j<5){
+      if(j>12 && j<23){
 	output_hybrid_barrel << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_mpf->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
@@ -958,8 +944,9 @@ for(int j=0; j<n_eta_control-1; j++){
     TH1D* hist_kfsr_fit_dijet;
     TH1D* hist_kfsr_dijet;
 
-    if(CorrectionObject::_runnr != "BCDEFGH"){ //TODO same as above
-        kfsr_dijet = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+    if(CorrectionObject::_runnr != "BCDEFGH" && _runnr != "FlateGH"){ //TODO same as above
+      // kfsr_dijet = new TFile(CorrectionObject::_input_path+"RunBCDEFGH/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");
+      kfsr_dijet = new TFile(CorrectionObject::_input_path+"RunFlateGH/Histo_Res_DiJet_L1_"+CorrectionObject::_generator_tag+"_AK4PFchs.root","READ");//TEST
 	hist_kfsr_fit_dijet = (TH1D*)kfsr_dijet->Get("hist_kfsr_fit_dijet");
 	hist_kfsr_dijet = (TH1D*)kfsr_dijet->Get("kfsr_dijet");
     }
@@ -981,6 +968,12 @@ for(int j=0; j<n_eta_control-1; j++){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,360,100); //RES
 	  else kfsr_fit_dijet->SetParameters(1,500,150); //CLOSURETEST
+	  //fit_fullrange = true;
+	  fit_285 = true;
+	}
+	if(CorrectionObject::_runnr == "FlateGH"){
+	  if(!CorrectionObject::_closuretest) kfsr_fit_dijet->SetParameters(-2,360,100); //RES
+	  else kfsr_fit_dijet->SetParameters(-1,140,70); //CLOSURETEST
 	  //fit_fullrange = true;
 	  fit_285 = true;
 	}
@@ -1015,12 +1008,12 @@ for(int j=0; j<n_eta_control-1; j++){
     }
 
     double flat_norm = 0, loglin_norm = 0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm += flat[j];
       loglin_norm += loglin[j];
     }
-    flat_norm = flat_norm/n_etabarr;
-    loglin_norm = loglin_norm/n_etabarr;
+    flat_norm = flat_norm/(n_etabarr*2);
+    loglin_norm = loglin_norm/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat[j] = flat[j]/flat_norm;
       loglin[j] = loglin[j]/loglin_norm;
@@ -1034,12 +1027,12 @@ for(int j=0; j<n_eta_control-1; j++){
     }
 
     double flat_norm_var = 0, loglin_norm_var = 0;
-    for (int j=18; j<23; j++){
+    for (int j=13; j<23; j++){
       flat_norm_var += flat_var[j];
       loglin_norm_var += loglin_var[j];
     }
-    flat_norm_var = flat_norm_var/n_etabarr;
-    loglin_norm_var = loglin_norm_var/n_etabarr;
+    flat_norm_var = flat_norm_var/(n_etabarr*2);
+    loglin_norm_var = loglin_norm_var/(n_etabarr*2);
     for (int j=0; j<n_eta_control-1; j++){
       flat_var[j] = flat_var[j]/flat_norm_var;
       loglin_var[j] = loglin_var[j]/loglin_norm_var;
@@ -1060,16 +1053,16 @@ for(int j=0; j<n_eta_control-1; j++){
     for(int i=0; i<2;i++){ 
       
       ofstream output, output_loglin, uncerts, uncerts_loglin, output_hybrid, uncerts_hybrid, output_hybrid_barrel, uncerts_hybrid_barrel ;
-      output.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      output_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
-      uncerts_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      output_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_FLAT_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      uncerts_loglin.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_LOGLIN_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
       
-      output_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts_hybrid.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Hybrid_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
-      output_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
-      uncerts_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
+      output_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt");
+      uncerts_hybrid_barrel.open(CorrectionObject::_outpath+"output/"+kFSR_method[i]+"/Summer16_07Aug2017_pT_Barrel_L2Residual_"+CorrectionObject::_generator_tag+"_"+CorrectionObject::_jettag+".txt.STAT");
 
       
       output  << output_header << endl;                                               //Dijet Method: for all eta use const pT extrapolation, const function for normalization
@@ -1103,57 +1096,7 @@ for(int j=0; j<n_eta_control-1; j++){
     }
 
 
-    for (int j=n_eta-1; j>0; --j){
-      output << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-      
-      output_loglin << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-      uncerts << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-
-      uncerts_loglin << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      
-      
-      if(j>12 && j<16){//const fit for 2.65 < |eta| < 3.1
-	output_hybrid << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin, const function for normalization
-	output_hybrid <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_loglin  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-      
-
-      if(j<6){//const fit for |eta| < 1.3
-	output_hybrid_barrel << fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f2[j-1]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
-
-	uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" << eta_range_control[j-1] << "  3    30    " 
-	      << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "  " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat 
-	      <<" "<< f2[j-1]->GetParError(0) << endl;
-      }
-      else{//log-lin, const function for normalization
-	output_hybrid_barrel <<  fixed << std::setprecision(6)  << "  -" << eta_range_control[j]<< " -" << eta_range_control[j-1] << "   11   10 6500   30   " << ptave_data[j-1]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j) << "   " << f1[j-1]->GetParameter(0) << " " << f1[j-1]->GetParameter(1) << "   1 0.0000 0.0" << endl;
-
-        uncerts_hybrid_barrel << fixed << std::setprecision(6) << "-" << eta_range_control[j] << " -" 
-		     << eta_range_control[j-1] << "  6    30    " << ptave_data[j-1]->FindLastBinAbove(100.)*10 
-		     << " " << kfsr_FitVal_dijet->GetBinError(j-1) / norm_flat  
-		     << " " <<Vcov[0][j-1] <<" "<<Vcov[1][j-1]<<" "<<Vcov[2][j-1]<<endl; 
-      }
-    }
-
-
-    for (int j=0; j<n_eta-1; j++){
+    for (int j=0; j<n_eta_control-1; j++){
  
       output << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1) 
@@ -1173,7 +1116,7 @@ for(int j=0; j<n_eta_control-1; j++){
 		     << kfsr_FitVal_dijet->GetBinError(j)/norm_loglin << " "<< Vcov[0][j]<<" "<< Vcov[1][j]<<" "<< Vcov[2][j] << endl; 
 
       
-      if(j>11 && j<15){
+      if(j>2 && j<6){
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
@@ -1182,6 +1125,17 @@ for(int j=0; j<n_eta_control-1; j++){
 	      << ptave_data[j]->FindLastBinAbove(100.)*10 
 	      <<" "<< kfsr_FitVal_dijet->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
       }
+
+    else if(j>29 && j<33){
+        output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   "
+             << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1)
+             << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;
+      
+      	uncerts_hybrid << fixed << std::setprecision(6) << " " << eta_range_control[j] << "  " << eta_range_control[j+1] << "  3    30    "
+              << ptave_data[j]->FindLastBinAbove(100.)*10
+              <<" "<< kfsr_FitVal_dijet->GetBinError(j)/norm_flat << " " << f2[j]->GetParameter(0) <<endl;
+      }
+
       else{
 	output_hybrid << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 		    << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_loglin << " " 
@@ -1194,7 +1148,7 @@ for(int j=0; j<n_eta_control-1; j++){
       }
       
 
-      if(j<5){
+      if(j>12 && j<23){
 	output_hybrid_barrel << fixed << std::setprecision(6)  << "   " << eta_range_control[j]<< "  " << eta_range_control[j+1] << "   11   10 6500   30   " 
 	     << ptave_data[j]->FindLastBinAbove(100.)*10 << "   " << 1/norm_flat << " " << kfsr_FitVal_dijet->GetBinContent(j+1) 
 	     << "   " << f2[j]->GetParameter(0) << " 0   1 0.0000 0.0" << endl;

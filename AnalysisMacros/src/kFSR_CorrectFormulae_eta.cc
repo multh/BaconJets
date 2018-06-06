@@ -127,6 +127,11 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
   TTreeReaderValue<Float_t> asymmetry_data(myReader_DATA, "asymmetry");
   TTreeReaderValue<Float_t> B_data(myReader_DATA, "B");   
   TTreeReaderValue<Float_t> weight_data(myReader_DATA, "weight");
+
+  TTreeReaderValue<Float_t> probejet_neutEmEF_data(myReader_DATA, "probejet_neutEmEF");
+  TTreeReaderValue<Float_t> probejet_chHadEF_data(myReader_DATA, "probejet_chHadEF");
+  TTreeReaderValue<Float_t> probejet_chEmEF_data(myReader_DATA, "probejet_chEmEF");
+
   int idx = 0;
   
   cout << "starting to loop over DATA events." << endl;
@@ -134,6 +139,8 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
   while (myReader_DATA.Next()) {
     for(int j=0; j<n_eta_control-1; j++){
       if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
+      if((fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chEmEF_data>chHadEF_threshold)) continue;
+
       for(int i=0; i<n_alpha; i++){
 	if(*alpha_data>alpha_bins[i]) continue;
 	hdata_asymmetry[j][i]->Fill(*pt_ave_data,*asymmetry_data,*weight_data);
@@ -158,11 +165,18 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
    TTreeReaderValue<Float_t> asymmetry_mc(myReader_MC, "asymmetry");
    TTreeReaderValue<Float_t> B_mc(myReader_MC, "B");
    TTreeReaderValue<Float_t> weight_mc(myReader_MC, "weight");
+
+   TTreeReaderValue<Float_t> probejet_neutEmEF_mc(myReader_MC, "probejet_neutEmEF");
+   TTreeReaderValue<Float_t> probejet_chHadEF_mc(myReader_MC, "probejet_chHadEF");
+   TTreeReaderValue<Float_t> probejet_chEmEF_mc(myReader_MC, "probejet_chEmEF");
+
    idx = 0;
 
    while (myReader_MC.Next()) {
      for(int j=0; j<n_eta_control-1; j++){
        if(*probejet_eta_mc>eta_bins_control[j+1] || *probejet_eta_mc<eta_bins_control[j]) continue;
+       if((fabs(*probejet_eta_mc)>3.1 && *probejet_neutEmEF_mc>neutEMEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chHadEF_mc>chHadEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chEmEF_mc>chHadEF_threshold)) continue;
+
        for(int i=0; i<n_alpha; i++){
 	 if(*alpha_mc>alpha_bins[i]) continue;
 	 hmc_asymmetry[j][i]->Fill(*pt_ave_mc,*asymmetry_mc,*weight_mc);
@@ -382,6 +396,7 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
    TString name_mpf_r[n_eta_control-1][n_pt_-1];
 
    for(int j=0; j<n_eta_control-1; j++){
+     eta_cut_bool = fabs(eta_bins_control[j])>eta_cut;
      for(int k = 1 ; k <  ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ) ; k++ ){ 
        graph_rel_r_mc[k][j] = new TGraphErrors(n_alpha,xbin_tgraph,rel_r_mc[k][j],zero,err_rel_r_mc[k][j]);
        graph_rel_r_mc[k][j] = (TGraphErrors*)CleanEmptyPoints(graph_rel_r_mc[k][j]);
@@ -535,8 +550,8 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
        pTbin_label+=(eta_cut_bool ? pt_bins_HF : pt_bins)[k];
        pTbin_label+=" < p_T < ";
        pTbin_label+=(eta_cut_bool ? pt_bins_HF : pt_bins)[k+1];
-       if(j==0) leg1->AddEntry(graph_rel_r[k][j],pTbin_label,"epl");
-       if(j==14){
+       if(j==18) leg1->AddEntry(graph_rel_r[k][j],pTbin_label,"epl");
+       if(j==32){
 	 leg2->AddEntry(graph_rel_r[k][j],pTbin_label,"epl");
        }
 
@@ -896,11 +911,15 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
        kFSR_DiJet->SetBinError(j+1,pol1[j]->GetParError(0));
      }
 
-     leg1->SetHeader("p_{T} balance, "+eta_range_control[j]+"#leq|#eta|<"+eta_range_control[j+1]);
-     leg2->SetHeader("p_{T} balance, "+eta_range_control[j]+"#leq|#eta|<"+eta_range_control[j+1]);
-     if(fabs(eta_bins_control[j])<eta_cut) leg1->Draw();
-     else  leg2->Draw();
-
+     leg1->SetHeader("p_{T} balance, "+eta_range_control[j]+"#leq #eta <"+eta_range_control[j+1]);
+     leg2->SetHeader("p_{T} balance, "+eta_range_control[j]+"#leq #eta <"+eta_range_control[j+1]);
+     
+     bool legende_bool = false;
+     if(fabs(eta_bins_control[j]) < fabs(eta_bins_control[j+1])) legende_bool = true;
+     
+     if((legende_bool ? (eta_bins_control[j]) : fabs(eta_bins_control[j+1]))<eta_cut)leg1->Draw();
+     else leg2->Draw();
+  
      TLatex *tex = new TLatex();
      tex->SetNDC();
      tex->SetTextSize(0.045); 
@@ -997,9 +1016,19 @@ void CorrectionObject::kFSR_CorrectFormulae_eta(){
 
      leg1->SetHeader("MPF, "+eta_range_control[j]+"#leq|#eta|<"+eta_range_control[j+1]);
      leg2->SetHeader("MPF, "+eta_range_control[j]+"#leq|#eta|<"+eta_range_control[j+1]);
-     if(fabs(eta_bins_control[j])<eta_cut)leg1->Draw();
-     else leg2->Draw();
-     
+ 
+     bool legende_bool = false;
+     if(fabs(eta_bins_control[j]) < fabs(eta_bins_control[j+1])) legende_bool = true;
+     //   cout<<"Eta: "eta_range_control[j]<<"  "<<eta_range_control[j+1]<<"  Legende bool: "<<legende_bool<<endl;
+     if((legende_bool ? fabs(eta_bins_control[j]) : fabs(eta_bins_control[j+1]))<eta_cut){
+       //  cout<<"Legende 1 Draw "<<endl;
+       leg1->Draw();
+     }
+     else{
+       //   cout<<"Legende 2 Draw "<<endl<<endl;
+       leg2->Draw();
+     }
+
      TLatex *tex = new TLatex();
      tex->SetNDC();
      tex->SetTextSize(0.045); 

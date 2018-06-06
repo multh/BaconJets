@@ -226,7 +226,7 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae_eta(){
     }
     //fill histos in bins of eta
     for(int i=0; i<n_eta_control-1; i++){
-      if(fabs(*probejet_eta_data)<eta_bins_control[i+1] && fabs(*probejet_eta_data)>=eta_bins_control[i]){
+      if(*probejet_eta_data<eta_bins_control[i+1] && *probejet_eta_data>=eta_bins_control[i]){
 	myCount++;
 	hdata_pt_ave[i]->Fill(*pt_ave_data,*weight_data);
 	hdata_MET[i]->Fill(*MET_data, *weight_data);
@@ -237,23 +237,26 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae_eta(){
 
     //fill histos in bins of pt and eta
     for(int j=0; j<n_eta_control-1; j++){
-    eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
-    for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
-      if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
-	if(fabs(*probejet_eta_data)>eta_bins_control[j+1] || fabs(*probejet_eta_data)<eta_bins_control[j]) continue;
-	  hdata_asymmetry[k][j]->Fill(*asymmetry_data,*weight_data);
-	  hdata_B[k][j]->Fill(*B_data,*weight_data);
-	  hdata_METoverJetsPt[k][j]->Fill((*MET_data)/(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data),*weight_data);
-	  hdata_METoverSqrtJetsPt[k][j]->Fill((*MET_data)/(sqrt(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data)),*weight_data);
-	  
-	  hdata_probejet_neutEmEF[k][j]->Fill(*probejet_neutEmEF_data,*weight_data);
-	  hdata_probejet_neutHadEF[k][j]->Fill(*probejet_neutHadEF_data,*weight_data);
-	  hdata_probejet_chEmEF[k][j]->Fill(*probejet_chEmEF_data,*weight_data);
-	  hdata_probejet_chHadEF[k][j]->Fill(*probejet_chHadEF_data,*weight_data);
-	  hdata_probejet_photonEF[k][j]->Fill(*probejet_photonEF_data,*weight_data);
-	  hdata_probejet_muonEF[k][j]->Fill(*probejet_muonEF_data,*weight_data);
-	  hdata_probejet_phi[k][j]->Fill(*probejet_phi_data,*weight_data);
-    }
+      eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
+      for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
+	if(*pt_ave_data<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_data>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
+	if(*probejet_eta_data>eta_bins_control[j+1] || *probejet_eta_data<eta_bins_control[j]) continue;
+	
+	if((fabs(*probejet_eta_data)>3.1 && *probejet_neutEmEF_data>neutEMEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chHadEF_data>chHadEF_threshold) || (fabs(*probejet_eta_data)>2.5 && *probejet_chEmEF_data>chHadEF_threshold)) continue;
+
+	hdata_asymmetry[k][j]->Fill(*asymmetry_data,*weight_data);
+	hdata_B[k][j]->Fill(*B_data,*weight_data);
+	hdata_METoverJetsPt[k][j]->Fill((*MET_data)/(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data),*weight_data);
+	hdata_METoverSqrtJetsPt[k][j]->Fill((*MET_data)/(sqrt(*sum_jets_pt_data+*probejet_pt_data+*barreljet_pt_data)),*weight_data);
+	
+	hdata_probejet_neutEmEF[k][j]->Fill(*probejet_neutEmEF_data,*weight_data);
+	hdata_probejet_neutHadEF[k][j]->Fill(*probejet_neutHadEF_data,*weight_data);
+	hdata_probejet_chEmEF[k][j]->Fill(*probejet_chEmEF_data,*weight_data);
+	hdata_probejet_chHadEF[k][j]->Fill(*probejet_chHadEF_data,*weight_data);
+	hdata_probejet_photonEF[k][j]->Fill(*probejet_photonEF_data,*weight_data);
+	hdata_probejet_muonEF[k][j]->Fill(*probejet_muonEF_data,*weight_data);
+	hdata_probejet_phi[k][j]->Fill(*probejet_phi_data,*weight_data);
+      }
     }
     idx++;
     if(idx%1000000==0) cout << "looping over data-TTree: Idx = " << idx << endl;
@@ -311,24 +314,24 @@ void CorrectionObject::FinalControlPlots_CorrectFormulae_eta(){
     //fill histos in bins of pt and eta
     for(int j=0; j<n_eta_control-1; j++){
       eta_cut_bool = fabs(eta_bins_control[j])>eta_cut; 
-    for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
+      for(int k=0; k< ( eta_cut_bool ?  n_pt_HF-1 : n_pt-1 ); k++){
 	if(*pt_ave_mc<(eta_cut_bool?pt_bins_HF:pt_bins)[k] || *pt_ave_mc>(eta_cut_bool?pt_bins_HF:pt_bins)[k+1]) continue;
 	if(*probejet_eta_mc>eta_bins_control[j+1] || *probejet_eta_mc<eta_bins_control[j]) continue;
-	else{
-	  hmc_asymmetry[k][j]->Fill(*asymmetry_mc,*weight_mc);
-	  hmc_B[k][j]->Fill(*B_mc,*weight_mc);
-	  hmc_METoverJetsPt[k][j]->Fill((*MET_mc)/(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc),*weight_mc);
-	  hmc_METoverSqrtJetsPt[k][j]->Fill((*MET_mc)/(sqrt(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc)),*weight_mc);
-	  
-	  hmc_probejet_neutEmEF[k][j]->Fill(*probejet_neutEmEF_mc,*weight_mc);
-	  hmc_probejet_neutHadEF[k][j]->Fill(*probejet_neutHadEF_mc,*weight_mc);
-	  hmc_probejet_chEmEF[k][j]->Fill(*probejet_chEmEF_mc,*weight_mc);
-	  hmc_probejet_chHadEF[k][j]->Fill(*probejet_chHadEF_mc,*weight_mc);
-	  hmc_probejet_photonEF[k][j]->Fill(*probejet_photonEF_mc,*weight_mc);
-	  hmc_probejet_muonEF[k][j]->Fill(*probejet_muonEF_mc,*weight_mc);
-	  hmc_probejet_phi[k][j]->Fill(*probejet_phi_mc,*weight_mc);
-	  
-	}
+	
+	if((fabs(*probejet_eta_mc)>3.1 && *probejet_neutEmEF_mc>neutEMEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chHadEF_mc>chHadEF_threshold) || (fabs(*probejet_eta_mc)>2.5 && *probejet_chEmEF_mc>chHadEF_threshold)) continue;
+	
+	hmc_asymmetry[k][j]->Fill(*asymmetry_mc,*weight_mc);
+	hmc_B[k][j]->Fill(*B_mc,*weight_mc);
+	hmc_METoverJetsPt[k][j]->Fill((*MET_mc)/(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc),*weight_mc);
+	hmc_METoverSqrtJetsPt[k][j]->Fill((*MET_mc)/(sqrt(*sum_jets_pt_mc+*probejet_pt_mc+*barreljet_pt_mc)),*weight_mc);
+	
+	hmc_probejet_neutEmEF[k][j]->Fill(*probejet_neutEmEF_mc,*weight_mc);
+	hmc_probejet_neutHadEF[k][j]->Fill(*probejet_neutHadEF_mc,*weight_mc);
+	hmc_probejet_chEmEF[k][j]->Fill(*probejet_chEmEF_mc,*weight_mc);
+	hmc_probejet_chHadEF[k][j]->Fill(*probejet_chHadEF_mc,*weight_mc);
+	hmc_probejet_photonEF[k][j]->Fill(*probejet_photonEF_mc,*weight_mc);
+	hmc_probejet_muonEF[k][j]->Fill(*probejet_muonEF_mc,*weight_mc);
+	hmc_probejet_phi[k][j]->Fill(*probejet_phi_mc,*weight_mc);
       }
     }
     idx++;
