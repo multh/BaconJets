@@ -299,6 +299,7 @@ TestModule::TestModule(uhh2::Context & ctx) :
       if(!ClosureTest){
 	//residuals
 	//JEC-Version MC: Legacy 2017 
+
 	if(JEC_Version == "Summer16_07Aug2017_V7"){
 	  JEC_corr              = JERFiles::Summer16_07Aug2017_V7_L123_AK4PFchs_MC;           //noRes only for DATA ;), only one version for MC for deriving Summer16_07Aug2016
 	  JEC_corr_L1RC         = JERFiles::Summer16_07Aug2017_V7_L1RC_AK4PFchs_MC;           
@@ -320,6 +321,7 @@ TestModule::TestModule(uhh2::Context & ctx) :
       }
       //closure
       else{
+
 	if(JEC_Version == "Summer16_07Aug2017_V7"){
 	  JEC_corr              = JERFiles::Summer16_07Aug2017_V7_L123_AK4PFchs_MC;               //ReReco Data + Summer16 MC V7
 	  JEC_corr_L1RC         = JERFiles::Summer16_07Aug2017_V7_L1RC_AK4PFchs_MC;
