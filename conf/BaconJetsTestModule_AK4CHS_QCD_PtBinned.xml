@@ -8,12 +8,14 @@
 <!ENTITY CACHEABLE        "False">
 
 <!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/"> -->
-<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/"> 
+<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERUp/"> 
+<!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERDown/"> -->
 
 <!ENTITY b_closuretest       "true">
-<!ENTITY jec_version           "Summer16_07Aug2017_V14">
+<!ENTITY jec_version           "Summer16_07Aug2017_V18">
 <!ENTITY APPLY_WEIGHTS       "false">
-<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/">  <!-- Change Weight-Path: CENTRAL/FWD -->
+<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERDown/">
+<!--<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/"> --> <!-- Change Weight-Path: CENTRAL/FWD -->
 <!-- <!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_ECALCleaning/"> --> <!-- Change Weight-Path: CENTRAL/FWD -->
 <!ENTITY Cut_PATH            "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/EtaPhiCut_ECAL/">
 
@@ -67,7 +69,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="60" AutoResubmit="5"/>
-<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_V18_NewMCTruth_MadGraph"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_V18_NewMCTruth_JERUp"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -93,7 +95,7 @@
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
-<!--
+
 <InputData Lumi="0.022" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to30_pythia8_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
           &QCDPt15to30_pythia8_AK4CHS;
           <InputTree Name="AnalysisTree"/>
@@ -169,11 +171,11 @@
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
--->
+
 
 
 <!--  MC Madgraph Samples -->
-
+<!--
 <InputData Lumi="0.017" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT50to100_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
           &QCD_HT50to100_madgraph_AK4CHS;
           <InputTree Name="AnalysisTree"/>
@@ -219,7 +221,7 @@
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
-
+-->
 
 <!-- DATA -->
 <!--
@@ -342,7 +344,7 @@
 	<Item Name="JEC_Version" Value="&jec_version;"/>
 
 	<!-- Systematic uncertainties -->
-	<Item Name="jersmear_direction" Value="nominal"/> <!--nominal/down/up -->
+	<Item Name="jersmear_direction" Value="up"/> <!--nominal/down/up -->
 
 	<Item Name="Apply_Lumiweights"  Value="&APPLY_LUMIWEIGHTS;"/>
 	<Item Name="Apply_Unflattening" Value="&APPLY_UNFLATTENING;"/>
