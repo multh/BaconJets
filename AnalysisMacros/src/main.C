@@ -26,15 +26,15 @@ int main(){
 
 
   TString generator    = "pythia";
-  bool    closure_test    = true;
+  bool    closure_test    = false;
   bool    trigger_fwd     = true;     //Use for Weight Calc
   bool    trigger_central = true;     //Use for Weight Calc
   TString collection    = "AK4CHS";
   
-  
+  /*
   TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERUp/";
   TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERUp/";
-  
+  */
 
   //SF Down
   /*
@@ -42,20 +42,18 @@ int main(){
   TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_OldCorrMET_NewSF_Down/";
   */
   
-  //SF Up
-  /*
-  TString input_path    ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_OldCorrMET_NewSF_Up/";
-  TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_OldCorrMET_NewSF_Up/";
-  */
+  TString input_path     ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/";
+  TString weight_path   ="/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/";
+ 
 
   //eine Klasse: enthaelt Info ueber runnr, Generator, collection, Strings zu MC/DATA-files, memberfunctions: controlPlots, kFSR etc.
   vector<CorrectionObject> Objects;
   
 
   Objects.emplace_back(CorrectionObject("BCDEFGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  Objects.emplace_back(CorrectionObject("BCD", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  Objects.emplace_back(CorrectionObject("EFearly", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
-  Objects.emplace_back(CorrectionObject("FlateGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  //Objects.emplace_back(CorrectionObject("BCD", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  //Objects.emplace_back(CorrectionObject("EFearly", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
+  //Objects.emplace_back(CorrectionObject("FlateGH", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   
   //Objects.emplace_back(CorrectionObject("B", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
   //Objects.emplace_back(CorrectionObject("BCDEFearly", generator,collection, input_path, weight_path, closure_test, trigger_fwd, trigger_central));
@@ -74,8 +72,10 @@ int main(){
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].Loop_MC_Data();
 
   //Weight Calcualtion for QCD pT binned and no trigger splitting 
-  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
-  
+   for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights();
+  // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights_TriggerThresholds(true); //Central trigger
+  // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].CalculateMCWeights_TriggerThresholds(false); //Central trigger
+
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].ControlPlots();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectExtrapolation();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].kFSR_CorrectFormulae("0","7");
@@ -93,9 +93,9 @@ int main(){
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput();
  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput_CorrectExtrapolation();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].L2ResOutput_eta();
- for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit(); //Mikkos Macro 
- for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_eta_0_13(); //Mikkos Macro
- for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_MC(); //Finer pT binning for MC
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit(); //Mikkos Macro 
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_eta_0_13(); //Mikkos Macro
+  //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].InputForGlobalFit_MC(); //Finer pT binning for MC
 
   //for(unsigned int i=0; i<Objects.size(); i++) Objects[i].FinalControlPlots_CorrectFormulae();
   // for(unsigned int i=0; i<Objects.size(); i++) Objects[i].MatchingPlots();

@@ -1525,6 +1525,9 @@ if(debug){
     }
     if(apply_EtaPhi_HCAL && !sel.EtaPhi_HCAL(event)) return false;
 
+    if(! sel.EnergyEtaCut()) return false;
+
+
    if(debug){
      cout << "before 'dijet advanced selection' : " << endl;
      cout << " Evt# "<<event.event<<" Run: "<<event.run<<" " << endl;
