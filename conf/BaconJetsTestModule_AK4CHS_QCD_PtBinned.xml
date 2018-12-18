@@ -8,6 +8,7 @@
 <!ENTITY CACHEABLE        "False">
 
 <!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/"> -->
+<<<<<<< HEAD
 <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERUp/"> 
 <!-- <!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERDown/"> -->
 
@@ -17,6 +18,17 @@
 <!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_newMCTruth_JERDown/">
 <!--<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/"> --> <!-- Change Weight-Path: CENTRAL/FWD -->
 <!-- <!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/ClosureTest/Summer16_07Aug2017_V7/AK4CHS/MC_NoReweighted_CHS_ECALCleaning/"> --> <!-- Change Weight-Path: CENTRAL/FWD -->
+=======
+<!ENTITY OUTdir              "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_HighPtCut/">
+
+<!ENTITY b_closuretest       "false">
+<!ENTITY jec_version           "Summer16_07Aug2017_V18">
+
+<!ENTITY APPLY_WEIGHTS       "false">
+<!-- <!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V14/AK4CHS/MC_NoReweighted_CHS_newMCTruth/">-->  <!-- Change Weight-Path: CENTRAL/FWD -->
+<!ENTITY WEIGHT_PATH         "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V18/AK4CHS/MC_NoReweighted_CHS_HighPtCut/">
+
+>>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 <!ENTITY Cut_PATH            "/nfs/dust/cms/user/multh/JEC/2016Legacy/Residuals/Summer16_07Aug2017_V7/AK4CHS/EtaPhiCut_ECAL/">
 
 <!ENTITY APPLY_METoverPTcut  "false">  <!--Apply MET Cut-->
@@ -46,6 +58,10 @@
 <!ENTITY QCDPt2400to3200_pythia8_AK4CHS       SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_Pt_2400to3200_allGENparticles.xml">
 <!ENTITY QCDPt3200toInf_pythia8_AK4CHS        SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_Pt_3200toInf_allGENparticles.xml">
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 <!ENTITY QCD_HT50to100_madgraph_AK4CHS           SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT50to100.xml">
 <!ENTITY QCD_HT100to200_madgraph_AK4CHS          SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT100to200.xml">
 <!ENTITY QCD_HT200to300_madgraph_AK4CHS         SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT200to300.xml">
@@ -55,6 +71,10 @@
 <!ENTITY QCD_HT1000to1500_madgraph_AK4CHS         SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT1000to1500.xml">
 <!ENTITY QCD_HT1500to2000_madgraph_AK4CHS        SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT1500to2000.xml">
 <!ENTITY QCD_HT2000toInf_madgraph_AK4CHS       SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_26_patch2/src/UHH2/common/datasets/RunII_80X_v3/MC_QCD_HT2000toInf.xml">
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 
 <!ENTITY DATA_RunB_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016B_07Aug.xml">
 <!ENTITY DATA_RunC_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016C_07Aug.xml">
@@ -64,12 +84,27 @@
 <!ENTITY DATA_RunG_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016G_07Aug.xml">
 <!ENTITY DATA_RunH_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_8_0_27/src/UHH2/common/datasets/RunII_80X_v3/DATA_JetHT_Run2016H_07Aug.xml">
 
+<!--
+<!ENTITY DATA_RunB_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016B_withL1seeds_withL1prescales_withLowPtJets.xml">
+<!ENTITY DATA_RunC_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016C_wL1seeds_wL1prescales_wLowPtJets_wXCONE_wXCONE04R.xml">
+<!ENTITY DATA_RunD_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016D_wL1seeds_wL1prescales_wLowPtJets_wXCONE_wXCONE04R.xml">
+<!ENTITY DATA_RunE_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016E_wL1seeds_wL1prescales_wLowPtJets_wXCONE_wXCONE04R.xml">
+<!ENTITY DATA_RunF_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016F_wL1seeds_wL1prescales_wLowPtJets_wXCONE_wXCONE04R.xml">
+<!ENTITY DATA_RunG_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016G_wL1seeds_wL1prescales_wLowPtJets_wXCONE_wXCONE04R.xml">
+<!ENTITY DATA_RunH_AK4CHS_Legacy SYSTEM "/nfs/dust/cms/user/multh/CMSSW_9_4_1/src/UHH2/common/datasets/RunII_94X_v2/DATA_JetHT_Run2016H_wL1seeds_wL1prescales_wLowPtJets_wXCONE_wXCONE04R.xml">
+-->
+
 ]>
 
 
 <!--
+<<<<<<< HEAD
 <ConfigParse NEventsBreak="0" FileSplit="60" AutoResubmit="5"/>
 <ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_V18_NewMCTruth_JERUp"/>
+=======
+<ConfigParse NEventsBreak="0" FileSplit="40" AutoResubmit="5"/>
+<ConfigSGE RAM ="4" DISK ="3" Mail="jens.multhaup@desy.de" Notification="as" Workdir="workdir_Summer16_07Aug2017_HighPtCut_MadGraph/"/>
+>>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -95,7 +130,11 @@
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
+<<<<<<< HEAD
 
+=======
+<!--
+>>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 <InputData Lumi="0.022" NEventsMax="&NEVT;" Type="MC" Version="QCDPt15to30_pythia8_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
           &QCDPt15to30_pythia8_AK4CHS;
           <InputTree Name="AnalysisTree"/>
@@ -171,8 +210,11 @@
           <InputTree Name="AnalysisTree"/>
           <OutputTree Name="AnalysisTree"/>
      </InputData>
+-->
 
+<!--  MC Madgraph Samples -->
 
+<<<<<<< HEAD
 
 <!--  MC Madgraph Samples -->
 <!--
@@ -222,6 +264,54 @@
           <OutputTree Name="AnalysisTree"/>
      </InputData>
 -->
+=======
+<InputData Lumi="0.2" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT50to100_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT50to100_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+<InputData Lumi="2.872" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT100to200_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT100to200_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+ <InputData Lumi="33.615" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT200to300_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT200to300_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+ <InputData Lumi="107.894" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT300to500_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT300to500_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+<InputData Lumi="1938.622" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT500to700_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT500to700_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+<InputData Lumi="6625.750" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT700to1000_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT700to1000_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+<InputData Lumi="12531.316" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT1000to1500_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT1000to1500_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+<InputData Lumi="98190.30" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT1500to2000_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT1500to2000_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+<InputData Lumi="239129.279" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT2000toInf_madgraph_AK4CHS_RunBCDEFGH" Cacheable="&CACHEABLE;">
+          &QCD_HT2000toInf_madgraph_AK4CHS;
+          <InputTree Name="AnalysisTree"/>
+          <OutputTree Name="AnalysisTree"/>
+     </InputData>
+
+>>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 
 <!-- DATA -->
 <!--
