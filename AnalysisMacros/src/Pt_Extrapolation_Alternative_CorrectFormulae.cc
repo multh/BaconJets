@@ -795,7 +795,6 @@ for(int j=0; j<n_eta-1; j++){
       if(CorrectionObject::_collection == "AK4CHS"){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters( -3.7, 33000,7500); //RES // Down: -6,87000,11000 //Up: -10, 80000,7000
-<<<<<<< HEAD
 	  else kfsr_fit_mpf->SetParameters(0.9,7,70); //CLOSURETEST
 	  fit_fullrange = true;
 	}
@@ -807,9 +806,6 @@ for(int j=0; j<n_eta-1; j++){
 	if(CorrectionObject::_runnr == "BCDEFGH"){
 	  if(!CorrectionObject::_closuretest) kfsr_fit_mpf->SetParameters( 0.5, 26000,50000); //RES // Down: -6,87000,11000 //Up: -10, 80000,7000
 	  else kfsr_fit_mpf->SetParameters(0.9,7.5,70); //CLOSURETEST
-=======
-	  else kfsr_fit_mpf->SetParameters(1,20,200); //CLOSURETEST
->>>>>>> 3b5aa05c25b2c8c1827e73ed2c08ea82d5084e25
 	  fit_fullrange = true;
 	}
       }
